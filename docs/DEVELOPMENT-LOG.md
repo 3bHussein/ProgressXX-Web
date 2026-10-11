@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Real-device sync QA instructions prepared
+
+- Added `docs/REAL-DEVICE-SYNC-CHECKLIST.md` with safe two-device verification of Food Library and Diary creation, cloud confirmation, duplicate checks and read-only checks of existing Daily/Workout/Weight, optional deletion of only labelled synthetic entries. Commit `f4f8bc5cd4b7e741dfca1c1b5eea01ea6bd29e4f`.
+- Pages #38185916722 SUCCESS. Full UI #38185916906 was IN PROGRESS when inspected. Prior completed Full UI #38185856127 SUCCESS.
+- **Manual QA has not been run**; user must conduct real phone/desktop steps or report screenshots. Never assert real-device sync passed from mocked tests.
+- No existing real user data or production DB modified by this docs-only update. Security testing remains deferred (`SECURITY-DEFERRED-2026-10-12`).
+
+
 ### 2026-10-12 — Eight-group independent-browser snapshot recovery VERIFIED
 
 - Full UI [#38185774877](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38185774877) **SUCCESS** including strict second independent Chromium-context wait for exact eight cloud snapshot keys, all restored and compared.
