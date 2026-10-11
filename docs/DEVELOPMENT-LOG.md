@@ -16,12 +16,22 @@ This is the **append-only** chronological log of completed work, investigations,
 
 - **Stage:** Pre-release hardening; not certified for sale/public paid launch.
 - **Known risk:** Real-account reproduction of login `undefined.filter` and Food/Daily restored-data sync needs independent confirmation, even though earlier CI ran green.
-- **Primary next step:** Follow docs/SUPABASE-SECURITY-AUDIT.md: safely address excessive TRUNCATE/TRIGGER grants in staged migration, verify two-account RLS isolation, then Food/Daily/Workout/Weight sync.
+- **Primary next step:** Test prepared migration on separate staging Supabase project/branch (none currently available); verify postflight grants and two-user RLS, then Food/Daily/Workout/Weight CRUD/sync. Production grants are unchanged.
 - **Data safety:** Preserve all existing user records; do not wipe or silently replace records.
 - **Deployment URL:** https://3bhussein.github.io/ProgressXX-Web/
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+
+### 2026-10-12 — Stage-only least privilege migration prepared (NOT APPLIED)
+
+- **Read-only recheck:** 11 private public tables grant TRUNCATE and TRIGGER to both anon and authenticated. Supabase project has no development branches available. Normal CRUD and RLS remain unchanged.
+- **Files:** `supabase/migrations/20261012_revoke_excess_table_privileges.sql` (commit `2e5b9b1782defe7586313a33d3c42c3995c91dee`), `supabase/security-grants-verification.sql` (commit `fd724b86b2bbb81ef7ff75602a9a85feeb9817ea`).
+- **Scope:** Revoke only TRUNCATE and TRIGGER from anon/authenticated for 11 verified tables, retaining CRUD, REFERENCES, all data and RLS policies; SQL saved but **NOT RUN**.
+- **Tests:** Preflight grants metadata confirmed; postflight verification and two-user negative RLS tests **NOT RUN**. No staging branch exists. No claim of successful hardening yet.
+- **Deployment/data:** GitHub files only; no changes to running site or production Supabase database.
+- **Next:** Set up approved staging/test environment and run migration there, validate effective privileges, full application CRUD/sync and two-user isolation; only then propose production rollout. Also review leaked-password protection warning.
+
 
 ### 2026-10-12 — Read-only live Supabase security audit
 
