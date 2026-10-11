@@ -202,6 +202,22 @@ const {chromium}=require('playwright');
  await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:15000});
  const afterFeatureReload=await page.evaluate(()=>({schedule:workoutSchedule(),goal:PXStore.getItem('progressx-weight-goal-v1')}));
  if(afterFeatureReload.schedule.tue!=='REST'||Number(afterFeatureReload.goal)!==80)throw Error('Core feature data lost after reload');
+ // Mobile touch layout regression for the signed-in account and Insights/Settings.
+ for(const section of ['settings','intelligence']){
+   await page.evaluate(name=>go(name),section);
+   const layout=await page.evaluate(name=>{
+     const sectionEl=document.getElementById(name);
+     const viewport=document.documentElement.clientWidth;
+     const ids=name==='settings'?['pxSettingsSync','pxSettingsSignOut']:['pxAnatomyLang'];
+     const controls=ids.map(id=>{
+       const el=document.getElementById(id),r=el?.getBoundingClientRect();
+       return {id,visible:!!r&&r.width>0&&r.height>0,left:r?.left,right:r?.right,width:r?.width,height:r?.height};
+     });
+     return {viewport,sectionWidth:sectionEl?.getBoundingClientRect().width,controls};
+   },section);
+   if(layout.controls.some(x=>!x.visible||x.left< -2||x.right>layout.viewport+2||x.height<35))throw Error('Mobile '+section+' control overflow: '+JSON.stringify(layout));
+ }
+ await page.evaluate(()=>go('home'));
  if(legacyGoogleCalls)throw Error('Called personal Google Sheets endpoint');
  if(errors.length)throw Error('Browser errors after reload: '+errors.slice(0,5).join(' ; '));
  console.log('PASS: full UI boot, auth gate, 8 tabs, isolated storage, Supabase save and reload, no personal Google requests');
