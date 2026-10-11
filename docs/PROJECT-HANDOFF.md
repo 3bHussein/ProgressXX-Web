@@ -22,6 +22,11 @@
 
 ## Verification completed — 320px and Food Diary queue (2026-10-12)
 
+
+## Verified mobile UI fix — 2026-10-12
+
+Full UI #38182804267 succeeded for 320px/390px Settings and Insights tab heights. GitHub Pages #38182804147 succeeded. Real-device check still pending. No production data changes; security deferral unchanged.
+
 ## Mobile full-height nav screenshot fix (2026-10-12)
 
 User screenshots showed Settings quick nav and Insights Atlas/Coverage tabs stretched to screen height, despite earlier width-only mobile tests passing. Updated `index.html` CSS to constrain row and button heights (commit `786c9ffba74b22b463900f28c2c3d1d0aacea9c8`), and Playwright 320px/390px checks now assert actual heights (commit `8a307957d417797322fb8d5ad9212167027acdcd`). Check new CI/deploy. No production data modified; security stage deferred.
