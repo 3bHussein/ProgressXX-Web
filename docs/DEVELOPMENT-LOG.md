@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Food Library and Diary record assertions after account re-login
+
+- Verified Full UI #38184053542 and GitHub Pages #38184053395 both SUCCESS.
+- Added record-level sign-out/sign-in assertions to `scripts/smoke-full-ui.cjs`: mock Food Library product `qa-outbox-retry` and Diary row `qa-offline-diary` must retain their IDs, calories/name and leave no stale queue items. Commit `e533f206bd467945717f74d13dd528720567052b`.
+- New CI result pending; missing record is a genuine test regression to investigate, **not** proof of production data loss. Daily full account roundtrip still pending.
+- No production user/database changes; `SECURITY-DEFERRED-2026-10-12` still deferred.
+
+
 ### 2026-10-12 — Account logout/login regression passed; Food state diagnostics added
 
 - Full UI smoke [#38183861962](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38183861962) **SUCCESS**, including actual mocked-account sign out/in, Workout Schedule and Weight Goal persistence.
