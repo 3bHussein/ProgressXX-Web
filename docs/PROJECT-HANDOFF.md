@@ -16,6 +16,11 @@
 ## Latest Settings work (2026-10-12)
 
 ## Settings mobile bottom-nav collision fix (2026-10-12)
+## Latest verified Settings mobile test (2026-10-12)
+
+Full UI #38182237311 SUCCESS and Pages #38182236945 SUCCESS after mobile bottom-navigation interception fix. Five Settings shortcuts were exercised by Chromium on 390px width. Next evaluate narrower screens / Food Diary pending reload recovery. No database data edited; security phase remains deferred.
+
+
 
 CI #38182112021 failed: `bottomNav` button intercepts tap on first Settings shortcut. Pages #38182112010 passed. Fixed `index.html` mobile Settings quick nav with sticky positioning, stacking order and bottom space (commit `c0c39431f735351e69eb234b1c3d5939814d2d0e`). Check latest Full UI CI before declaring success. No database writes. Security phase deferred.
 
