@@ -22,6 +22,16 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+
+### 2026-10-12 — 320px mobile and Food Diary queued restart regression
+
+- Confirmed prior Full UI #38182388731 success and Pages #38182388594 success.
+- Extended existing Chromium smoke on production root `index.html`: 320px phone viewport checks of Settings account buttons and Insights language input, restoring normal 390px viewport afterwards (commit `a5d6be017639536e3d1de665d65304fe6c2f4a1c`).
+- Added Food Diary synthetic pending entry, mocked POST 503, reload check for queued + local + in-memory row, and retry exactly one backend write (commit `ec26b6bf509b08cd431e6b16dfb774dc7ecabb5b`). No genuine production Food entries involved.
+- CI outcome for new changes pending. Do not claim these new assertions pass until run completes. No DB schema/production data changes. Security deferred `SECURITY-DEFERRED-2026-10-12`.
+- Next inspect CI and fix any genuine mobile or Food Diary rehydration regression without weakening test.
+
+
 ### 2026-10-12 — Settings mobile tap interception fix verified
 
 - Full UI smoke [#38182237311](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38182237311) **SUCCESS**, including the 390px Chromium click/scroll test for all five Settings shortcuts.
