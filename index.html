@@ -9513,7 +9513,30 @@ window.__legacyBoot=init;
   if(!ready||uploading||!navigator.onLine||revision===savedRevision)return;
   uploading=true;const writing=revision;tell('↻ Syncing to Supabase…');
   try{
-   // Single-account snapshot; originals remain byte-exact strings (including raw performance).
+   // Check the latest server tombstones immediately before writing.
+   // Never allow an older open tab to resurrect a workout deleted elsewhere.
+   const latestRows=await cloud('user_app_snapshots?select=payload&user_id=eq.'+encodeURIComponent(account)+'&limit=1');
+   if(!Array.isArray(latestRows))throw Error('Cannot verify remote workout deletions');
+   const latest=latestRows[0]?.payload||{};
+   const asList=value=>{try{const v=JSON.parse(value||'[]');return Array.isArray(v)?v:[]}catch{return []}};
+   const tombstoneKey='progressx-workout-deleted-ids-v1';
+   const remoteDeleted=asList(latest[tombstoneKey]).map(String);
+   const localDeleted=asList(values[tombstoneKey]).map(String);
+   const allDeleted=new Set([...remoteDeleted,...localDeleted]);
+   if(allDeleted.size){
+    const nextDeleted=JSON.stringify([...allDeleted]);
+    if(values[tombstoneKey]!==nextDeleted)nodeStorage.setItem(tombstoneKey,nextDeleted);
+    for(const key of ['progressx-data-v19','progressx-workout-sync-queue-v1']){
+     if(!Object.prototype.hasOwnProperty.call(values,key))continue;
+     const list=asList(values[key]);
+     const filtered=list.filter(x=>key==='progressx-data-v19'
+      ?!allDeleted.has(String(x?.id||''))
+      :x?.op==='delete'||(!allDeleted.has(String(x?.localId||''))&&!allDeleted.has(String(x?.payload?.id||''))));
+     if(filtered.length!==list.length)nodeStorage.setItem(key,JSON.stringify(filtered));
+    }
+   }
+   // This preflight reduces stale writes; concurrent server writes still require
+   // an atomic revision check before a complete cross-device guarantee.
    await cloud('user_app_snapshots?on_conflict=user_id','POST',{user_id:account,payload:{...values},updated_at:new Date().toISOString()});
    await mirrorWorkoutScheduleToTable({...values});
    savedRevision=writing;if(revision===writing)clearPending();tell('✓ Synced to Supabase · '+new Date().toLocaleTimeString());
