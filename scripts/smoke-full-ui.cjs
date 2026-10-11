@@ -15,7 +15,7 @@ const {chromium}=require('playwright');
   await route.fulfill({status:200,contentType:'application/json',body:route.request().method()==='GET'?JSON.stringify(Object.keys(savedCloudPayload).length?[{payload:savedCloudPayload}]:[]):'[{}]'});
  });
  await page.route('https://unpkg.com/**',route=>route.abort());
- await page.goto('http://127.0.0.1:8765/full-app.html',{waitUntil:'domcontentloaded'});
+ await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});
  await page.fill('#pxEmail','qa@example.test');
  await page.fill('#pxPassword','demo-password');
  await page.click('#pxSignin');
