@@ -22,6 +22,15 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Settings quick navigation after mobile CI success
+
+- Confirmed Full UI run #38181679627 SUCCESS and Pages deploy #38181678866 SUCCESS for the prior mobile Settings/Insights build.
+- Added touch-friendly Settings shortcuts to Account, Backup, Sync, Preferences and Schedule in production `index.html` (commit `948600c920bcc7975dc550d9e2140cb5b4737305`); links scroll to existing functional panels without changing stored values.
+- Extended `tests/mobile-settings-insights-regression.cjs` to assert jump targets and styling (commit `45fa87f6b7d8e029cfce698d99fc9fd1c9843e77`). Fresh CI and Pages outcome not yet confirmed.
+- No Supabase or user-data changes. Security checkpoint `SECURITY-DEFERRED-2026-10-12` remains paused.
+- Next: inspect Actions for new commits and evaluate mobile Settings shortcut usability.
+
+
 ### 2026-10-12 — Mobile viewport regression for Settings and Insights
 
 - Previous full UI test #38181404446 SUCCESS, Pages deployment #38181404262 SUCCESS.
