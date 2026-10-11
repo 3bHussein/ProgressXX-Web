@@ -13,6 +13,10 @@ const {chromium}=require('playwright');
  await page.route('**/rest/v1/**',async route=>{
   const req=route.request(),isPost=req.method()==='POST',product=req.url().includes('/food_products');
   if(req.url().includes('/food_entries')&&req.method()==='GET'){
+   if(req.url().includes('select=id%2Cclient_id')||req.url().includes('select=id,client_id')){
+    const record={id:'dddddddd-dddd-4ddd-8ddd-dddddddddddd',client_id:'pxlegacy:cloud-qa-food',logged_at:'2026-10-11T10:53:00+00:00',food_name:'[Snack] Cloud QA Oats',calories:389,protein_g:16.9,carbs_g:66.3,fat_g:6.9};
+    await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([record])});return;
+   }
    const rows=foodEntryWrites.length?[{id:'cccccccc-cccc-4ccc-8ccc-cccccccccccc',...foodEntryWrites.at(-1)}]:[];
    await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(rows)});return;
   }
@@ -35,6 +39,9 @@ const {chromium}=require('playwright');
  await page.fill('#pxPassword','demo-password');
  await page.click('#pxSignin');
  await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,{timeout:15000});
+ await page.waitForFunction(()=>document.querySelector('#foodDiaryList')?.textContent.includes('Cloud QA Oats'),null,{timeout:12000});
+ const readback=await page.evaluate(()=>({rows:JSON.parse(PXStore.getItem('progressx-food-log')||'[]'),shown:document.querySelector('#foodDiaryList')?.textContent}));
+ if(!readback.rows.some(x=>x.id==='cloud-qa-food'&&x.date==='2026-10-11'&&x.time==='13:53'))throw Error('Cloud Food Diary row missing after load or timezone conversion wrong');
  if(errors.length)throw Error('Browser errors: '+errors.slice(0,5).join(' ; '));
  for(const id of ['home','log','analytics','nutrition','daily','calculators','settings','intelligence']){
   if(await page.locator('#'+id).count()!==1)throw Error('Missing original section '+id);
