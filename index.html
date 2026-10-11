@@ -55,7 +55,7 @@ body:has(#signedOut:not(.hidden)) main{display:grid;place-items:center}body:has(
 .scheduleDay small{display:block;color:#9cb4cd;padding-top:6px}
 #dashboard [id$="Section"]{scroll-margin-top:95px}
 @media(max-width:560px){.scheduleGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.scheduleDay{padding:9px}.scheduleDay button{font-size:12px}.appNav{box-shadow:0 8px 22px #0005}}
-.todayHero{background:linear-gradient(125deg,#382b68,#163f50);border:1px solid #7568b4;border-radius:20px;padding:22px;margin:14px 0 20px}.todayHero h2{margin:7px 0;font-size:clamp(22px,3vw,30px)}.todayHero p{margin:7px 0}.todayHero button{background:#fff;color:#1a2541;margin-top:12px}.todayEyebrow{letter-spacing:1.5px;text-transform:uppercase;font-size:11px;font-weight:800;color:#c4f5ed}.historyTools{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:12px 0}.historyTools input{max-width:320px}.historyMeta{font-size:12px;color:#9bb1cb}.historyPager{display:flex;align-items:center;gap:12px;margin:10px 0}.historyPager button{padding:9px 16px;background:#293a56;color:#fff}@media(max-width:560px){.todayHero{padding:17px}.historyTools input{max-width:100%}}</style></head><body><main><section class="panel">
+.todayHero{background:linear-gradient(125deg,#382b68,#163f50);border:1px solid #7568b4;border-radius:20px;padding:22px;margin:14px 0 20px}.todayHero h2{margin:7px 0;font-size:clamp(22px,3vw,30px)}.todayHero p{margin:7px 0}.todayHero button{background:#fff;color:#1a2541;margin-top:12px}.todayEyebrow{letter-spacing:1.5px;text-transform:uppercase;font-size:11px;font-weight:800;color:#c4f5ed}.historyTools{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:12px 0}.historyTools input{max-width:320px}.historyMeta{font-size:12px;color:#9bb1cb}.historyPager{display:flex;align-items:center;gap:12px;margin:10px 0}.historyPager button{padding:9px 16px;background:#293a56;color:#fff}@media(max-width:560px){.todayHero{padding:17px}.historyTools input{max-width:100%}}.livePanel{border:1px solid #6d5cb5;border-radius:19px;background:linear-gradient(140deg,#231c41,#152d39);padding:18px;margin:16px 0}.livePanel h3{margin:4px 0}.liveActions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.liveActions button{background:#364667;color:#fff;padding:12px}.liveActions .finish{background:#166f5d}.liveActions button:disabled{opacity:.4}.liveFieldGrid{display:grid;grid-template-columns:1.4fr .6fr .7fr;gap:8px}.livePanel .liveNote{color:#c8d7ec;font-size:13px}.liveSets li{padding:6px 0;border-bottom:1px solid #45516e;font-size:13px}@media(max-width:540px){.liveFieldGrid{grid-template-columns:1fr 1fr}.liveFieldGrid #liveExercise{grid-column:1/-1}.liveActions button{flex:1 1 auto}}</style></head><body><main><section class="panel">
 <div class="brand">Progress<span style="color:#ab8afe">XX</span></div>
 <p class="small">COMMERCIAL ACCOUNT PREVIEW · Separate from your existing personal app</p>
 <div id="signedOut"><div class="tabs"><button id="tabSignIn" class="active" type="button">Sign in</button><button id="tabSignUp" type="button">Create account</button></div>
@@ -68,7 +68,7 @@ body:has(#signedOut:not(.hidden)) main{display:grid;place-items:center}body:has(
 <div id="signedIn" class="hidden"><h1>Welcome to your fitness hub</h1><p>Account: <strong id="who"></strong></p><p>Your workouts, nutrition and progress are stored privately in Supabase. Legacy import and paid subscriptions are not yet enabled.</p><nav class="appNav" aria-label="App sections"><button type="button" class="active" id="goOverview">🏠 Overview</button><button type="button" id="goTraining">🏋️ Training</button><button type="button" id="goFood">🥗 Food</button></nav><div id="dashboard" class="dashboard" data-view="overview">
 <section id="overviewSection"><div class="todayHero" id="todayPlan"><div class="todayEyebrow">YOUR DAILY PLAN</div><h2 id="todayTitle">Checking your schedule…</h2><p id="todaySummary">Your plan is stored privately in Supabase.</p><button type="button" id="todayStart">Start today’s workout →</button></div><h2>Your progress</h2><p class="viewhint">Private Supabase records for this account. Your old personal data has not been imported.</p>
 <div class="dashgrid"><div class="stat"><span>Workouts logged</span><b id="workoutCount">—</b></div><div class="stat"><span>Latest weight</span><b id="latestWeight">—</b></div></div></section>
-<div class="dashboard" id="trainingSection"><h2>Workout Programs</h2><p class="viewhint">Browse ready-made training plans. Training is adjustable; choose a level appropriate for you. Home plans support fat-loss goals alongside nutrition and daily activity.</p><div class="sectionbar"><button type="button" id="filterHome" class="selected">🏠 Home</button><button type="button" id="filterGym">🏋️ Gym Splits</button></div><div id="programList" aria-live="polite">Loading programs…</div><div id="programDetails"></div></div><section id="scheduleSection"><h2>📅 Weekly Workout Schedule</h2><p class="viewhint">Your personal weekly plan synced to Supabase. Leave a day blank for rest.</p><div id="scheduleGrid" class="scheduleGrid"></div><p id="scheduleStatus" class="viewhint" role="status"></p></section><section id="workoutLogSection"><h3>Log a workout</h3><form id="workoutForm"><label for="workoutNotes">Workout name / notes</label><input id="workoutNotes" maxlength="300" required placeholder="e.g. Full body A"><button class="primary" type="submit">Save workout</button></form></section>
+<div class="dashboard" id="trainingSection"><h2>Workout Programs</h2><p class="viewhint">Browse ready-made training plans. Training is adjustable; choose a level appropriate for you. Home plans support fat-loss goals alongside nutrition and daily activity.</p><div class="sectionbar"><button type="button" id="filterHome" class="selected">🏠 Home</button><button type="button" id="filterGym">🏋️ Gym Splits</button></div><div id="programList" aria-live="polite">Loading programs…</div><div id="programDetails"></div></div><section id="scheduleSection"><h2>📅 Weekly Workout Schedule</h2><p class="viewhint">Your personal weekly plan synced to Supabase. Leave a day blank for rest.</p><div id="scheduleGrid" class="scheduleGrid"></div><p id="scheduleStatus" class="viewhint" role="status"></p></section><section id="workoutLogSection"><div id="liveWorkout" class="livePanel"><div class="todayEyebrow">LIVE WORKOUT · CLOUD SYNC</div><h3 id="liveTitle">No active session</h3><p id="liveInfo" class="liveNote">Start a workout to log individual sets, pause, resume and finish.</p><label for="liveWorkoutName">Session name</label><input id="liveWorkoutName" maxlength="120" placeholder="e.g. Push Day"><div class="liveActions"><button type="button" id="liveStart">▶ Start session</button><button type="button" id="livePause">⏸ Pause</button><button type="button" id="liveFinish" class="finish">✓ Finish workout</button></div><div id="liveEntry"><div class="liveFieldGrid"><input id="liveExercise" maxlength="120" placeholder="Exercise name" aria-label="Exercise"><input id="liveReps" type="number" min="1" max="1000" step="1" placeholder="Reps" aria-label="Reps"><input id="liveWeight" type="number" min="0" step=".5" placeholder="kg" aria-label="Weight kg"></div><button type="button" class="primary" id="liveSaveSet">＋ Save set</button></div><ul id="liveSetList" class="liveSets"></ul><p id="liveStatus" class="liveNote" role="status"></p></div><h3>Quick workout log</h3><form id="workoutForm"><label for="workoutNotes">Workout name / notes</label><input id="workoutNotes" maxlength="300" required placeholder="e.g. Full body A"><button class="primary" type="submit">Save workout</button></form></section>
 <section id="weightSection"><h3>Weight check-in</h3><form id="weightForm"><label for="weightKg">Weight in kilograms</label><div class="fieldrow"><input id="weightKg" type="number" required step="0.1" min="20" max="500" placeholder="kg"><button class="primary" type="submit">Save</button></div></form></section>
 <section class="dashboard" id="legacyInsights"><h2>ProgressXX Insights</h2><p class="viewhint">Personal Records &amp; Weekly Review — rebuilt from your private Supabase logs. No personal Google Sheet data imported.</p><div class="insightsGrid"><div class="insight"><small>Sessions · last 7 days</small><strong id="weeklySessions">—</strong></div><div class="insight"><small>Sets · last 7 days</small><strong id="weeklySets">—</strong></div><div class="insight"><small>Training volume · 7 days</small><strong id="weeklyVolume">—</strong></div><div class="insight"><small>Exercises tracked</small><strong id="exerciseCount">—</strong></div></div><h3>Personal Records (max weight)</h3><ul class="prList" id="personalRecords"><li>Loading your records…</li></ul><p class="insightWarning">PRs are the highest logged weight per exercise, not estimated one-rep maximum. Only the most recent 5000 sets are included in this preview.</p><button id="refreshInsights" type="button" class="textlink">Refresh insights</button></section><section id="foodTracker" class="dashboard">
 <h2>🥗 Food Tracker</h2><p class="viewhint">Private nutrition diary · Supabase sync. Nutrition values are estimates you enter, not verified database facts.</p>
@@ -98,7 +98,7 @@ function notice(message,error=false){el('notice').textContent=message;el('notice
 function render(){const logged=!!session?.access_token&&!!session?.user;el('signedIn').classList.toggle('hidden',!logged);el('signedOut').classList.toggle('hidden',logged);el('who').textContent=logged?(session.user.email||'Account'):''}
 function setMode(next){mode=next;notice('');el('authForm').reset();el('tabSignIn').classList.toggle('active',mode==='signin');el('tabSignUp').classList.toggle('active',mode==='signup');el('heading').textContent=mode==='signin'?'Welcome back':mode==='signup'?'Create your account':'Reset your password';el('description').textContent=mode==='signin'?'Sign in to your secure fitness account.':mode==='signup'?'Create a free account to get started.':'We will send a password reset link if your email is registered.';el('passwordRow').classList.toggle('hidden',mode==='reset');el('password').required=mode!=='reset';el('password').autocomplete=mode==='signup'?'new-password':'current-password';el('submit').textContent=mode==='signin'?'Sign in':mode==='signup'?'Create account':'Send reset link';el('forgot').classList.toggle('hidden',mode!=='signin');el('back').classList.toggle('hidden',mode!=='reset')}
 async function api(path,options={}){const headers={'apikey':PUBLIC_KEY,'Content-Type':'application/json',...options.headers};let response;try{response=await fetch(URL_BASE+'/auth/v1/'+path,{...options,headers})}catch{throw Error('Network unavailable. Check your connection.')}const data=await response.json().catch(()=>({}));if(!response.ok)throw Error(data.msg||data.error_description||data.message||data.error||'Authentication request failed.');return data}
-function save(value){session=value;try{if(session)sessionStorage.setItem(sessionKey,JSON.stringify(session));else sessionStorage.removeItem(sessionKey)}catch{}render();if(session?.user){loadDashboard();loadPrograms();loadInsights();loadFood();loadSavedMeals();loadSchedule()}}
+function save(value){session=value;try{if(session)sessionStorage.setItem(sessionKey,JSON.stringify(session));else sessionStorage.removeItem(sessionKey)}catch{}render();if(session?.user){loadDashboard();loadPrograms();loadInsights();loadFood();loadSavedMeals();loadSchedule();restoreLive()}}
 async function refresh(){if(!session?.refresh_token)return;const data=await api('token?grant_type=refresh_token',{method:'POST',body:JSON.stringify({refresh_token:session.refresh_token})});save(data)}
 async function init(){try{session=JSON.parse(sessionStorage.getItem(sessionKey)||'null')}catch{session=null}if(session?.refresh_token){try{await refresh()}catch{save(null)}}render();if(session?.user){loadDashboard();loadPrograms();loadInsights()}}
 el('tabSignIn').addEventListener('click',()=>setMode('signin'));el('tabSignUp').addEventListener('click',()=>setMode('signup'));el('forgot').addEventListener('click',()=>setMode('reset'));el('back').addEventListener('click',()=>setMode('signin'));
@@ -113,7 +113,7 @@ async function db(table,method='GET',body=null,query=''){
  let response;
  try{response=await fetch(URL_BASE+'/rest/v1/'+table+query,{method,headers,body:body?JSON.stringify(body):undefined})}
  catch{throw Error('Cannot contact database. Check connection.')}
- if(response.status===401){await refresh();return db(table,method,body,query)}
+ if(response.status===401)throw Error('Session expired. Please sign out and sign in again.');
  if(!response.ok){const payload=await response.json().catch(()=>({}));throw Error(payload.message||'Database request failed');}
  if(response.status===204)return null;
  const text=await response.text();return text?JSON.parse(text):null;
@@ -254,7 +254,7 @@ async function viewProgram(program){
  row.append(reps,weight,btn,feedback);li.append(name,muscle,tip,history,row,timer);ul.append(li);
 }
    section.append(ul);
-   const start=document.createElement('button');start.type='button';start.textContent='Log this day';start.addEventListener('click',()=>{el('workoutNotes').value=program.title+' — '+d.title;el('workoutNotes').scrollIntoView({behavior:'smooth',block:'center'});el('workoutNotes').focus()});section.append(start);wrapper.append(section);
+   const start=document.createElement('button');start.type='button';start.textContent='Log this day';start.addEventListener('click',()=>{el('workoutNotes').value=program.title+' — '+d.title;el('liveWorkout').scrollIntoView({behavior:'smooth',block:'center'});el('workoutNotes').focus()});section.append(start);wrapper.append(section);
   }
   area.replaceChildren(wrapper);
  }catch(err){area.textContent='Unable to open program: '+err.message}
@@ -387,10 +387,80 @@ function updateTodayPlan(entries){
 el('todayStart').addEventListener('click',()=>{
  selectView('training');
  if(todayWorkoutTitle){
-  el('workoutNotes').value=todayWorkoutTitle;
+  el('liveWorkoutName').value=todayWorkoutTitle;
   el('workoutNotes').scrollIntoView({behavior:'smooth',block:'center'});
-  el('workoutNotes').focus();
+  el('liveWorkoutName').focus();
  }else{el('scheduleSection').scrollIntoView({behavior:'smooth',block:'center'})}
+});
+
+
+const LIVE_KEY='pxx_commercial_live_v1';
+let liveState=null,liveSaving=false,liveTick=null;
+function liveStorageKey(){return LIVE_KEY+':'+(session?.user?.id||'signed-out')}
+function storeLive(){try{if(liveState)localStorage.setItem(liveStorageKey(),JSON.stringify(liveState));else localStorage.removeItem(liveStorageKey())}catch{}}
+function resetLive(){if(liveTick){clearInterval(liveTick);liveTick=null}liveState=null;renderLive()}
+function restoreLive(){resetLive();try{const v=JSON.parse(localStorage.getItem(liveStorageKey())||'null');if(v&&v.owner===session?.user?.id&&v.sessionId&&['running','paused'].includes(v.status))liveState=v}catch{}renderLive();if(liveState)refreshLiveSets()}
+function renderLive(){
+ const on=!!liveState,paused=on&&liveState.status==='paused';
+ el('liveTitle').textContent=on?liveState.name:'No active session';
+ el('liveInfo').textContent=on?(paused?'Paused':'In progress')+' · '+new Date(liveState.startedAt).toLocaleString():'Start a workout to log individual sets.';
+ el('liveStart').textContent=on?(paused?'▶ Resume':'▶ Session active'):'▶ Start session';
+ el('liveStart').disabled=on&&!paused;
+ el('livePause').disabled=!on||paused;
+ el('liveFinish').disabled=!on;
+ el('liveSaveSet').disabled=!on||paused;
+ el('liveEntry').hidden=!on||paused;
+ el('liveWorkoutName').disabled=on;
+ if(on)el('liveWorkoutName').value=liveState.name;
+}
+async function refreshLiveSets(){
+ if(!liveState)return;
+ const id=liveState.sessionId;
+ try{
+ const sets=await db('workout_sets','GET',null,'?select=exercise_name,reps,weight_kg,performed_at&session_id=eq.'+encodeURIComponent(id)+'&order=performed_at.desc&limit=150');
+ if(!liveState||liveState.sessionId!==id)return;
+ const list=el('liveSetList');list.replaceChildren();
+ for(const x of sets){const li=document.createElement('li');li.textContent=x.exercise_name+' · '+x.reps+' reps × '+(x.weight_kg??0)+' kg';list.append(li)}
+ el('liveStatus').textContent=sets.length+' saved sets';
+ }catch(e){el('liveStatus').textContent='Could not load sets: '+e.message}
+}
+async function startLive(name){
+ if(liveState)throw Error('Finish your current workout first.');
+ const title=String(name||'').trim()||'Workout';
+ const now=new Date().toISOString();
+ const record=await db('workout_sessions','POST',{user_id:session.user.id,notes:title,started_at:now});
+ if(!record?.[0]?.id)throw Error('Could not create workout.');
+ liveState={owner:session.user.id,sessionId:record[0].id,name:title,startedAt:now,status:'running'};
+ storeLive();renderLive();await refreshLiveSets();await loadDashboard();
+}
+el('liveStart').addEventListener('click',async()=>{
+ const btn=el('liveStart');btn.disabled=true;
+ try{if(liveState){liveState.status='running';storeLive();renderLive()}else await startLive(el('liveWorkoutName').value);el('liveStatus').textContent='Session ready.'}
+ catch(e){el('liveStatus').textContent=e.message}finally{renderLive()}
+});
+el('livePause').addEventListener('click',()=>{
+ if(!liveState)return;liveState.status='paused';storeLive();renderLive();el('liveStatus').textContent='Paused on this device. Resume to continue.'
+});
+el('liveSaveSet').addEventListener('click',async()=>{
+ if(!liveState||liveState.status!=='running'||liveSaving)return;
+ const exercise=el('liveExercise').value.trim(),reps=Number(el('liveReps').value),weight=el('liveWeight').value===''?0:Number(el('liveWeight').value);
+ if(!exercise||!Number.isInteger(reps)||reps<1||reps>1000||!Number.isFinite(weight)||weight<0||weight>10000){el('liveStatus').textContent='Enter an exercise, valid reps and weight.';return}
+ liveSaving=true;el('liveSaveSet').disabled=true;
+ try{
+  await db('workout_sets','POST',{user_id:session.user.id,session_id:liveState.sessionId,exercise_name:exercise,reps,weight_kg:weight,performed_at:new Date().toISOString()});
+  el('liveReps').value='';await refreshLiveSets();await loadInsights();
+ }catch(e){el('liveStatus').textContent=e.message}finally{liveSaving=false;renderLive()}
+});
+el('liveFinish').addEventListener('click',async()=>{
+ if(!liveState||liveSaving||!confirm('Finish this workout and save your session?'))return;
+ const btn=el('liveFinish');btn.disabled=true;
+ try{
+  await db('workout_sessions','PATCH',{finished_at:new Date().toISOString()},'?id=eq.'+encodeURIComponent(liveState.sessionId));
+  storeLive();try{localStorage.removeItem(liveStorageKey())}catch{}
+  resetLive();el('liveSetList').replaceChildren();el('liveWorkoutName').value='';
+  el('liveStatus').textContent='Workout completed and synced ✓';
+  await Promise.all([loadDashboard(),loadInsights()]);
+ }catch(e){el('liveStatus').textContent='Finish failed: '+e.message}finally{renderLive()}
 });
 
 init();
