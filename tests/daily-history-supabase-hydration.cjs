@@ -30,3 +30,22 @@ vm.runInNewContext(s.slice(start,end),ctx);
  assert.match(s.slice(s.indexOf('async function activate(next)'),s.indexOf("document.getElementById('pxLogin')")),/await window\.__pxLoadDailyHistory\(\)/);
  console.log('PASS: Daily history imported from owner-scoped Supabase, newer local state protected, idempotent');
 })().catch(e=>{console.error(e);process.exitCode=1});
+
+const remindersStart=s.indexOf(' window.__pxLoadReminderArchive=async()=>{');
+const remindersEnd=s.indexOf(' window.__pxLoadDailyHistory=async()=>{',remindersStart);
+assert.ok(remindersStart>0&&remindersEnd>remindersStart,'Reminder archive loader missing');
+let archiveCalls=0;
+const store={};
+const reminderCtx={
+ window:{},ready:true,account:'account',JSON,Array,Object,String,Error,
+ nodeStorage:{getItem:k=>store[k]??null,setItem:(k,v)=>{store[k]=v}},
+ cloud:async url=>{archiveCalls++;assert.match(url,/progressxx_reminder_archive\?select/);return [{reminder_id:'multivitamin',name:'Multivitamin',amount:'1 serving',reminder_time:'12:24',enabled:true}]}
+};
+vm.runInNewContext(s.slice(remindersStart,remindersEnd),reminderCtx);
+(async()=>{
+ assert.equal(await reminderCtx.window.__pxLoadReminderArchive(),1);
+ assert.equal(JSON.parse(store['progressx-reminders'])[0].time,'12:24');
+ assert.equal(await reminderCtx.window.__pxLoadReminderArchive(),0);
+ assert.equal(archiveCalls,1,'Existing reminder edits must not be overwritten');
+ console.log('PASS: archived reminders hydrate only when account has no saved reminder list');
+})().catch(e=>{console.error(e);process.exitCode=1});
