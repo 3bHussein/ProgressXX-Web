@@ -14,7 +14,32 @@ input{width:100%;border:1px solid #394b66;border-radius:12px;padding:14px;backgr
 .hidden{display:none!important}.small{font-size:12px;color:#91a5bf}strong{overflow-wrap:anywhere}@media(max-width:420px){main{padding:12px}.panel{border-radius:18px;padding:22px}}
 
 .dashboard{margin-top:22px;border-top:1px solid #394b66;padding-top:18px}.dashgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{background:#0c1626;border:1px solid #30405a;border-radius:14px;padding:14px}.stat b{display:block;font-size:25px;margin-top:7px}.stat span{font-size:12px;color:#9eb1ca}.fieldrow{display:flex;gap:8px;align-items:end}.fieldrow input{min-width:0;flex:1}.fieldrow button{margin:0;white-space:nowrap}.history{margin:12px 0;padding:0;list-style:none}.history li{padding:10px 0;border-bottom:1px solid #2c3750;font-size:14px}.viewhint{font-size:13px}
-.programCard{padding:13px;border:1px solid #354560;border-radius:14px;background:#0a1525;margin:10px 0}.programCard h4{margin:0 0 5px}.programCard p{margin:4px 0 10px}.programCard button{padding:10px;background:#352a58;color:#fff}.programDay{margin:13px 0;border-top:1px solid #354560;padding-top:12px}.programDay li{line-height:1.6}.pill{display:inline-block;background:#243653;color:#cae5ff;border-radius:20px;padding:4px 9px;font-size:11px}.sectionbar{display:flex;gap:8px;margin:12px 0}.sectionbar button{flex:1;background:#25354b;color:#fff;padding:10px}.sectionbar button.selected{background:#6548bd}.setEntry{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 15px;align-items:center}.setEntry input{width:84px;flex:1;min-width:70px}.setEntry button{padding:11px;background:#6344bf;color:#fff}.setEntry .setFeedback{width:100%;font-size:12px;color:#87e6bb}.exerciseLabel{font-weight:700}.exerciseHelp{font-size:12px;color:#9fb0c7}.timerText{font-size:13px;color:#c8b7ff;margin:8px 0}.programCard button:disabled{opacity:.45}.langSwitch{display:flex;gap:8px;margin:10px 0}.langSwitch button{background:#24354c;color:white;padding:9px 13px}.langSwitch button.selected{background:#6951bb}.muscleTag{display:inline-block;font-size:12px;border-radius:12px;background:#193e42;color:#a8f5e4;padding:4px 9px;margin:6px 0}.setHistory{font-size:12px;color:#bad0e9;padding:6px 0}.exerciseHelp[dir=rtl]{text-align:right;line-height:1.7}.insightsGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}.insight{border:1px solid #30405a;border-radius:12px;background:#0c1626;padding:12px}.insight strong{font-size:21px;display:block}.insight small{font-size:12px;color:#9eb1ca}.prList{list-style:none;padding:0;margin:12px 0}.prList li{padding:10px 0;border-bottom:1px solid #30405a;font-size:13px}.insightWarning{font-size:12px;color:#9fb0c7}</style></head><body><main><section class="panel">
+.programCard{padding:13px;border:1px solid #354560;border-radius:14px;background:#0a1525;margin:10px 0}.programCard h4{margin:0 0 5px}.programCard p{margin:4px 0 10px}.programCard button{padding:10px;background:#352a58;color:#fff}.programDay{margin:13px 0;border-top:1px solid #354560;padding-top:12px}.programDay li{line-height:1.6}.pill{display:inline-block;background:#243653;color:#cae5ff;border-radius:20px;padding:4px 9px;font-size:11px}.sectionbar{display:flex;gap:8px;margin:12px 0}.sectionbar button{flex:1;background:#25354b;color:#fff;padding:10px}.sectionbar button.selected{background:#6548bd}.setEntry{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 15px;align-items:center}.setEntry input{width:84px;flex:1;min-width:70px}.setEntry button{padding:11px;background:#6344bf;color:#fff}.setEntry .setFeedback{width:100%;font-size:12px;color:#87e6bb}.exerciseLabel{font-weight:700}.exerciseHelp{font-size:12px;color:#9fb0c7}.timerText{font-size:13px;color:#c8b7ff;margin:8px 0}.programCard button:disabled{opacity:.45}.langSwitch{display:flex;gap:8px;margin:10px 0}.langSwitch button{background:#24354c;color:white;padding:9px 13px}.langSwitch button.selected{background:#6951bb}.muscleTag{display:inline-block;font-size:12px;border-radius:12px;background:#193e42;color:#a8f5e4;padding:4px 9px;margin:6px 0}.setHistory{font-size:12px;color:#bad0e9;padding:6px 0}.exerciseHelp[dir=rtl]{text-align:right;line-height:1.7}.insightsGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}.insight{border:1px solid #30405a;border-radius:12px;background:#0c1626;padding:12px}.insight strong{font-size:21px;display:block}.insight small{font-size:12px;color:#9eb1ca}.prList{list-style:none;padding:0;margin:12px 0}.prList li{padding:10px 0;border-bottom:1px solid #30405a;font-size:13px}.insightWarning{font-size:12px;color:#9fb0c7}
+/* Commercial design refresh: wider desktop workspace, mobile-first navigation and cards */
+:root{--accent:#9c82ff;--mint:#4ce0c3;--stroke:#29384f}
+main{display:block;padding:32px max(18px,calc((100vw - 1060px)/2));}
+.panel{width:100%;max-width:1060px;margin:auto;border-radius:26px;background:linear-gradient(145deg,#152136 0%,#0e1727 80%);padding:clamp(18px,3vw,36px)}
+body:has(#signedOut:not(.hidden)) main{display:grid;place-items:center}body:has(#signedOut:not(.hidden)) .panel{max-width:480px}
+#signedIn>h1{font-size:clamp(27px,4vw,40px);margin:8px 0}
+#signedIn>p{max-width:690px}
+.appNav{display:flex;gap:8px;overflow-x:auto;padding:10px 0 14px;position:sticky;top:0;z-index:5;background:#111c2df2;backdrop-filter:blur(12px);border-bottom:1px solid var(--stroke);scrollbar-width:none}
+.appNav button{min-width:122px;flex:1;background:#23334b;color:#d8e5ff;padding:12px;border-radius:12px}
+.appNav button.active{background:linear-gradient(120deg,#7853db,#4c9eae);color:white}
+#dashboard{border:0;margin-top:8px}
+#dashboard>h2,#dashboard h2{font-size:clamp(20px,2vw,26px)}
+#dashboard>.dashgrid,#dashboard .insightsGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+#programList{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.programCard,.stat,.insight{background:linear-gradient(145deg,#19263b,#0d192b);box-shadow:0 5px 20px #0002}
+.programCard{border-radius:17px;padding:18px;margin:0}
+.foodFields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.foodFields input{min-width:0}
+.foodEntry{padding:12px 0;border-bottom:1px solid #344359;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.foodEntry small{color:#a9bbcf}
+.foodEntry button{padding:8px 11px;background:#25364e;color:#dedafc}
+.foodStats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.foodStats b{font-size:21px}
+#foodTracker{scroll-margin-top:86px}
+@media(min-width:720px){#dashboard>.dashgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.foodFields{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:560px){main{padding:0}.panel{border:0;border-radius:0;min-height:100dvh;padding:17px 14px 90px}.appNav{position:sticky;top:0;margin:0 -14px;padding:10px 14px}.appNav button{font-size:13px;padding:12px 9px;min-width:98px}.foodFields{grid-template-columns:repeat(2,minmax(0,1fr))}.foodStats{grid-template-columns:repeat(2,minmax(0,1fr))}.setEntry input{flex:1 1 95px}.dashgrid{gap:8px}}
+</style></head><body><main><section class="panel">
 <div class="brand">Progress<span style="color:#ab8afe">XX</span></div>
 <p class="small">COMMERCIAL ACCOUNT PREVIEW · Separate from your existing personal app</p>
 <div id="signedOut"><div class="tabs"><button id="tabSignIn" class="active" type="button">Sign in</button><button id="tabSignUp" type="button">Create account</button></div>
@@ -24,12 +49,23 @@ input{width:100%;border:1px solid #394b66;border-radius:12px;padding:14px;backgr
 <button class="primary" id="submit" type="submit">Sign in</button></form>
 <div class="bar"><button class="textlink" type="button" id="forgot">Forgot password?</button><button class="textlink hidden" id="back" type="button">Back to sign in</button></div>
 </div>
-<div id="signedIn" class="hidden"><h1>You're signed in</h1><p>Account: <strong id="who"></strong></p><p>Your account is authenticated. Workout data migration and commercial subscriptions are not enabled in this preview.</p><div id="dashboard" class="dashboard">
+<div id="signedIn" class="hidden"><h1>You're signed in</h1><p>Account: <strong id="who"></strong></p><p>Your account is authenticated. Workout data migration and commercial subscriptions are not enabled in this preview.</p><nav class="appNav" aria-label="App sections"><button type="button" class="active" id="goOverview">🏠 Overview</button><button type="button" id="goTraining">🏋️ Training</button><button type="button" id="goFood">🥗 Food</button></nav><div id="dashboard" class="dashboard">
 <h2>Your progress</h2><p class="viewhint">Private Supabase records for this account. Your old personal data has not been imported.</p>
 <div class="dashgrid"><div class="stat"><span>Workouts logged</span><b id="workoutCount">—</b></div><div class="stat"><span>Latest weight</span><b id="latestWeight">—</b></div></div>
-<div class="dashboard"><h2>Workout Programs</h2><p class="viewhint">Browse ready-made training plans. Training is adjustable; choose a level appropriate for you. Home plans support fat-loss goals alongside nutrition and daily activity.</p><div class="sectionbar"><button type="button" id="filterHome" class="selected">🏠 Home</button><button type="button" id="filterGym">🏋️ Gym Splits</button></div><div id="programList" aria-live="polite">Loading programs…</div><div id="programDetails"></div></div><h3>Log a workout</h3><form id="workoutForm"><label for="workoutNotes">Workout name / notes</label><input id="workoutNotes" maxlength="300" required placeholder="e.g. Full body A"><button class="primary" type="submit">Save workout</button></form>
+<div class="dashboard" id="trainingSection"><h2>Workout Programs</h2><p class="viewhint">Browse ready-made training plans. Training is adjustable; choose a level appropriate for you. Home plans support fat-loss goals alongside nutrition and daily activity.</p><div class="sectionbar"><button type="button" id="filterHome" class="selected">🏠 Home</button><button type="button" id="filterGym">🏋️ Gym Splits</button></div><div id="programList" aria-live="polite">Loading programs…</div><div id="programDetails"></div></div><h3>Log a workout</h3><form id="workoutForm"><label for="workoutNotes">Workout name / notes</label><input id="workoutNotes" maxlength="300" required placeholder="e.g. Full body A"><button class="primary" type="submit">Save workout</button></form>
 <h3>Weight check-in</h3><form id="weightForm"><label for="weightKg">Weight in kilograms</label><div class="fieldrow"><input id="weightKg" type="number" required step="0.1" min="20" max="500" placeholder="kg"><button class="primary" type="submit">Save</button></div></form>
-<section class="dashboard" id="legacyInsights"><h2>ProgressXX Insights</h2><p class="viewhint">Personal Records &amp; Weekly Review — rebuilt from your private Supabase logs. No personal Google Sheet data imported.</p><div class="insightsGrid"><div class="insight"><small>Sessions · last 7 days</small><strong id="weeklySessions">—</strong></div><div class="insight"><small>Sets · last 7 days</small><strong id="weeklySets">—</strong></div><div class="insight"><small>Training volume · 7 days</small><strong id="weeklyVolume">—</strong></div><div class="insight"><small>Exercises tracked</small><strong id="exerciseCount">—</strong></div></div><h3>Personal Records (max weight)</h3><ul class="prList" id="personalRecords"><li>Loading your records…</li></ul><p class="insightWarning">PRs are the highest logged weight per exercise, not estimated one-rep maximum. Only the most recent 5000 sets are included in this preview.</p><button id="refreshInsights" type="button" class="textlink">Refresh insights</button></section><h3>Recent workouts</h3><ul id="workoutHistory" class="history"></ul>
+<section class="dashboard" id="legacyInsights"><h2>ProgressXX Insights</h2><p class="viewhint">Personal Records &amp; Weekly Review — rebuilt from your private Supabase logs. No personal Google Sheet data imported.</p><div class="insightsGrid"><div class="insight"><small>Sessions · last 7 days</small><strong id="weeklySessions">—</strong></div><div class="insight"><small>Sets · last 7 days</small><strong id="weeklySets">—</strong></div><div class="insight"><small>Training volume · 7 days</small><strong id="weeklyVolume">—</strong></div><div class="insight"><small>Exercises tracked</small><strong id="exerciseCount">—</strong></div></div><h3>Personal Records (max weight)</h3><ul class="prList" id="personalRecords"><li>Loading your records…</li></ul><p class="insightWarning">PRs are the highest logged weight per exercise, not estimated one-rep maximum. Only the most recent 5000 sets are included in this preview.</p><button id="refreshInsights" type="button" class="textlink">Refresh insights</button></section><section id="foodTracker" class="dashboard">
+<h2>🥗 Food Tracker</h2><p class="viewhint">Private nutrition diary · Supabase sync. Nutrition values are estimates you enter, not verified database facts.</p>
+<form id="foodForm">
+<label for="foodDay">Date</label><input type="date" id="foodDay" required>
+<label for="foodMeal">Meal</label><select id="foodMeal" aria-label="Meal category"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option></select>
+<label for="foodName">Food / meal</label><input id="foodName" required maxlength="120" placeholder="e.g. Chicken and rice">
+<div class="foodFields"><div><label for="foodCalories">kcal</label><input id="foodCalories" type="number" min="0" max="20000" step="1" placeholder="0"></div><div><label for="foodProtein">Protein g</label><input id="foodProtein" type="number" min="0" max="2000" step=".1" placeholder="0"></div><div><label for="foodCarbs">Carbs g</label><input id="foodCarbs" type="number" min="0" max="2000" step=".1" placeholder="0"></div><div><label for="foodFat">Fat g</label><input id="foodFat" type="number" min="0" max="2000" step=".1" placeholder="0"></div></div>
+<button type="submit" class="primary">＋ Add food</button></form>
+<h3>Daily nutrition</h3><div class="foodStats"><div class="stat"><span>Calories</span><b id="totalCalories">0</b></div><div class="stat"><span>Protein g</span><b id="totalProtein">0</b></div><div class="stat"><span>Carbs g</span><b id="totalCarbs">0</b></div><div class="stat"><span>Fat g</span><b id="totalFat">0</b></div></div>
+<h3>Food entries</h3><div id="foodList" aria-live="polite">Loading…</div>
+<h3>⭐ Saved Meals</h3><p class="viewhint">Save a reusable meal, then add it to any selected day.</p><div id="savedMealList" aria-live="polite">Loading…</div>
+</section><h3>Recent workouts</h3><ul id="workoutHistory" class="history"></ul>
 <button id="refreshData" type="button" class="textlink">Refresh dashboard</button>
 </div><button id="signOut" class="primary">Sign out</button></div>
 <div id="notice" class="notice" role="status" aria-live="polite"></div>
@@ -46,7 +82,7 @@ function notice(message,error=false){el('notice').textContent=message;el('notice
 function render(){const logged=!!session?.access_token&&!!session?.user;el('signedIn').classList.toggle('hidden',!logged);el('signedOut').classList.toggle('hidden',logged);el('who').textContent=logged?(session.user.email||'Account'):''}
 function setMode(next){mode=next;notice('');el('authForm').reset();el('tabSignIn').classList.toggle('active',mode==='signin');el('tabSignUp').classList.toggle('active',mode==='signup');el('heading').textContent=mode==='signin'?'Welcome back':mode==='signup'?'Create your account':'Reset your password';el('description').textContent=mode==='signin'?'Sign in to your secure fitness account.':mode==='signup'?'Create a free account to get started.':'We will send a password reset link if your email is registered.';el('passwordRow').classList.toggle('hidden',mode==='reset');el('password').required=mode!=='reset';el('password').autocomplete=mode==='signup'?'new-password':'current-password';el('submit').textContent=mode==='signin'?'Sign in':mode==='signup'?'Create account':'Send reset link';el('forgot').classList.toggle('hidden',mode!=='signin');el('back').classList.toggle('hidden',mode!=='reset')}
 async function api(path,options={}){const headers={'apikey':PUBLIC_KEY,'Content-Type':'application/json',...options.headers};let response;try{response=await fetch(URL_BASE+'/auth/v1/'+path,{...options,headers})}catch{throw Error('Network unavailable. Check your connection.')}const data=await response.json().catch(()=>({}));if(!response.ok)throw Error(data.msg||data.error_description||data.message||data.error||'Authentication request failed.');return data}
-function save(value){session=value;try{if(session)sessionStorage.setItem(sessionKey,JSON.stringify(session));else sessionStorage.removeItem(sessionKey)}catch{}render();if(session?.user){loadDashboard();loadPrograms();loadInsights()}}
+function save(value){session=value;try{if(session)sessionStorage.setItem(sessionKey,JSON.stringify(session));else sessionStorage.removeItem(sessionKey)}catch{}render();if(session?.user){loadDashboard();loadPrograms();loadInsights();loadFood();loadSavedMeals()}}
 async function refresh(){if(!session?.refresh_token)return;const data=await api('token?grant_type=refresh_token',{method:'POST',body:JSON.stringify({refresh_token:session.refresh_token})});save(data)}
 async function init(){try{session=JSON.parse(sessionStorage.getItem(sessionKey)||'null')}catch{session=null}if(session?.refresh_token){try{await refresh()}catch{save(null)}}render();if(session?.user){loadDashboard();loadPrograms();loadInsights()}}
 el('tabSignIn').addEventListener('click',()=>setMode('signin'));el('tabSignUp').addEventListener('click',()=>setMode('signup'));el('forgot').addEventListener('click',()=>setMode('reset'));el('back').addEventListener('click',()=>setMode('signin'));
@@ -238,6 +274,53 @@ async function loadInsights(){
  }catch(err){const list=el('personalRecords');list.textContent='Unable to load insights: '+err.message}
 }
 el('refreshInsights').addEventListener('click',loadInsights);
+
+
+function todayLocal(){const now=new Date();return [now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-')}
+function dayOf(iso){const d=new Date(iso);return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
+function num(id){const v=el(id).value;return v===''?null:Number(v)}
+function foodPayload(){return {food_name:'['+el('foodMeal').value+'] '+el('foodName').value.trim(),calories:num('foodCalories'),protein_g:num('foodProtein'),carbs_g:num('foodCarbs'),fat_g:num('foodFat')}}
+async function loadFood(){
+ if(!session?.user)return;
+ try{
+  const chosen=el('foodDay').value||todayLocal();
+  const items=await db('food_entries','GET',null,'?select=id,food_name,calories,protein_g,carbs_g,fat_g,logged_at&order=logged_at.desc&limit=1500');
+  const rows=items.filter(x=>dayOf(x.logged_at)===chosen),totals=['calories','protein_g','carbs_g','fat_g'];
+  ['totalCalories','totalProtein','totalCarbs','totalFat'].forEach((id,i)=>el(id).textContent=rows.reduce((a,x)=>a+(Number(x[totals[i]])||0),0).toFixed(i===0?0:1));
+  const list=el('foodList');list.replaceChildren();
+  if(!rows.length)list.textContent='No food entries on this day.';
+  for(const entry of rows){
+   const wrapper=document.createElement('div');wrapper.className='foodEntry';
+   const title=document.createElement('div');const b=document.createElement('b');b.textContent=entry.food_name;
+   const detail=document.createElement('small');detail.textContent=' · '+(entry.calories??'—')+' kcal · P '+(entry.protein_g??'—')+' / C '+(entry.carbs_g??'—')+' / F '+(entry.fat_g??'—');
+   title.append(b,detail);const actions=document.createElement('div');
+   const save=document.createElement('button');save.textContent='☆ Save meal';save.onclick=async()=>{save.disabled=true;try{await db('saved_meals','POST',{user_id:session.user.id,title:entry.food_name.replace(/^\[(Breakfast|Lunch|Dinner|Snack)\] /,''),calories:entry.calories,protein_g:entry.protein_g,carbs_g:entry.carbs_g,fat_g:entry.fat_g});notice('Saved meal added.');await loadSavedMeals()}catch(e){notice(e.message,true)}finally{save.disabled=false}};
+   const del=document.createElement('button');del.textContent='Delete';del.onclick=async()=>{if(!confirm('Delete this food entry?'))return;del.disabled=true;try{await db('food_entries','DELETE',null,'?id=eq.'+encodeURIComponent(entry.id));await loadFood()}catch(e){notice(e.message,true)}finally{del.disabled=false}};
+   actions.append(save,del);wrapper.append(title,actions);list.append(wrapper);
+  }
+ }catch(e){el('foodList').textContent='Food diary unavailable: '+e.message}
+}
+async function loadSavedMeals(){
+ if(!session?.user)return;
+ try{
+  const meals=await db('saved_meals','GET',null,'?select=id,title,calories,protein_g,carbs_g,fat_g&order=created_at.desc&limit=100');
+  const list=el('savedMealList');list.replaceChildren();if(!meals.length)list.textContent='No saved meals yet.';
+  for(const meal of meals){
+   const row=document.createElement('div');row.className='foodEntry';const label=document.createElement('span');label.textContent=meal.title+' · '+(meal.calories??'—')+' kcal';
+   const add=document.createElement('button');add.textContent='＋ Add today';add.onclick=async()=>{add.disabled=true;try{await db('food_entries','POST',{user_id:session.user.id,logged_at:new Date(el('foodDay').value+'T12:00:00').toISOString(),food_name:'[Meal] '+meal.title,calories:meal.calories,protein_g:meal.protein_g,carbs_g:meal.carbs_g,fat_g:meal.fat_g});notice('Meal logged.');await loadFood()}catch(e){notice(e.message,true)}finally{add.disabled=false}};
+   row.append(label,add);list.append(row);
+  }
+ }catch(e){el('savedMealList').textContent='Saved meals unavailable: '+e.message}
+}
+el('foodDay').value=todayLocal();el('foodDay').addEventListener('change',loadFood);
+el('foodForm').addEventListener('submit',async e=>{
+ e.preventDefault();const btn=e.submitter;btn.disabled=true;
+ try{const data=foodPayload();await db('food_entries','POST',{...data,user_id:session.user.id,logged_at:new Date(el('foodDay').value+'T12:00:00').toISOString()});el('foodName').value='';notice('Food entry synced ✓');await loadFood()}
+ catch(err){notice(err.message,true)}finally{btn.disabled=false}
+});
+for(const [id,dest] of [['goOverview','dashboard'],['goTraining','trainingSection'],['goFood','foodTracker']]){
+ el(id).addEventListener('click',()=>{document.querySelectorAll('.appNav button').forEach(b=>b.classList.remove('active'));el(id).classList.add('active');el(dest).scrollIntoView({behavior:'smooth',block:'start'})})
+}
 
 init();
 </script></body></html>
