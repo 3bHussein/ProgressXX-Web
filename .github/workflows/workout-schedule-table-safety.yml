@@ -1,0 +1,20 @@
+name: Workout schedule table safety
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'tests/workout-schedule-table-mirror.cjs'
+      - '.github/workflows/workout-schedule-table-safety.yml'
+  workflow_dispatch:
+jobs:
+  schedule-table-contract:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check protected table mirror CRUD behavior
+        run: node tests/workout-schedule-table-mirror.cjs
