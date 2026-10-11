@@ -8,6 +8,11 @@
 
 ## Current verification / follow-up — 2026-10-12
 ## Follow-up — 2026-10-12
+## Latest Food restart diagnosis — 2026-10-12
+
+CI #38180431308 failed at Food offline queue/product state after reload. Pages #38180431218 passed. Added detailed smoke failure diagnostics (commit `1ec489976ec4b145ea770b21515fcb0dbbdc8afa`) and await new CI to determine which state disappears. Not fixed yet. Preserve user data; `SECURITY-DEFERRED-2026-10-12` stays deferred.
+
+
 
 The Food restart-recovery test failed CI #38180320704; Pages #38180320858 succeeded. Test was amended in commit `6e5b9454b2dbc46eb0bbe9784d0a9941b326f9f9` to persist local row and keep simulated 503 until after reload; result is not yet verified. Read newest DEVELOPMENT-LOG and inspect latest CI before further changes. No production data altered.
 
