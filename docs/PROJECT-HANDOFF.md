@@ -18,6 +18,12 @@
 ## Settings mobile bottom-nav collision fix (2026-10-12)
 ## Latest verified Settings mobile test (2026-10-12)
 
+## Current pending test — 320px mobile and Food Diary restart (2026-10-12)
+
+Prior CI #38182388731 and Pages #38182388594 passed. Chromium smoke expanded for 320px Settings/Insights viewport and Food Diary pending row recovery from simulated 503 across reload, commits `a5d6be017639536e3d1de665d65304fe6c2f4a1c` and `ec26b6bf509b08cd431e6b16dfb774dc7ecabb5b`. Inspect latest CI; don't assert success yet. Security audit phase remains deferred; no prod data writes.
+
+
+
 Full UI #38182237311 SUCCESS and Pages #38182236945 SUCCESS after mobile bottom-navigation interception fix. Five Settings shortcuts were exercised by Chromium on 390px width. Next evaluate narrower screens / Food Diary pending reload recovery. No database data edited; security phase remains deferred.
 
 
