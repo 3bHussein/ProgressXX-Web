@@ -23,6 +23,17 @@ This is the **append-only** chronological log of completed work, investigations,
 
 ## Entries (newest first)
 
+### 2026-10-12 — Food outbox survives app restart: regression gate
+
+- Verified full UI smoke #38180217072 SUCCESS for Food transient HTTP 503 retry test.
+- Changed `scripts/smoke-full-ui.cjs` in commit `6a4134bfd113df58c784783e99ee12ab45a525e5`: after a simulated 503 response, reload the app, assert both the pending Food queue item and its local product survive, then retry and assert queue drains and only one cloud write exists.
+- New CI result not yet verified; if it fails, diagnose genuine Food rehydration race before accepting deployment.
+- Separate infrastructure warning: GitHub Pages run #38180217307 failed at Deploy to GitHub Pages though its build succeeded; inspect current/latest deploy before attributing to application code.
+- No production database writes or application code changes. Security checkpoint `SECURITY-DEFERRED-2026-10-12` still deferred.
+- Next: review new CI and deployment; fix any confirmed reload/reconciliation issue safely.
+
+
+
 ### 2026-10-12 — Food transient-server retry regression
 
 - Added a browser smoke test to `scripts/smoke-full-ui.cjs` for an injected HTTP 503 on a queued Food Library POST, verifying the outbox retains the failed operation, retries once after recovery, and produces one cloud record.
