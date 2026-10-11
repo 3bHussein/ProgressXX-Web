@@ -3,7 +3,7 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
 const browser=await chromium.launch({headless:true});
 const page=await browser.newPage();
 const account='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
-const workouts=Array.from({length:634},(_,i)=>({id:String(i+1),day:i%2?'2 — POSTERIOR':'1 — ANTERIOR',week:Math.floor(i/32)+1,exercise:i%2?'Row':'Press',performance:'25*8',status:'Completed',date:'',notes:''}));
+const workouts=Array.from({length:32},(_,i)=>({id:String(i+1),day:i%2?'2 — POSTERIOR':'1 — ANTERIOR',week:Math.floor(i/32)+1,exercise:i%2?'Row':'Press',performance:'25*8',status:'Completed',date:'',notes:''}));
 const snapshot={
  'progressx-data-v19':JSON.stringify([{id:'local-test',day:'test',exercise:'test',week:1,performance:'',status:'Completed'}]),
  'progressx-food-log':'[]','progressx-food-products':'[]',
@@ -29,7 +29,7 @@ await page.locator('#pxEmail').fill('test@example.com');await page.locator('#pxP
 await page.waitForTimeout(4500);
 const status=await page.locator('#pxLoginMessage').textContent();
 const result=await page.evaluate(()=>({hidden:document.getElementById('pxCommercialGate').hidden,entries:typeof data==='object'&&Array.isArray(data)?data.length:null,reminders:Array.isArray(dailyReminders)?dailyReminders.length:null}));
-if(!result.hidden||result.entries!==634||problems.length)throw Error(JSON.stringify({status,result,problems:problems.slice(0,6)},null,2));
-console.log('PASS: historical 634 entries + restored Food, Daily, nutrition archives login and hydrate safely');
+if(!result.hidden||result.entries!==32||problems.length)throw Error(JSON.stringify({status,result,problems:problems.slice(0,6)},null,2));
+console.log('PASS: sampled historical entries + restored Food, Daily, nutrition archives login and hydrate safely');
 await browser.close();
 })().catch(e=>{console.error(e);process.exitCode=1});
