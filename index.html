@@ -7278,7 +7278,7 @@ async function seedOrPullCloudProfile(remoteTemplates){
 }
 
 async function syncNutritionFromSheet(dateOverride=null,silent=false,force=false){
-  if(!$('appScriptUrl')?.value.trim())return false;
+  if(!$('appScriptUrl')?.value.trim())return window.__pxLoadFoodDiary?window.__pxLoadFoodDiary():false;
   const date=dateOverride||selectedNutritionDate();
 
   if(!force && nutritionLastPullDate===String(date) && Date.now()-nutritionLastPullAt<12000){
@@ -9236,6 +9236,37 @@ window.__legacyBoot=init;
   if(!Array.isArray(verified)||!verified[0]?.id)throw Error('Food entry was not found after database write');
   return verified[0];
  };
+ window.__pxLoadFoodDiary=async()=>{
+  if(!ready||!account)throw Error('Sign in to load food diary');
+  const rows=await cloud('food_entries?select=id,client_id,logged_at,food_name,calories,protein_g,carbs_g,fat_g&order=logged_at.desc&limit=1500');
+  if(!Array.isArray(rows))throw Error('Invalid food diary response');
+  const local=Array.isArray(foodLog)?foodLog:[];
+  const map=new Map(local.filter(x=>x?.id).map(x=>[String(x.id),x]));
+  const formatLocal=stamp=>{
+   const d=new Date(stamp);
+   if(Number.isNaN(d.getTime()))return {date:'',time:''};
+   const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Cairo',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(d);
+   const get=k=>parts.find(p=>p.type===k)?.value||'00';
+   return {date:get('year')+'-'+get('month')+'-'+get('day'),time:get('hour')+':'+get('minute')};
+  };
+  for(const r of rows){
+   const id=String(r.client_id||'').startsWith('pxlegacy:')?String(r.client_id).slice(9):String(r.id);
+   if(!id)continue;
+   const original=map.get(id)||{};
+   const parts=String(r.food_name||'').match(/^\[([^\]]+)\]\s*(.*)$/);
+   const when=formatLocal(r.logged_at);
+   const entry={...original,id,date:when.date,meal:parts?parts[1]:(original.meal||'Snack'),time:when.time,
+    name:parts?parts[2]:String(r.food_name||'Food'),calories:Number(r.calories)||0,
+    protein:Number(r.protein_g)||0,carbs:Number(r.carbs_g)||0,fat:Number(r.fat_g)||0};
+   // Never discard unsynced local edits in favor of older server values.
+   if(!map.has(id)||!isFoodPending(id))map.set(id,entry);
+  }
+  foodLog=[...map.values()];
+  PXStore.setItem(FOOD_LOG_KEY,JSON.stringify(foodLog));
+  renderNutrition();
+  setNutritionSyncState(rows.length+' food entries loaded from Supabase',true);
+  return rows.length;
+ };
  window.__pxBackfillFoodDiary=async()=>{
   if(!ready||!navigator.onLine)return;
   let entries=[];try{entries=JSON.parse(nodeStorage.getItem('progressx-food-log')||'[]')}catch{}
@@ -9322,7 +9353,7 @@ window.__legacyBoot=init;
   if(typeof window.__legacyBoot!=='function')throw Error('Original app did not initialize');
   await window.__legacyBoot();
   if(pending)scheduleCloudSync();
-  setTimeout(async()=>{try{await window.__pxBackfillFoodProducts?.();await window.__pxBackfillFoodDiary?.()}catch(e){tell('Food sync: '+e.message,true)}},1500);
+  setTimeout(async()=>{try{await window.__pxBackfillFoodProducts?.();await window.__pxBackfillFoodDiary?.();await window.__pxLoadFoodDiary?.()}catch(e){tell('Food sync: '+e.message,true)}},1500);
   gate.hidden=true;document.getElementById('pxAccountTools').hidden=false;
  }
  document.getElementById('pxLogin').addEventListener('submit',async e=>{
