@@ -6492,6 +6492,11 @@ async function pxFlushFoodOutbox(){
     continue;
    }
    try{
+    const isDeleted=JSON.parse(PXStore.getItem(isProduct?'pxx-food-deleted-ids':'pxx-food-deleted-log-ids')||'[]').includes(String(row.id));
+    if(isDeleted){
+      PXStore.setItem(PX_FOOD_OUTBOX_KEY,JSON.stringify(pxFoodOutbox().filter(x=>!(x.id===item.id&&x.type===item.type))));
+      continue;
+    }
     const action=isProduct?'food_product_upsert':'food_log_upsert';
     const payload={...row,id:String(row.id)};
     const r=await apiCall(action,payload);
@@ -9268,7 +9273,8 @@ window.__legacyBoot=init;
   if(!Array.isArray(rows))throw Error('Invalid food diary response');
   const local=Array.isArray(foodLog)?foodLog:[];
   const deletedIds=new Set(JSON.parse(nodeStorage.getItem('pxx-food-deleted-log-ids')||'[]'));
-  const map=new Map(local.filter(x=>x?.id&&!deletedIds.has(String(x.id))).map(x=>[String(x.id),x]));
+  const pendingIds=new Set(pxFoodOutbox().filter(x=>x.type==='log').map(x=>String(x.id)));
+  const map=new Map(local.filter(x=>x?.id&&!deletedIds.has(String(x.id))&&(pendingIds.has(String(x.id))||isFoodPending(x.id))).map(x=>[String(x.id),x]));
   const formatLocal=stamp=>{
    const d=new Date(stamp);
    if(Number.isNaN(d.getTime()))return {date:'',time:''};
@@ -9300,8 +9306,9 @@ window.__legacyBoot=init;
   if(!Array.isArray(entries)||!entries.length)return;
   let synced=0,failed=0;
   const deletedIds=new Set(JSON.parse(nodeStorage.getItem('pxx-food-deleted-log-ids')||'[]'));
+  const pendingIds=new Set(pxFoodOutbox().filter(x=>x.type==='log').map(x=>String(x.id)));
   for(const entry of entries){
-   if(!entry?.id||!entry.name||deletedIds.has(String(entry.id)))continue;
+   if(!entry?.id||!entry.name||deletedIds.has(String(entry.id))||(!pendingIds.has(String(entry.id))&&!isFoodPending(entry.id)))continue;
    try{await window.__pxSaveFoodEntry(entry);synced++}catch(e){failed++;console.warn('Food entry pending',e.message)}
   }
   tell(failed?'⚠ '+failed+' food entries still pending database sync':'✓ '+synced+' food entries verified in Supabase',!!failed);
@@ -9312,13 +9319,13 @@ window.__legacyBoot=init;
   if(!Array.isArray(products)||!products.length)return;
   let failures=0;
   const deletedIds=new Set(JSON.parse(nodeStorage.getItem('pxx-food-deleted-ids')||'[]'));
+  const pendingIds=new Set(pxFoodOutbox().filter(x=>x.type==='product').map(x=>String(x.id)));
   for(const product of products){
-   if(!product?.name||!product.id||deletedIds.has(String(product.id)))continue;
+   if(!product?.name||!product.id||deletedIds.has(String(product.id))||!pendingIds.has(String(product.id)))continue;
    if(new Set(JSON.parse(nodeStorage.getItem('pxx-food-deleted-ids')||'[]')).has(String(product.id)))continue;
    try{await window.__pxSaveProduct(product)}catch(e){failures++;console.warn('Food product backfill pending:',e.message)}
   }
-  if(failures)tell('⚠ '+failures+' products still awaiting database sync',true);
-  else tell('✓ '+products.length+' food products verified in Supabase');
+  if(failures)tell('⚠ '+failures+' pending product uploads failed',true);
  };
  window.__pxCommitFood=async()=>{
   if(!ready||!account)throw Error('Sign in before saving');
@@ -9383,7 +9390,7 @@ window.__legacyBoot=init;
   if(typeof window.__legacyBoot!=='function')throw Error('Original app did not initialize');
   await window.__legacyBoot();
   if(pending)scheduleCloudSync();
-  setTimeout(async()=>{try{await window.__pxBackfillFoodProducts?.();await window.__pxLoadProducts?.();await window.__pxBackfillFoodDiary?.();await window.__pxLoadFoodDiary?.()}catch(e){tell('Food sync: '+e.message,true)}},1500);
+  setTimeout(()=>window.__pxRefreshNutrition?.().catch(e=>tell('Food sync: '+e.message,true)),1500);
   gate.hidden=true;document.getElementById('pxAccountTools').hidden=false;
  }
  document.getElementById('pxLogin').addEventListener('submit',async e=>{
@@ -9401,7 +9408,18 @@ window.__legacyBoot=init;
    if(data.access_token)await activate(data);
   }catch(e){status.textContent=e.message}
  });
- document.getElementById('pxSyncNow').addEventListener('click',async()=>{
+ window.__pxRefreshNutrition=async()=>{
+   if(!ready||!navigator.onLine)return;
+   await window.__pxBackfillFoodProducts?.();
+   await window.__pxBackfillFoodDiary?.();
+   await pxFlushFoodOutbox();
+   await window.__pxLoadProducts?.();
+   await window.__pxLoadFoodDiary?.();
+ };
+ window.addEventListener('focus',()=>{
+   if(ready&&navigator.onLine)window.__pxRefreshNutrition?.().catch(e=>tell('Food refresh: '+e.message,true));
+ });
+  document.getElementById('pxSyncNow').addEventListener('click',async()=>{
   if(!ready)return;
   const button=document.getElementById('pxSyncNow');button.disabled=true;
   try{
@@ -9410,6 +9428,7 @@ window.__legacyBoot=init;
    // Does not read or import any data from personal files.
    revision++;markPending();await flush();
    if(revision!==savedRevision)tell('⚠ Sync pending · check network',true);
+   await window.__pxRefreshNutrition?.();
   }catch(e){tell('⚠ Sync failed: '+e.message,true)}finally{button.disabled=false}
  });
  document.getElementById('pxLogout').addEventListener('click',async()=>{await flush();if(revision!==savedRevision&&!confirm('Cloud sync is still pending. Sign out anyway? Local changes will remain on this device.'))return;sessionStorage.removeItem(SESSION_KEY);location.reload()});
