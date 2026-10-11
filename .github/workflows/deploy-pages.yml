@@ -12,6 +12,8 @@ on:
       - icon-512.svg
       - .github/workflows/deploy-pages.yml
       - scripts/smoke-full-ui.cjs
+      - tests/login-optional-render-recovery.cjs
+      - tests/login-imported-archive-regression.cjs
   workflow_dispatch:
 permissions:
   contents: read
