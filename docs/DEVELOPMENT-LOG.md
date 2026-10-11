@@ -22,6 +22,15 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Fix asynchronous Food re-login assertion timing
+
+- Full UI #38184159603 **FAILED** on `Food Library product missing or changed after sign-in`; Pages #38184159952 **SUCCEEDED**.
+- Root issue under investigation: login loads normalized Food tables asynchronously (scheduled roughly 1.5 seconds after account activation), but the new record assertion ran immediately after the login gate closed.
+- Test now explicitly awaits `window.__pxRefreshNutrition(true)` before comparing Food Library/Diary records to the mocked cloud rows, preserving the strict record-level assertions. Commit `7e67c673057eda15b00531b28b610b6e42e07070`.
+- New CI not yet verified. No app runtime or Supabase production data changed; security checkpoint `SECURITY-DEFERRED-2026-10-12` remains paused.
+- Next: review new CI logs; if records still absent, trace cloud mock row mapping/account hydration and fix actual defect rather than relaxing assertions.
+
+
 ### 2026-10-12 — Food Library and Diary record assertions after account re-login
 
 - Verified Full UI #38184053542 and GitHub Pages #38184053395 both SUCCESS.
