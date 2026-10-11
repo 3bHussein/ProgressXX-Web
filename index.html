@@ -9531,6 +9531,21 @@ window.__legacyBoot=init;
   // Only locally queued edits can override server data; normal cached rows cannot.
   // This prevents an old cache from unexpectedly replacing another device's cloud state.
   const merged=pending?{...cloudValues,...pending}:cloudValues;
+  // A stale offline device must not overwrite a deletion already recorded by another device.
+  // Union tombstones from both sides before accepting any pending workout entries or queue.
+  const parseArray=value=>{try{const x=JSON.parse(value||'[]');return Array.isArray(x)?x:[]}catch{return []}};
+  const deletedWorkoutIds=new Set([
+   ...parseArray(cloudValues['progressx-workout-deleted-ids-v1']),
+   ...parseArray(pending?.['progressx-workout-deleted-ids-v1'])
+  ].map(String));
+  if(deletedWorkoutIds.size){
+   merged['progressx-workout-deleted-ids-v1']=JSON.stringify([...deletedWorkoutIds]);
+   const logKey='progressx-data-v19',queueKey='progressx-workout-sync-queue-v1';
+   const filteredLog=parseArray(merged[logKey]).filter(x=>!deletedWorkoutIds.has(String(x?.id||'')));
+   if(merged[logKey]!=null)merged[logKey]=JSON.stringify(filteredLog);
+   const filteredQueue=parseArray(merged[queueKey]).filter(x=>x?.op==='delete'||(!deletedWorkoutIds.has(String(x?.localId||''))&&!deletedWorkoutIds.has(String(x?.payload?.id||''))));
+   if(merged[queueKey]!=null)merged[queueKey]=JSON.stringify(filteredQueue);
+  }
   values={};
   for(const [k,v] of Object.entries(merged)){
    if(typeof v!=='string'||k.length>100||v.length>1000000)continue;
