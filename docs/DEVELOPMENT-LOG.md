@@ -22,6 +22,15 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Mobile viewport regression for Settings and Insights
+
+- Previous full UI test #38181404446 SUCCESS, Pages deployment #38181404262 SUCCESS.
+- Updated `scripts/smoke-full-ui.cjs` (commit `f39578abc38ce38dcab1d25ef8c192745cbb4a0b`) to navigate to Settings and Insights on the 390px Playwright mobile viewport; verify account buttons/anatomy selector are visible, touch-sized, and not horizontally outside viewport.
+- Pending new GitHub Actions outcome. Browser viewport simulation does not replace actual iOS/Android device review.
+- No app runtime, Supabase data or permissions changed. `SECURITY-DEFERRED-2026-10-12` stays deferred.
+- Next: inspect new CI failure/success and address any genuine mobile overflow.
+
+
 
 ### 2026-10-12 — Settings and Insights mobile UX refresh
 
