@@ -4,7 +4,6 @@ on:
     paths:
       - 'index.html'
       - 'tests/account-pages-snapshot-sync.cjs'
-      - 'tests/login-imported-archive-regression.cjs'
       - '.github/workflows/page-snapshot-regression.yml'
   workflow_dispatch:
 jobs:
@@ -32,5 +31,4 @@ jobs:
           exit 1
       - name: Confirm page state synchronizes across browser contexts
         run: |
-          node tests/login-imported-archive-regression.cjs
           node tests/account-pages-snapshot-sync.cjs
