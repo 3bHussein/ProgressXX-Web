@@ -1,0 +1,29 @@
+name: Atomic Snapshot PostgreSQL Integration
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/20261011_progressxx_atomic_snapshot.sql'
+      - 'tests/postgres-atomic-fixture.sql'
+      - 'tests/postgres-atomic-concurrency.sh'
+      - '.github/workflows/atomic-postgres-integration.yml'
+  workflow_dispatch:
+jobs:
+  real-postgres:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: PostgreSQL concurrent write and deletion tests
+        run: bash tests/postgres-atomic-concurrency.sh
