@@ -9664,6 +9664,8 @@ window.__legacyBoot=init;
    stale.forEach(key=>browserStorage.removeItem(key));
   }
   savedRevision=revision;ready=true;tell('✓ Signed in · Supabase connected');
+  const connectionLabel=document.getElementById('pxSettingsConnection');
+  if(connectionLabel)connectionLabel.textContent=navigator.onLine?'Connected':'Offline';
   // Restore queued Food rows into the in-memory UI before the login boot/render.
   // The initial Food globals were created before the account storage became available.
   for(const item of pxFoodOutbox()){
@@ -9738,7 +9740,8 @@ window.__legacyBoot=init;
   }catch(e){tell('⚠ Sync failed: '+e.message,true)}finally{button.disabled=false}
  });
  document.getElementById('pxLogout').addEventListener('click',async()=>{await flush();if(revision!==savedRevision&&!confirm('Cloud sync is still pending. Sign out anyway? Local changes will remain on this device.'))return;sessionStorage.removeItem(SESSION_KEY);location.reload()});
- window.addEventListener('online',()=>{if(ready)void flush()});
+ window.addEventListener('online',()=>{const label=document.getElementById('pxSettingsConnection');if(label)label.textContent='Connected';if(ready)void flush()});
+ window.addEventListener('offline',()=>{const label=document.getElementById('pxSettingsConnection');if(label)label.textContent='Offline'});
  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&ready)void flush()});
  try{
   const previous=JSON.parse(sessionStorage.getItem(SESSION_KEY)||'null');
