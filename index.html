@@ -384,12 +384,14 @@ function updateTodayPlan(entries){
  el('todaySummary').textContent=entry?'Scheduled for '+today+' · '+(entry.notes||'Ready when you are.'):'No workout scheduled for '+today+'. Enjoy a rest day or set one in Training.';
  el('todayStart').textContent=entry?'Start today’s workout →':'Edit weekly schedule →';
 }
-el('todayStart').addEventListener('click',()=>{
+el('todayStart').addEventListener('click',async()=>{
  selectView('training');
  if(todayWorkoutTitle){
   el('liveWorkoutName').value=todayWorkoutTitle;
-  el('workoutNotes').scrollIntoView({behavior:'smooth',block:'center'});
-  el('liveWorkoutName').focus();
+  el('liveWorkout').scrollIntoView({behavior:'smooth',block:'center'});
+  if(!liveState){try{await startLive(todayWorkoutTitle)}catch(e){el('liveStatus').textContent=e.message}}
+  else if(liveState.status==='paused'){liveState.status='running';storeLive();renderLive()}
+  el('liveExercise').focus();
  }else{el('scheduleSection').scrollIntoView({behavior:'smooth',block:'center'})}
 });
 
