@@ -16,12 +16,24 @@ This is the **append-only** chronological log of completed work, investigations,
 
 - **Stage:** Pre-release hardening; not certified for sale/public paid launch.
 - **Known risk:** Real-account reproduction of login `undefined.filter` and Food/Daily restored-data sync needs independent confirmation, even though earlier CI ran green.
-- **Primary next step:** Check deploy CI #38155895490 for the newly required login tests, then verify real-account login and account-specific persistence/RLS across Food/Daily/Workout/Weight.
+- **Primary next step:** Inspect latest Pages deployment CI after commits 0750b4f/7f49a67; fix actual login test failure if any, then check real-account login and account-specific Food/Daily/Workout/Weight persistence/RLS.
 - **Data safety:** Preserve all existing user records; do not wipe or silently replace records.
 - **Deployment URL:** https://3bhussein.github.io/ProgressXX-Web/
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+
+### 2026-10-11 — Fix hanging restored Food/Daily login CI regression
+
+- **Symptom:** Pages deploy #38155895490 stayed in progress on `Required restored Food and Daily account login regression` after prior login UI regression succeeded.
+- **Root-cause hypothesis:** Failure handler in `tests/login-imported-archive-regression.cjs` set `process.exitCode=1` but left Playwright Chromium running; a thrown assertion could keep Node alive until job timeout, masking the error. Confirm actual failing assertion from next CI log; this is a hang fix, not proof the underlying regression passes.
+- **Files changed:** `tests/login-imported-archive-regression.cjs`, `.github/workflows/deploy-pages.yml`.
+- **Commits:** `0750b4f069d89ebe024ffe334ac3b72e52afc054` (fail fast on error with stack); `7f49a6756edd8566dc5b5544628c79c41a9c07dc` (re-run deployment validation when either mandatory login test changes).
+- **Tests/CI:** GitHub run on latest workflow commit pending verification. Do **not** mark pass until required regression and Pages deploy complete.
+- **Deployment/data impact:** Test/CI only. No application data or schema touched; deploy remains gated.
+- **Risk:** Actual mock-account test may fail even after hanging process is fixed; test quality and real Supabase two-user isolation remain unverified.
+- **Next:** Inspect latest Pages CI run, capture first failing assertion; fix genuine login hydration bug without disabling tests, then proceed to Food/Daily/Workout/Weight RLS audit.
+
 
 ### 2026-10-11 — Make login regression checks mandatory for Pages deploy
 
