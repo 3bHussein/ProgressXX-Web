@@ -23,6 +23,16 @@ This is the **append-only** chronological log of completed work, investigations,
 
 ## Entries (newest first)
 
+### 2026-10-12 — Food transient-server retry regression
+
+- Added a browser smoke test to `scripts/smoke-full-ui.cjs` for an injected HTTP 503 on a queued Food Library POST, verifying the outbox retains the failed operation, retries once after recovery, and produces one cloud record.
+- Code commit: `76c8b0e97fa40f6bda48abefcc30299c6164c1a8`.
+- Latest prior workflow for outbox tombstone checks was still running when inspected (#38180138777); newer server-retry CI is not yet verified.
+- No production database or runtime application code changed. Mocked test only.
+- Next: inspect new Actions result and investigate failures. Keep `SECURITY-DEFERRED-2026-10-12` paused.
+
+
+
 ### 2026-10-12 — Food outbox duplicate/tombstone browser regression
 
 - **Prior results:** Full UI smoke #38180040958 and #38180026886 SUCCESS (mocked Food Diary deletion remains absent on reload).
