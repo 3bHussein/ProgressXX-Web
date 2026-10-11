@@ -9145,7 +9145,7 @@ window.__legacyBoot=init;
   </div>
 </div>
 
-<div id="pxCommercialGate"><div class="pxAuthBox"><h2>⚡ ProgressXX</h2><p>Full original experience · Private Supabase account</p><form id="pxLogin"><input id="pxEmail" type="email" autocomplete="username" required placeholder="Email"><input id="pxPassword" type="password" autocomplete="current-password" required placeholder="Password"><div class="pxAuthActions"><button id="pxSignin" type="submit">Sign in</button><button type="button" class="pxSoft" id="pxSignup">Create account</button></div></form><p id="pxLoginMessage" role="status">Sign in to load your private fitness workspace.</p></div></div><div id="pxSyncPill" hidden role="status">Cloud ready</div><div id="pxAccountTools" hidden><a href="./commercial-v1.html" title="Access all previous commercial records">Previous commercial data</a><button type="button" id="pxLogout">Sign out</button></div>
+<div id="pxCommercialGate"><div class="pxAuthBox"><h2>⚡ ProgressXX</h2><p>Full original experience · Private Supabase account</p><form id="pxLogin"><input id="pxEmail" type="email" autocomplete="username" required placeholder="Email"><input id="pxPassword" type="password" autocomplete="current-password" required placeholder="Password"><div class="pxAuthActions"><button id="pxSignin" type="submit">Sign in</button><button type="button" class="pxSoft" id="pxSignup">Create account</button></div></form><p id="pxLoginMessage" role="status">Sign in to load your private fitness workspace.</p></div></div><div id="pxSyncPill" hidden role="status">Cloud ready</div><div id="pxAccountTools" hidden><a href="./commercial-v1.html" title="Access all previous commercial records">Previous commercial data</a><button type="button" id="pxSyncNow">↻ Sync now</button><button type="button" id="pxLogout">Sign out</button></div>
 <script id="pxCommercialBridge">
 (()=>{
  'use strict';
@@ -9183,15 +9183,15 @@ window.__legacyBoot=init;
   if(!response.ok){let error;try{error=await response.json()}catch{}throw Error(error?.message||'Sync error '+response.status)}
   return response.status===204?null:response.json();
  }
- function tell(message,problem=false){pill.textContent=message;pill.style.color=problem?'#fecaca':'#d8faf1';pill.hidden=false}
+ function tell(message,problem=false){pill.textContent=message;pill.style.color=problem?'#fecaca':'#d8faf1';pill.hidden=false;pill.title='Supabase account snapshot · '+(account||'not signed in')}
  function scheduleCloudSync(){if(!ready)return;clearTimeout(timer);timer=setTimeout(()=>{void flush()},1200)}
  async function flush(){
   if(!ready||uploading||!navigator.onLine||revision===savedRevision)return;
-  uploading=true;const writing=revision;
+  uploading=true;const writing=revision;tell('↻ Syncing to Supabase…');
   try{
    // Single-account snapshot; originals remain byte-exact strings (including raw performance).
    await cloud('user_app_snapshots?on_conflict=user_id','POST',{user_id:account,payload:{...values},updated_at:new Date().toISOString()});
-   savedRevision=writing;if(revision===writing)clearPending();tell('✓ Saved to Supabase');
+   savedRevision=writing;if(revision===writing)clearPending();tell('✓ Synced to Supabase · '+new Date().toLocaleTimeString());
   }catch(e){tell('Unsynced changes: '+e.message,true)}
   finally{uploading=false;if(revision!==savedRevision)scheduleCloudSync()}
  }
@@ -9238,6 +9238,17 @@ window.__legacyBoot=init;
    status.textContent=data.access_token?'Account created. Signing in…':'Account created. Check your email, then sign in.';
    if(data.access_token)await activate(data);
   }catch(e){status.textContent=e.message}
+ });
+ document.getElementById('pxSyncNow').addEventListener('click',async()=>{
+  if(!ready)return;
+  const button=document.getElementById('pxSyncNow');button.disabled=true;
+  try{
+   if(uploading){tell('↻ Sync already running');return}
+   // Force a write of the current signed-in account snapshot on demand.
+   // Does not read or import any data from personal files.
+   revision++;markPending();await flush();
+   if(revision!==savedRevision)tell('⚠ Sync pending · check network',true);
+  }catch(e){tell('⚠ Sync failed: '+e.message,true)}finally{button.disabled=false}
  });
  document.getElementById('pxLogout').addEventListener('click',async()=>{await flush();if(revision!==savedRevision&&!confirm('Cloud sync is still pending. Sign out anyway? Local changes will remain on this device.'))return;sessionStorage.removeItem(SESSION_KEY);location.reload()});
  window.addEventListener('online',()=>{if(ready)void flush()});
