@@ -7277,7 +7277,7 @@ async function seedOrPullCloudProfile(remoteTemplates){
 }
 
 async function syncNutritionFromSheet(dateOverride=null,silent=false,force=false){
-  if(!$('appScriptUrl')?.value.trim())return window.__pxLoadFoodDiary?window.__pxLoadFoodDiary():false;
+  if(!$('appScriptUrl')?.value.trim())return window.__pxCommercialReady?.()?window.__pxLoadFoodDiary?.():false;
   const date=dateOverride||selectedNutritionDate();
 
   if(!force && nutritionLastPullDate===String(date) && Date.now()-nutritionLastPullAt<12000){
@@ -9401,6 +9401,7 @@ window.__legacyBoot=init;
   }catch(e){status.textContent=e.message}
  });
  let nutritionRefreshInFlight=null,lastNutritionRefreshAt=0;
+ window.__pxCommercialReady=()=>ready;
  window.__pxRefreshNutrition=async(force=false)=>{
    if(!ready||!navigator.onLine)return;
    if(nutritionRefreshInFlight)return nutritionRefreshInFlight;
