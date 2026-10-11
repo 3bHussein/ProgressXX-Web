@@ -255,6 +255,22 @@ const {chromium}=require('playwright');
    if(bounds.some(x=>!x.height||x.height<35||x.left< -2||x.right>x.width+2))throw Error('320px control overflow: '+JSON.stringify(bounds));
  }
  await page.setViewportSize({width:390,height:844});
+ // Guard against full-screen-height mobile tabs observed on real devices.
+ for(const width of [320,390]){
+   await page.setViewportSize({width,height:780});
+   for(const name of ['settings','intelligence']){
+     await page.evaluate(section=>go(section),name);
+     const metrics=await page.evaluate(section=>{
+       const selector=section==='settings'?'#settings .pxSettingsQuickNav':'#intelligence .pxAnatomyMobileTabs';
+       const row=document.querySelector(selector);
+       return {section,rowHeight:row?.getBoundingClientRect().height,
+         buttonHeights:[...row.querySelectorAll('button')].map(b=>b.getBoundingClientRect().height)};
+     },name);
+     if(!metrics.rowHeight||metrics.rowHeight>85||metrics.buttonHeights.some(h=>h<40||h>55))
+       throw Error('Oversized mobile navigation tabs: '+JSON.stringify(metrics));
+   }
+ }
+ await page.setViewportSize({width:390,height:844});
  // Real mobile Settings shortcut interaction: each control must scroll to its target.
  await page.evaluate(()=>go('settings'));
  for(const id of ['pxSettingsAccount','pxSettingsBackup','pxSettingsSyncCenter','pxSettingsHub','pxSettingsSchedule']){
