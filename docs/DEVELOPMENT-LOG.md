@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Cross-browser sync: await persisted values instead of stale status
+
+- GitHub Actions Full UI [#38185543017](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38185543017) **FAILED** in `tests/account-pages-snapshot-sync.cjs`: `Missing cloud snapshot for Workout Schedule` even though `smoke-full-ui.cjs` passed. Pages [#38185543037](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38185543037) **SUCCESS**.
+- Root test race: the first context's `Synced to Supabase` status could refer to an earlier sync, not the new eight-key sample batch.
+- Tightened test to poll **actual mock cloud snapshot values** for all eight feature groups for at most 25 seconds, then retain strict per-key assertions (commit `cabc8e8b4f1a76a00d1914b5c8bc1671b50eb685`). Next CI pending.
+- No production app/database/user data changed; security testing remains deferred (`SECURITY-DEFERRED-2026-10-12`). If test still fails, inspect whether values truly flush and why; do not soften the assertion.
+
+
 ### 2026-10-12 — Workout passed; second browser context auth timing regression
 
 - Full UI #38185419994 **SUCCESS**, including new Workout Log record-level sign-out/sign-in assertion. Pages #38185426186 **SUCCESS**.
