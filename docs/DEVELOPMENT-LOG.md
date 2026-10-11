@@ -22,6 +22,15 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Logout/login persistence browser regression
+
+- User confirmed on real phone that Settings and Insights mobile buttons now display correctly. Existing 320px/390px mock Chromium coverage passed.
+- New Full UI Playwright scenario clicks actual Sign out, signs back in to mock Supabase account, and checks persisted Workout Schedule and Weight Goal after account activation. Commit `269c8b7aa7f9023b2ac76082d260163106822e93`.
+- Food Library/Diary already covered by synthetic interrupted sync/reload tests; full real-account Food/Daily/Workout/Weight roundtrip still not verified. Fresh CI result pending.
+- No production data, database, or security changes. Keep `SECURITY-DEFERRED-2026-10-12` on hold.
+- Next: check CI logs, fix any failure; then expand account roundtrip to Food/Daily/Workout/Weight using isolated fixtures.
+
+
 ### 2026-10-12 — Latest mobile Insights/Settings smoke and Pages deployment green
 
 - Full UI [#38183271469](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38183271469) **SUCCESS**.
