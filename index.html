@@ -14,7 +14,7 @@ input{width:100%;border:1px solid #394b66;border-radius:12px;padding:14px;backgr
 .hidden{display:none!important}.small{font-size:12px;color:#91a5bf}strong{overflow-wrap:anywhere}@media(max-width:420px){main{padding:12px}.panel{border-radius:18px;padding:22px}}
 
 .dashboard{margin-top:22px;border-top:1px solid #394b66;padding-top:18px}.dashgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{background:#0c1626;border:1px solid #30405a;border-radius:14px;padding:14px}.stat b{display:block;font-size:25px;margin-top:7px}.stat span{font-size:12px;color:#9eb1ca}.fieldrow{display:flex;gap:8px;align-items:end}.fieldrow input{min-width:0;flex:1}.fieldrow button{margin:0;white-space:nowrap}.history{margin:12px 0;padding:0;list-style:none}.history li{padding:10px 0;border-bottom:1px solid #2c3750;font-size:14px}.viewhint{font-size:13px}
-.programCard{padding:13px;border:1px solid #354560;border-radius:14px;background:#0a1525;margin:10px 0}.programCard h4{margin:0 0 5px}.programCard p{margin:4px 0 10px}.programCard button{padding:10px;background:#352a58;color:#fff}.programDay{margin:13px 0;border-top:1px solid #354560;padding-top:12px}.programDay li{line-height:1.6}.pill{display:inline-block;background:#243653;color:#cae5ff;border-radius:20px;padding:4px 9px;font-size:11px}.sectionbar{display:flex;gap:8px;margin:12px 0}.sectionbar button{flex:1;background:#25354b;color:#fff;padding:10px}.sectionbar button.selected{background:#6548bd}</style></head><body><main><section class="panel">
+.programCard{padding:13px;border:1px solid #354560;border-radius:14px;background:#0a1525;margin:10px 0}.programCard h4{margin:0 0 5px}.programCard p{margin:4px 0 10px}.programCard button{padding:10px;background:#352a58;color:#fff}.programDay{margin:13px 0;border-top:1px solid #354560;padding-top:12px}.programDay li{line-height:1.6}.pill{display:inline-block;background:#243653;color:#cae5ff;border-radius:20px;padding:4px 9px;font-size:11px}.sectionbar{display:flex;gap:8px;margin:12px 0}.sectionbar button{flex:1;background:#25354b;color:#fff;padding:10px}.sectionbar button.selected{background:#6548bd}.setEntry{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 15px;align-items:center}.setEntry input{width:84px;flex:1;min-width:70px}.setEntry button{padding:11px;background:#6344bf;color:#fff}.setEntry .setFeedback{width:100%;font-size:12px;color:#87e6bb}.exerciseLabel{font-weight:700}.exerciseHelp{font-size:12px;color:#9fb0c7}.timerText{font-size:13px;color:#c8b7ff;margin:8px 0}.programCard button:disabled{opacity:.45}</style></head><body><main><section class="panel">
 <div class="brand">Progress<span style="color:#ab8afe">XX</span></div>
 <p class="small">COMMERCIAL ACCOUNT PREVIEW · Separate from your existing personal app</p>
 <div id="signedOut"><div class="tabs"><button id="tabSignIn" class="active" type="button">Sign in</button><button id="tabSignUp" type="button">Create account</button></div>
@@ -57,7 +57,7 @@ async function db(table,method='GET',body=null,query=''){
  if(!session?.access_token)throw Error('Please sign in again.');
  if(session.expires_at && Date.now()/1000 >= session.expires_at-45)await refresh();
  const headers={'apikey':PUBLIC_KEY,'Authorization':'Bearer '+session.access_token,'Content-Type':'application/json'};
- if(method==='POST')headers.Prefer='return=minimal';
+ if(method==='POST')headers.Prefer='return=representation';
  let response;
  try{response=await fetch(URL_BASE+'/rest/v1/'+table+query,{method,headers,body:body?JSON.stringify(body):undefined})}
  catch{throw Error('Cannot contact database. Check connection.')}
@@ -95,7 +95,22 @@ el('weightForm').addEventListener('submit',async e=>{
 el('refreshData').addEventListener('click',loadDashboard);
 
 
-let programCatalog=[],programFilter='home';
+let programCatalog=[],programFilter='home', activeProgramSession=null,restTick=null;
+const exerciseTips={
+'Chair Squat':'Sit back toward a stable chair, control the descent and stand tall.',
+'Incline Push-up':'Keep your body straight and lower your chest toward a stable elevated surface.',
+'Glute Bridge':'Press through your heels and raise the hips without arching your back.',
+'Bird Dog':'Extend opposite arm and leg without rotating your trunk.',
+'Bench Press':'Control the bar to your chest with feet planted; use a spotter.',
+'Back Squat':'Brace your trunk and squat through a comfortable depth.',
+'Romanian Deadlift':'Hinge at the hips with a neutral spine and soft knees.',
+'Lat Pulldown':'Pull elbows toward ribs without swinging your torso.'
+};
+function runRestTimer(seconds,node){
+ if(restTick)clearInterval(restTick);
+ let left=seconds;node.textContent='Rest: '+left+'s';
+ restTick=setInterval(()=>{left--;node.textContent=left>0?'Rest: '+left+'s':'Rest complete ✓';if(left<=0){clearInterval(restTick);restTick=null}},1000);
+}
 const escapeSafe=s=>String(s??'');
 async function loadPrograms(){
  try{programCatalog=await db('program_templates','GET',null,'?select=id,title,category,level,days_per_week,slug&is_published=eq.true&order=days_per_week.asc');renderProgramList()}
@@ -125,7 +140,37 @@ async function viewProgram(program){
    const h=document.createElement('h4');h.textContent='Day '+d.day_index+' · '+d.title;section.append(h);
    const exercises=await db('program_exercises','GET',null,'?select=exercise_name,sets,rep_range,rest_seconds&day_id=eq.'+encodeURIComponent(d.id)+'&order=sort_order.asc');
    const ul=document.createElement('ul');
-   for(const ex of exercises){const li=document.createElement('li');li.textContent=ex.exercise_name+' — '+ex.sets+' × '+ex.rep_range+(ex.rest_seconds?' · '+ex.rest_seconds+'s rest':'');ul.append(li)}
+   for(const ex of exercises){
+ const li=document.createElement('li');
+ const name=document.createElement('div');name.className='exerciseLabel';name.textContent=ex.exercise_name+' — '+ex.sets+' × '+ex.rep_range;
+ const tip=document.createElement('div');tip.className='exerciseHelp';tip.textContent=exerciseTips[ex.exercise_name]||'Choose a load and range of motion you can control. Stop if painful.';
+ const row=document.createElement('div');row.className='setEntry';
+ const reps=document.createElement('input');reps.type='number';reps.min='1';reps.max='1000';reps.step='1';reps.placeholder='Reps';reps.setAttribute('aria-label',ex.exercise_name+' repetitions');
+ const weight=document.createElement('input');weight.type='number';weight.min='0';weight.step='0.5';weight.placeholder='kg (0=BW)';weight.setAttribute('aria-label',ex.exercise_name+' weight kg');
+ const btn=document.createElement('button');btn.type='button';btn.textContent='Save set';
+ const feedback=document.createElement('div');feedback.className='setFeedback';feedback.setAttribute('role','status');
+ const timer=document.createElement('div');timer.className='timerText';
+ btn.addEventListener('click',async()=>{
+  const r=Number(reps.value),w=weight.value===''?0:Number(weight.value);
+  if(!Number.isInteger(r)||r<1||r>1000||!Number.isFinite(w)||w<0||w>10000){feedback.textContent='Enter valid reps and weight.';return}
+  btn.disabled=true;
+  try{
+   const key=program.id+':'+d.id;
+   if(activeProgramSession?.key!==key){
+    const result=await db('workout_sessions','POST',{user_id:session.user.id,notes:program.title+' — '+d.title,started_at:new Date().toISOString()});
+    if(!result?.[0]?.id)throw Error('Unable to create workout session');
+    activeProgramSession={key,id:result[0].id,sets:0};
+   }
+   await db('workout_sets','POST',{user_id:session.user.id,session_id:activeProgramSession.id,exercise_name:ex.exercise_name,reps:r,weight_kg:w,performed_at:new Date().toISOString()});
+   activeProgramSession.sets++;
+   feedback.textContent='Saved ✓ · '+activeProgramSession.sets+' sets this session';
+   notice('Set saved to your private workout log.');
+   await loadDashboard();
+   if(ex.rest_seconds)runRestTimer(ex.rest_seconds,timer);
+  }catch(err){feedback.textContent='Error: '+err.message}finally{btn.disabled=false}
+ });
+ row.append(reps,weight,btn,feedback);li.append(name,tip,row,timer);ul.append(li);
+}
    section.append(ul);
    const start=document.createElement('button');start.type='button';start.textContent='Log this day';start.addEventListener('click',()=>{el('workoutNotes').value=program.title+' — '+d.title;el('workoutNotes').scrollIntoView({behavior:'smooth',block:'center'});el('workoutNotes').focus()});section.append(start);wrapper.append(section);
   }
