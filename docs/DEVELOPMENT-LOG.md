@@ -23,6 +23,15 @@ This is the **append-only** chronological log of completed work, investigations,
 
 ## Entries (newest first)
 
+### 2026-10-12 — Food complete; Daily history account roundtrip test added
+
+- Full UI [#38184364104](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38184364104) **SUCCESS** and Pages [#38184364239](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38184364239) **SUCCESS**. Mock Food Library/Diary record-level assertions after sign-out/sign-in now pass.
+- Added a synthetic dated Daily history row marker in account-scoped snapshot storage before sign-out and assert it is restored after sign-in (`scripts/smoke-full-ui.cjs`, commit `40d45def60a708b7e013d3c60b9b910b279bf54a`). Fresh CI result pending.
+- This tests Daily snapshot persistence, not all daily reminders/water/real cross-device synchronization. No production database or user-data modifications; security deferred at `SECURITY-DEFERRED-2026-10-12`.
+- Next: inspect fresh CI, and if failing diagnose why Daily snapshot state fails to persist rather than weakening assertions.
+
+
+
 ### 2026-10-12 — Correct mocked Food Diary cloud list during re-login
 
 - Full UI [#38184268033](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38184268033) **FAILED**: real record-level test found Food Library item present, but Food Diary item absent after mock logout/login and hydration.
