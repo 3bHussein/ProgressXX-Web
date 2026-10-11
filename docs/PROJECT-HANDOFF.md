@@ -41,6 +41,11 @@
 ## Workout Log account roundtrip QA (2026-10-12)
 ## Current cross-context CI follow-up (2026-10-12)
 ## Cross-context cloud acknowledgement follow-up (2026-10-12)
+## Second-context hydration verification (2026-10-12)
+
+Earlier Full UI #38185686778 was in progress at review. Added exact-value wait for the eight mock snapshot keys in second independent Chromium browser context (`tests/account-pages-snapshot-sync.cjs`, commit `3f0b601440eea087ccb981504fd51edce2f776f2`). New CI pending, no production app/database change. Security stage still deferred.
+
+
 
 Full UI #38185543017 failed in second test due to `Missing cloud snapshot for Workout Schedule`, despite smoke passing; Pages #38185543037 succeeded. Fixed test race by waiting for server-side mock snapshot to actually contain all eight newly written values instead of trusting a stale `Synced` label; commit `cabc8e8b4f1a76a00d1914b5c8bc1671b50eb685`. Await new CI. No production DB changes. Security deferred.
 
