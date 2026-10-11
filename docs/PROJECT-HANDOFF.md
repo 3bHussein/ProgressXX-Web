@@ -25,6 +25,11 @@
 
 ## Verified mobile UI fix — 2026-10-12
 ## New Insights tab click test (2026-10-12)
+## Verified Insights mobile click test (2026-10-12)
+
+Full UI run #38182994635 succeeded for actual 320px/390px clicks on Anatomy Atlas and Muscle Coverage. Latest Pages run #38182994916 was in progress at check; do not assume success. No user data changes. Security phase remains deferred.
+
+
 
 Added real Chromium click assertions on Insights anatomy tabs at 320px and 390px in `scripts/smoke-full-ui.cjs`; commit `7d1a3c51475e27dfb88183b29041674da28a4459`. Await CI. Prior height check passed. No data/security changes.
 
