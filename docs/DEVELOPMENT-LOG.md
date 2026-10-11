@@ -22,6 +22,15 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Latest mobile Insights/Settings smoke and Pages deployment green
+
+- Full UI [#38183271469](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38183271469) **SUCCESS**.
+- GitHub Pages [#38183271199](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38183271199) **SUCCESS**.
+- Confirms automated 320px/390px mobile tab geometry and interactions on the primary index.html route. Actual phone visual validation remains outstanding.
+- No production data/database changes; security review remains deferred at `SECURITY-DEFERRED-2026-10-12`.
+- Next: request real phone screenshot if layout remains problematic; prioritize concrete mobile UI issues, not additional speculative code.
+
+
 ### 2026-10-12 — Insights mobile click regression verified
 
 - Full UI Chromium [#38182994635](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38182994635) **SUCCESS** for Anatomy Atlas / Muscle Coverage tab clicks at both 320px and 390px, including selected-state checks.
