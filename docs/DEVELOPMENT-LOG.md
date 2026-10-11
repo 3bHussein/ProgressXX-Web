@@ -23,6 +23,15 @@ This is the **append-only** chronological log of completed work, investigations,
 
 ## Entries (newest first)
 
+### 2026-10-12 — Budget constraint: no paid staging
+
+- Owner declined the paid Supabase staging branch due to current budget constraints. **Do not create or enable paid infrastructure without a new explicit approval.**
+- Quoted branch rate was USD 0.01344/hour; no branch created and no payment incurred by this decision.
+- Continue with free static CI, read-only production checks and optional local PostgreSQL/Supabase emulation using synthetic data.
+- The permission-revocation migration remains UNAPPLIED to production, and real two-account CRUD isolation remains unverified.
+- Next: design a no-cost local RLS regression harness and document commands; avoid database production mutations.
+
+
 ### 2026-10-12 — RLS read-only verification
 
 - GitHub full UI smoke #38178220700 passed.
