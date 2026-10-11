@@ -2545,7 +2545,7 @@ async function init(){
 function wire(){
   if($('progressPhotoDate'))$('progressPhotoDate').value=localDateKey();
   if($('bodyMeasureDate'))$('bodyMeasureDate').value=localDateKey();
-  goalExerciseOptions();renderGoalFormState();
+  safeProgressXXRender('Goal form options',goalExerciseOptions);renderGoalFormState();
   const savedTdeeProfile=loadTdeeProfile();
   if(savedTdeeProfile&&savedTdeeProfile.targets){
     nutritionTargets={
