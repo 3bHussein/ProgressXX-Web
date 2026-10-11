@@ -22,6 +22,13 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Daily QA green and weight check-in logout/login test
+
+- Full UI #38185151840 **SUCCESS** and Pages #38185151808 **SUCCESS**, including synthetic Daily reminder completion and water state after re-login.
+- Added mock account roundtrip for real Weight Check-in structure via `saveProgressPhotos`/`progressPhotos` (ID `qa-weight-relogin`, dated 2026-10-09, 78.4 kg and note) in `scripts/smoke-full-ui.cjs`; strict assertion after sign-out/sign-in. Commit `b436894974c4bc38c3fc7412c6b7d16fb93d7fdd`. Fresh CI pending.
+- Workout Schedule and Weight Goal already passed; Workout Log record persistence still pending. No actual user or DB records changed. Security testing remains deferred (`SECURITY-DEFERRED-2026-10-12`).
+
+
 ### 2026-10-12 — Daily reminder and water re-login regression
 
 - Full UI #38184630725 SUCCESS and Pages #38184630608 SUCCESS, including Daily History synthetic account roundtrip.
