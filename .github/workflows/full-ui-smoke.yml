@@ -14,6 +14,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Verify pending Supabase hardening migration safety
+        run: node tests/security-migration-safety.cjs
       - run: npm install --no-save playwright@1.55.0
       - run: npx playwright install --with-deps chromium
       - name: Full UI browser smoke
