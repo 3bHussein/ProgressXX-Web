@@ -6,6 +6,10 @@
 
 A static test for the 11-command unapplied privilege migration was added at `tests/security-migration-safety.cjs` and wired into `.github/workflows/full-ui-smoke.yml` (commit `df4a14761d11dbd77bb028c2f82e6eda0ee330ab`). Production database unchanged. Check current Actions status first; next step is independently approved staging/cost plus negative two-user RLS and CRUD tests. See `docs/DEVELOPMENT-LOG.md`.
 
+## Latest verification (2026-10-12)
+
+CI run #38178220700 passed. Production read-only RLS role simulation returned zero private rows to anonymous role and synthetic nonexistent authenticated account for sampled Food/Workout/Weight/Daily tables. See docs/RLS-NEGATIVE-READ-PROBE.md and DEVELOPMENT-LOG.md. This is limited SELECT testing; real two-account CRUD, staging grant hardening and cross-device synchronization remain unverified. No production schema/data changed.
+
 ## Mandatory continuity rule
 
 Every time work is finished, **append a dated entry to docs/DEVELOPMENT-LOG.md**, update the latest issue/next step in this file, and update ROADMAP checkboxes/evidence when relevant. Include changed files, commit/PR, actual CI/run link and test result, deployed/not deployed, data impact and next specific action. Read the newest development-log entry first in a new chat. No change is finished until documentation has been updated; never fabricate tests or success. These updates require a deliberate GitHub commit per task — they are **not automatic outside an active session**.
