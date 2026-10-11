@@ -16,12 +16,23 @@ This is the **append-only** chronological log of completed work, investigations,
 
 - **Stage:** Pre-release hardening; not certified for sale/public paid launch.
 - **Known risk:** Real-account reproduction of login `undefined.filter` and Food/Daily restored-data sync needs independent confirmation, even though earlier CI ran green.
-- **Primary next step:** Audit two-account Supabase RLS isolation plus per-account Food/Daily/Workout/Weight CRUD/sync; user confirms app working and Pages CI #38156792995 passed.
+- **Primary next step:** Follow docs/SUPABASE-SECURITY-AUDIT.md: safely address excessive TRUNCATE/TRIGGER grants in staged migration, verify two-account RLS isolation, then Food/Daily/Workout/Weight sync.
 - **Data safety:** Preserve all existing user records; do not wipe or silently replace records.
 - **Deployment URL:** https://3bhussein.github.io/ProgressXX-Web/
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+
+### 2026-10-12 — Read-only live Supabase security audit
+
+- **Scope:** Supabase production metadata only: RLS, policies, table grants, public functions and security advisor. No database writes or user records inspected.
+- **Evidence:** 20/20 public tables have RLS. Core private tables have auth.uid() owner policies; published program catalog uses intentionally public-to-authenticated SELECT policies.
+- **Security issue:** Several private tables grant TRUNCATE/TRIGGER and REFERENCES privileges to anon/authenticated. PostgreSQL TRUNCATE bypasses RLS row filtering; tighten least privilege with reviewed and tested migration. Also Supabase advisor flags leaked-password protection disabled.
+- **Document:** `docs/SUPABASE-SECURITY-AUDIT.md` (commit `d740c67b953677ab6566b1843b171435fb27ffe0`).
+- **Tests:** Read-only schema and advisor inspection done; no live two-account negative tests and no staged permission migration yet. **NOT PRODUCTION SECURITY VERIFIED.**
+- **Deployment/data impact:** Documentation only; no application, table policies, roles or user data changed.
+- **Next:** Stage reviewed REVOKE of excess grants and test two accounts' RLS isolation, then verify Food/Daily/Workout/Weight CRUD and sync.
+
 
 ### 2026-10-11 — Login regression CI confirmed green; user confirms app works
 
