@@ -16,12 +16,22 @@ This is the **append-only** chronological log of completed work, investigations,
 
 - **Stage:** Pre-release hardening; not certified for sale/public paid launch.
 - **Known risk:** Real-account reproduction of login `undefined.filter` and Food/Daily restored-data sync needs independent confirmation, even though earlier CI ran green.
-- **Primary next step:** Inspect latest Pages deployment CI after commits 0750b4f/7f49a67; fix actual login test failure if any, then check real-account login and account-specific Food/Daily/Workout/Weight persistence/RLS.
+- **Primary next step:** Check Pages deployment CI after fixture assertion commit d7d8d0b; verify live restored login, then audit per-account Food/Daily/Workout/Weight sync and RLS.
 - **Data safety:** Preserve all existing user records; do not wipe or silently replace records.
 - **Deployment URL:** https://3bhussein.github.io/ProgressXX-Web/
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+
+### 2026-10-11 — Fix restored-account regression fixture count mismatch
+
+- **Observed CI failure:** restored Food/Daily login test returned `hidden=true`, `entries=33`, `reminders=3`, `problems=[]` but expected 32 entries.
+- **Finding:** Test snapshot explicitly contains one `local-test` workout record **plus** 32 mocked `legacy_workout_entries` records. Correct combined expected count is 33, not 32. This is a test-fixture mismatch, not evidence of a production account error.
+- **Code changed:** `tests/login-imported-archive-regression.cjs` now expects `workouts.length + 1` and separately checks the local fixture appears exactly once, while still rejecting browser errors.
+- **Commit:** `d7d8d0b5a8eba7a4e7e5f2271165417df5354371`.
+- **Tests/deploy:** Updated GitHub Actions run is pending; must inspect actual outcome before marking pass. No production app, schema or user data changed.
+- **Next:** Verify rerun of mandatory Pages workflow. If passing, audit account-isolated Food/Daily/Workout/Weight tables and RLS; separately confirm real restored-account login.
+
 
 ### 2026-10-11 — Fix hanging restored Food/Daily login CI regression
 
