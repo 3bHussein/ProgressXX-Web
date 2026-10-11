@@ -37,7 +37,7 @@ console.log('PASS: stale device offline edits cannot restore workouts deleted in
   [queueKey]:JSON.stringify([{op:'upsert',localId:'local_old',payload:{id:'local_old'}},{op:'upsert',localId:'local_new',payload:{id:'local_new'}}])
  };
  const rest={
-  ready:true,uploading:false,navigator:{onLine:true},revision,savedRevision,
+  ready:true,uploading:false,window:{__pxAtomicSnapshotReady:false},navigator:{onLine:true},revision,savedRevision,
   account:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',values,Date,JSON,Set,String,Object,Array,Error,
   clearPending(){},tell(){},scheduleCloudSync(){scheduled=true},mirrorWorkoutScheduleToTable:async()=>{},
   nodeStorage:{setItem(k,v){values[k]=v;rest.revision++}},
