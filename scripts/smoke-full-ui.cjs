@@ -230,6 +230,12 @@ const {chromium}=require('playwright');
  await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:15000});
  const afterFeatureReload=await page.evaluate(()=>({schedule:workoutSchedule(),goal:PXStore.getItem('progressx-weight-goal-v1')}));
  if(afterFeatureReload.schedule.tue!=='REST'||Number(afterFeatureReload.goal)!==80)throw Error('Core feature data lost after reload');
+ // Daily history roundtrip: synthetic dated check-in in scoped snapshot storage.
+ await page.evaluate(()=>{
+   const history=dailyHistoryMap();
+   history['2026-10-09']={...(history['2026-10-09']||{}),qa_daily_relogin_marker:'daily-survives-account-roundtrip'};
+   PXStore.setItem(DAILY_HISTORY_KEY,JSON.stringify(history));
+ });
  // Account logout/login regression: retain account-scoped Workout Schedule and Weight Goal.
  // Use mock Supabase credentials and data only; do not touch production accounts.
  await page.locator('#pxLogout').click();
@@ -262,6 +268,9 @@ const {chromium}=require('playwright');
  if(!foodRoundtrip.entry||foodRoundtrip.entry.name!=='Queued QA meal')
    throw Error('Food Diary record missing or changed after sign-in: '+JSON.stringify(foodRoundtrip));
  if(foodRoundtrip.queued.length)throw Error('Already synced Food items unexpectedly pending after sign-in');
+ const dailyRoundtrip=await page.evaluate(()=>dailyHistoryMap()?.['2026-10-09']?.qa_daily_relogin_marker);
+ if(dailyRoundtrip!=='daily-survives-account-roundtrip')
+   throw Error('Daily history entry lost after account logout/login: '+JSON.stringify(dailyRoundtrip));
  if(afterRelogin.schedule.tue!=='REST'||Number(afterRelogin.goal)!==80)
    throw Error('Schedule or Weight Goal lost on account logout/login: '+JSON.stringify(afterRelogin));
  // Mobile touch layout regression for the signed-in account and Insights/Settings.
