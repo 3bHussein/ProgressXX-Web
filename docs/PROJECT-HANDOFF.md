@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## Latest work (2026-10-12)
+
+A static test for the 11-command unapplied privilege migration was added at `tests/security-migration-safety.cjs` and wired into `.github/workflows/full-ui-smoke.yml` (commit `df4a14761d11dbd77bb028c2f82e6eda0ee330ab`). Production database unchanged. Check current Actions status first; next step is independently approved staging/cost plus negative two-user RLS and CRUD tests. See `docs/DEVELOPMENT-LOG.md`.
+
 ## Mandatory continuity rule
 
 Every time work is finished, **append a dated entry to docs/DEVELOPMENT-LOG.md**, update the latest issue/next step in this file, and update ROADMAP checkboxes/evidence when relevant. Include changed files, commit/PR, actual CI/run link and test result, deployed/not deployed, data impact and next specific action. Read the newest development-log entry first in a new chat. No change is finished until documentation has been updated; never fabricate tests or success. These updates require a deliberate GitHub commit per task — they are **not automatic outside an active session**.
