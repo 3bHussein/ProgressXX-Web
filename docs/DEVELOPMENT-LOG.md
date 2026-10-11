@@ -23,6 +23,18 @@ This is the **append-only** chronological log of completed work, investigations,
 
 ## Entries (newest first)
 
+### 2026-10-12 — Food offline-to-online retry smoke coverage
+
+- **Previous CI evidence:** [Full UI run #38179694848](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38179694848) SUCCESS, including Workout CRUD, Workout Schedule mirror and noop regression checks.
+- **Change:** `scripts/smoke-full-ui.cjs` simulates offline browser mode and checks Food Library and Food Diary upserts do not falsely report success or reach mocked backend; restores connectivity and exercises successful retries, duplicate-free Food Diary write, and deleted product non-resurrection.
+- **Commit:** `0d5dbbbf628121f68e946b00300f206d354d003d`.
+- **Tests:** Await CI result for modified browser smoke test; mock backend tests do not prove all real-device/offline sync paths.
+- **Production/data:** No application runtime source or Supabase production data changed.
+- **Security:** `SECURITY-DEFERRED-2026-10-12` remains intentionally deferred.
+- **Next:** Inspect CI; fix failures without bypass; improve offline queued Food conflict/deletion coverage once baseline passes.
+
+
+
 ### 2026-10-12 — Workout sync test coverage promoted to CI
 
 - **Previous verification:** [Full UI smoke #38179540966](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38179540966) SUCCESS for Account Snapshot / Daily / Weight checks.
