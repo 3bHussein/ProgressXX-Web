@@ -1,0 +1,23 @@
+name: Full ProgressXX migration smoke
+on:
+  push:
+    branches: [feature/full-legacy-migration]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  full-ui-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Full UI browser smoke
+        run: |
+          python3 -m http.server 8765 > /tmp/full-ui-server.log 2>&1 &
+          sleep 2
+          node scripts/smoke-full-ui.cjs
