@@ -46,6 +46,11 @@
 ## Independent-browser mock sync VERIFIED — 2026-10-12
 ## Real-device sync QA checklist — 2026-10-12
 ## User-confirmed live Food Library sync (2026-10-12)
+## Live bidirectional Food sync confirmed by owner (2026-10-12)
+
+Owner confirmed phone-created Food Diary item appeared exactly once with correct fields on desktop. Previously confirmed desktop-created Food Library product appeared on phone. These are limited live bidirectional Food tests. Next read-only compare Workout, Daily, Weight existing records across devices; no production edits or security scope changes.
+
+
 
 Owner confirmed desktop-created Food Library test product appeared on phone. This is a partial, one-direction live sync pass. Reverse Food Diary sync and existing Daily/Workout/Weight reconciliation remain unchecked. No assistant production DB changes; security testing deferred.
 
