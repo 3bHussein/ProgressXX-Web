@@ -3,7 +3,7 @@ const {chromium}=require('playwright');
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  const page=await browser.newPage({viewport:{width:390,height:844}});
  const errors=[];
- let savedCloudPayload={},cloudWrites=0,legacyGoogleCalls=0,productWrites=[];
+ let savedCloudPayload={},cloudWrites=0,legacyGoogleCalls=0,productWrites=[],foodEntryWrites=[];
  page.on('request',req=>{if(/script\.google\.com|docs\.google\.com/.test(req.url()))legacyGoogleCalls++});
  page.on('pageerror',error=>errors.push(error.message));
  await page.route('**/auth/v1/**',async route=>{
@@ -12,6 +12,11 @@ const {chromium}=require('playwright');
  });
  await page.route('**/rest/v1/**',async route=>{
   const req=route.request(),isPost=req.method()==='POST',product=req.url().includes('/food_products');
+  if(isPost&&req.url().includes('/food_entries')){
+   const row=req.postDataJSON();foodEntryWrites.push(row);
+   await route.fulfill({status:201,contentType:'application/json',body:JSON.stringify([{id:'cccccccc-cccc-4ccc-8ccc-cccccccccccc',...row}])});
+   return;
+  }
   if(isPost&&product){
    const row=req.postDataJSON();productWrites.push(row);
    await route.fulfill({status:201,contentType:'application/json',body:JSON.stringify([{id:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',...row}])});
@@ -53,6 +58,7 @@ const {chromium}=require('playwright');
  if(!productWrites.length||productWrites.at(-1).name!=='QA only'||productWrites.at(-1).source_id!=='qa-test-record')throw Error('No real food_products table upsert request');
  const logReply=await page.evaluate(async()=>apiCall('food_log_upsert',{name:'QA only',id:'qa-log-record'}));
  if(!logReply?.ok)throw Error('Food log Supabase bridge failed: '+JSON.stringify(logReply));
+ if(!foodEntryWrites.length||foodEntryWrites.at(-1).client_id!=='pxlegacy:qa-log-record'||foodEntryWrites.at(-1).food_name!=='[Snack] QA only')throw Error('No real food_entries database upsert');
  const readReply=await page.evaluate(async()=>apiCall('food_products_list'));
  if(!readReply?.ok)throw Error('Food products read bridge failed');
  if(legacyGoogleCalls)throw Error('Called personal Google Sheets endpoint');
