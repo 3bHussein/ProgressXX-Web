@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Insights mobile click regression verified
+
+- Full UI Chromium [#38182994635](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38182994635) **SUCCESS** for Anatomy Atlas / Muscle Coverage tab clicks at both 320px and 390px, including selected-state checks.
+- Separate Deploy ProgressXX Full App [#38182976604](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38182976604) succeeded for an earlier commit; latest Pages deployment #38182994916 was still in progress at inspection.
+- No application/runtime/database writes in this task. User-data isolation and deferred security marker remain unchanged.
+- Next: confirm latest Pages deployment completion and gather real-device check when available.
+
+
 ### 2026-10-12 — Real click regression for Insights anatomy mobile tabs
 
 - Previous 320px and 390px tab height regression #38182804267 passed; verified prior Pages build #38182804147 succeeded.
