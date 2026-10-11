@@ -116,6 +116,22 @@ const {chromium}=require('playwright');
  if(afterReload.products.includes('qa-test-record'))throw Error('Stale local product appeared after refresh');
  if(productWrites.length!==postsBefore)throw Error('Stale cached products were re-uploaded to database');
 
+ // Offline outbox conflict checks: tombstoned products must never be resurrected.
+ const queueProbe=await page.evaluate(async()=>{
+   const dead='qa-outbox-deleted',alive='qa-outbox-active';
+   foodProducts.push({id:dead,name:'Removed while offline',servingQty:1,servingUnit:'serving',calories:10});
+   foodProducts.push({id:alive,name:'Queued fresh food',servingQty:1,servingUnit:'serving',calories:20});
+   PXStore.setItem('pxx-food-deleted-ids',JSON.stringify([dead]));
+   pxFoodQueue('product',dead);
+   pxFoodQueue('product',alive);
+   pxFoodQueue('product',alive);
+   const before=pxFoodOutbox().length;
+   await pxFlushFoodOutbox();
+   return {before,after:pxFoodOutbox(),dead,alive};
+ });
+ if(queueProbe.before!==2||queueProbe.after.length)throw Error('Food outbox did not deduplicate and drain after reconnect');
+ if(productWrites.some(x=>x.source_id===queueProbe.dead))throw Error('Tombstoned Food product was resurrected by outbox');
+ if(productWrites.filter(x=>x.source_id===queueProbe.alive).length!==1)throw Error('Outbox retry failed to save active product exactly once');
  const logReply=await page.evaluate(async()=>apiCall('food_log_upsert',{name:'QA only',id:'qa-log-record'}));
  if(!logReply?.ok)throw Error('Food log Supabase bridge failed: '+JSON.stringify(logReply));
  if(!foodEntryWrites.some(x=>x.client_id==='pxlegacy:qa-log-record'&&x.food_name==='[Snack] QA only'))throw Error('No real food_entries database upsert');
