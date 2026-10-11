@@ -8,6 +8,12 @@
 - **P0:** blocks inviting outside users or any paid launch; **P1:** blocks broad beta/reliable operations; **P2:** product growth/commercial enhancements.
 - This roadmap is **not** a claim that implementation is missing; a feature may exist yet remain unverified.
 
+## Deferred security checkpoint — SECURITY-DEFERRED-2026-10-12
+
+**On hold by owner, resume only on explicit request.** Paid staging and advanced two-account RLS/CRUD testing are deferred because of budget/priorities. Existing excessive TRUNCATE/TRIGGER grants remain; the migration is prepared but NOT applied. No commercial release sign-off is possible until this P0 gate is revisited and passed. See [development log](docs/DEVELOPMENT-LOG.md) and [Supabase security audit](docs/SUPABASE-SECURITY-AUDIT.md).
+
+To resume: `Resume SECURITY-DEFERRED-2026-10-12` or `ارجع لاختبارات الأمان المؤجلة`.
+
 ## Phase 0 — Baseline / protect current data (P0)
 
 - [ ] Capture current live deployed commit and green required Actions; confirm `index.html` is production target.
