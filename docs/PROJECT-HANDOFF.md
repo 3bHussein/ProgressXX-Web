@@ -31,6 +31,11 @@
 ## Logout/login mock fixture fix (2026-10-12)
 ## Current QA follow-up — 2026-10-12
 ## Food record roundtrip QA (2026-10-12)
+## Latest Food relogin CI diagnosis — 2026-10-12
+
+CI #38184159603 failed missing Food product after re-login; Pages #38184159952 passed. Login's normalized Food hydration is asynchronous after gate closes. Test now awaits `__pxRefreshNutrition(true)` before comparing records, commit `7e67c673057eda15b00531b28b610b6e42e07070`. New CI pending; retain strict assertions. Production data untouched, security deferred.
+
+
 
 Prior Full UI #38184053542 and Pages #38184053395 passed. Added mock account Food Library product and Diary entry record-level assertions on logout/login in commit `e533f206bd467945717f74d13dd528720567052b`; new CI pending. Daily full roundtrip not yet proven. No production data changes. Security deferred.
 
