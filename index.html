@@ -118,20 +118,20 @@ async function db(table,method='GET',body=null,query=''){
  if(response.status===204)return null;
  const text=await response.text();return text?JSON.parse(text):null;
 }
-let dashBusy=false;
+let dashBusy=false,historyRows=[],historyOffset=0;
+function renderHistory(){const term=el('historySearch').value.toLowerCase().trim();const filtered=historyRows.filter(x=>(x.notes||'Workout').toLowerCase().includes(term));const page=filtered.slice(historyOffset,historyOffset+10);const list=el('workoutHistory');list.replaceChildren();if(!page.length){const li=document.createElement('li');li.textContent='No matching workouts.';list.append(li)}for(const x of page){const li=document.createElement('li');li.textContent=(x.notes||'Workout')+' · '+new Date(x.started_at).toLocaleDateString();list.append(li)}el('historyCount').textContent=filtered.length+' recent records';el('historyPage').textContent=(filtered.length?Math.floor(historyOffset/10)+1:0)+' / '+Math.max(1,Math.ceil(filtered.length/10));el('historyPrev').disabled=historyOffset===0;el('historyNext').disabled=historyOffset+10>=filtered.length}
+el('historySearch').addEventListener('input',()=>{historyOffset=0;renderHistory()});el('historyPrev').addEventListener('click',()=>{historyOffset=Math.max(0,historyOffset-10);renderHistory()});el('historyNext').addEventListener('click',()=>{historyOffset+=10;renderHistory()});
 async function loadDashboard(){
  if(!session?.user||dashBusy)return;
  dashBusy=true;
  try{
   const [sessions,weights]=await Promise.all([
-   db('workout_sessions','GET',null,'?select=id,notes,started_at&order=started_at.desc&limit=20'),
+   db('workout_sessions','GET',null,'?select=id,notes,started_at&order=started_at.desc&limit=500'),
    db('weight_checkins','GET',null,'?select=weight_kg,measured_at&order=measured_at.desc&limit=1')
   ]);
   el('workoutCount').textContent=String(sessions.length)+(sessions.length===20?'+':'');
   el('latestWeight').textContent=weights.length?Number(weights[0].weight_kg).toFixed(1)+' kg':'—';
-  const list=el('workoutHistory');list.replaceChildren();
-  if(!sessions.length){const li=document.createElement('li');li.textContent='No workouts yet.';list.append(li)}
-  for(const item of sessions){const li=document.createElement('li');li.textContent=(item.notes||'Workout')+' · '+new Date(item.started_at).toLocaleDateString();list.append(li)}
+  historyRows=sessions;renderHistory();
  }catch(err){notice('Dashboard: '+err.message,true)}finally{dashBusy=false}
 }
 el('workoutForm').addEventListener('submit',async e=>{
@@ -348,6 +348,7 @@ async function loadSchedule(){
  const grid=el('scheduleGrid');grid.textContent='Loading your week…';
  try{
   const entries=await db('workout_schedule','GET',null,'?select=id,weekday,title,notes&order=weekday.asc');
+  updateTodayPlan(entries);
   const byDay=new Map(entries.map(x=>[x.weekday,x]));
   grid.replaceChildren();
   for(const [day,dayName] of ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'].entries()){
@@ -373,6 +374,24 @@ async function loadSchedule(){
   }
  }catch(err){grid.textContent='Schedule unavailable: '+err.message}
 }
+
+let todayWorkoutTitle='';
+function updateTodayPlan(entries){
+ const entry=entries.find(x=>x.weekday===new Date().getDay());
+ todayWorkoutTitle=entry?.title||'';
+ const today=new Date().toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'});
+ el('todayTitle').textContent=entry?entry.title:'Rest & recovery';
+ el('todaySummary').textContent=entry?'Scheduled for '+today+' · '+(entry.notes||'Ready when you are.'):'No workout scheduled for '+today+'. Enjoy a rest day or set one in Training.';
+ el('todayStart').textContent=entry?'Start today’s workout →':'Edit weekly schedule →';
+}
+el('todayStart').addEventListener('click',()=>{
+ selectView('training');
+ if(todayWorkoutTitle){
+  el('workoutNotes').value=todayWorkoutTitle;
+  el('workoutNotes').scrollIntoView({behavior:'smooth',block:'center'});
+  el('workoutNotes').focus();
+ }else{el('scheduleSection').scrollIntoView({behavior:'smooth',block:'center'})}
+});
 
 init();
 </script></body></html>
