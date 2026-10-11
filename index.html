@@ -5142,7 +5142,7 @@ function openSheet(){
 function getApiUrl(){throw Error('Google Sheets integration disabled in commercial build.');}
 async function apiCall(action,params={}){
  const simpleRead=(key,field)=>{try{return {ok:true,[field]:JSON.parse(PXStore.getItem(key)||'[]')}}catch{return {ok:true,[field]:[]}}};
- if(action==='food_products_list')return simpleRead('progressx-food-products','products');
+ 
  if(action==='food_log_list'){const data=simpleRead('progressx-food-log','entries');data.entries=data.entries.filter(x=>!params.date||String(x.date)===String(params.date));return data}
  if(action==='meal_templates_list')return simpleRead('progressx-saved-meals-v1','templates');
  if(action==='nutrition_targets_get'){try{return {ok:true,targets:JSON.parse(PXStore.getItem('progressx-nutrition-targets')||'{}')}}catch{return {ok:true,targets:{}}}}
@@ -5165,7 +5165,18 @@ async function apiCall(action,params={}){
    return {ok:true,id:sourceId};
   }catch(e){return {ok:false,error:'Supabase food_entries: '+String(e.message||e)}}
  }
- if(['food_product_delete','food_log_delete'].includes(action)){
+ if(action==='food_product_delete'){
+  try{
+   if(!navigator.onLine)throw Error('Offline — delete requires a database connection');
+   await window.__pxDeleteProduct(String(params.id));
+   return {ok:true};
+  }catch(e){return {ok:false,error:'Supabase delete: '+String(e.message||e)}}
+ }
+ if(action==='food_products_list'){
+  try{return {ok:true,products:await window.__pxLoadProducts()}}
+  catch(e){return {ok:false,error:String(e.message||e)}}
+ }
+ if(['food_log_delete'].includes(action)){
   try{
    if(!navigator.onLine)throw Error('Offline');
    const r=await window.__pxCommitFood();
@@ -5591,10 +5602,8 @@ async function saveOnlineFoodToLibrary(index){
     renderNutrition();
     setOnlineFoodSearchState(`${p.name} saved to Food Library.`,true);
   }catch(e){
-    foodProducts=foodProducts.filter(x=>String(x.id)!==String(tempId));
-    PXStore.setItem(FOOD_PRODUCTS_KEY,JSON.stringify(foodProducts));
-    renderNutrition();
-    setOnlineFoodSearchState('Could not save product: '+e.message,false);
+    pxFoodQueue('product',tempId);
+    setOnlineFoodSearchState('Product kept locally — database sync pending: '+e.message,false);
   }
 }
 function reviewOnlineFood(index){
@@ -6574,29 +6583,18 @@ async function saveFoodProduct(){
   }
 }
 async function deleteFoodProduct(id){
-  if(!confirm('Delete this product from your food library? Existing diary entries will stay unchanged.'))return;
-
-  const idx=foodProducts.findIndex(x=>String(x.id)===String(id));
-  const backup=idx>=0?clone(foodProducts[idx]):null;
-
-  if(idx>=0)foodProducts.splice(idx,1);
+ if(!confirm('Delete this product from your Food Library? Existing food diary entries will stay.'))return;
+ const product=foodProducts.find(x=>String(x.id)===String(id));
+ if(!product)return;
+ setNutritionSyncState('Deleting product from Supabase…');
+ try{
+  const result=await apiCall('food_product_delete',{id:String(id)});
+  if(!result?.ok)throw Error(result?.error||'Delete not confirmed');
+  foodProducts=foodProducts.filter(x=>String(x.id)!==String(id));
   PXStore.setItem(FOOD_PRODUCTS_KEY,JSON.stringify(foodProducts));
-  renderNutrition();
-  setNutritionSyncState('Deleting product in background…');
-
-  try{
-    const r=await apiCall('food_product_delete',{id});
-    if(!r.ok)throw new Error(r.error||'Delete failed');
-    setNutritionSyncState('Food product deleted',true);
-  }catch(e){
-    if(backup){
-      foodProducts.push(backup);
-      PXStore.setItem(FOOD_PRODUCTS_KEY,JSON.stringify(foodProducts));
-      renderNutrition();
-    }
-    setNutritionSyncState('Delete error: '+e.message,false);
-    alert('Could not delete product from Google Sheet: '+e.message);
-  }
+  PXStore.setItem(PX_FOOD_OUTBOX_KEY,JSON.stringify(pxFoodOutbox().filter(x=>!(x.type==='product'&&String(x.id)===String(id)))));
+  renderNutrition();setNutritionSyncState('✓ Product deleted from Supabase',true);
+ }catch(e){setNutritionSyncState('Product not deleted: '+e.message,false)}
 }
 
 async function syncMealTemplatesFromSheet(silent=true){
@@ -9201,6 +9199,28 @@ window.__legacyBoot=init;
   get length(){return Object.keys(values).length}
  };
  window.__pxActiveStore=nodeStorage;
+ window.__pxLoadProducts=async()=>{
+  if(!ready||!account)throw Error('Sign in to load products');
+  const rows=await cloud('food_products?select=id,source_id,barcode,name,serving_qty,serving_unit,calories,protein_g,carbs_g,fat_g&order=created_at.desc&limit=2000');
+  if(!Array.isArray(rows))throw Error('Product list unavailable');
+  const mapped=rows.map(r=>({id:r.source_id||r.id,barcode:r.barcode||'',name:r.name,
+   servingQty:Number(r.serving_qty)||1,servingUnit:r.serving_unit||'g',
+   calories:Number(r.calories)||0,protein:Number(r.protein_g)||0,carbs:Number(r.carbs_g)||0,fat:Number(r.fat_g)||0}));
+  // Keep entries not yet uploaded, but do not resurrect products deleted from the database.
+  const pendingIds=new Set(pxFoodOutbox().filter(x=>x.type==='product').map(x=>String(x.id)));
+  for(const p of foodProducts)if(pendingIds.has(String(p.id))&&!mapped.some(x=>String(x.id)===String(p.id)))mapped.push(p);
+  foodProducts=mapped;
+  PXStore.setItem(FOOD_PRODUCTS_KEY,JSON.stringify(foodProducts));
+  renderNutrition();return mapped;
+ };
+ window.__pxDeleteProduct=async id=>{
+  if(!ready||!account)throw Error('Please sign in');
+  // RLS scopes all writes to the authenticated owner.
+  await cloud('food_products?source_id=eq.'+encodeURIComponent(id),'DELETE');
+  const remaining=await cloud('food_products?select=id&source_id=eq.'+encodeURIComponent(id)+'&limit=1');
+  if(!Array.isArray(remaining)||remaining.length)throw Error('Product deletion was not confirmed');
+  return true;
+ };
  window.__pxSaveProduct=async p=>{
   if(!ready||!account)throw Error('Please sign in');
   const numeric=x=>Number.isFinite(Number(x))?Number(x):0;
@@ -9353,7 +9373,7 @@ window.__legacyBoot=init;
   if(typeof window.__legacyBoot!=='function')throw Error('Original app did not initialize');
   await window.__legacyBoot();
   if(pending)scheduleCloudSync();
-  setTimeout(async()=>{try{await window.__pxBackfillFoodProducts?.();await window.__pxBackfillFoodDiary?.();await window.__pxLoadFoodDiary?.()}catch(e){tell('Food sync: '+e.message,true)}},1500);
+  setTimeout(async()=>{try{await window.__pxBackfillFoodProducts?.();await window.__pxLoadProducts?.();await window.__pxBackfillFoodDiary?.();await window.__pxLoadFoodDiary?.()}catch(e){tell('Food sync: '+e.message,true)}},1500);
   gate.hidden=true;document.getElementById('pxAccountTools').hidden=false;
  }
  document.getElementById('pxLogin').addEventListener('submit',async e=>{
