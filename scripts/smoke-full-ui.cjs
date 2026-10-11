@@ -3,7 +3,7 @@ const {chromium}=require('playwright');
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  const page=await browser.newPage({viewport:{width:390,height:844}});
  const errors=[];
- let savedCloudPayload={},cloudWrites=0,legacyGoogleCalls=0;
+ let savedCloudPayload={},cloudWrites=0,legacyGoogleCalls=0,productWrites=[];
  page.on('request',req=>{if(/script\.google\.com|docs\.google\.com/.test(req.url()))legacyGoogleCalls++});
  page.on('pageerror',error=>errors.push(error.message));
  await page.route('**/auth/v1/**',async route=>{
@@ -11,8 +11,14 @@ const {chromium}=require('playwright');
   await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({access_token:'mock-auth-token',refresh_token:'mock-refresh-token',expires_at:Math.floor(Date.now()/1000)+3600,user:{id:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',email:'qa@example.test'}})});
  });
  await page.route('**/rest/v1/**',async route=>{
-  if(route.request().method()==='POST'){savedCloudPayload=route.request().postDataJSON().payload;cloudWrites++}
-  await route.fulfill({status:200,contentType:'application/json',body:route.request().method()==='GET'?JSON.stringify(Object.keys(savedCloudPayload).length?[{payload:savedCloudPayload}]:[]):'[{}]'});
+  const req=route.request(),isPost=req.method()==='POST',product=req.url().includes('/food_products');
+  if(isPost&&product){
+   const row=req.postDataJSON();productWrites.push(row);
+   await route.fulfill({status:201,contentType:'application/json',body:JSON.stringify([{id:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',...row}])});
+   return;
+  }
+  if(isPost){savedCloudPayload=req.postDataJSON().payload;cloudWrites++}
+  await route.fulfill({status:200,contentType:'application/json',body:req.method()==='GET'?JSON.stringify(Object.keys(savedCloudPayload).length?[{payload:savedCloudPayload}]:[]):'[{}]'});
  });
  await page.route('https://unpkg.com/**',route=>route.abort());
  await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});
@@ -44,6 +50,7 @@ const {chromium}=require('playwright');
  // Legacy Food API must no longer try the disabled Google Sheets transport.
  const productReply=await page.evaluate(async()=>apiCall('food_product_upsert',{name:'QA only',id:'qa-test-record'}));
  if(!productReply?.ok)throw Error('Food product Supabase bridge failed: '+JSON.stringify(productReply));
+ if(!productWrites.length||productWrites.at(-1).name!=='QA only'||productWrites.at(-1).source_id!=='qa-test-record')throw Error('No real food_products table upsert request');
  const logReply=await page.evaluate(async()=>apiCall('food_log_upsert',{name:'QA only',id:'qa-log-record'}));
  if(!logReply?.ok)throw Error('Food log Supabase bridge failed: '+JSON.stringify(logReply));
  const readReply=await page.evaluate(async()=>apiCall('food_products_list'));
