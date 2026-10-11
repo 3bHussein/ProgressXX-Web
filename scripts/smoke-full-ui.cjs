@@ -12,6 +12,10 @@ const {chromium}=require('playwright');
  });
  await page.route('**/rest/v1/**',async route=>{
   const req=route.request(),isPost=req.method()==='POST',product=req.url().includes('/food_products');
+  if(req.url().includes('/food_entries')&&req.method()==='GET'){
+   const rows=foodEntryWrites.length?[{id:'cccccccc-cccc-4ccc-8ccc-cccccccccccc',...foodEntryWrites.at(-1)}]:[];
+   await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(rows)});return;
+  }
   if(isPost&&req.url().includes('/food_entries')){
    const row=req.postDataJSON();foodEntryWrites.push(row);
    await route.fulfill({status:201,contentType:'application/json',body:JSON.stringify([{id:'cccccccc-cccc-4ccc-8ccc-cccccccccccc',...row}])});
