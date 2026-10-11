@@ -5572,7 +5572,7 @@ async function saveOnlineFoodToLibrary(index){
   setOnlineFoodSearchState(`Saving ${p.name} to your library…`);
 
   try{
-    const r=await apiCall('food_product_upsert',{...product,id:''});
+    const r=await apiCall('food_product_upsert',{...product,id:String(tempId)});
     if(!r.ok)throw new Error(r.error||'Could not save product');
 
     const row=foodProducts.find(x=>String(x.id)===String(tempId));
@@ -6478,7 +6478,7 @@ async function pxFlushFoodOutbox(){
    }
    try{
     const action=isProduct?'food_product_upsert':'food_log_upsert';
-    const payload={...row,id:String(row.id).startsWith('temp_')?'':row.id};
+    const payload={...row,id:isProduct?String(row.id):(String(row.id).startsWith('temp_')?'':row.id)};
     const r=await apiCall(action,payload);
     if(!r?.ok||!r.id)throw Error(r?.error||'Sync failed');
     const oldId=row.id;
