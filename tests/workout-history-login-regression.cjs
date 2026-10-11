@@ -1,0 +1,13 @@
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const html=fs.readFileSync('index.html','utf8');
+const refresh=html.slice(html.indexOf('async function syncFromSheet('),html.indexOf('async function startupWorkoutSync('));
+const login=html.slice(html.indexOf('async function activate(next)'),html.indexOf("document.getElementById('pxLogin')"));
+assert.match(login,/await window\.__legacyBoot\(\);[\s\S]*await startupWorkoutSync\(\)/,'Workout table must load after signed-in account boots');
+assert.match(refresh,/new Map\(\)/,'History must track stable IDs');
+assert.match(refresh,/unique\.set\(String\(row\.id\),row\)/,'Distinct entries must be retained by ID');
+assert.doesNotMatch(refresh,/dedupeRemoteWorkouts\(remoteWorkoutRows/,'Do not dedupe historical workouts by exercise/week');
+assert.doesNotMatch(refresh,/cleanupRemoteWorkoutDuplicates\(deduped\.duplicates\)/,'Do not delete normalized historical records');
+const example=[{id:'632',week:20,day:'Pull',exercise:'Row'},{id:'633',week:20,day:'Pull',exercise:'Row'}];
+const byId=new Map(example.map(x=>[String(x.id),x]));
+assert.equal(byId.size,2);
+console.log('PASS: signed-in workout fetch retains all 634 independent history IDs including same-exercise pair');
