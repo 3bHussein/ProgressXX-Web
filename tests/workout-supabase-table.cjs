@@ -19,7 +19,7 @@ async function cloud(path,method='GET',body){
  if(method==='DELETE'){records=records.filter(x=>x.source_id!==filter?.slice(3));return null}
  throw Error('Unexpected REST method '+method);
 }
-const scope={account,ready:true,cloud,workoutQueue:()=>[],data:[],Error,String,Number,Array,Date};
+const scope={account,ready:true,cloud,workoutQueue:()=>[],workoutDeletedIds:()=>new Set(),data:[],Error,String,Number,Array,Date};
 scope.window=scope;
 vm.runInNewContext(html.slice(start,end),scope);
 (async()=>{
