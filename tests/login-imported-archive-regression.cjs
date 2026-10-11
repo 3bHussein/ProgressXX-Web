@@ -28,8 +28,10 @@ await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'
 await page.locator('#pxEmail').fill('test@example.com');await page.locator('#pxPassword').fill('test');await page.locator('#pxSignin').click();
 await page.waitForTimeout(4500);
 const status=await page.locator('#pxLoginMessage').textContent();
-const result=await page.evaluate(()=>({hidden:document.getElementById('pxCommercialGate').hidden,entries:typeof data==='object'&&Array.isArray(data)?data.length:null,reminders:Array.isArray(dailyReminders)?dailyReminders.length:null}));
-if(!result.hidden||result.entries!==32||problems.length)throw Error(JSON.stringify({status,result,problems:problems.slice(0,6)},null,2));
-console.log('PASS: sampled historical entries + restored Food, Daily, nutrition archives login and hydrate safely');
+const result=await page.evaluate(()=>({hidden:document.getElementById('pxCommercialGate').hidden,entries:typeof data==='object'&&Array.isArray(data)?data.length:null,localFixtureCount:Array.isArray(data)?data.filter(x=>String(x.id)==='local-test').length:null,reminders:Array.isArray(dailyReminders)?dailyReminders.length:null}));
+// Snapshot intentionally contains one separate local workout plus 32 cloud history entries.
+// Verify the merge retains exactly that local record instead of masking the count mismatch.
+if(!result.hidden||result.entries!==workouts.length+1||result.localFixtureCount!==1||problems.length)throw Error(JSON.stringify({status,result,problems:problems.slice(0,6)},null,2));
+console.log('PASS: 32 cloud history entries + 1 local snapshot entry, restored Food/Daily archives and no browser errors');
 await browser.close();
 })().catch(e=>{console.error('FAIL: restored Food/Daily account login regression:',e?.stack||e);process.exit(1)});
