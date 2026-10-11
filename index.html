@@ -9537,7 +9537,25 @@ window.__legacyBoot=init;
    }
    // This preflight reduces stale writes; concurrent server writes still require
    // an atomic revision check before a complete cross-device guarantee.
-   await cloud('user_app_snapshots?on_conflict=user_id','POST',{user_id:account,payload:{...values},updated_at:new Date().toISOString()});
+   // Atomic RPC is opt-in only after its SQL migration is deployed and verified.
+   // Avoid enabling it on the live site before the backend function exists.
+   let confirmedPayload=null;
+   if(window.__pxAtomicSnapshotReady===true){
+    confirmedPayload=await cloud('rpc/progressxx_sync_snapshot','POST',{p_payload:{...values}});
+    if(!confirmedPayload||typeof confirmedPayload!=='object'||Array.isArray(confirmedPayload))
+     throw Error('Atomic snapshot write was not confirmed');
+    // The server can remove workouts deleted on another device.
+    // Bring the signed-in account cache into agreement with the confirmed result.
+    for(const key of ['progressx-data-v19','progressx-workout-sync-queue-v1','progressx-workout-deleted-ids-v1']){
+     if(typeof confirmedPayload[key]!=='string')continue;
+     if(values[key]!==confirmedPayload[key]){
+      values[key]=confirmedPayload[key];
+      browserStorage.setItem(storagePrefix(account)+key,confirmedPayload[key]);
+     }
+    }
+   }else{
+    await cloud('user_app_snapshots?on_conflict=user_id','POST',{user_id:account,payload:{...values},updated_at:new Date().toISOString()});
+   }
    await mirrorWorkoutScheduleToTable({...values});
    savedRevision=writing;if(revision===writing)clearPending();tell('✓ Synced to Supabase · '+new Date().toLocaleTimeString());
   }catch(e){tell('Unsynced changes: '+e.message,true)}
