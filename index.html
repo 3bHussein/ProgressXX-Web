@@ -14,7 +14,7 @@ input{width:100%;border:1px solid #394b66;border-radius:12px;padding:14px;backgr
 .hidden{display:none!important}.small{font-size:12px;color:#91a5bf}strong{overflow-wrap:anywhere}@media(max-width:420px){main{padding:12px}.panel{border-radius:18px;padding:22px}}
 
 .dashboard{margin-top:22px;border-top:1px solid #394b66;padding-top:18px}.dashgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{background:#0c1626;border:1px solid #30405a;border-radius:14px;padding:14px}.stat b{display:block;font-size:25px;margin-top:7px}.stat span{font-size:12px;color:#9eb1ca}.fieldrow{display:flex;gap:8px;align-items:end}.fieldrow input{min-width:0;flex:1}.fieldrow button{margin:0;white-space:nowrap}.history{margin:12px 0;padding:0;list-style:none}.history li{padding:10px 0;border-bottom:1px solid #2c3750;font-size:14px}.viewhint{font-size:13px}
-.programCard{padding:13px;border:1px solid #354560;border-radius:14px;background:#0a1525;margin:10px 0}.programCard h4{margin:0 0 5px}.programCard p{margin:4px 0 10px}.programCard button{padding:10px;background:#352a58;color:#fff}.programDay{margin:13px 0;border-top:1px solid #354560;padding-top:12px}.programDay li{line-height:1.6}.pill{display:inline-block;background:#243653;color:#cae5ff;border-radius:20px;padding:4px 9px;font-size:11px}.sectionbar{display:flex;gap:8px;margin:12px 0}.sectionbar button{flex:1;background:#25354b;color:#fff;padding:10px}.sectionbar button.selected{background:#6548bd}.setEntry{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 15px;align-items:center}.setEntry input{width:84px;flex:1;min-width:70px}.setEntry button{padding:11px;background:#6344bf;color:#fff}.setEntry .setFeedback{width:100%;font-size:12px;color:#87e6bb}.exerciseLabel{font-weight:700}.exerciseHelp{font-size:12px;color:#9fb0c7}.timerText{font-size:13px;color:#c8b7ff;margin:8px 0}.programCard button:disabled{opacity:.45}</style></head><body><main><section class="panel">
+.programCard{padding:13px;border:1px solid #354560;border-radius:14px;background:#0a1525;margin:10px 0}.programCard h4{margin:0 0 5px}.programCard p{margin:4px 0 10px}.programCard button{padding:10px;background:#352a58;color:#fff}.programDay{margin:13px 0;border-top:1px solid #354560;padding-top:12px}.programDay li{line-height:1.6}.pill{display:inline-block;background:#243653;color:#cae5ff;border-radius:20px;padding:4px 9px;font-size:11px}.sectionbar{display:flex;gap:8px;margin:12px 0}.sectionbar button{flex:1;background:#25354b;color:#fff;padding:10px}.sectionbar button.selected{background:#6548bd}.setEntry{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 15px;align-items:center}.setEntry input{width:84px;flex:1;min-width:70px}.setEntry button{padding:11px;background:#6344bf;color:#fff}.setEntry .setFeedback{width:100%;font-size:12px;color:#87e6bb}.exerciseLabel{font-weight:700}.exerciseHelp{font-size:12px;color:#9fb0c7}.timerText{font-size:13px;color:#c8b7ff;margin:8px 0}.programCard button:disabled{opacity:.45}.langSwitch{display:flex;gap:8px;margin:10px 0}.langSwitch button{background:#24354c;color:white;padding:9px 13px}.langSwitch button.selected{background:#6951bb}.muscleTag{display:inline-block;font-size:12px;border-radius:12px;background:#193e42;color:#a8f5e4;padding:4px 9px;margin:6px 0}.setHistory{font-size:12px;color:#bad0e9;padding:6px 0}.exerciseHelp[dir=rtl]{text-align:right;line-height:1.7}</style></head><body><main><section class="panel">
 <div class="brand">Progress<span style="color:#ab8afe">XX</span></div>
 <p class="small">COMMERCIAL ACCOUNT PREVIEW · Separate from your existing personal app</p>
 <div id="signedOut"><div class="tabs"><button id="tabSignIn" class="active" type="button">Sign in</button><button id="tabSignUp" type="button">Create account</button></div>
@@ -95,7 +95,22 @@ el('weightForm').addEventListener('submit',async e=>{
 el('refreshData').addEventListener('click',loadDashboard);
 
 
+let exerciseLanguage='en';
 let programCatalog=[],programFilter='home', activeProgramSession=null,restTick=null;
+const exerciseDetails={
+'Chair Squat':['Quadriceps / Glutes','Sit toward a stable chair, then stand up while keeping your knees aligned.','اجلس باتجاه كرسي ثابت ثم قف مع الحفاظ على محاذاة الركبتين.'],
+'Incline Push-up':['Chest / Triceps','Keep your torso straight and lower toward a stable elevated surface.','حافظ على استقامة الجسم وانزل ناحية سطح مرتفع وثابت.'],
+'Glute Bridge':['Glutes / Hamstrings','Lift hips by pushing through your heels, avoiding excessive lower-back arch.','ارفع الحوض بالضغط بالكعبين وتجنب تقوس أسفل الظهر.'],
+'Bird Dog':['Core / Back','Extend opposite arm and leg without twisting your hips.','مد الذراع والرجل المتقابلتين من دون لف الحوض.'],
+'Bench Press':['Chest / Triceps','Lower with control and press up; use a spotter for heavy attempts.','انزل بالوزن بتحكم ثم ادفع للأعلى، واستخدم مساعداً عند الأوزان الثقيلة.'],
+'Back Squat':['Quads / Glutes','Brace your core and descend as far as you can control.','ثبّت الجذع وانزل بالقدر الذي يمكنك التحكم فيه.'],
+'Romanian Deadlift':['Hamstrings / Glutes','Hinge back at the hips and keep weights close to your legs.','ادفع الحوض للخلف وحافظ على قرب الأوزان من الساقين.'],
+'Lat Pulldown':['Back / Biceps','Pull elbows down while keeping your trunk controlled.','اسحب المرفقين للأسفل مع ثبات الجذع.'],
+'Overhead Press':['Shoulders / Triceps','Press upward without leaning excessively backward.','ادفع الوزن لأعلى من دون الميل للخلف بشكل مبالغ فيه.'],
+'Leg Press':['Quads / Glutes','Lower slowly within a comfortable range and avoid locking knees.','انزل ببطء في مدى مريح وتجنب قفل الركبتين.'],
+'Biceps Curl':['Biceps','Keep elbows near your sides and avoid swinging.','حافظ على المرفقين قرب الجسم وتجنب التأرجح.'],
+'Dead Bug':['Core','Keep your lower back stable while extending opposite limbs.','ثبّت أسفل الظهر أثناء مد الأطراف المتقابلة.']
+};
 const exerciseTips={
 'Chair Squat':'Sit back toward a stable chair, control the descent and stand tall.',
 'Incline Push-up':'Keep your body straight and lower your chest toward a stable elevated surface.',
@@ -135,6 +150,13 @@ async function viewProgram(program){
   const days=await db('program_days','GET',null,'?select=id,title,day_index&template_id=eq.'+encodeURIComponent(program.id)+'&order=day_index.asc');
   const wrapper=document.createElement('div');wrapper.className='programCard';
   const title=document.createElement('h3');title.textContent=program.title;wrapper.append(title);
+  const langs=document.createElement('div');langs.className='langSwitch';
+  for(const [code,label] of [['en','English'],['ar','العربية']]){
+   const b=document.createElement('button');b.textContent=label;b.type='button';b.classList.toggle('selected',exerciseLanguage===code);
+   b.addEventListener('click',()=>{exerciseLanguage=code;viewProgram(program)});
+   langs.append(b);
+  }
+  wrapper.append(langs);
   for(const d of days){
    const section=document.createElement('section');section.className='programDay';
    const h=document.createElement('h4');h.textContent='Day '+d.day_index+' · '+d.title;section.append(h);
@@ -143,7 +165,10 @@ async function viewProgram(program){
    for(const ex of exercises){
  const li=document.createElement('li');
  const name=document.createElement('div');name.className='exerciseLabel';name.textContent=ex.exercise_name+' — '+ex.sets+' × '+ex.rep_range;
- const tip=document.createElement('div');tip.className='exerciseHelp';tip.textContent=exerciseTips[ex.exercise_name]||'Choose a load and range of motion you can control. Stop if painful.';
+ const tip=document.createElement('div');tip.className='exerciseHelp';const detail=exerciseDetails[ex.exercise_name];
+ tip.textContent=detail?(exerciseLanguage==='ar'?detail[2]:detail[1]):(exerciseLanguage==='ar'?'اختر وزناً ومدى حركة يمكنك التحكم فيهما وتوقف عند الشعور بالألم.':'Choose a controlled load and range; stop if painful.');
+ tip.dir=exerciseLanguage==='ar'?'rtl':'ltr';
+ const muscle=document.createElement('div');muscle.className='muscleTag';muscle.textContent=detail?detail[0]:'Full-body / see exercise form';
  const row=document.createElement('div');row.className='setEntry';
  const reps=document.createElement('input');reps.type='number';reps.min='1';reps.max='1000';reps.step='1';reps.placeholder='Reps';reps.setAttribute('aria-label',ex.exercise_name+' repetitions');
  const weight=document.createElement('input');weight.type='number';weight.min='0';weight.step='0.5';weight.placeholder='kg (0=BW)';weight.setAttribute('aria-label',ex.exercise_name+' weight kg');
@@ -169,7 +194,12 @@ async function viewProgram(program){
    if(ex.rest_seconds)runRestTimer(ex.rest_seconds,timer);
   }catch(err){feedback.textContent='Error: '+err.message}finally{btn.disabled=false}
  });
- row.append(reps,weight,btn,feedback);li.append(name,tip,row,timer);ul.append(li);
+ const history=document.createElement('div');history.className='setHistory';history.textContent='Loading last sets…';
+ try{
+   const recent=await db('workout_sets','GET',null,'?select=reps,weight_kg,performed_at&exercise_name=eq.'+encodeURIComponent(ex.exercise_name)+'&order=performed_at.desc&limit=3');
+   history.textContent=recent.length?('Previous: '+recent.map(x=>x.reps+' reps × '+Number(x.weight_kg||0)+' kg').join(' · ')):'No previous sets yet.';
+ }catch{history.textContent='Previous sets unavailable.'}
+ row.append(reps,weight,btn,feedback);li.append(name,muscle,tip,history,row,timer);ul.append(li);
 }
    section.append(ul);
    const start=document.createElement('button');start.type='button';start.textContent='Log this day';start.addEventListener('click',()=>{el('workoutNotes').value=program.title+' — '+d.title;el('workoutNotes').scrollIntoView({behavior:'smooth',block:'center'});el('workoutNotes').focus()});section.append(start);wrapper.append(section);
