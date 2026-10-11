@@ -23,6 +23,17 @@ This is the **append-only** chronological log of completed work, investigations,
 
 ## Entries (newest first)
 
+### 2026-10-12 — Promote account sync, Daily and Weight regression checks into CI
+
+- **Scope:** Automated verification only, no production app/database changes; deferred security item SECURITY-DEFERRED-2026-10-12 remains deferred.
+- **Changed:** `.github/workflows/full-ui-smoke.yml` (commit `e53bf90ac1e9a83aa9338339fd87cc52f4ce9940`).
+- **Added CI checks:** `tests/account-pages-snapshot-sync.cjs` (two isolated browser contexts, same test account, account snapshot roundtrip), `tests/daily-history-supabase-hydration.cjs` (Daily archival load/idempotency), `tests/weight-table-bridge.cjs` (Weight create/retry/delete). Existing Chromium smoke still runs first.
+- **Verification:** Await GitHub Actions run result; tests simulate Supabase responses and do not establish true user-to-user RLS isolation.
+- **Data/deployment impact:** No database modifications or migration applications; no user data affected.
+- **Next:** Inspect full-ui-smoke workflow outcome, correct any genuine regression, then extend Food/Workout normalized sync tests. Do not resume the deferred security phase without a request.
+
+
+
 ### 2026-10-12 — SECURITY-DEFERRED-2026-10-12: Security staging and advanced RLS testing paused by owner
 
 - **Decision:** Owner explicitly requests skipping the paid staging/local RLS isolation work for now and returning only when requested. This is DEFERRED, not passed or cancelled.
