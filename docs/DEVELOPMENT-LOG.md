@@ -22,6 +22,16 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+
+### 2026-10-12 — Correct mocked Food Diary cloud list during re-login
+
+- Full UI [#38184268033](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38184268033) **FAILED**: real record-level test found Food Library item present, but Food Diary item absent after mock logout/login and hydration.
+- Diagnosis: test mock `food_entries` list GET always returned only fixed Cloud QA Oats fixture, dropping records previously accepted by POST. This false simulation masked persisted Diary records even though mock POST recorded them.
+- Fixed `scripts/smoke-full-ui.cjs` to include saved Diary POST rows in the list response while preserving fixed fixture; strict roundtrip assertion unchanged. Commit `002f743ea97634b22a80a5959dc683c49d9cb0b4`.
+- New CI pending; no production app, database, user data or security changes. `SECURITY-DEFERRED-2026-10-12` remains on hold.
+- Next: verify Actions, then extend separate Daily roundtrip assertions with safe fixtures.
+
+
 ### 2026-10-12 — Fix asynchronous Food re-login assertion timing
 
 - Full UI #38184159603 **FAILED** on `Food Library product missing or changed after sign-in`; Pages #38184159952 **SUCCEEDED**.
