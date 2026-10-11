@@ -23,6 +23,18 @@ This is the **append-only** chronological log of completed work, investigations,
 
 ## Entries (newest first)
 
+### 2026-10-12 — Food Diary delete confirmation and no-resurrection regression
+
+- **Previous CI:** [Full migration smoke #38179820794](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38179820794) SUCCESS; Food offline rejection and online retry mock checks passed.
+- **Scope:** `scripts/smoke-full-ui.cjs` now mocks Food Diary DELETE by client ID, calls `food_log_delete`, confirms mocked cloud removal, reloads the account and checks that the entry remains absent.
+- **Commit:** `734cb8cf95eabafab490d00f382e3a15086f9037`.
+- **Verification:** The latest CI result for this commit is pending review; this is mock-backend browser coverage, not real Supabase or two-user verification.
+- **Production/data impact:** No changes to runtime app, database schema or user data.
+- **Next:** Verify updated CI and fix any issue; then add stronger Food conflict/outbox test coverage without modifying production.
+- **Security:** `SECURITY-DEFERRED-2026-10-12` remains on hold at user's request.
+
+
+
 ### 2026-10-12 — Food offline-to-online retry smoke coverage
 
 - **Previous CI evidence:** [Full UI run #38179694848](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38179694848) SUCCESS, including Workout CRUD, Workout Schedule mirror and noop regression checks.
