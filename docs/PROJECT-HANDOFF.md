@@ -33,6 +33,12 @@
 ## Food record roundtrip QA (2026-10-12)
 ## Latest Food relogin CI diagnosis — 2026-10-12
 
+## Food Diary re-login cloud mock fix — 2026-10-12
+
+Full UI #38184268033 failed because mocked Food Diary list GET excluded saved POST rows, although Food Library re-login passed. Corrected fixture in `scripts/smoke-full-ui.cjs` commit `002f743ea97634b22a80a5959dc683c49d9cb0b4`; strict Food record test retained. Check fresh CI. No production data/security change.
+
+
+
 CI #38184159603 failed missing Food product after re-login; Pages #38184159952 passed. Login's normalized Food hydration is asynchronous after gate closes. Test now awaits `__pxRefreshNutrition(true)` before comparing records, commit `7e67c673057eda15b00531b28b610b6e42e07070`. New CI pending; retain strict assertions. Production data untouched, security deferred.
 
 
