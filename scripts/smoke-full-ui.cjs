@@ -29,7 +29,7 @@ const {chromium}=require('playwright');
  if(value!=='abc123')throw Error('Scoped storage failed');
  const unscoped=await page.evaluate(()=>window.localStorage.getItem('qa-sentinel'));
  if(unscoped!==null)throw Error('Unscoped personal data leak');
- await page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Saved to Supabase'),{timeout:10000});
+ await page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Synced to Supabase'),{timeout:10000});
  if(cloudWrites<1||savedCloudPayload['qa-sentinel']!=='abc123')throw Error('Snapshot was not persisted to the cloud endpoint');
  await page.reload({waitUntil:'domcontentloaded'});
  try{await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:10000})}catch(error){console.error('Reload failure diagnostics:',await page.evaluate(()=>({status:document.querySelector('#pxLoginMessage')?.textContent,gateHidden:document.querySelector('#pxCommercialGate')?.hidden,session:sessionStorage.getItem('pxx_commercial_auth_preview_v1')?.slice(0,160),sync:document.querySelector('#pxSyncPill')?.textContent})),errors.slice(-8));throw error}
@@ -39,7 +39,7 @@ const {chromium}=require('playwright');
  await page.reload({waitUntil:'domcontentloaded'});
  await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:15000});
  if(await page.evaluate(()=>PXStore.getItem('offline-sentinel'))!=='survive-reload')throw Error('Offline queued edit lost after reload');
- await page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Saved to Supabase'),null,{timeout:15000});
+ await page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Synced to Supabase'),null,{timeout:15000});
  if(savedCloudPayload['offline-sentinel']!=='survive-reload')throw Error('Offline edit did not reconcile to cloud');
  // Legacy Food API must no longer try the disabled Google Sheets transport.
  const productReply=await page.evaluate(async()=>apiCall('food_product_upsert',{name:'QA only',id:'qa-test-record'}));
