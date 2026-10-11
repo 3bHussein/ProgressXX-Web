@@ -1,0 +1,18 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const html=fs.readFileSync('index.html','utf8');
+const start=html.indexOf("const WORKOUT_DELETED_IDS_KEY='progressx-workout-deleted-ids-v1';");
+const end=html.indexOf("const SYNC_META_KEY=",start);
+assert.ok(start>0&&end>start);
+const memory=new Map();
+const scope={PXStore:{getItem:k=>memory.get(k)||null,setItem:(k,v)=>memory.set(k,v)},Set,JSON,String};
+vm.runInNewContext(html.slice(start,end)+';globalThis.deleted=workoutDeletedIds;globalThis.remember=rememberDeletedWorkout;',scope);
+assert.equal(scope.deleted().size,0);
+scope.remember('local_deleted');
+assert.equal(scope.deleted().has('local_deleted'),true);
+scope.remember('local_deleted');
+assert.equal(scope.deleted().size,1);
+assert.ok(html.includes("remote.filter(x=>!deletedWorkoutIds.has(String(x.id)))"),'Cloud refresh must not reintroduce deleted row');
+assert.ok(html.includes("if(!local||deletedWorkoutIds.has(String(local.id)))continue"),'Queue merge must not resurrect deleted row');
+assert.ok(html.includes("const deletedIds=workoutDeletedIds();"),'Table read must respect tombstones');
+assert.ok(html.includes("rememberDeletedWorkout(row.id);"),'Delete must persist tombstone before async request');
+console.log('PASS: stable tombstones recorded, deduplicated, and used by workout refresh paths');
