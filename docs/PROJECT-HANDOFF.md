@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## Latest outbox regression — 2026-10-12
+
+Full UI tests #38180040958 and #38180026886 passed. Added Food outbox mock browser test for duplicate queue entries and local tombstones (commit 7d1b3ef14cc416e97fa951a5ee5e29adac480694). Check latest CI; next failed-write retry preservation test. No production data/schema changes. Security deferred checkpoint still on hold.
+
 ## Latest continuation — 2026-10-12
 
 Previous Food offline smoke CI #38179820794 passed. Added mocked Food Diary delete + reload no-resurrection verification in `scripts/smoke-full-ui.cjs` (commit 734cb8cf95eabafab490d00f382e3a15086f9037). Check latest CI before calling this verified. Next: conflict/outbox tests. Do not resume SECURITY-DEFERRED-2026-10-12 without request.
