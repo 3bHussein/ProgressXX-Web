@@ -37,20 +37,30 @@ const assert=require('node:assert/strict');
   return {page,errors};
  }
  try{
+  const sampleValues={
+   'Workout Log':'[]',
+   'Workout Schedule':JSON.stringify({mon:'REST',tue:'REST'}),
+   'Weight Check-ins':'[]',
+   'Daily Reminders':'[]',
+   'Anatomy links':'{}',
+   'Workout Templates':'[]',
+   'Goal Center':'[]',
+   'Body Measurements':'[]'
+  };
   const first=await browser.newContext();
   const a=await login(first);
-  await a.page.evaluate(keys=>{
-   Object.entries(keys).forEach(([name,key])=>PXStore.setItem(key,JSON.stringify({qaArea:name,marker:'qa-multi-page-2026'})));
-  },keys);
+  await a.page.evaluate(({keys,samples})=>{
+   Object.entries(keys).forEach(([name,key])=>PXStore.setItem(key,samples[name]));
+  },{keys,samples:sampleValues});
   await a.page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Synced to Supabase'),null,{timeout:20000});
   await a.page.waitForTimeout(500);
-  for(const [name,key] of Object.entries(keys))assert.equal(JSON.parse(snapshot[key]||'null')?.marker,'qa-multi-page-2026','Missing cloud snapshot for '+name);
+  for(const [name,key] of Object.entries(keys))assert.equal(snapshot[key],sampleValues[name],'Missing cloud snapshot for '+name);
   assert.ok(writes>0,'No snapshot POST was sent');
   // A separate browser context simulates another device: no local storage is shared.
   const second=await browser.newContext();
   const b=await login(second);
   const restored=await b.page.evaluate(keys=>Object.fromEntries(Object.entries(keys).map(([n,k])=>[n,PXStore.getItem(k)])),keys);
-  for(const [name,value] of Object.entries(restored))assert.equal(JSON.parse(value||'null')?.qaArea,name,'Cross-device snapshot restore failed for '+name);
+  for(const [name,value] of Object.entries(restored))assert.equal(value,sampleValues[name],'Cross-device snapshot restore failed for '+name);
   assert.deepEqual(a.errors,[],'First-device JavaScript errors');
   assert.deepEqual(b.errors,[],'Second-device JavaScript errors');
   console.log('PASS: scoped snapshot values persisted and restored in a separate browser context for '+Object.keys(keys).length+' feature groups.');
