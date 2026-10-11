@@ -5,6 +5,7 @@ on:
       - 'index.html'
       - 'tests/workout-supabase-table.cjs'
       - 'tests/workout-deletion-tombstone.cjs'
+      - 'tests/workout-cross-device-deletion.cjs'
       - '.github/workflows/workout-supabase-table.yml'
   workflow_dispatch:
 jobs:
@@ -21,3 +22,4 @@ jobs:
         run: |
           node tests/workout-supabase-table.cjs
           node tests/workout-deletion-tombstone.cjs
+          node tests/workout-cross-device-deletion.cjs
