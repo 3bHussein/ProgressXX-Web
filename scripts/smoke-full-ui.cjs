@@ -217,6 +217,17 @@ const {chromium}=require('playwright');
    },section);
    if(layout.controls.some(x=>!x.visible||x.left< -2||x.right>layout.viewport+2||x.height<35))throw Error('Mobile '+section+' control overflow: '+JSON.stringify(layout));
  }
+ // Narrow-phone regression: controls stay usable at 320px.
+ await page.setViewportSize({width:320,height:700});
+ for(const section of ['settings','intelligence']){
+   await page.evaluate(name=>go(name),section);
+   const bounds=await page.evaluate(name=>(name==='settings'?['pxSettingsSync','pxSettingsSignOut']:['pxAnatomyLang']).map(id=>{
+     const r=document.getElementById(id)?.getBoundingClientRect();
+     return {id,left:r?.left,right:r?.right,height:r?.height,width:document.documentElement.clientWidth};
+   }),section);
+   if(bounds.some(x=>!x.height||x.height<35||x.left< -2||x.right>x.width+2))throw Error('320px control overflow: '+JSON.stringify(bounds));
+ }
+ await page.setViewportSize({width:390,height:844});
  // Real mobile Settings shortcut interaction: each control must scroll to its target.
  await page.evaluate(()=>go('settings'));
  for(const id of ['pxSettingsAccount','pxSettingsBackup','pxSettingsSyncCenter','pxSettingsHub','pxSettingsSchedule']){
