@@ -13,6 +13,11 @@
 
 ## Current work — Mobile Settings & Insights (2026-10-12)
 ## Mobile viewport CI continuation (2026-10-12)
+## Latest Settings work (2026-10-12)
+
+Confirmed CI #38181679627 and Pages #38181678866 passed. Added scrollable Settings quick navigation to Account, Backup, Sync, Preferences, Schedule in `index.html`, commit `948600c920bcc7975dc550d9e2140cb5b4737305`, plus coverage `45fa87f6b7d8e029cfce698d99fc9fd1c9843e77`. Recheck latest CI. No data changes; deferred security work remains on hold.
+
+
 
 Last Full UI #38181404446 and Pages #38181404262 passed. Added 390px Chromium Settings/Insights interactive-control viewport assertions to `scripts/smoke-full-ui.cjs` commit `f39578abc38ce38dcab1d25ef8c192745cbb4a0b`; await new CI result. No app runtime/data edits. Security checkpoint still deferred.
 
