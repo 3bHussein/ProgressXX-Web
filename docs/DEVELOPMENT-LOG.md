@@ -16,12 +16,24 @@ This is the **append-only** chronological log of completed work, investigations,
 
 - **Stage:** Pre-release hardening; not certified for sale/public paid launch.
 - **Known risk:** Real-account reproduction of login `undefined.filter` and Food/Daily restored-data sync needs independent confirmation, even though earlier CI ran green.
-- **Primary next step:** Verify production login on empty/restored accounts, then audit account-specific persistence and RLS across Food/Daily/Workout/Weight.
+- **Primary next step:** Check deploy CI #38155895490 for the newly required login tests, then verify real-account login and account-specific persistence/RLS across Food/Daily/Workout/Weight.
 - **Data safety:** Preserve all existing user records; do not wipe or silently replace records.
 - **Deployment URL:** https://3bhussein.github.io/ProgressXX-Web/
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+
+### 2026-10-11 — Make login regression checks mandatory for Pages deploy
+
+- **Scope:** CI deployment gate for existing login recovery tests (not an application behavior change).
+- **File changed:** `.github/workflows/deploy-pages.yml`.
+- **Commit:** `2297115beebb3014b2c693682c7bd971b285fb5e`.
+- **Change:** After existing mobile smoke test, require `node tests/login-optional-render-recovery.cjs` and `node tests/login-imported-archive-regression.cjs` to pass before Pages artifact upload/deploy. Restored Food/Daily login tests were previously present but not explicitly called by deploy workflow.
+- **Tests:** As of logging, [deployment run #38155895490](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38155895490) and [full-UI smoke #38155895425](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38155895425) were QUEUED — **NOT VERIFIED**, must inspect final conclusions.
+- **Deployment/data:** No database or user data changes; deployment of workflow update pending CI.
+- **Risk:** Tests use mocked account responses, not a live Supabase two-user/RLS verification. Existing tests must actually pass in CI. A real restored account may still exhibit the prior exception.
+- **Next:** Inspect queued CI results; on failure diagnose/fix without bypass. Then test two-account RLS isolation and audit Food/Daily persistence.
+
 
 ### 2026-10-11 — Persistent development log and future-chat continuity
 
