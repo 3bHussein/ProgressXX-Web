@@ -30,6 +30,11 @@
 ## Current persistence continuation (2026-10-12)
 ## Logout/login mock fixture fix (2026-10-12)
 ## Current QA follow-up — 2026-10-12
+## Food record roundtrip QA (2026-10-12)
+
+Prior Full UI #38184053542 and Pages #38184053395 passed. Added mock account Food Library product and Diary entry record-level assertions on logout/login in commit `e533f206bd467945717f74d13dd528720567052b`; new CI pending. Daily full roundtrip not yet proven. No production data changes. Security deferred.
+
+
 
 Full UI #38183861962 passed after mock snapshot fixture fix. Added Food library, diary and queue state diagnostics around sign-out/sign-in in commit `5ee366c7e7f2ddf60cae7bbf779059787bd15dd8`, but this does not yet certify Food/Daily end-to-end persistence. Check new CI. No production DB changes; security review remains deferred.
 
