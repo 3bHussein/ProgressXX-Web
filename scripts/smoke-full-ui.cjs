@@ -229,6 +229,22 @@ const {chromium}=require('playwright');
  await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:15000});
  const afterFeatureReload=await page.evaluate(()=>({schedule:workoutSchedule(),goal:PXStore.getItem('progressx-weight-goal-v1')}));
  if(afterFeatureReload.schedule.tue!=='REST'||Number(afterFeatureReload.goal)!==80)throw Error('Core feature data lost after reload');
+ // Account logout/login regression: retain account-scoped Workout Schedule and Weight Goal.
+ // Use mock Supabase credentials and data only; do not touch production accounts.
+ await page.locator('#pxLogout').click();
+ await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===false,null,{timeout:15000});
+ await page.fill('#pxEmail','qa@example.test');
+ await page.fill('#pxPassword','demo-password');
+ await page.click('#pxSignin');
+ await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:15000});
+ const afterRelogin=await page.evaluate(()=>({
+   schedule:workoutSchedule(),
+   goal:PXStore.getItem('progressx-weight-goal-v1'),
+   foodProducts:foodProducts.length,
+   foodLog:foodLog.length
+ }));
+ if(afterRelogin.schedule.tue!=='REST'||Number(afterRelogin.goal)!==80)
+   throw Error('Schedule or Weight Goal lost on account logout/login: '+JSON.stringify(afterRelogin));
  // Mobile touch layout regression for the signed-in account and Insights/Settings.
  for(const section of ['settings','intelligence']){
    await page.evaluate(name=>go(name),section);
