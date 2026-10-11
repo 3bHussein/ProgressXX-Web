@@ -9390,7 +9390,7 @@ window.__legacyBoot=init;
   if(typeof window.__legacyBoot!=='function')throw Error('Original app did not initialize');
   await window.__legacyBoot();
   if(pending)scheduleCloudSync();
-  setTimeout(()=>window.__pxRefreshNutrition?.().catch(e=>tell('Food sync: '+e.message,true)),1500);
+  setTimeout(()=>window.__pxRefreshNutrition?.(true).catch(e=>tell('Food sync: '+e.message,true)),1500);
   gate.hidden=true;document.getElementById('pxAccountTools').hidden=false;
  }
  document.getElementById('pxLogin').addEventListener('submit',async e=>{
@@ -9408,16 +9408,21 @@ window.__legacyBoot=init;
    if(data.access_token)await activate(data);
   }catch(e){status.textContent=e.message}
  });
- window.__pxRefreshNutrition=async()=>{
+ let nutritionRefreshInFlight=null,lastNutritionRefreshAt=0;
+ window.__pxRefreshNutrition=async(force=false)=>{
    if(!ready||!navigator.onLine)return;
-   await window.__pxBackfillFoodProducts?.();
-   await window.__pxBackfillFoodDiary?.();
-   await pxFlushFoodOutbox();
-   await window.__pxLoadProducts?.();
-   await window.__pxLoadFoodDiary?.();
+   if(nutritionRefreshInFlight)return nutritionRefreshInFlight;
+   if(!force&&Date.now()-lastNutritionRefreshAt<12000&&!pxFoodOutbox().length)return;
+   nutritionRefreshInFlight=(async()=>{
+     // The outbox is the only upload source. Avoid replaying every cached item twice.
+     await pxFlushFoodOutbox();
+     await Promise.all([window.__pxLoadProducts?.(),window.__pxLoadFoodDiary?.()]);
+     lastNutritionRefreshAt=Date.now();
+   })();
+   try{return await nutritionRefreshInFlight}finally{nutritionRefreshInFlight=null}
  };
  window.addEventListener('focus',()=>{
-   if(ready&&navigator.onLine)window.__pxRefreshNutrition?.().catch(e=>tell('Food refresh: '+e.message,true));
+   if(ready&&navigator.onLine)window.__pxRefreshNutrition?.(false).catch(e=>tell('Food refresh: '+e.message,true));
  });
   document.getElementById('pxSyncNow').addEventListener('click',async()=>{
   if(!ready)return;
@@ -9428,7 +9433,7 @@ window.__legacyBoot=init;
    // Does not read or import any data from personal files.
    revision++;markPending();await flush();
    if(revision!==savedRevision)tell('⚠ Sync pending · check network',true);
-   await window.__pxRefreshNutrition?.();
+   await window.__pxRefreshNutrition?.(true);
   }catch(e){tell('⚠ Sync failed: '+e.message,true)}finally{button.disabled=false}
  });
  document.getElementById('pxLogout').addEventListener('click',async()=>{await flush();if(revision!==savedRevision&&!confirm('Cloud sync is still pending. Sign out anyway? Local changes will remain on this device.'))return;sessionStorage.removeItem(SESSION_KEY);location.reload()});
