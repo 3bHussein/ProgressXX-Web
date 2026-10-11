@@ -1,6 +1,10 @@
 # ProgressX — Project handoff / memory for future chats
 
-**Updated:** 2026-10-11. **Read alongside:** [README](../README.md) and [ROADMAP](../ROADMAP.md).
+**Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
+
+## Mandatory continuity rule
+
+Every time work is finished, **append a dated entry to docs/DEVELOPMENT-LOG.md**, update the latest issue/next step in this file, and update ROADMAP checkboxes/evidence when relevant. Include changed files, commit/PR, actual CI/run link and test result, deployed/not deployed, data impact and next specific action. Read the newest development-log entry first in a new chat. No change is finished until documentation has been updated; never fabricate tests or success. These updates require a deliberate GitHub commit per task — they are **not automatic outside an active session**.
 
 ## User intent / non-negotiables
 
@@ -35,7 +39,7 @@ GitHub's latest observed commit message: `Reproduce Food/Daily login undefined-f
 
 ## Recommended continuation procedure for a new assistant/developer
 
-1. Open this file, README, ROADMAP, `docs/FULL-LEGACY-CUTOVER.md`; read latest GitHub commits, open PRs, Actions and production app.
+1. Open this file, DEVELOPMENT-LOG, README, ROADMAP, `docs/FULL-LEGACY-CUTOVER.md`; read latest GitHub commits, open PRs, Actions and production app.
 2. Establish **actual current** branch/head and whether required workflows pass. Avoid guessing the framework or build commands; inspect scripts/workflows.
 3. Identify one top-priority unchecked item in ROADMAP. Reproduce it with safe fixtures (empty, malformed, historical and fresh users).
 4. Patch only affected production paths; add regression tests; run tests in PR; verify deploy before reporting success.
@@ -48,4 +52,4 @@ Do **not** publish Supabase service role keys, Apps Script credentials, user ema
 
 ## Suggested first instruction in future chat
 
-"Continue ProgressX at 3bHussein/ProgressXX-Web. Read README.md, ROADMAP.md, docs/PROJECT-HANDOFF.md and FULL-LEGACY-CUTOVER.md. Inspect latest GitHub Actions and deployed root site; verify login undefined.filter fix, then audit Food/Daily/Workout/Weight persistence and Supabase RLS. Preserve all existing data. Add regression tests and update the docs after each verified task."
+"Continue ProgressX at 3bHussein/ProgressXX-Web. Read README.md, ROADMAP.md, docs/DEVELOPMENT-LOG.md, docs/PROJECT-HANDOFF.md and FULL-LEGACY-CUTOVER.md. Inspect latest GitHub Actions and deployed root site; verify login undefined.filter fix, then audit Food/Daily/Workout/Weight persistence and Supabase RLS. Preserve all existing data. Add regression tests and update the docs after each verified task."
