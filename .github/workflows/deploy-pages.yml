@@ -37,9 +37,11 @@ jobs:
           node - <<'NODE'
           const fs=require('fs'),vm=require('vm'),assert=require('assert');
           const html=fs.readFileSync('index.html','utf8');
-          const scripts=[...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/g)];
+          const start=html.indexOf('<script>'),end=html.indexOf('</script>',start);
+          assert(start!==-1 && end>start,'Missing inline script');
+          const scripts=[html.slice(start+8,end)];
           assert(scripts.length>0,'Missing script');
-          for(const [,script] of scripts) new vm.Script(script);
+          for(const script of scripts) new vm.Script(script);
           for(const id of ['authForm','signedIn','dashboard','weightForm','workoutForm'])assert(html.includes('id="'+id+'"'),'Missing '+id);
           console.log('Commercial auth and dashboard syntax/element checks passed');
           NODE
