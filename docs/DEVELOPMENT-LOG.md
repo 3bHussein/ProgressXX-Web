@@ -23,6 +23,15 @@ This is the **append-only** chronological log of completed work, investigations,
 
 ## Entries (newest first)
 
+### 2026-10-12 — RLS read-only verification
+
+- GitHub full UI smoke #38178220700 passed.
+- Read-only role simulations found zero visible private rows for an absent synthetic authenticated identity and for anonymous visitors in the audited private tables.
+- Detailed evidence: docs/RLS-NEGATIVE-READ-PROBE.md (commit a91a2d2e0451cb55b65c1738846def7674a70ada).
+- No production schema or user data changes. Excessive grants remain; security migration is not applied.
+- Next: approved staging environment, migration rehearsal, and actual two-user authenticated CRUD isolation tests.
+
+
 ### 2026-10-12 — Static security-migration verification added to CI
 
 - **Files:** `tests/security-migration-safety.cjs`, `.github/workflows/full-ui-smoke.yml`.
