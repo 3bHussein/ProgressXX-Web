@@ -73,7 +73,7 @@ console.log('PASS: stale device offline edits cannot restore workouts deleted in
  };
  const cache=new Map();
  const context={
-  ready:true,uploading:false,revision:1,savedRevision:0,values,account:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+  ready:true,uploading:false,revision:1,savedRevision:0,snapshotVersion:'2026-10-11T12:00:00.000Z',values,account:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
   navigator:{onLine:true},Date,JSON,Set,String,Object,Array,Error,
   window:{__pxAtomicSnapshotReady:true},
   browserStorage:{setItem:(k,v)=>cache.set(k,v)},
@@ -83,13 +83,13 @@ console.log('PASS: stale device offline edits cannot restore workouts deleted in
   cloud:async(path,method,body)=>{
    calls.push({path,method,body});
    if(path.startsWith('user_app_snapshots?select='))return [{payload:{[deletedKey]:JSON.stringify(['local_old'])}}];
-   if(path==='rpc/progressxx_sync_snapshot')return serverData;
+   if(path==='rpc/progressxx_sync_snapshot')return {payload:serverData,updated_at:'2026-10-11T12:00:01.000Z'};
    throw Error('Unexpected network request '+method+' '+path);
   }
  };
  vm.runInNewContext(html.slice(start,end)+';globalThis.runFlush=flush;',context);
  await context.runFlush();
- assert.equal(calls.some(c=>c.path==='rpc/progressxx_sync_snapshot'&&c.method==='POST'),true);
+ assert.equal(calls.some(c=>c.path==='rpc/progressxx_sync_snapshot'&&c.method==='POST'&&c.body.p_expected_updated_at==='2026-10-11T12:00:00.000Z'),true);
  assert.equal(calls.some(c=>c.path.includes('on_conflict=user_id')),false,'RPC mode must never fall back to unsafe snapshot upsert');
  assert.deepEqual(JSON.parse(cache.get('pxx:full:'+context.account+':'+logKey)).map(x=>x.id),['local_new']);
  assert.deepEqual(JSON.parse(cache.get('pxx:full:'+context.account+':'+deletedKey)),['local_old']);
