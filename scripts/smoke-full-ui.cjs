@@ -225,8 +225,8 @@ const {chromium}=require('playwright');
    const index=['pxSettingsAccount','pxSettingsBackup','pxSettingsSyncCenter','pxSettingsHub','pxSettingsSchedule'].indexOf(id);
    await page.locator('#settings .pxSettingsQuickNav button').nth(index).click();
    await page.waitForTimeout(400);
-   const check=await target.evaluate(el=>({top:el.getBoundingClientRect().top,height:el.getBoundingClientRect().height}));
-   if(check.height<1||check.top>innerHeight)throw Error('Settings shortcut did not navigate to '+id+': '+JSON.stringify(check));
+   const check=await target.evaluate(el=>({top:el.getBoundingClientRect().top,height:el.getBoundingClientRect().height,viewport:window.innerHeight}));
+   if(check.height<1||check.top>check.viewport)throw Error('Settings shortcut did not navigate to '+id+': '+JSON.stringify(check));
  }
  await page.evaluate(()=>go('home'));
  if(legacyGoogleCalls)throw Error('Called personal Google Sheets endpoint');
