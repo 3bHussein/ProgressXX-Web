@@ -89,4 +89,4 @@ begin
 end;
 $$;
 revoke all on function public.progressxx_sync_snapshot(jsonb,timestamptz) from public;
-grant execute on function public.progressxx_sync_snapshot(jsonb) to authenticated;
+grant execute on function public.progressxx_sync_snapshot(jsonb,timestamptz) to authenticated;
