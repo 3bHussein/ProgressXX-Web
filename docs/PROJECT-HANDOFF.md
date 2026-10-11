@@ -24,6 +24,11 @@
 
 
 ## Verified mobile UI fix — 2026-10-12
+## New Insights tab click test (2026-10-12)
+
+Added real Chromium click assertions on Insights anatomy tabs at 320px and 390px in `scripts/smoke-full-ui.cjs`; commit `7d1a3c51475e27dfb88183b29041674da28a4459`. Await CI. Prior height check passed. No data/security changes.
+
+
 
 Full UI #38182804267 succeeded for 320px/390px Settings and Insights tab heights. GitHub Pages #38182804147 succeeded. Real-device check still pending. No production data changes; security deferral unchanged.
 
