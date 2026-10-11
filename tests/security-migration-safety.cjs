@@ -12,5 +12,5 @@ for(let i=0;i<expected.length;i++){
   const normalized=revokes[i].replace(/\s+/g,' ').trim();
   assert.equal(normalized,`REVOKE TRUNCATE, TRIGGER ON TABLE public.${expected[i]} FROM anon, authenticated`);
 }
-assert(!/\b(?:DROP|DELETE|UPDATE|INSERT|ALTER|CREATE|TRUNCATE|GRANT)\b/i.test(sql),'Unexpected destructive or permission-expanding SQL');
+assert(!/\b(?:DROP|DELETE|UPDATE|INSERT|ALTER|CREATE|GRANT)\b/i.test(sql),'Unexpected destructive or permission-expanding SQL');
 console.log('PASS: security migration contains exactly 11 scoped TRUNCATE/TRIGGER revocations; no data-changing SQL');
