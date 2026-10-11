@@ -28,6 +28,11 @@
 ## Verified Insights mobile click test (2026-10-12)
 ## Latest deploy confirmed (2026-10-12)
 ## Current persistence continuation (2026-10-12)
+## Logout/login mock fixture fix (2026-10-12)
+
+CI #38183773942 failed due to test fixture TypeError on `Object.keys(savedCloudPayload)` after mock returned empty/missing payload. Test-only fix `53c9829090ab24d9285115b1a8758fbf0c4f1cec`; fresh CI pending. Pages #38183773691 passed; no production data changed. Security deferred remains.
+
+
 
 User visually confirmed Settings/Insights mobile height issue resolved. Added browser logout/login test for mock account Workout Schedule and Weight Goal (commit `269c8b7aa7f9023b2ac76082d260163106822e93`). Fresh CI unverified. Synthetic Food Diary/Library reload tests passed previously but full 4-domain account roundtrip remains pending. No production DB changes; security deferral continues.
 
