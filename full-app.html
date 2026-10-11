@@ -2114,7 +2114,7 @@ textarea{resize:vertical}
 
     <label class="tiny muted">Apps Script Web App URL</label>
     <input id="appScriptUrl"
-      placeholder="https://script.google.com/macros/s/.../exec">
+      placeholder="Google Sheets connection is disabled in this build">
 
     <div class="actions" style="margin-top:8px">
       <button class="btn primary" onclick="syncFromSheet(false)">Refresh from Google Sheet</button>
@@ -2332,6 +2332,7 @@ textarea{resize:vertical}
 });
 
 </script>
+<script id="pxStoreEarly">const PXStore={getItem:(...a)=>window.__pxActiveStore?.getItem(...a)??null,setItem:(...a)=>window.__pxActiveStore?.setItem(...a),removeItem:(...a)=>window.__pxActiveStore?.removeItem(...a),key:(...a)=>window.__pxActiveStore?.key(...a)??null,clear:()=>{throw Error('Account scoped storage cannot be cleared')},get length(){return window.__pxActiveStore?.length??0}};</script>
 <script>
 const PROGRESSX_BUNDLED=[];
 let bundled=[],data=[],activeDay='All',editingId=null,currentPage='home';const KEY='progressx-data-v19', SCRIPT_URL_KEY='progressx-appscript-url-v19', SHEET_URL='', DEFAULT_APPS_SCRIPT_URL='', $=id=>document.getElementById(id);const clone=x=>JSON.parse(JSON.stringify(x));
@@ -9038,6 +9039,12 @@ v2Rows('v2RecoveryInfo',[['Completed entries',data.filter(x=>x.status==='Complet
 
 
 // Initialize only after the V2 anatomy and recovery constants are defined.
+// Original Google Sheet operations are not used for the commercial app.
+syncFromSheet=async()=>true;
+startupWorkoutSync=async()=>true;
+processWorkoutQueue=async()=>true;
+queueWorkoutOperation=()=>{};
+pendingWorkoutCount=()=>0;
 window.__legacyBoot=init;
 </script><div id="dailyNotice" class="reminderNotice"></div>
 <div id="alarmOverlay" class="alarmOverlay">
@@ -9098,7 +9105,7 @@ window.__legacyBoot=init;
   key(i){return Object.keys(values)[i]??null},
   get length(){return Object.keys(values).length}
  };
- window.PXStore=nodeStorage;
+ window.__pxActiveStore=nodeStorage;
  const headers=()=>({'apikey':PUB,'Authorization':'Bearer '+auth.access_token,'Content-Type':'application/json'});
  async function tokenRequest(path,body){
   const response=await fetch(BASE+'/auth/v1/'+path,{method:'POST',headers:{'apikey':PUB,'Content-Type':'application/json'},body:JSON.stringify(body)});
