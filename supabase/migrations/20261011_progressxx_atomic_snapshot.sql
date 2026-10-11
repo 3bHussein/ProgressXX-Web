@@ -1,6 +1,6 @@
 -- Staged, non-destructive RPC. Do not run on production until reviewed.
 -- Operates only on auth.uid() and serializes all writes for that user.
-create or replace function public.progressxx_sync_snapshot(p_payload jsonb)
+create or replace function public.progressxx_sync_snapshot(p_payload jsonb, p_expected_updated_at timestamptz)
 returns jsonb
 language plpgsql
 security invoker
@@ -9,6 +9,8 @@ as $$
 declare
   v_user uuid := auth.uid();
   v_prior jsonb;
+  v_timestamp timestamptz;
+  v_next_timestamp timestamptz;
   v_new jsonb;
   v_deleted jsonb;
   v_key text;
@@ -22,8 +24,11 @@ begin
   insert into public.user_app_snapshots(user_id,payload)
     values(v_user,'{}'::jsonb)
     on conflict (user_id) do nothing;
-  select payload into v_prior from public.user_app_snapshots
+  select payload, updated_at into v_prior, v_timestamp from public.user_app_snapshots
     where user_id=v_user for update;
+  if v_timestamp is distinct from p_expected_updated_at then
+    raise exception 'Snapshot version conflict: reload before saving' using errcode='40001';
+  end if;
   if v_prior is null then raise exception 'Snapshot missing or inaccessible'; end if;
 
   -- User snapshots contain stringified JSON arrays for workout tombstones.
@@ -74,11 +79,12 @@ begin
     end if;
   end loop;
 
+  v_next_timestamp:=greatest(clock_timestamp(),v_timestamp + interval '1 microsecond');
   update public.user_app_snapshots
-    set payload=v_new,updated_at=now()
+    set payload=v_new,updated_at=v_next_timestamp
     where user_id=v_user;
-  return v_new;
+  return jsonb_build_object('payload',v_new,'updated_at',v_next_timestamp);
 end;
 $$;
-revoke all on function public.progressxx_sync_snapshot(jsonb) from public;
+revoke all on function public.progressxx_sync_snapshot(jsonb,timestamptz) from public;
 grant execute on function public.progressxx_sync_snapshot(jsonb) to authenticated;
