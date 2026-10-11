@@ -165,6 +165,33 @@ const {chromium}=require('playwright');
  const pendingAfterSuccess=await page.evaluate(()=>pxFoodOutbox().some(x=>x.id==='qa-outbox-retry'&&x.type==='product'));
  if(pendingAfterSuccess)throw Error('Food outbox failed to retry after app restart');
  if(productWrites.filter(x=>x.source_id==='qa-outbox-retry').length!==1)throw Error('Food outbox retry duplicated or lost product');
+ // Recover an unsynced Food Diary entry after app restart.
+ await page.route('**/rest/v1/food_entries?**',route=>route.request().method()==='POST'
+   ?route.fulfill({status:503,contentType:'application/json',body:'{"message":"temporary outage"}'})
+   :route.fallback());
+ const queuedDiary=await page.evaluate(async()=>{
+   const id='qa-offline-diary';
+   foodLog.push({id,name:'Queued QA meal',meal:'Dinner',date:'2026-10-11',time:'19:30',calories:320,protein:22,carbs:30,fat:11});
+   PXStore.setItem(FOOD_LOG_KEY,JSON.stringify(foodLog));
+   pxFoodQueue('log',id);
+   await pxFlushFoodOutbox();
+   return pxFoodOutbox().some(x=>x.id===id&&x.type==='log');
+ });
+ if(!queuedDiary)throw Error('Food Diary queue disappeared during 503 outage');
+ await page.reload({waitUntil:'domcontentloaded'});
+ await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:15000});
+ const diaryState=await page.evaluate(()=>({
+   queued:pxFoodOutbox().some(x=>x.id==='qa-offline-diary'&&x.type==='log'),
+   loaded:foodLog.some(x=>x.id==='qa-offline-diary'),
+   stored:loadLocalArray(FOOD_LOG_KEY,[]).some(x=>x.id==='qa-offline-diary')
+ }));
+ if(!diaryState.queued||!diaryState.loaded||!diaryState.stored)throw Error('Food Diary restart recovery failed: '+JSON.stringify(diaryState));
+ await page.unroute('**/rest/v1/food_entries?**');
+ await page.evaluate(()=>pxFlushFoodOutbox());
+ if(await page.evaluate(()=>pxFoodOutbox().some(x=>x.id==='qa-offline-diary'&&x.type==='log')))
+   throw Error('Food Diary queue not cleared after retry');
+ if(foodEntryWrites.filter(x=>x.client_id==='pxlegacy:qa-offline-diary').length!==1)
+   throw Error('Food Diary recovery duplicated or lost entry');
  const logReply=await page.evaluate(async()=>apiCall('food_log_upsert',{name:'QA only',id:'qa-log-record'}));
  if(!logReply?.ok)throw Error('Food log Supabase bridge failed: '+JSON.stringify(logReply));
  if(!foodEntryWrites.some(x=>x.client_id==='pxlegacy:qa-log-record'&&x.food_name==='[Snack] QA only'))throw Error('No real food_entries database upsert');
