@@ -9154,10 +9154,14 @@ window.__legacyBoot=init;
  const browserStorage=window.localStorage;
  let auth=null,account=null,values={},revision=0,savedRevision=0,timer=null,uploading=false,ready=false;
  const storagePrefix=id=>'pxx:full:'+id+':';
+ const pendingKey=id=>'pxx:pending:'+id;
+ function markPending(){if(account)browserStorage.setItem(pendingKey(account),JSON.stringify({payload:{...values},at:Date.now()}))}
+ function clearPending(){if(account)browserStorage.removeItem(pendingKey(account))}
+ function readPending(id){try{const data=JSON.parse(browserStorage.getItem(pendingKey(id))||'null');return data&&data.payload&&typeof data.payload==='object'?data.payload:null}catch{return null}}
  const nodeStorage={
   getItem(key){if(!account)return null;return browserStorage.getItem(storagePrefix(account)+key)},
-  setItem(key,value){if(!account)throw Error('Not authenticated');const k=String(key),v=String(value);browserStorage.setItem(storagePrefix(account)+k,v);values[k]=v;revision++;scheduleCloudSync()},
-  removeItem(key){if(!account)throw Error('Not authenticated');const k=String(key);browserStorage.removeItem(storagePrefix(account)+k);delete values[k];revision++;scheduleCloudSync()},
+  setItem(key,value){if(!account)throw Error('Not authenticated');const k=String(key),v=String(value);browserStorage.setItem(storagePrefix(account)+k,v);values[k]=v;revision++;markPending();scheduleCloudSync()},
+  removeItem(key){if(!account)throw Error('Not authenticated');const k=String(key);browserStorage.removeItem(storagePrefix(account)+k);delete values[k];revision++;markPending();scheduleCloudSync()},
   clear(){throw Error('This commercial app never permits clearing all local storage.')},
   key(i){return Object.keys(values)[i]??null},
   get length(){return Object.keys(values).length}
@@ -9187,7 +9191,7 @@ window.__legacyBoot=init;
   try{
    // Single-account snapshot; originals remain byte-exact strings (including raw performance).
    await cloud('user_app_snapshots?on_conflict=user_id','POST',{user_id:account,payload:{...values},updated_at:new Date().toISOString()});
-   savedRevision=writing;tell('✓ Saved to Supabase');
+   savedRevision=writing;if(revision===writing)clearPending();tell('✓ Saved to Supabase');
   }catch(e){tell('Unsynced changes: '+e.message,true)}
   finally{uploading=false;if(revision!==savedRevision)scheduleCloudSync()}
  }
@@ -9198,20 +9202,26 @@ window.__legacyBoot=init;
   // Do not read unscoped legacy storage. Only load from the signed-in account.
   const rows=await cloud('user_app_snapshots?select=payload&user_id=eq.'+encodeURIComponent(account)+'&limit=1');
   const cloudValues=rows[0]?.payload||{};
+  const pending=readPending(account);
+  // Only locally queued edits can override server data; normal cached rows cannot.
+  // This prevents an old cache from unexpectedly replacing another device's cloud state.
+  const merged=pending?{...cloudValues,...pending}:cloudValues;
   values={};
-  for(const [k,v] of Object.entries(cloudValues)){
+  for(const [k,v] of Object.entries(merged)){
    if(typeof v!=='string'||k.length>100||v.length>1000000)continue;
-   const scoped=storagePrefix(account)+k;
-   browserStorage.setItem(scoped,v);values[k]=v;
+   browserStorage.setItem(storagePrefix(account)+k,v);values[k]=v;
   }
-  const prefix=storagePrefix(account);
-  for(let i=0;i<browserStorage.length;i++){
-   const key=browserStorage.key(i);
-   if(key?.startsWith(prefix)){const stripped=key.slice(prefix.length);if(!(stripped in values))values[stripped]=browserStorage.getItem(key)}
+  if(pending){revision++;tell('Restoring locally queued edits…');}
+  else{
+   // Remove stale account cache keys only; never touch any other user's storage.
+   const prefix=storagePrefix(account),stale=[];
+   for(let i=0;i<browserStorage.length;i++){const key=browserStorage.key(i);if(key?.startsWith(prefix)&&!(key.slice(prefix.length) in values))stale.push(key)}
+   stale.forEach(key=>browserStorage.removeItem(key));
   }
   savedRevision=revision;ready=true;tell('✓ Signed in · Supabase connected');
   if(typeof window.__legacyBoot!=='function')throw Error('Original app did not initialize');
   await window.__legacyBoot();
+  if(pending)scheduleCloudSync();
   gate.hidden=true;document.getElementById('pxAccountTools').hidden=false;
  }
  document.getElementById('pxLogin').addEventListener('submit',async e=>{
@@ -9229,7 +9239,7 @@ window.__legacyBoot=init;
    if(data.access_token)await activate(data);
   }catch(e){status.textContent=e.message}
  });
- document.getElementById('pxLogout').addEventListener('click',async()=>{await flush();sessionStorage.removeItem(SESSION_KEY);location.reload()});
+ document.getElementById('pxLogout').addEventListener('click',async()=>{await flush();if(revision!==savedRevision&&!confirm('Cloud sync is still pending. Sign out anyway? Local changes will remain on this device.'))return;sessionStorage.removeItem(SESSION_KEY);location.reload()});
  window.addEventListener('online',()=>{if(ready)void flush()});
  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&ready)void flush()});
  try{
