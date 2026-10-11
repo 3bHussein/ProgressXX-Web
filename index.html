@@ -2341,6 +2341,9 @@ let bundled=[],data=[],activeDay='All',editingId=null,currentPage='home';const K
 const APP_VERSION='2.0.0';
 const APP_BUILD_DATE='2026-10-10';
 const WORKOUT_QUEUE_KEY='progressx-workout-sync-queue-v1';
+const WORKOUT_DELETED_IDS_KEY='progressx-workout-deleted-ids-v1';
+function workoutDeletedIds(){try{const items=JSON.parse(PXStore.getItem(WORKOUT_DELETED_IDS_KEY)||'[]');return new Set(Array.isArray(items)?items.map(String):[])}catch{return new Set()}}
+function rememberDeletedWorkout(id){const deleted=workoutDeletedIds();deleted.add(String(id));PXStore.setItem(WORKOUT_DELETED_IDS_KEY,JSON.stringify([...deleted]))}
 const SYNC_META_KEY='progressx-sync-meta-v1';
 let workoutSyncBusy=false;
 let workoutLastCloudCheck=0;
@@ -4625,6 +4628,7 @@ async function deleteEntry(){
   if(idx<0)return closeEditor();
   const row=clone(data[idx]);
   data.splice(idx,1);
+  rememberDeletedWorkout(row.id);
   PXStore.setItem(KEY,JSON.stringify(data));
 
   // If it never reached the cloud, just remove its pending insert.
@@ -7711,14 +7715,15 @@ async function syncFromSheet(silent=false,opts={}){
     saveWorkoutQueue(q);
 
     // Cloud is source of truth, but unsynced local changes must NEVER disappear.
-    let merged=remote.map(x=>clone(x));
+    const deletedWorkoutIds=workoutDeletedIds();
+    let merged=remote.filter(x=>!deletedWorkoutIds.has(String(x.id))).map(x=>clone(x));
     for(const item of q){
       if(item.op==='delete'){
         merged=merged.filter(x=>String(x.id)!==String(item.payload.id));
         continue;
       }
       const local=data.find(x=>String(x.id)===String(item.localId)||String(x.id)===String(item.payload.id));
-      if(!local)continue;
+      if(!local||deletedWorkoutIds.has(String(local.id)))continue;
       const idx=item.payload.id
         ?merged.findIndex(x=>String(x.id)===String(item.payload.id))
         :merged.findIndex(x=>workoutKey(x)===item.key);
@@ -9408,7 +9413,8 @@ window.__legacyBoot=init;
   }));
   // The snapshot remains authoritative for older records not yet moved to the table.
   const pendingIds=new Set(workoutQueue().map(x=>String(x.localId||x.payload?.id||'')));
-  const deletedIds=new Set(workoutQueue().filter(x=>x.op==='delete').map(x=>String(x.payload?.id||'')));
+  const deletedIds=workoutDeletedIds();
+  for(const item of workoutQueue())if(item.op==='delete')deletedIds.add(String(item.payload?.id||''));
   const local=Array.isArray(data)?data:[];
   const result=new Map(cloudRows.filter(x=>!deletedIds.has(String(x.id))).map(x=>[String(x.id),x]));
   for(const row of local){
