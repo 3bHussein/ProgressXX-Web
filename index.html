@@ -4611,7 +4611,7 @@ async function saveEntry(){
   closeEditor();
   rebuild();
   if(prResult.isPR)setTimeout(()=>showPRToast(obj),80);
-  setWorkoutPendingUI('Workout saved on this device. Syncing with Google Sheet…');
+  setWorkoutPendingUI('Workout saved on this device. Syncing with Supabase…');
 
   // Fire-and-forget. If offline/timed out, queue remains and retries automatically.
   processWorkoutQueue();
@@ -5176,6 +5176,21 @@ async function apiCall(action,params={}){
    if(!result)throw Error('Supabase product insert was not confirmed');
    return {ok:true,id:sourceId};
   }catch(e){return {ok:false,error:'Supabase products: '+String(e.message||e)}}
+ }
+ if(action==='list'){
+  try{return {ok:true,rows:await window.__pxListWorkoutEntries()}}
+  catch(e){return {ok:false,error:'Supabase workout list: '+String(e.message||e)}}
+ }
+ if(action==='upsert'){
+  try{if(!navigator.onLine)throw Error('Offline');
+   const row=await window.__pxSaveWorkoutEntry(params);
+   return {ok:true,id:row.source_id};
+  }catch(e){return {ok:false,error:'Supabase workout save: '+String(e.message||e)}}
+ }
+ if(action==='delete'){
+  try{if(!navigator.onLine)throw Error('Offline');
+   await window.__pxDeleteWorkoutEntry(String(params.id));return {ok:true};
+  }catch(e){return {ok:false,error:'Supabase workout delete: '+String(e.message||e)}}
  }
  if(action==='weight_list'){
   try{return {ok:true,entries:await window.__pxListWeightCheckins()}}
@@ -7641,7 +7656,7 @@ async function processWorkoutQueue(){
           }
         }
 
-        const res=await apiCall('upsert',item.payload);
+        const res=await apiCall('upsert',{...item.payload,__localId:item.localId});
         if(!res.ok)throw new Error(res.error||'Save failed');
 
         const li=data.findIndex(r=>String(r.id)===String(item.localId)||String(r.id)===String(item.payload.id));
@@ -9379,6 +9394,49 @@ window.__legacyBoot=init;
   return response.status===204?null:response.json();
  }
  function tell(message,problem=false){pill.textContent=message;pill.style.color=problem?'#fecaca':'#d8faf1';pill.hidden=false;pill.title='Supabase account snapshot · '+(account||'not signed in')}
+ const WORKOUT_SOURCE_PREFIX='pxlog:';
+ const workoutSourceId=id=>WORKOUT_SOURCE_PREFIX+String(id||'');
+ const workoutIdFromSource=id=>String(id||'').startsWith(WORKOUT_SOURCE_PREFIX)?String(id).slice(WORKOUT_SOURCE_PREFIX.length):String(id);
+ window.__pxListWorkoutEntries=async()=>{
+  if(!ready||!account)throw Error('Sign in to load workouts');
+  const rows=await cloud('legacy_workout_entries?select=source_id,day_name,exercise_name,week_number,original_date,original_time,raw_performance,status,notes&user_id=eq.'+encodeURIComponent(account)+'&source_id=like.'+encodeURIComponent(WORKOUT_SOURCE_PREFIX+'*')+'&limit=5000');
+  if(!Array.isArray(rows))throw Error('Invalid workout table response');
+  const cloudRows=rows.map(r=>({
+   id:workoutIdFromSource(r.source_id),day:r.day_name||'',exercise:r.exercise_name||'',week:r.week_number||'',
+   date:r.original_date||'',time:r.original_time||'',performance:r.raw_performance||'',status:r.status||'No data',notes:r.notes||''
+  }));
+  // The snapshot remains authoritative for older records not yet moved to the table.
+  const pendingIds=new Set(workoutQueue().map(x=>String(x.localId||x.payload?.id||'')));
+  const deletedIds=new Set(workoutQueue().filter(x=>x.op==='delete').map(x=>String(x.payload?.id||'')));
+  const local=Array.isArray(data)?data:[];
+  const result=new Map(cloudRows.filter(x=>!deletedIds.has(String(x.id))).map(x=>[String(x.id),x]));
+  for(const row of local){
+   const id=String(row.id||'');if(!id||deletedIds.has(id))continue;
+   if(!result.has(id)||pendingIds.has(id))result.set(id,row);
+  }
+  return [...result.values()];
+ };
+ window.__pxSaveWorkoutEntry=async row=>{
+  if(!ready||!account)throw Error('Sign in to save workout');
+  const id=String(row.id||'').trim();
+  // Pending insert operations supply a stable localId through the queue.
+  const source=workoutSourceId(id||row.__localId);
+  if(!source||source===WORKOUT_SOURCE_PREFIX)throw Error('Missing stable workout source ID');
+  const payload={user_id:account,source_id:source,day_name:String(row.day||''),exercise_name:String(row.exercise||''),
+   week_number:Number(row.week)||null,original_date:String(row.date||''),original_time:String(row.time||''),
+   raw_performance:String(row.performance||''),status:String(row.status||''),notes:String(row.notes||'')};
+  const saved=await cloud('legacy_workout_entries?on_conflict=user_id,source_id','POST',payload);
+  if(!Array.isArray(saved)||saved[0]?.source_id!==source)throw Error('Workout table write not confirmed');
+  return saved[0];
+ };
+ window.__pxDeleteWorkoutEntry=async id=>{
+  if(!ready||!account)throw Error('Sign in to delete workout');
+  const source=workoutSourceId(id);
+  await cloud('legacy_workout_entries?user_id=eq.'+encodeURIComponent(account)+'&source_id=eq.'+encodeURIComponent(source),'DELETE');
+  const rows=await cloud('legacy_workout_entries?select=source_id&user_id=eq.'+encodeURIComponent(account)+'&source_id=eq.'+encodeURIComponent(source));
+  if(!Array.isArray(rows)||rows.length)throw Error('Workout deletion not confirmed');
+  return true;
+ };
  const WEIGHT_CLIENT_PREFIX='pxweight:';
  window.__pxListWeightCheckins=async()=>{
   if(!ready||!account)throw Error('Sign in to view weight check-ins');
