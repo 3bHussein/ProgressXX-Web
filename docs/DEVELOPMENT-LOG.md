@@ -22,6 +22,15 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Account logout/login regression passed; Food state diagnostics added
+
+- Full UI smoke [#38183861962](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38183861962) **SUCCESS**, including actual mocked-account sign out/in, Workout Schedule and Weight Goal persistence.
+- Added Food Library/Diary in-memory and pending queue counts to account roundtrip diagnostics in `scripts/smoke-full-ui.cjs` (commit `5ee366c7e7f2ddf60cae7bbf779059787bd15dd8`); this is **observability only, not proof** of complete Food/Daily cloud roundtrip.
+- Prior Pages run #38183861772 was still in progress at first inspection. Latest CI for new changes pending.
+- Do not touch real production records or run paid staging. Deferred security checkpoint `SECURITY-DEFERRED-2026-10-12` continues.
+- Next: verify CI, add stronger account roundtrip assertions for Food/Daily using isolated fixture after reviewing data source design.
+
+
 ### 2026-10-12 — Fix mocked snapshot payload crash in logout/login CI
 
 - Full UI [#38183773942](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38183773942) **FAILED**: Playwright mock handler `Object.keys(savedCloudPayload)` raised TypeError on undefined/null during new logout/login scenario.
