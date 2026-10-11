@@ -15,6 +15,10 @@
 ## Mobile viewport CI continuation (2026-10-12)
 ## Latest Settings work (2026-10-12)
 
+## Settings mobile bottom-nav collision fix (2026-10-12)
+
+CI #38182112021 failed: `bottomNav` button intercepts tap on first Settings shortcut. Pages #38182112010 passed. Fixed `index.html` mobile Settings quick nav with sticky positioning, stacking order and bottom space (commit `c0c39431f735351e69eb234b1c3d5939814d2d0e`). Check latest Full UI CI before declaring success. No database writes. Security phase deferred.
+
 ## Latest Settings CI check (2026-10-12)
 
 Shortcut interaction workflow #38182006405 was still running during inspection. A six-second click timeout was added to each mobile Settings shortcut in `scripts/smoke-full-ui.cjs` (commit `5a73b1e76a3fbc08ceed08bd1585a58c8c35a3a8`). Check latest Actions results and logs before claiming pass or changing navigation code. Development Log has context. Security deferred remains paused.
