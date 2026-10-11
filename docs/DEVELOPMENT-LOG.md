@@ -22,6 +22,17 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+
+### 2026-10-12 — Settings and Insights mobile UX refresh
+
+- **Scope:** Production root `index.html`; commits `e3db54931a43a79a06a4307af05e3c7e5098633b`, `5b0420b19fdb7cf76bb329f25955ddeb5f538934`. Added an actual Settings account-and-sync panel with functional buttons routed to existing cloud sync/logout and live online/offline indicator. Existing settings backup, data health, device tools and appearance retained.
+- **Clean-up:** Removed visible “Previous commercial data” link to `commercial-v1.html` from production root. Hid deprecated Google Sheets connection panels in Settings instead of exposing disabled controls. Updated inaccurate Appearance copy.
+- **Responsive UI:** Changed fixed floating account controls to mobile-friendly inline two-button bar, added mobile layout guardrails for Settings and Insights including narrow phones.
+- **Regression:** New `tests/mobile-settings-insights-regression.cjs`, commit `6ed2353bc0d6e5206d803d2ffe0539ee4af1f951`, wired into Full UI smoke workflow commit `d745e384e5973940019a03cb4e63f6ceb33077e5`. Fresh CI/deploy MUST be checked before asserting success.
+- **Data impact:** No Supabase/database changes and no user data migration or deletion. `SECURITY-DEFERRED-2026-10-12` remains deferred.
+- **Next:** Inspect GitHub CI and live mobile UI, correct regressions; verify Settings on real account/mobile. Also expand Food Diary pending restoration coverage.
+
+
 ### 2026-10-12 — Food queued-row recovery verified by CI
 
 - Full UI regression run [#38180732086](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38180732086) **SUCCESS**, including Food offline queued-row reload recovery after runtime hydration fixes.
