@@ -23,6 +23,10 @@ Food requirements: Today's Food, Food Library, saved meals, date/time including 
 
 Data sources/history: Google Apps Script/Sheets were used for some personal data and legacy import; later the app uses Supabase for account data. Prior source spreadsheet names include `workout_history_W1-W19_v2(3).xlsx` and `workout_history_W1-W19_v2(4).xlsx`. **These names are historical context, not a guarantee files are present or that imports are correct.** Do not put their contents in this public repo. Review `docs/FULL-LEGACY-CUTOVER.md` and actual current code/migrations before modifying data flows.
 
+## Most recent engineering change (2026-10-11)
+
+Pages deployment workflow now requires restored Food/Daily login regression and optional-panel isolation regression tests before deployment (commit `2297115beebb3014b2c693682c7bd971b285fb5e`). At handoff, Actions run [#38155895490](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38155895490) was QUEUED; inspect final result before treating this gate as verified. See [DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) for full chronology. Next investigate real-account login and two-user RLS/data isolation.
+
 ## Latest issue / verification state
 
 On 2026-10-11 user reported `Cannot read properties of undefined (reading 'filter')` **during login**, notably while loading Food/Daily and restored historical data.
