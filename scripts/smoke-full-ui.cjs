@@ -41,6 +41,13 @@ const {chromium}=require('playwright');
  if(await page.evaluate(()=>PXStore.getItem('offline-sentinel'))!=='survive-reload')throw Error('Offline queued edit lost after reload');
  await page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Saved to Supabase'),null,{timeout:15000});
  if(savedCloudPayload['offline-sentinel']!=='survive-reload')throw Error('Offline edit did not reconcile to cloud');
+ // Legacy Food API must no longer try the disabled Google Sheets transport.
+ const productReply=await page.evaluate(async()=>apiCall('food_product_upsert',{name:'QA only',id:'qa-test-record'}));
+ if(!productReply?.ok)throw Error('Food product Supabase bridge failed: '+JSON.stringify(productReply));
+ const logReply=await page.evaluate(async()=>apiCall('food_log_upsert',{name:'QA only',id:'qa-log-record'}));
+ if(!logReply?.ok)throw Error('Food log Supabase bridge failed: '+JSON.stringify(logReply));
+ const readReply=await page.evaluate(async()=>apiCall('food_products_list'));
+ if(!readReply?.ok)throw Error('Food products read bridge failed');
  if(legacyGoogleCalls)throw Error('Called personal Google Sheets endpoint');
  if(errors.length)throw Error('Browser errors after reload: '+errors.slice(0,5).join(' ; '));
  console.log('PASS: full UI boot, auth gate, 8 tabs, isolated storage, Supabase save and reload, no personal Google requests');
