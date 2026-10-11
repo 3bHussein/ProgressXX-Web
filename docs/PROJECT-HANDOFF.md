@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## Latest Food test expansion — 2026-10-12
+
+Full UI #38179694848 passed. Browser smoke now tests explicit offline Food product and diary write rejection, online retry and no duplicate writes (commit 0d5dbbbf628121f68e946b00300f206d354d003d). Check next GitHub Actions outcome; this is mocked connectivity, not full real-world offline queue certification. Next task: food queue conflict/deletion tests, while SECURITY-DEFERRED-2026-10-12 stays deferred.
+
 ## Current continuation — 2026-10-12
 
 GitHub Full UI smoke #38179540966 passed. Subsequently the Full UI workflow was extended to run Workout CRUD, schedule mirror and sync-noop regression tests (commit df125ea27849dcc88c748da4ce0468578c2e96f8). Latest workflow outcome pending verification. Continue with Food CRUD/offline retry test coverage after checking Actions. Paid security staging and advanced RLS testing remain deferred at SECURITY-DEFERRED-2026-10-12.
