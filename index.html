@@ -1219,11 +1219,12 @@ textarea{resize:vertical}
 }
 </style>
 <style id="px-settings-insights-mobile-20261012">
-#settings .pxSettingsQuickNav{display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;padding:4px 2px 12px;margin-bottom:8px}
+#settings .pxSettingsQuickNav{display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;padding:8px 6px 12px;margin-bottom:8px;position:sticky;top:calc(8px + env(safe-area-inset-top,0px));z-index:65;background:var(--card);border:1px solid var(--line);border-radius:14px}
 #settings .pxSettingsQuickNav button{flex:0 0 auto;min-height:44px;border:1px solid var(--line);border-radius:12px;background:var(--card2);color:var(--text);font-weight:700;padding:8px 13px;cursor:pointer}
 #settings .pxSettingsQuickNav button:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
 #settings #pxSettingsAccount,#settings #pxSettingsHub,#settings #pxSettingsBackup,#settings #pxSettingsSyncCenter,#settings #pxSettingsSchedule{scroll-margin-top:24px}
 #settings .pxSettingsHero{margin-bottom:14px}
+@media(max-width:820px){#settings{padding-bottom:calc(140px + env(safe-area-inset-bottom,0px))}#settings .pxSettingsQuickNav{scroll-margin-top:90px}}
 #settings .pxRealAccountPanel{margin-bottom:14px}
 #settings .settingsGrid,#settings .settingsGrid>.panel{min-width:0}
 #settings .settingsGrid details{max-width:100%;overflow-wrap:anywhere}
