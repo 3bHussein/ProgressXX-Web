@@ -14,6 +14,11 @@
 ## Current work — Mobile Settings & Insights (2026-10-12)
 ## Mobile viewport CI continuation (2026-10-12)
 ## Latest Settings work (2026-10-12)
+## Current continuation — Settings shortcut browser clicks (2026-10-12)
+
+Previous CI #38181874481 and Pages #38181874600 successful. Added mobile Chromium clicks and target viewport checks for Settings shortcuts in `scripts/smoke-full-ui.cjs` (latest commit `8c0dd6e9f5d1e7a76579ddef9dac75e50ef78cdf`). New CI pending verification. No production data change. Security checkpoint deferred.
+
+
 
 Confirmed CI #38181679627 and Pages #38181678866 passed. Added scrollable Settings quick navigation to Account, Backup, Sync, Preferences, Schedule in `index.html`, commit `948600c920bcc7975dc550d9e2140cb5b4737305`, plus coverage `45fa87f6b7d8e029cfce698d99fc9fd1c9843e77`. Recheck latest CI. No data changes; deferred security work remains on hold.
 
