@@ -223,7 +223,7 @@ const {chromium}=require('playwright');
    const target=page.locator('#'+id);
    if(await target.count()!==1)throw Error('Missing Settings shortcut destination '+id);
    const index=['pxSettingsAccount','pxSettingsBackup','pxSettingsSyncCenter','pxSettingsHub','pxSettingsSchedule'].indexOf(id);
-   await page.locator('#settings .pxSettingsQuickNav button').nth(index).click();
+   await page.locator('#settings .pxSettingsQuickNav button').nth(index).click({timeout:6000});
    await page.waitForTimeout(400);
    const check=await target.evaluate(el=>({top:el.getBoundingClientRect().top,height:el.getBoundingClientRect().height,viewport:window.innerHeight}));
    if(check.height<1||check.top>check.viewport)throw Error('Settings shortcut did not navigate to '+id+': '+JSON.stringify(check));
