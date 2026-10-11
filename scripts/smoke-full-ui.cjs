@@ -22,8 +22,8 @@ const {chromium}=require('playwright');
  for(const id of ['home','log','analytics','nutrition','daily','calculators','settings','intelligence']){
   if(await page.locator('#'+id).count()!==1)throw Error('Missing original section '+id);
  }
- await page.evaluate(()=>window.PXStore.setItem('qa-sentinel','abc123'));
- const value=await page.evaluate(()=>window.PXStore.getItem('qa-sentinel'));
+ await page.evaluate(()=>PXStore.setItem('qa-sentinel','abc123'));
+ const value=await page.evaluate(()=>PXStore.getItem('qa-sentinel'));
  if(value!=='abc123')throw Error('Scoped storage failed');
  const unscoped=await page.evaluate(()=>window.localStorage.getItem('qa-sentinel'));
  if(unscoped!==null)throw Error('Unscoped personal data leak');
