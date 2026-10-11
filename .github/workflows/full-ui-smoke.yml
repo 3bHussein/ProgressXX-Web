@@ -29,3 +29,4 @@ jobs:
           node tests/workout-supabase-table.cjs
           node tests/workout-schedule-table-mirror.cjs
           node tests/workout-sync-noop-regression.cjs
+          node tests/mobile-settings-insights-regression.cjs
