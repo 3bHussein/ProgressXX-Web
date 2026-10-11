@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Real click regression for Insights anatomy mobile tabs
+
+- Previous 320px and 390px tab height regression #38182804267 passed; verified prior Pages build #38182804147 succeeded.
+- Added Chromium click assertions for the **Muscle Coverage** and **Anatomy Atlas** mobile tabs at both 320px and 390px; checks the selected panel state and `aria-pressed`, not only CSS heights. Commit `7d1a3c51475e27dfb88183b29041674da28a4459`.
+- New CI still requires verification; synthetic mobile browsers only, no real-phone proof. No app runtime/production DB changes. Security checkpoint `SECURITY-DEFERRED-2026-10-12` remains deferred.
+- Next: inspect CI, fix any tab interaction bug, then get a real-device screenshot check.
+
+
 ### 2026-10-12 — Mobile Settings and Insights height fix verified
 
 - Full UI regression [#38182804267](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38182804267) **SUCCESS**: synthetic Chromium at 320px / 390px validates tab row and button heights for Settings and Insights.
