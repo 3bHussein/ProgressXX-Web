@@ -23,6 +23,16 @@ This is the **append-only** chronological log of completed work, investigations,
 
 ## Entries (newest first)
 
+### 2026-10-12 — Fix full-height mobile Settings & Insights tabs shown in screenshots
+
+- User-provided screenshots exposed a visual issue missed by old width/visibility-only mobile tests: Settings quick-nav and Insights Anatomy Atlas/Muscle Coverage tab buttons stretched nearly full-screen in height.
+- Fixed root `index.html` with explicit horizontal flex alignment and maximum nav height (68px), Settings button height (44px), Insights tab height (46px), including 320px/390px layouts. Commit `786c9ffba74b22b463900f28c2c3d1d0aacea9c8`.
+- Expanded `scripts/smoke-full-ui.cjs` with actual computed bounding-rectangle height assertions for both mobile tab rows at 320px and 390px. Commit `8a307957d417797322fb8d5ad9212167027acdcd`.
+- Await new Full UI CI and Pages deployment before declaring verified; real phone review recommended. No user data, Supabase or security migration changed.
+- Next: inspect latest Actions; fix any CSS specificity issue if heights still fail. Deferred security remains `SECURITY-DEFERRED-2026-10-12`.
+
+
+
 ### 2026-10-12 — Food Diary queue reload and 320px UI CI passed
 
 - Verified **Full UI** [#38182541980](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38182541980) **SUCCESS** on smoke covering queued Food Diary POST temporary 503, full reload, account-scoped pending/local/in-memory recovery and exactly one saved backend record after retry.
