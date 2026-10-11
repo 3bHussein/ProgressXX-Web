@@ -32,4 +32,4 @@ const result=await page.evaluate(()=>({hidden:document.getElementById('pxCommerc
 if(!result.hidden||result.entries!==32||problems.length)throw Error(JSON.stringify({status,result,problems:problems.slice(0,6)},null,2));
 console.log('PASS: sampled historical entries + restored Food, Daily, nutrition archives login and hydrate safely');
 await browser.close();
-})().catch(e=>{console.error(e);process.exitCode=1});
+})().catch(e=>{console.error('FAIL: restored Food/Daily account login regression:',e?.stack||e);process.exit(1)});
