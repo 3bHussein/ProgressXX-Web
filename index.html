@@ -9359,6 +9359,35 @@ window.__legacyBoot=init;
   return response.status===204?null:response.json();
  }
  function tell(message,problem=false){pill.textContent=message;pill.style.color=problem?'#fecaca':'#d8faf1';pill.hidden=false;pill.title='Supabase account snapshot · '+(account||'not signed in')}
+ const SCHEDULE_ROW_MARKER='progressxx-weekly-schedule-v1';
+ const SCHEDULE_KEYS=['sun','mon','tue','wed','thu','fri','sat'];
+ // Snapshot remains authoritative; only rows explicitly tagged by ProgressXX are maintained.
+ async function mirrorWorkoutScheduleToTable(savedValues){
+  if(!Object.prototype.hasOwnProperty.call(savedValues,'progressx-workout-schedule-v1'))return;
+  let schedule;
+  try{schedule=JSON.parse(savedValues['progressx-workout-schedule-v1']||'{}')}catch{throw Error('Invalid weekly schedule snapshot')}
+  if(!schedule||typeof schedule!=='object'||Array.isArray(schedule))throw Error('Invalid weekly schedule format');
+  const endpoint='workout_schedule';
+  const rows=await cloud(endpoint+'?select=id,user_id,weekday,title,notes&user_id=eq.'+encodeURIComponent(account)+'&notes=eq.'+encodeURIComponent(SCHEDULE_ROW_MARKER));
+  if(!Array.isArray(rows))throw Error('Weekly schedule rows unavailable');
+  const owned=rows.filter(r=>r.user_id===account&&r.notes===SCHEDULE_ROW_MARKER);
+  const byDay=new Map();
+  for(const row of owned){
+   if(byDay.has(Number(row.weekday)))throw Error('Duplicate managed schedule weekday: '+row.weekday);
+   byDay.set(Number(row.weekday),row);
+  }
+  for(let i=0;i<SCHEDULE_KEYS.length;i++){
+   const day=SCHEDULE_KEYS[i],title=String(schedule[day]||'').trim(),prior=byDay.get(i);
+   if(title.length>120)throw Error('Scheduled training day name exceeds 120 characters');
+   if(!title){
+    if(prior)await cloud(endpoint+'?id=eq.'+encodeURIComponent(prior.id)+'&user_id=eq.'+encodeURIComponent(account)+'&notes=eq.'+encodeURIComponent(SCHEDULE_ROW_MARKER),'DELETE');
+   }else if(prior){
+    if(prior.title!==title)await cloud(endpoint+'?id=eq.'+encodeURIComponent(prior.id)+'&user_id=eq.'+encodeURIComponent(account)+'&notes=eq.'+encodeURIComponent(SCHEDULE_ROW_MARKER),'PATCH',{title});
+   }else{
+    await cloud(endpoint,'POST',{user_id:account,weekday:i,title,notes:SCHEDULE_ROW_MARKER});
+   }
+  }
+ }
  function scheduleCloudSync(){if(!ready)return;clearTimeout(timer);timer=setTimeout(()=>{void flush()},1200)}
  async function flush(){
   if(!ready||uploading||!navigator.onLine||revision===savedRevision)return;
@@ -9366,6 +9395,7 @@ window.__legacyBoot=init;
   try{
    // Single-account snapshot; originals remain byte-exact strings (including raw performance).
    await cloud('user_app_snapshots?on_conflict=user_id','POST',{user_id:account,payload:{...values},updated_at:new Date().toISOString()});
+   await mirrorWorkoutScheduleToTable({...values});
    savedRevision=writing;if(revision===writing)clearPending();tell('✓ Synced to Supabase · '+new Date().toLocaleTimeString());
   }catch(e){tell('Unsynced changes: '+e.message,true)}
   finally{uploading=false;if(revision!==savedRevision)scheduleCloudSync()}
