@@ -2433,6 +2433,61 @@ function remoteWorkoutRows(rows){
 }
 
 function prepareProgressXXPrivateSource(){/* intentionally disabled for commercial accounts */}
+let deferredInstallPrompt=null;
+function isAndroidNativeApp(){
+  return !!window.ProgressXAndroid || location.hostname==='appassets.androidplatform.net';
+}
+function updatePwaInstallUI(){
+  const btn=$('pwaInstallBtn'),status=$('pwaInstallStatus'),info=$('pwaInstallInfo');
+  if(!btn||!status||!info)return;
+  const standalone=window.matchMedia?.('(display-mode: standalone)')?.matches||window.navigator.standalone===true;
+  btn.disabled=false;
+  if(isAndroidNativeApp()){
+    status.textContent='Android App';
+    btn.textContent='Already installed';
+    info.textContent='You are already using the native Android app. PWA installation is only for the web version.';
+    return;
+  }
+  if(standalone){
+    status.textContent='Installed';
+    btn.textContent='Installed';
+    info.textContent='ProgressX is already installed on this device.';
+    return;
+  }
+  btn.textContent=deferredInstallPrompt?'Install app':'Install help';
+  status.textContent=deferredInstallPrompt?'Ready':'Web';
+  if(location.protocol!=='https:'&&location.hostname!=='localhost'){
+    info.textContent='PWA installation requires HTTPS (or localhost). Open ProgressX from its hosted HTTPS web address.';
+  }else if(deferredInstallPrompt){
+    info.textContent='ProgressX is ready to install.';
+  }else{
+    info.textContent='The browser has not offered an install prompt yet. Tap Install help for browser-specific steps.';
+  }
+}
+async function installProgressX(){
+  if(isAndroidNativeApp()){
+    alert('This is already the native Android app. PWA installation is only for the web version.');
+    return;
+  }
+  const standalone=window.matchMedia?.('(display-mode: standalone)')?.matches||window.navigator.standalone===true;
+  if(standalone){alert('ProgressX is already installed on this device.');return}
+  if(deferredInstallPrompt){
+    deferredInstallPrompt.prompt();
+    try{await deferredInstallPrompt.userChoice}catch{}
+    deferredInstallPrompt=null;
+    updatePwaInstallUI();
+    return;
+  }
+  const secure=location.protocol==='https:'||location.hostname==='localhost';
+  const ua=navigator.userAgent||'';
+  let msg=secure
+    ? 'Your browser has not exposed the automatic install prompt yet.\n\n'
+    : 'This page is not running in a secure HTTPS context, so browsers cannot install it as a PWA.\n\n';
+  if(/iPhone|iPad|iPod/i.test(ua))msg+='On iPhone/iPad: Safari → Share → Add to Home Screen.';
+  else if(/Chrome|Chromium|Edg/i.test(ua))msg+='On Chrome/Edge: open the browser menu and choose Install app / Install ProgressX / Add to Home screen.';
+  else msg+='Open the browser menu and look for Install app or Add to Home Screen.';
+  alert(msg);
+}
 function setupPwa(){
   if(isAndroidNativeApp())return updatePwaInstallUI();
   window.addEventListener('beforeinstallprompt',e=>{
@@ -9152,9 +9207,10 @@ window.__legacyBoot=init;
    const key=browserStorage.key(i);
    if(key?.startsWith(prefix)){const stripped=key.slice(prefix.length);if(!(stripped in values))values[stripped]=browserStorage.getItem(key)}
   }
-  savedRevision=revision;ready=true;gate.hidden=true;tell('✓ Signed in · Supabase connected');
+  savedRevision=revision;ready=true;tell('✓ Signed in · Supabase connected');
   if(typeof window.__legacyBoot!=='function')throw Error('Original app did not initialize');
   await window.__legacyBoot();
+  gate.hidden=true;
  }
  document.getElementById('pxLogin').addEventListener('submit',async e=>{
   e.preventDefault();status.textContent='Signing in…';
