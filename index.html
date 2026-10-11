@@ -8788,7 +8788,7 @@ function pxCoverageStats(){
  const links=pxAnatomyLinks();
  for(const entry of data){
   const name=String(entry.exercise||'').trim(), date=String(entry.date||'').slice(0,10);
-  if(!name||!/^\\d{4}-\\d{2}-\\d{2}$/.test(date))continue;
+  if(!name||!/^\d{4}-\d{2}-\d{2}$/.test(date))continue;
   const d=new Date(date+'T12:00:00');if(Number.isNaN(d.getTime())||d<cutoff||d>now)continue;
   if(String(entry.status||'').toLowerCase()!=='completed')continue;
   const workingSets=pxCoverageCountSets(entry.performance);
@@ -9216,8 +9216,8 @@ window.__legacyBoot=init;
   const id=String(p.id||'').trim();
   if(!id)throw Error('Missing entry ID');
   const numeric=x=>Number.isFinite(Number(x))?Math.max(0,Number(x)):0;
-  const date=/^\\d{4}-\\d{2}-\\d{2}$/.test(String(p.date||''))?String(p.date):new Date().toISOString().slice(0,10);
-  const time=/^\\d{2}:\\d{2}$/.test(String(p.time||''))?String(p.time):'12:00';
+  const date=/^\d{4}-\d{2}-\d{2}$/.test(String(p.date||''))?String(p.date):new Date().toISOString().slice(0,10);
+  const time=/^\d{2}:\d{2}$/.test(String(p.time||''))?String(p.time):'12:00';
   const timestamp=new Date(date+'T'+time+':00').toISOString();
   const record={user_id:account,client_id:'pxlegacy:'+id,logged_at:timestamp,
    food_name:'['+String(p.meal||'Snack')+'] '+String(p.name||'Food').slice(0,180),
