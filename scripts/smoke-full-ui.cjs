@@ -27,6 +27,16 @@ const {chromium}=require('playwright');
    await route.fulfill({status:201,contentType:'application/json',body:JSON.stringify([{id:'cccccccc-cccc-4ccc-8ccc-cccccccccccc',...row}])});
    return;
   }
+  if(product&&req.method()==='GET'){
+   const filter=new URL(req.url()).searchParams.get('source_id');
+   const found=filter?.startsWith('eq.')?productWrites.filter(x=>x.source_id===filter.slice(3)):productWrites;
+   await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(found.map(x=>({id:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',...x})))});return;
+  }
+  if(product&&req.method()==='DELETE'){
+   const filter=new URL(req.url()).searchParams.get('source_id');
+   productWrites=productWrites.filter(x=>x.source_id!==filter?.slice(3));
+   await route.fulfill({status:204,body:''});return;
+  }
   if(isPost&&product){
    const row=req.postDataJSON();productWrites.push(row);
    await route.fulfill({status:201,contentType:'application/json',body:JSON.stringify([{id:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',...row}])});
@@ -69,6 +79,12 @@ const {chromium}=require('playwright');
  const productReply=await page.evaluate(async()=>apiCall('food_product_upsert',{name:'QA only',id:'qa-test-record'}));
  if(!productReply?.ok)throw Error('Food product Supabase bridge failed: '+JSON.stringify(productReply));
  if(!productWrites.length||productWrites.at(-1).name!=='QA only'||productWrites.at(-1).source_id!=='qa-test-record')throw Error('No real food_products table upsert request');
+ const library=await page.evaluate(async()=>apiCall('food_products_list'));
+ if(!library.ok||!library.products.some(x=>x.id==='qa-test-record'))throw Error('Food library not fetched from database');
+ const deleted=await page.evaluate(async()=>apiCall('food_product_delete',{id:'qa-test-record'}));
+ if(!deleted.ok||productWrites.some(x=>x.source_id==='qa-test-record'))throw Error('Food product not deleted in database');
+ const again=await page.evaluate(async()=>apiCall('food_products_list'));
+ if(again.products.some(x=>x.id==='qa-test-record'))throw Error('Deleted product was resurrected');
  const logReply=await page.evaluate(async()=>apiCall('food_log_upsert',{name:'QA only',id:'qa-log-record'}));
  if(!logReply?.ok)throw Error('Food log Supabase bridge failed: '+JSON.stringify(logReply));
  if(!foodEntryWrites.some(x=>x.client_id==='pxlegacy:qa-log-record'&&x.food_name==='[Snack] QA only'))throw Error('No real food_entries database upsert');
