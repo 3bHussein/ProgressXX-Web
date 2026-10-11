@@ -22,6 +22,13 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Real phone Food Library sync user-confirmed
+
+- Account owner confirmed the labelled Food Library test product added on desktop **appeared on phone** with the same account. This is a real-device **one-direction partial PASS**, not verification of Food Diary reverse sync or all tables.
+- Next: create **one** labelled Food Diary entry from phone; verify exactly one record on desktop, same date/time/meal/calories; preserve existing records. Cleanup only the test items after success.
+- No production data edits made by assistant. Security testing remains deferred (`SECURITY-DEFERRED-2026-10-12`).
+
+
 ### 2026-10-12 — Real-device sync QA instructions prepared
 
 - Added `docs/REAL-DEVICE-SYNC-CHECKLIST.md` with safe two-device verification of Food Library and Diary creation, cloud confirmation, duplicate checks and read-only checks of existing Daily/Workout/Weight, optional deletion of only labelled synthetic entries. Commit `f4f8bc5cd4b7e741dfca1c1b5eea01ea6bd29e4f`.
