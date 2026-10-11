@@ -9618,6 +9618,16 @@ window.__legacyBoot=init;
    stale.forEach(key=>browserStorage.removeItem(key));
   }
   savedRevision=revision;ready=true;tell('✓ Signed in · Supabase connected');
+  // Restore queued Food rows into the in-memory UI before the login boot/render.
+  // The initial Food globals were created before the account storage became available.
+  for(const item of pxFoodOutbox()){
+   if(item.type!=='product'&&item.type!=='log')continue;
+   const target=item.type==='product'?foodProducts:foodLog;
+   if(target.some(x=>String(x.id)===String(item.id)))continue;
+   const stored=loadLocalArray(item.type==='product'?FOOD_PRODUCTS_KEY:FOOD_LOG_KEY,[]);
+   const found=stored.find(x=>String(x.id)===String(item.id));
+   if(found)target.push(item.type==='product'?normalizeFoodProduct(found):found);
+  }
   if(typeof window.__legacyBoot!=='function')throw Error('Original app did not initialize');
   try{await window.__pxRestoreLegacySettings()}catch(err){tell('Legacy settings: '+err.message,true)}
   try{await window.__pxLoadReminderArchive()}catch(err){tell('Reminders archive: '+err.message,true)}
