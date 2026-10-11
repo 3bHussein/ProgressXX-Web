@@ -12,6 +12,8 @@ input{width:100%;border:1px solid #394b66;border-radius:12px;padding:14px;backgr
 .textlink{border:0;color:#bda6ff;background:transparent;padding:10px 0;font-weight:600}.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px}
 .notice{font-size:14px;min-height:22px;margin-top:16px;line-height:1.5}.notice.error{color:#ff9caa}.notice.ok{color:#7ae3be}
 .hidden{display:none!important}.small{font-size:12px;color:#91a5bf}strong{overflow-wrap:anywhere}@media(max-width:420px){main{padding:12px}.panel{border-radius:18px;padding:22px}}
+
+.dashboard{margin-top:22px;border-top:1px solid #394b66;padding-top:18px}.dashgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{background:#0c1626;border:1px solid #30405a;border-radius:14px;padding:14px}.stat b{display:block;font-size:25px;margin-top:7px}.stat span{font-size:12px;color:#9eb1ca}.fieldrow{display:flex;gap:8px;align-items:end}.fieldrow input{min-width:0;flex:1}.fieldrow button{margin:0;white-space:nowrap}.history{margin:12px 0;padding:0;list-style:none}.history li{padding:10px 0;border-bottom:1px solid #2c3750;font-size:14px}.viewhint{font-size:13px}
 </style></head><body><main><section class="panel">
 <div class="brand">Progress<span style="color:#ab8afe">XX</span></div>
 <p class="small">COMMERCIAL ACCOUNT PREVIEW · Separate from your existing personal app</p>
@@ -22,7 +24,14 @@ input{width:100%;border:1px solid #394b66;border-radius:12px;padding:14px;backgr
 <button class="primary" id="submit" type="submit">Sign in</button></form>
 <div class="bar"><button class="textlink" type="button" id="forgot">Forgot password?</button><button class="textlink hidden" id="back" type="button">Back to sign in</button></div>
 </div>
-<div id="signedIn" class="hidden"><h1>You're signed in</h1><p>Account: <strong id="who"></strong></p><p>Your account is authenticated. Workout data migration and commercial subscriptions are not enabled in this preview.</p><button id="signOut" class="primary">Sign out</button></div>
+<div id="signedIn" class="hidden"><h1>You're signed in</h1><p>Account: <strong id="who"></strong></p><p>Your account is authenticated. Workout data migration and commercial subscriptions are not enabled in this preview.</p><div id="dashboard" class="dashboard">
+<h2>Your progress</h2><p class="viewhint">Private Supabase records for this account. Your old personal data has not been imported.</p>
+<div class="dashgrid"><div class="stat"><span>Workouts logged</span><b id="workoutCount">—</b></div><div class="stat"><span>Latest weight</span><b id="latestWeight">—</b></div></div>
+<h3>Log a workout</h3><form id="workoutForm"><label for="workoutNotes">Workout name / notes</label><input id="workoutNotes" maxlength="300" required placeholder="e.g. Full body A"><button class="primary" type="submit">Save workout</button></form>
+<h3>Weight check-in</h3><form id="weightForm"><label for="weightKg">Weight in kilograms</label><div class="fieldrow"><input id="weightKg" type="number" required step="0.1" min="20" max="500" placeholder="kg"><button class="primary" type="submit">Save</button></div></form>
+<h3>Recent workouts</h3><ul id="workoutHistory" class="history"></ul>
+<button id="refreshData" type="button" class="textlink">Refresh dashboard</button>
+</div><button id="signOut" class="primary">Sign out</button></div>
 <div id="notice" class="notice" role="status" aria-live="polite"></div>
 <p class="small">Do not enter data from your old workout log here. No payments or data migration are active.</p>
 </section></main>
@@ -37,11 +46,53 @@ function notice(message,error=false){el('notice').textContent=message;el('notice
 function render(){const logged=!!session?.access_token&&!!session?.user;el('signedIn').classList.toggle('hidden',!logged);el('signedOut').classList.toggle('hidden',logged);el('who').textContent=logged?(session.user.email||'Account'):''}
 function setMode(next){mode=next;notice('');el('authForm').reset();el('tabSignIn').classList.toggle('active',mode==='signin');el('tabSignUp').classList.toggle('active',mode==='signup');el('heading').textContent=mode==='signin'?'Welcome back':mode==='signup'?'Create your account':'Reset your password';el('description').textContent=mode==='signin'?'Sign in to your secure fitness account.':mode==='signup'?'Create a free account to get started.':'We will send a password reset link if your email is registered.';el('passwordRow').classList.toggle('hidden',mode==='reset');el('password').required=mode!=='reset';el('password').autocomplete=mode==='signup'?'new-password':'current-password';el('submit').textContent=mode==='signin'?'Sign in':mode==='signup'?'Create account':'Send reset link';el('forgot').classList.toggle('hidden',mode!=='signin');el('back').classList.toggle('hidden',mode!=='reset')}
 async function api(path,options={}){const headers={'apikey':PUBLIC_KEY,'Content-Type':'application/json',...options.headers};let response;try{response=await fetch(URL_BASE+'/auth/v1/'+path,{...options,headers})}catch{throw Error('Network unavailable. Check your connection.')}const data=await response.json().catch(()=>({}));if(!response.ok)throw Error(data.msg||data.error_description||data.message||data.error||'Authentication request failed.');return data}
-function save(value){session=value;try{if(session)sessionStorage.setItem(sessionKey,JSON.stringify(session));else sessionStorage.removeItem(sessionKey)}catch{}render()}
+function save(value){session=value;try{if(session)sessionStorage.setItem(sessionKey,JSON.stringify(session));else sessionStorage.removeItem(sessionKey)}catch{}render();if(session?.user)loadDashboard()}
 async function refresh(){if(!session?.refresh_token)return;const data=await api('token?grant_type=refresh_token',{method:'POST',body:JSON.stringify({refresh_token:session.refresh_token})});save(data)}
-async function init(){try{session=JSON.parse(sessionStorage.getItem(sessionKey)||'null')}catch{session=null}if(session?.refresh_token){try{await refresh()}catch{save(null)}}render()}
+async function init(){try{session=JSON.parse(sessionStorage.getItem(sessionKey)||'null')}catch{session=null}if(session?.refresh_token){try{await refresh()}catch{save(null)}}render();if(session?.user)loadDashboard()}
 el('tabSignIn').addEventListener('click',()=>setMode('signin'));el('tabSignUp').addEventListener('click',()=>setMode('signup'));el('forgot').addEventListener('click',()=>setMode('reset'));el('back').addEventListener('click',()=>setMode('signin'));
 el('authForm').addEventListener('submit',async event=>{event.preventDefault();const email=el('email').value.trim(),password=el('password').value,btn=el('submit');btn.disabled=true;notice('Connecting…');try{if(mode==='signup'){const d=await api('signup',{method:'POST',body:JSON.stringify({email,password})});if(d.access_token)save(d);else notice('Check your email for a confirmation link, then sign in.');}else if(mode==='reset'){await api('recover',{method:'POST',body:JSON.stringify({email})});notice('If this email is registered, you will receive a password reset link.')}else{const d=await api('token?grant_type=password',{method:'POST',body:JSON.stringify({email,password})});save(d);notice('Signed in successfully.')}}catch(err){notice(err.message,true)}finally{btn.disabled=false}});
 el('signOut').addEventListener('click',async()=>{const token=session?.access_token;save(null);if(token)try{await api('logout',{method:'POST',headers:{Authorization:'Bearer '+token}})}catch{}setMode('signin');notice('Signed out on this device.')});
+
+async function db(table,method='GET',body=null,query=''){
+ if(!session?.access_token)throw Error('Please sign in again.');
+ if(session.expires_at && Date.now()/1000 >= session.expires_at-45)await refresh();
+ const headers={'apikey':PUBLIC_KEY,'Authorization':'Bearer '+session.access_token,'Content-Type':'application/json'};
+ if(method==='POST')headers.Prefer='return=minimal';
+ let response;
+ try{response=await fetch(URL_BASE+'/rest/v1/'+table+query,{method,headers,body:body?JSON.stringify(body):undefined})}
+ catch{throw Error('Cannot contact database. Check connection.')}
+ if(response.status===401){await refresh();return db(table,method,body,query)}
+ if(!response.ok){const payload=await response.json().catch(()=>({}));throw Error(payload.message||'Database request failed');}
+ if(response.status===204)return null;
+ const text=await response.text();return text?JSON.parse(text):null;
+}
+let dashBusy=false;
+async function loadDashboard(){
+ if(!session?.user||dashBusy)return;
+ dashBusy=true;
+ try{
+  const [sessions,weights]=await Promise.all([
+   db('workout_sessions','GET',null,'?select=id,notes,started_at&order=started_at.desc&limit=20'),
+   db('weight_checkins','GET',null,'?select=weight_kg,measured_at&order=measured_at.desc&limit=1')
+  ]);
+  el('workoutCount').textContent=String(sessions.length)+(sessions.length===20?'+':'');
+  el('latestWeight').textContent=weights.length?Number(weights[0].weight_kg).toFixed(1)+' kg':'—';
+  const list=el('workoutHistory');list.replaceChildren();
+  if(!sessions.length){const li=document.createElement('li');li.textContent='No workouts yet.';list.append(li)}
+  for(const item of sessions){const li=document.createElement('li');li.textContent=(item.notes||'Workout')+' · '+new Date(item.started_at).toLocaleDateString();list.append(li)}
+ }catch(err){notice('Dashboard: '+err.message,true)}finally{dashBusy=false}
+}
+el('workoutForm').addEventListener('submit',async e=>{
+ e.preventDefault();const btn=e.submitter;btn.disabled=true;
+ try{await db('workout_sessions','POST',{user_id:session.user.id,notes:el('workoutNotes').value.trim(),started_at:new Date().toISOString()});el('workoutForm').reset();notice('Workout saved to your private account.');await loadDashboard()}
+ catch(err){notice(err.message,true)}finally{btn.disabled=false}
+});
+el('weightForm').addEventListener('submit',async e=>{
+ e.preventDefault();const btn=e.submitter;btn.disabled=true;
+ try{await db('weight_checkins','POST',{user_id:session.user.id,weight_kg:Number(el('weightKg').value),measured_at:new Date().toISOString()});el('weightForm').reset();notice('Weight saved to your private account.');await loadDashboard()}
+ catch(err){notice(err.message,true)}finally{btn.disabled=false}
+});
+el('refreshData').addEventListener('click',loadDashboard);
+
 init();
 </script></body></html>
