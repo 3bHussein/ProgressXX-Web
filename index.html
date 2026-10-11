@@ -2253,7 +2253,7 @@ textarea{resize:vertical}
   </div>
 </div>
 
-<div class="modalWrap" id="editorWrap" onclick="if(event.target===this)closeEditor()"><div class="modal"><div class="modalHead"><div><h3 id="editorTitle" style="margin:0">Log workout</h3><div class="tiny muted">Edit any old workout or add a new one. Exercise suggestions are filtered automatically by the selected training day; you can still type a new exercise.</div></div><button class="iconbtn" onclick="closeEditor()">✕</button></div><div class="formGrid" style="margin-top:14px"><div style="display:flex;gap:8px;align-items:stretch;min-width:0"><select id="fDay" aria-label="Training day" style="flex:1;min-width:0" onchange="buildExerciseOptions(this.value);prefillLastPerformance()"></select><button type="button" class="btn soft" style="flex-shrink:0" onclick="createEditorTrainingDay()">＋ New day</button></div><input id="fWeek" type="number" min="1" placeholder="Week"><input id="fDate" type="date"><input id="fTime" type="time"><div class="exercisePicker full"><label for="fExercise">Exercise</label><input id="fExercise" autocomplete="off" placeholder="Choose or type an exercise"><select id="fExerciseSelect" aria-label="Select a saved exercise" onchange="selectEditorExercise()"></select><div class="actions" style="margin:5px 0"><button type="button" class="btn soft" onclick="pxRenameExercise(document.getElementById('fDay').value,document.getElementById('fExercise').value.trim())">✎ Rename exercise</button><button type="button" class="btn danger" onclick="pxDeleteExerciseEverywhere(document.getElementById('fDay').value,document.getElementById('fExercise').value.trim())">Delete everywhere</button></div><div id="fExerciseHint" class="tiny muted"></div><datalist id="exerciseOptions"></datalist></div><textarea id="fPerformance" class="full" rows="3" placeholder="Example: 25×8, 27.5×7, 30×6"></textarea><div id="lastPerfHint" class="tiny muted full" style="margin-top:-6px"></div><select id="fStatus"><option>Completed</option><option>Skipped</option><option>Uncertain</option><option>No data</option></select><input id="fNotes" placeholder="Notes: RIR, machine, grip, gym, pain-free etc."><div class="actions full"><button class="btn primary" onclick="saveEntry()">Save entry</button><button class="btn danger" id="deleteBtn" onclick="deleteEntry()">Delete</button></div></div></div></div>
+<div class="modalWrap" id="editorWrap" onclick="if(event.target===this)closeEditor()"><div class="modal"><div class="modalHead"><div><h3 id="editorTitle" style="margin:0">Log workout</h3><div class="tiny muted">Edit any old workout or add a new one. Exercise suggestions are filtered automatically by the selected training day; you can still type a new exercise.</div></div><button class="iconbtn" onclick="closeEditor()">✕</button></div><div class="formGrid" style="margin-top:14px"><select id="fDay"></select><input id="fWeek" type="number" min="1" placeholder="Week"><input id="fDate" type="date"><input id="fTime" type="time"><div class="exercisePicker full"><label for="fExercise">Exercise</label><input id="fExercise" autocomplete="off" placeholder="Choose or type an exercise"><select id="fExerciseSelect" aria-label="Select a saved exercise" onchange="selectEditorExercise()"></select><div class="actions" style="margin:5px 0"><button type="button" class="btn soft" onclick="pxRenameExercise(document.getElementById('fDay').value,document.getElementById('fExercise').value.trim())">✎ Rename exercise</button><button type="button" class="btn danger" onclick="pxDeleteExerciseEverywhere(document.getElementById('fDay').value,document.getElementById('fExercise').value.trim())">Delete everywhere</button></div><div id="fExerciseHint" class="tiny muted"></div><datalist id="exerciseOptions"></datalist></div><textarea id="fPerformance" class="full" rows="3" placeholder="Example: 25×8, 27.5×7, 30×6"></textarea><div id="lastPerfHint" class="tiny muted full" style="margin-top:-6px"></div><select id="fStatus"><option>Completed</option><option>Skipped</option><option>Uncertain</option><option>No data</option></select><input id="fNotes" placeholder="Notes: RIR, machine, grip, gym, pain-free etc."><div class="actions full"><button class="btn primary" onclick="saveEntry()">Save entry</button><button class="btn danger" id="deleteBtn" onclick="deleteEntry()">Delete</button></div></div></div></div>
 <script>
 /* ProgressXX V2 analytics core. Pure, read-only functions: no storage, network or DOM. */
 (function(root,factory){
@@ -2637,23 +2637,8 @@ function editorDayLabel(day){
 function buildEditorDays(){
  const sel=$('fDay');if(!sel)return;
  const previous=sel.value,ds=editorTrainingDays();
- sel.replaceChildren(...(ds.length?ds.map(d=>new Option(editorDayLabel(d),d)):[new Option('No training days loaded — add a new day','')]));
+ sel.replaceChildren(...(ds.length?ds.map(d=>new Option(editorDayLabel(d),d)):[new Option('No training days loaded — sync workouts first','')]));
  if(ds.includes(previous))sel.value=previous;
-}
-function createEditorTrainingDay(){
- const value=window.prompt('New training day name (e.g. Push, Pull, Legs, ANTERIOR 1):');
- if(value===null)return;
- const day=String(value).trim().replace(/\s+/g,' ');
- if(!day){alert('Enter a training day name.');return;}
- if(day.length>80){alert('Training day name must be 80 characters or fewer.');return;}
- const sel=$('fDay');
- const known=editorTrainingDays().find(d=>d.toLowerCase()===day.toLowerCase());
- const selected=known||day;
- if(!Array.from(sel.options).some(opt=>opt.value===selected))sel.add(new Option(selected,selected));
- sel.value=selected;
- buildExerciseOptions(selected);
- prefillLastPerformance();
- $('fExercise').focus();
 }
 function exercisesForDay(day){
  const history=[...new Set(data.filter(x=>!day||String(x.day)===String(day)).map(x=>String(x.exercise||'').trim()).filter(Boolean))];
@@ -4536,7 +4521,7 @@ function sessionPrev(){
   renderWorkoutSession();
 }
 
-function quickAdd(day){openEditor();if(day&&!Array.from($('fDay').options).some(o=>o.value===day))$('fDay').add(new Option(day,day));$('fDay').value=day;buildExerciseOptions(day);$('fExercise').value='';$('fPerformance').value='';$('lastPerfHint').textContent=''}
+function quickAdd(day){openEditor();$('fDay').value=day;buildExerciseOptions(day);$('fExercise').value='';$('fPerformance').value='';$('lastPerfHint').textContent=''}
 function openEditor(id=null){
   editingId=id;
   const x=id!==null?data.find(r=>String(r.id)===String(id)):null;
@@ -4580,7 +4565,7 @@ async function saveEntry(){
 
   if(!obj.exercise)return alert('Exercise is required.');
   if(!obj.week)return alert('Week is required.');
-  if(!obj.day)return alert('Select a training day or tap ＋ New day to create one.');
+  if(!obj.day)return alert('Training day is required.');
 
   // One exercise only once per training day + week.
   const duplicate=findWorkoutDuplicate(obj,editingId!==null?(existing?.id||editingId):null);
