@@ -5140,7 +5140,22 @@ function openSheet(){
   Do NOT paste the Google Sheet URL here; this field expects the Apps Script /exec URL.
 */
 function getApiUrl(){throw Error('Google Sheets integration disabled in commercial build.');}
-function apiCall(){return Promise.resolve({ok:false,error:'Google Sheets integration disabled in commercial build.'});}
+async function apiCall(action,params={}){
+ const simpleRead=(key,field)=>{try{return {ok:true,[field]:JSON.parse(PXStore.getItem(key)||'[]')}}catch{return {ok:true,[field]:[]}}};
+ if(action==='food_products_list')return simpleRead('progressx-food-products','products');
+ if(action==='food_log_list'){const data=simpleRead('progressx-food-log','entries');data.entries=data.entries.filter(x=>!params.date||String(x.date)===String(params.date));return data}
+ if(action==='meal_templates_list')return simpleRead('progressx-saved-meals-v1','templates');
+ if(action==='nutrition_targets_get'){try{return {ok:true,targets:JSON.parse(PXStore.getItem('progressx-nutrition-targets')||'{}')}}catch{return {ok:true,targets:{}}}}
+ if(['food_product_upsert','food_log_upsert','food_product_delete','food_log_delete'].includes(action)){
+  try{
+   if(!navigator.onLine)throw Error('Offline');
+   const r=await window.__pxCommitFood();
+   if(!r)throw Error('Supabase sync not confirmed');
+   return {ok:true,id:String(params.id||('food_'+Date.now()+'_'+Math.random().toString(36).slice(2,9)))};
+  }catch(e){return {ok:false,error:'Supabase: '+String(e.message||e)}}
+ }
+ return {ok:false,error:'Legacy Google Sheets action '+action+' is not yet supported by Supabase'};
+}
 
 /* ===========================
    V51 — BARCODE SCANNER
@@ -9167,6 +9182,14 @@ window.__legacyBoot=init;
   get length(){return Object.keys(values).length}
  };
  window.__pxActiveStore=nodeStorage;
+ window.__pxCommitFood=async()=>{
+  if(!ready||!account)throw Error('Sign in before saving');
+  if(uploading)await new Promise(resolve=>{const check=()=>uploading?setTimeout(check,80):resolve();check()});
+  revision++;markPending();
+  const attempt=revision;await flush();
+  if(savedRevision<attempt)throw Error('Changes remain locally pending');
+  return true;
+ };
  const headers=()=>({'apikey':PUB,'Authorization':'Bearer '+auth.access_token,'Content-Type':'application/json'});
  async function tokenRequest(path,body){
   const response=await fetch(BASE+'/auth/v1/'+path,{method:'POST',headers:{'apikey':PUB,'Content-Type':'application/json'},body:JSON.stringify(body)});
