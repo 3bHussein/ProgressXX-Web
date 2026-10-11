@@ -34,6 +34,9 @@ const assert=require('node:assert/strict');
   await page.locator('#pxPassword').fill('qa-password');
   await page.locator('#pxSignin').click();
   await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:15000});
+  // Gate visibility changes before account boot and snapshot hydration finish.
+  // Wait for a cloud-sync-ready state before evaluating cross-session records.
+  await page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Synced to Supabase'),null,{timeout:20000});
   return {page,errors};
  }
  try{
