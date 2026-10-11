@@ -4,6 +4,7 @@ on:
     paths:
       - 'index.html'
       - 'tests/workout-supabase-table.cjs'
+      - 'tests/workout-deletion-tombstone.cjs'
       - '.github/workflows/workout-supabase-table.yml'
   workflow_dispatch:
 jobs:
@@ -17,4 +18,6 @@ jobs:
         with:
           node-version: '24'
       - name: Test account-scoped workout table CRUD and idempotent retries
-        run: node tests/workout-supabase-table.cjs
+        run: |
+          node tests/workout-supabase-table.cjs
+          node tests/workout-deletion-tombstone.cjs
