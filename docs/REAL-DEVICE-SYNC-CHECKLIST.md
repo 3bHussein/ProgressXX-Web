@@ -1,6 +1,6 @@
 # ProgressX real-device account sync verification
 
-Status: **PARTIAL REAL-DEVICE PASS** (Food Library desktop → phone confirmed by account owner); Food Diary reverse direction remains untested. Updated 2026-10-12.
+Status: **BIDIRECTIONAL FOOD SYNC REPORTED PASS** (Food Library desktop → phone and Food Diary phone → desktop, exactly one accurate row). Workout/Daily/Weight read-only comparison remains outstanding. Updated 2026-10-12.
 
 ## Safety
 - Use the **same personal account** on phone and desktop at https://3bhussein.github.io/ProgressXX-Web/.
@@ -34,3 +34,10 @@ For each row mark PASS / FAIL / NOT TESTED: desktop cloud status; item after des
 - **NOT YET TESTED:** creating one Food Diary entry on phone and verifying exactly one matching record on desktop after refresh.
 - **NOT YET TESTED:** read-only reconciliation of existing Workout Log, Daily and Weight; cleanup of test records.
 - Device screenshots, latency, and normalized database audit were not supplied. Do not generalize this partial pass to all sync flows.
+
+## Second owner-reported checkpoint (2026-10-12)
+
+- **PASS (reported by user):** Food Diary entry created on phone appeared on desktop exactly once, with correct data.
+- Together with earlier desktop → phone Food Library pass, this confirms **bidirectional Food feature flow** on the user's devices for these two test items. It does not establish all products/entries or long-term conflict guarantees.
+- **NEXT — READ ONLY:** compare one known Workout Log row, one Daily History day and one Weight Check-in on both devices. Check exercise/week/sets, daily checkmarks/water, and weight/date. No editing or deletion until both match.
+- Test cleanup should happen only when the owner chooses to delete labelled QA entries; confirm no unintended records were affected.
