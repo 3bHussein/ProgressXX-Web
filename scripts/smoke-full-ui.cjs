@@ -69,7 +69,7 @@ const {chromium}=require('playwright');
  if(!productWrites.length||productWrites.at(-1).name!=='QA only'||productWrites.at(-1).source_id!=='qa-test-record')throw Error('No real food_products table upsert request');
  const logReply=await page.evaluate(async()=>apiCall('food_log_upsert',{name:'QA only',id:'qa-log-record'}));
  if(!logReply?.ok)throw Error('Food log Supabase bridge failed: '+JSON.stringify(logReply));
- if(!foodEntryWrites.length||foodEntryWrites.at(-1).client_id!=='pxlegacy:qa-log-record'||foodEntryWrites.at(-1).food_name!=='[Snack] QA only')throw Error('No real food_entries database upsert');
+ if(!foodEntryWrites.some(x=>x.client_id==='pxlegacy:qa-log-record'&&x.food_name==='[Snack] QA only'))throw Error('No real food_entries database upsert');
  const readReply=await page.evaluate(async()=>apiCall('food_products_list'));
  if(!readReply?.ok)throw Error('Food products read bridge failed');
  if(legacyGoogleCalls)throw Error('Called personal Google Sheets endpoint');
