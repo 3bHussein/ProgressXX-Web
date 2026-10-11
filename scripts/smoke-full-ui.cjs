@@ -132,6 +132,28 @@ const {chromium}=require('playwright');
  if(queueProbe.before!==2||queueProbe.after.length)throw Error('Food outbox did not deduplicate and drain after reconnect');
  if(productWrites.some(x=>x.source_id===queueProbe.dead))throw Error('Tombstoned Food product was resurrected by outbox');
  if(productWrites.filter(x=>x.source_id===queueProbe.alive).length!==1)throw Error('Outbox retry failed to save active product exactly once');
+ // Simulate a transient server rejection: pending Food write remains queued for retry.
+ let rejectOneProduct=true;
+ await page.route('**/rest/v1/food_products?**',async route=>{
+   if(rejectOneProduct&&route.request().method()==='POST'){
+     rejectOneProduct=false;
+     return route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({message:'temporary outage'})});
+   }
+   return route.fallback();
+ });
+ const retry=await page.evaluate(async()=>{
+   const id='qa-outbox-retry';
+   foodProducts.push({id,name:'Retry food',servingQty:1,servingUnit:'serving',calories:11});
+   pxFoodQueue('product',id);
+   await pxFlushFoodOutbox();
+   const pendingAfterFailure=pxFoodOutbox().some(x=>x.id===id&&x.type==='product');
+   await pxFlushFoodOutbox();
+   const pendingAfterSuccess=pxFoodOutbox().some(x=>x.id===id&&x.type==='product');
+   return {pendingAfterFailure,pendingAfterSuccess};
+ });
+ await page.unroute('**/rest/v1/food_products?**');
+ if(!retry.pendingAfterFailure||retry.pendingAfterSuccess)throw Error('Food outbox failed to retain and retry temporary server failure');
+ if(productWrites.filter(x=>x.source_id==='qa-outbox-retry').length!==1)throw Error('Food outbox retry duplicated or lost product');
  const logReply=await page.evaluate(async()=>apiCall('food_log_upsert',{name:'QA only',id:'qa-log-record'}));
  if(!logReply?.ok)throw Error('Food log Supabase bridge failed: '+JSON.stringify(logReply));
  if(!foodEntryWrites.some(x=>x.client_id==='pxlegacy:qa-log-record'&&x.food_name==='[Snack] QA only'))throw Error('No real food_entries database upsert');
