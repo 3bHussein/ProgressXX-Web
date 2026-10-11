@@ -17,6 +17,7 @@ const cloud=async(path,method='GET',body)=>{
  throw Error(method);
 };
 const sandbox={account:uid,ready:true,cloud,progressPhotos:()=>[],localDateKey:()=>'2026-10-11',Date,Number,String,Error,Array};
+sandbox.window=sandbox;
 vm.runInNewContext(html.slice(start,end),sandbox);
 (async()=>{
  let rows=await sandbox.__pxListWeightCheckins();
