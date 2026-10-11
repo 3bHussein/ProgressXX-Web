@@ -12,6 +12,11 @@
 ## Current work — queued Food hydration fix (2026-10-12)
 
 ## Current work — Mobile Settings & Insights (2026-10-12)
+## Mobile viewport CI continuation (2026-10-12)
+
+Last Full UI #38181404446 and Pages #38181404262 passed. Added 390px Chromium Settings/Insights interactive-control viewport assertions to `scripts/smoke-full-ui.cjs` commit `f39578abc38ce38dcab1d25ef8c192745cbb4a0b`; await new CI result. No app runtime/data edits. Security checkpoint still deferred.
+
+
 
 Root `index.html` now has a functional Settings cloud/account panel with status, usable Sync now/Sign out, improved mobile Insights and account toolbar, no “Previous commercial data” link, and hidden disabled Google Sheet panels. Commits `e3db54931a43a79a06a4307af05e3c7e5098633b`, `5b0420b19fdb7cf76bb329f25955ddeb5f538934`. New static regression test and CI wiring commits `6ed2353bc0d6e5206d803d2ffe0539ee4af1f951`, `d745e384e5973940019a03cb4e63f6ceb33077e5`. Check latest CI/deploy and real mobile appearance; no database change. Security defer remains.
 
