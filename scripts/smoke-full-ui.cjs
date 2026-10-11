@@ -236,6 +236,13 @@ const {chromium}=require('playwright');
    history['2026-10-09']={...(history['2026-10-09']||{}),qa_daily_relogin_marker:'daily-survives-account-roundtrip'};
    PXStore.setItem(DAILY_HISTORY_KEY,JSON.stringify(history));
  });
+ // Synthetic Daily reminders, checkmarks and water must survive mock account re-login.
+ await page.evaluate(()=>{
+   const reminders=Array.isArray(dailyReminders)?dailyReminders:[];
+   PXStore.setItem(DAILY_REMINDERS_KEY,JSON.stringify([...reminders,{id:'qa-daily-roundtrip',name:'QA reminder',enabled:true,time:'08:15'}]));
+   PXStore.setItem(DAILY_DONE_KEY,JSON.stringify({...dailyDoneMap(),'qa-daily-roundtrip':true}));
+   PXStore.setItem(DAILY_WATER_KEY,JSON.stringify({date:localDateKey(),current:1.25,target:2.75}));
+ });
  // Account logout/login regression: retain account-scoped Workout Schedule and Weight Goal.
  // Use mock Supabase credentials and data only; do not touch production accounts.
  await page.locator('#pxLogout').click();
@@ -271,6 +278,15 @@ const {chromium}=require('playwright');
  const dailyRoundtrip=await page.evaluate(()=>dailyHistoryMap()?.['2026-10-09']?.qa_daily_relogin_marker);
  if(dailyRoundtrip!=='daily-survives-account-roundtrip')
    throw Error('Daily history entry lost after account logout/login: '+JSON.stringify(dailyRoundtrip));
+ const dailyCheck=await page.evaluate(()=>({
+   reminders:JSON.parse(PXStore.getItem(DAILY_REMINDERS_KEY)||'[]'),
+   done:dailyDoneMap(),
+   water:getWaterState()
+ }));
+ if(!dailyCheck.reminders.some(x=>x.id==='qa-daily-roundtrip'&&x.name==='QA reminder')||
+    dailyCheck.done['qa-daily-roundtrip']!==true||
+    dailyCheck.water.current!==1.25||dailyCheck.water.target!==2.75)
+   throw Error('Daily reminders or water lost after account relogin: '+JSON.stringify(dailyCheck));
  if(afterRelogin.schedule.tue!=='REST'||Number(afterRelogin.goal)!==80)
    throw Error('Schedule or Weight Goal lost on account logout/login: '+JSON.stringify(afterRelogin));
  // Mobile touch layout regression for the signed-in account and Insights/Settings.
