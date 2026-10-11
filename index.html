@@ -2423,6 +2423,7 @@ function removeWorkoutQueueItem(localId){
 function remoteWorkoutRows(rows){
   return (rows||[]).map(x=>({
     id:x.id,
+    _tableConfirmed:x._tableConfirmed===true,
     day:x.day||'',
     exercise:x.exercise||'',
     week:Number(x.week)||x.week||'',
@@ -4627,7 +4628,7 @@ async function deleteEntry(){
   PXStore.setItem(KEY,JSON.stringify(data));
 
   // If it never reached the cloud, just remove its pending insert.
-  if(String(row.id||'').startsWith('local_')){
+  if(String(row.id||'').startsWith('local_')&&workoutQueue().some(x=>x.op==='upsert'&&String(x.localId)===String(row.id))){
     removeWorkoutQueueItem(row.id);
   }else{
     queueWorkoutOperation({
@@ -5184,7 +5185,7 @@ async function apiCall(action,params={}){
  if(action==='upsert'){
   try{if(!navigator.onLine)throw Error('Offline');
    const row=await window.__pxSaveWorkoutEntry(params);
-   return {ok:true,id:row.source_id};
+   return {ok:true,id:row.source_id.slice('pxlog:'.length)};
   }catch(e){return {ok:false,error:'Supabase workout save: '+String(e.message||e)}}
  }
  if(action==='delete'){
@@ -7646,7 +7647,7 @@ async function processWorkoutQueue(){
           const list=await apiCall('list');
           if(!list.ok)throw new Error(list.error||'Could not verify Sheet before save');
           const remote=remoteWorkoutRows(list.rows);
-          const match=remote.find(r=>workoutKey(r)===item.key);
+          const match=remote.find(r=>r._tableConfirmed&&workoutKey(r)===item.key);
           if(match){
             const li=data.findIndex(r=>String(r.id)===String(item.localId));
             if(li>=0)data[li]={...data[li],id:match.id,_sync:undefined};
@@ -7700,7 +7701,7 @@ async function syncFromSheet(silent=false,opts={}){
     // This handles request timeouts where Google saved successfully but the app never got the response.
     for(const item of [...q]){
       if(item.op!=='upsert'||item.payload.id)continue;
-      const match=remote.find(r=>workoutKey(r)===item.key);
+      const match=remote.find(r=>r._tableConfirmed&&workoutKey(r)===item.key);
       if(match){
         const li=data.findIndex(x=>String(x.id)===String(item.localId));
         if(li>=0)data[li]={...data[li],id:match.id,_sync:undefined};
@@ -9402,7 +9403,7 @@ window.__legacyBoot=init;
   const rows=await cloud('legacy_workout_entries?select=source_id,day_name,exercise_name,week_number,original_date,original_time,raw_performance,status,notes&user_id=eq.'+encodeURIComponent(account)+'&source_id=like.'+encodeURIComponent(WORKOUT_SOURCE_PREFIX+'*')+'&limit=5000');
   if(!Array.isArray(rows))throw Error('Invalid workout table response');
   const cloudRows=rows.map(r=>({
-   id:workoutIdFromSource(r.source_id),day:r.day_name||'',exercise:r.exercise_name||'',week:r.week_number||'',
+   id:workoutIdFromSource(r.source_id),_tableConfirmed:true,day:r.day_name||'',exercise:r.exercise_name||'',week:r.week_number||'',
    date:r.original_date||'',time:r.original_time||'',performance:r.raw_performance||'',status:r.status||'No data',notes:r.notes||''
   }));
   // The snapshot remains authoritative for older records not yet moved to the table.
