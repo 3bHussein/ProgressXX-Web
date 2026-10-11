@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## Latest continuation — 2026-10-12
+
+Previous Food offline smoke CI #38179820794 passed. Added mocked Food Diary delete + reload no-resurrection verification in `scripts/smoke-full-ui.cjs` (commit 734cb8cf95eabafab490d00f382e3a15086f9037). Check latest CI before calling this verified. Next: conflict/outbox tests. Do not resume SECURITY-DEFERRED-2026-10-12 without request.
+
 ## Latest Food test expansion — 2026-10-12
 
 Full UI #38179694848 passed. Browser smoke now tests explicit offline Food product and diary write rejection, online retry and no duplicate writes (commit 0d5dbbbf628121f68e946b00300f206d354d003d). Check next GitHub Actions outcome; this is mocked connectivity, not full real-world offline queue certification. Next task: food queue conflict/deletion tests, while SECURITY-DEFERRED-2026-10-12 stays deferred.
