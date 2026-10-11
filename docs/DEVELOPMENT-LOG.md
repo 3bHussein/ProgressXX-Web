@@ -1,6 +1,6 @@
 # ProgressX — Development Log (Persistent)
 
-This is the **append-only** chronological log of completed work, investigations, releases and handoffs. Last updated: **2026-10-11**.
+This is the **append-only** chronological log of completed work, investigations, releases and handoffs. Last updated: **2026-10-12**.
 
 ## Rules — mandatory for all future tasks
 
@@ -22,6 +22,17 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+
+### 2026-10-12 — SECURITY-DEFERRED-2026-10-12: Security staging and advanced RLS testing paused by owner
+
+- **Decision:** Owner explicitly requests skipping the paid staging/local RLS isolation work for now and returning only when requested. This is DEFERRED, not passed or cancelled.
+- **Reason:** Current budget/priorities. No paid Supabase staging branch was created.
+- **Still open:** Apply/test `supabase/migrations/20261012_revoke_excess_table_privileges.sql` in safe staging; verify excess TRUNCATE/TRIGGER grants removed; test two genuinely separate accounts' negative CRUD/RLS; confirm cross-device data isolation; review leaked-password protection.
+- **Evidence/files:** `docs/SUPABASE-SECURITY-AUDIT.md`, `docs/RLS-NEGATIVE-READ-PROBE.md`, `supabase/security-grants-verification.sql`, `tests/security-migration-safety.cjs`. Static and read-only checks exist but are not a full security certification.
+- **State:** Production permissions unchanged. No application or user data modified. Do not apply the migration or create paid services without explicit renewed approval.
+- **Resume trigger:** User says `Resume SECURITY-DEFERRED-2026-10-12` / `ارجع لاختبارات الأمان المؤجلة`.
+- **Next active work:** Continue unrelated, non-destructive ProgressX improvements (Food/Daily/Workout/Weight UX, sync regression tests, performance) without declaring product ready for public paid launch.
+
 
 ### 2026-10-12 — Budget constraint: no paid staging
 
