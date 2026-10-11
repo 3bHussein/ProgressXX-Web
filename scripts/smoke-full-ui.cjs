@@ -32,7 +32,7 @@ const {chromium}=require('playwright');
  await page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Saved to Supabase'),{timeout:10000});
  if(cloudWrites<1||savedCloudPayload['qa-sentinel']!=='abc123')throw Error('Snapshot was not persisted to the cloud endpoint');
  await page.reload({waitUntil:'domcontentloaded'});
- await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,{timeout:15000});
+ try{await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:10000})}catch(error){console.error('Reload failure diagnostics:',await page.evaluate(()=>({status:document.querySelector('#pxLoginMessage')?.textContent,gateHidden:document.querySelector('#pxCommercialGate')?.hidden,session:sessionStorage.getItem('pxx_commercial_auth_preview_v1')?.slice(0,160),sync:document.querySelector('#pxSyncPill')?.textContent})),errors.slice(-8));throw error}
  if(await page.evaluate(()=>PXStore.getItem('qa-sentinel'))!=='abc123')throw Error('Cloud reload lost the record');
  if(legacyGoogleCalls)throw Error('Called personal Google Sheets endpoint');
  if(errors.length)throw Error('Browser errors after reload: '+errors.slice(0,5).join(' ; '));
