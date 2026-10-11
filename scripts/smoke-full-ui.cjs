@@ -249,6 +249,12 @@ const {chromium}=require('playwright');
      id:'qa-weight-relogin',date:'2026-10-09',weight:78.4,note:'QA roundtrip',createdAt:'2026-10-09T08:00:00.000Z',_pending:false
    }]);
  });
+ // Synthetic Workout Log record must persist through the account snapshot.
+ await page.evaluate(()=>{
+   data=data.filter(x=>x.id!=='qa-workout-relogin');
+   data.push({id:'qa-workout-relogin',week:20,day:'Monday',exercise:'QA dumbbell row',sets:3,reps:12,weight:18,notes:'QA roundtrip'});
+   save();
+ });
  // Account logout/login regression: retain account-scoped Workout Schedule and Weight Goal.
  // Use mock Supabase credentials and data only; do not touch production accounts.
  await page.locator('#pxLogout').click();
@@ -296,6 +302,9 @@ const {chromium}=require('playwright');
  const weightRow=await page.evaluate(()=>progressPhotos().find(x=>x.id==='qa-weight-relogin'));
  if(!weightRow||Number(weightRow.weight)!==78.4||weightRow.note!=='QA roundtrip')
    throw Error('Weight check-in lost or changed on account relogin: '+JSON.stringify(weightRow));
+ const workoutRow=await page.evaluate(()=>data.find(x=>x.id==='qa-workout-relogin'));
+ if(!workoutRow||workoutRow.exercise!=='QA dumbbell row'||Number(workoutRow.week)!==20||workoutRow.notes!=='QA roundtrip')
+   throw Error('Workout Log record lost on account re-login: '+JSON.stringify(workoutRow));
  if(afterRelogin.schedule.tue!=='REST'||Number(afterRelogin.goal)!==80)
    throw Error('Schedule or Weight Goal lost on account logout/login: '+JSON.stringify(afterRelogin));
  // Mobile touch layout regression for the signed-in account and Insights/Settings.
