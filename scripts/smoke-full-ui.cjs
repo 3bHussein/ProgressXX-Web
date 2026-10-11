@@ -78,6 +78,17 @@ const {chromium}=require('playwright');
  await page.waitForTimeout(2000);
  if(savedCloudPayload['offline-sentinel']!=='survive-reload')throw Error('Offline edit did not reconcile to cloud');
  // Legacy Food API must no longer try the disabled Google Sheets transport.
+ // Explicit offline->online retry for Food Library and Food Diary: no phantom success/writes offline.
+ const productPostsBeforeOffline=productWrites.length;
+ const foodPostsBeforeOffline=foodEntryWrites.length;
+ await page.context().setOffline(true);
+ const offlineReplies=await page.evaluate(async()=>({
+   product:await apiCall('food_product_upsert',{name:'QA only',id:'qa-test-record'}),
+   food:await apiCall('food_log_upsert',{name:'QA only',id:'qa-log-record'})
+ }));
+ if(offlineReplies.product?.ok||offlineReplies.food?.ok)throw Error('Offline Food writes falsely reported success');
+ if(productWrites.length!==productPostsBeforeOffline||foodEntryWrites.length!==foodPostsBeforeOffline)throw Error('Offline Food write unexpectedly reached cloud');
+ await page.context().setOffline(false);
  const productReply=await page.evaluate(async()=>apiCall('food_product_upsert',{name:'QA only',id:'qa-test-record'}));
  if(!productReply?.ok)throw Error('Food product Supabase bridge failed: '+JSON.stringify(productReply));
  if(!productWrites.length||productWrites.at(-1).name!=='QA only'||productWrites.at(-1).source_id!=='qa-test-record')throw Error('No real food_products table upsert request');
@@ -103,6 +114,8 @@ const {chromium}=require('playwright');
  const logReply=await page.evaluate(async()=>apiCall('food_log_upsert',{name:'QA only',id:'qa-log-record'}));
  if(!logReply?.ok)throw Error('Food log Supabase bridge failed: '+JSON.stringify(logReply));
  if(!foodEntryWrites.some(x=>x.client_id==='pxlegacy:qa-log-record'&&x.food_name==='[Snack] QA only'))throw Error('No real food_entries database upsert');
+ if(productWrites.filter(x=>x.source_id==='qa-test-record').length!==0)throw Error('Deleted Food Library item reappeared after offline-to-online retry');
+ if(foodEntryWrites.filter(x=>x.client_id==='pxlegacy:qa-log-record').length!==1)throw Error('Food Diary retry created duplicate');
  const readReply=await page.evaluate(async()=>apiCall('food_products_list'));
  if(!readReply?.ok)throw Error('Food products read bridge failed');
  // Core feature smoke: schedule, weight goal and workout log operate in the real index.html.
