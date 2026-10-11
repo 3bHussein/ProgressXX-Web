@@ -1,7 +1,7 @@
 name: Full ProgressXX migration smoke
 on:
   push:
-    branches: [feature/full-legacy-migration]
+    branches: [main, feature/full-legacy-migration]
   pull_request:
     branches: [main]
   workflow_dispatch:
