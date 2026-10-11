@@ -271,6 +271,21 @@ const {chromium}=require('playwright');
    }
  }
  await page.setViewportSize({width:390,height:844});
+ // Exercise real mobile anatomy tab clicks at narrow and standard phone sizes.
+ for(const width of [320,390]){
+   await page.setViewportSize({width,height:780});
+   await page.evaluate(()=>go('intelligence'));
+   for(const [id,expected] of [['pxAnatomyTabCoverage','coverage'],['pxAnatomyTabAtlas','atlas']]){
+     await page.locator('#'+id).click({timeout:6000});
+     const state=await page.evaluate(buttonId=>({
+       active:document.querySelector('.pxAnatomyPanel')?.dataset.mobileTab,
+       pressed:document.getElementById(buttonId)?.getAttribute('aria-pressed')
+     }),id);
+     if(state.active!==expected||state.pressed!=='true')
+       throw Error('Mobile anatomy tab click did not select '+expected+' at '+width+'px: '+JSON.stringify(state));
+   }
+ }
+ await page.setViewportSize({width:390,height:844});
  // Real mobile Settings shortcut interaction: each control must scroll to its target.
  await page.evaluate(()=>go('settings'));
  for(const id of ['pxSettingsAccount','pxSettingsBackup','pxSettingsSyncCenter','pxSettingsHub','pxSettingsSchedule']){
