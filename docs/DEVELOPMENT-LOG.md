@@ -22,6 +22,15 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Settings mobile tap interception fix verified
+
+- Full UI smoke [#38182237311](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38182237311) **SUCCESS**, including the 390px Chromium click/scroll test for all five Settings shortcuts.
+- GitHub Pages deployment [#38182236945](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38182236945) **SUCCESS**.
+- Prior failure #38182112021 explicitly showed bottom navigation intercepting the Settings Account button. CSS fix in `index.html` commit `c0c39431f735351e69eb234b1c3d5939814d2d0e` now passes regression.
+- No further app code or user database changes. Real-phone verification still advised; no paid staging or RLS testing until explicitly requested (`SECURITY-DEFERRED-2026-10-12`).
+- Next: extend mobile confidence to narrow screen / landscape and Food Diary queued-entry recovery without data loss.
+
+
 
 ### 2026-10-12 — Fixed Settings shortcuts obscured by bottom mobile nav
 
