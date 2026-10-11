@@ -23,6 +23,16 @@ This is the **append-only** chronological log of completed work, investigations,
 
 ## Entries (newest first)
 
+### 2026-10-12 — Static security-migration verification added to CI
+
+- **Files:** `tests/security-migration-safety.cjs`, `.github/workflows/full-ui-smoke.yml`.
+- **Commits:** `9a44af0245e72e7d16276eaa9e2bafc6f872f9c1` (final test correction), `df4a14761d11dbd77bb028c2f82e6eda0ee330ab` (CI wiring).
+- **Change:** automated assertion checks the pending migration has exactly 11 specific `REVOKE TRUNCATE, TRIGGER` statements for intended tables and no unexpected SQL operations; Full UI workflow now runs it on push/PR.
+- **Tests:** Newly triggered GitHub Actions result must be inspected; static validation does not replace actual migration testing or RLS tests.
+- **Deployment/data:** No Supabase changes, no personal data touched. Security migration remains UNAPPLIED. No staging branch exists; creating one requires separate cost confirmation.
+- **Next:** Confirm GitHub CI passes; arrange separate staging with approved cost, rehearse migration/negative two-user access and verify app CRUD/sync. Never apply to production solely on static test success.
+
+
 ### 2026-10-12 — Stage-only least privilege migration prepared (NOT APPLIED)
 
 - **Read-only recheck:** 11 private public tables grant TRUNCATE and TRIGGER to both anon and authenticated. Supabase project has no development branches available. Normal CRUD and RLS remain unchanged.
