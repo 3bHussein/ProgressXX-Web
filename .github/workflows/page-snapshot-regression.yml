@@ -32,5 +32,5 @@ jobs:
           exit 1
       - name: Confirm page state synchronizes across browser contexts
         run: |
-          node tests/account-pages-snapshot-sync.cjs
           node tests/login-imported-archive-regression.cjs
+          node tests/account-pages-snapshot-sync.cjs
