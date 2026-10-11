@@ -47,8 +47,8 @@ const {chromium}=require('playwright');
    await route.fulfill({status:201,contentType:'application/json',body:JSON.stringify([{id:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',...row}])});
    return;
   }
-  if(isPost){savedCloudPayload=req.postDataJSON().payload;cloudWrites++}
-  await route.fulfill({status:200,contentType:'application/json',body:req.method()==='GET'?JSON.stringify(Object.keys(savedCloudPayload).length?[{payload:savedCloudPayload}]:[]):'[{}]'});
+  if(isPost&&req.url().includes('/user_app_snapshots')){const body=req.postDataJSON();if(body?.payload&&typeof body.payload==='object'){savedCloudPayload=body.payload;cloudWrites++}}
+  await route.fulfill({status:200,contentType:'application/json',body:req.method()==='GET'?JSON.stringify(Object.keys(savedCloudPayload||{}).length?[{payload:savedCloudPayload}]:[]):'[{}]'});
  });
  await page.route('https://unpkg.com/**',route=>route.abort());
  await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});
