@@ -247,6 +247,9 @@ const {chromium}=require('playwright');
  }));
  if(!Array.isArray(foodEntryWrites)||!Array.isArray(productWrites))
    throw Error('Food mock table state was lost during account roundtrip');
+ // Refresh normalized Supabase Food tables before assessing account re-login.
+ // Login triggers this asynchronously after a delay; the test must await completion.
+ await page.evaluate(()=>window.__pxRefreshNutrition(true));
  // Real record assertions, not counts: Food Library and Diary must survive sign-out/sign-in.
  const foodRoundtrip=await page.evaluate(()=>({
    product:foodProducts.find(x=>String(x.id)==='qa-outbox-retry'),
