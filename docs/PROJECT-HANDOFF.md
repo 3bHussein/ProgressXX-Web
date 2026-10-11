@@ -27,6 +27,11 @@
 ## New Insights tab click test (2026-10-12)
 ## Verified Insights mobile click test (2026-10-12)
 ## Latest deploy confirmed (2026-10-12)
+## Current persistence continuation (2026-10-12)
+
+User visually confirmed Settings/Insights mobile height issue resolved. Added browser logout/login test for mock account Workout Schedule and Weight Goal (commit `269c8b7aa7f9023b2ac76082d260163106822e93`). Fresh CI unverified. Synthetic Food Diary/Library reload tests passed previously but full 4-domain account roundtrip remains pending. No production DB changes; security deferral continues.
+
+
 
 Full UI #38183271469 SUCCESS and GitHub Pages #38183271199 SUCCESS. Mobile viewport/tab tests are passing. Real phone screenshots are still required to confirm visual appearance. No database changes. Security checkpoint deferred.
 
