@@ -4,6 +4,12 @@
 
 ## Latest outbox regression — 2026-10-12
 
+## Latest 2026-10-12 — Food server retry coverage
+
+Added transient HTTP 503 Food outbox test, commit `76c8b0e97fa40f6bda48abefcc30299c6164c1a8`. Check GitHub Actions for pass/failure before claiming verification. Security checkpoint remains deferred; no production data modified.
+
+
+
 Full UI tests #38180040958 and #38180026886 passed. Added Food outbox mock browser test for duplicate queue entries and local tombstones (commit 7d1b3ef14cc416e97fa951a5ee5e29adac480694). Check latest CI; next failed-write retry preservation test. No production data/schema changes. Security deferred checkpoint still on hold.
 
 ## Latest continuation — 2026-10-12
