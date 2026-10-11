@@ -1,0 +1,20 @@
+name: Workout Log Supabase Table Safety
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'tests/workout-supabase-table.cjs'
+      - '.github/workflows/workout-supabase-table.yml'
+  workflow_dispatch:
+jobs:
+  workout-table-contract:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Test account-scoped workout table CRUD and idempotent retries
+        run: node tests/workout-supabase-table.cjs
