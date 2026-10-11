@@ -241,8 +241,12 @@ const {chromium}=require('playwright');
    schedule:workoutSchedule(),
    goal:PXStore.getItem('progressx-weight-goal-v1'),
    foodProducts:foodProducts.length,
-   foodLog:foodLog.length
+   foodLog:foodLog.length,
+   queuedFoodProducts:pxFoodOutbox().filter(x=>x.type==='product').length,
+   queuedFoodDiary:pxFoodOutbox().filter(x=>x.type==='log').length
  }));
+ if(!Array.isArray(foodEntryWrites)||!Array.isArray(productWrites))
+   throw Error('Food mock table state was lost during account roundtrip');
  if(afterRelogin.schedule.tue!=='REST'||Number(afterRelogin.goal)!==80)
    throw Error('Schedule or Weight Goal lost on account logout/login: '+JSON.stringify(afterRelogin));
  // Mobile touch layout regression for the signed-in account and Insights/Settings.
