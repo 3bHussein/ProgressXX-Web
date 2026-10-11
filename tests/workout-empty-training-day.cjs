@@ -36,7 +36,7 @@ const assert = require('node:assert/strict');
     await page.locator('#pxSignin').click();
     await page.waitForFunction(() => document.querySelector('#pxCommercialGate')?.hidden === true, null, {timeout:15000});
     await page.waitForFunction(() => typeof window.openEditor === 'function' && document.getElementById('fDay'));
-    await page.evaluate(() => openEditor());
+    await page.evaluate(() => { closeAlarmPopup(); openEditor(); });
     assert.equal(await page.locator('#fDay').inputValue(),'','fresh account should start with no training day');
     page.once('dialog', dialog => dialog.accept('Push A'));
     await page.getByRole('button',{name:/New day/}).click();
