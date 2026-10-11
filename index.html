@@ -9515,6 +9515,19 @@ window.__legacyBoot=init;
   }catch(e){tell('Unsynced changes: '+e.message,true)}
   finally{uploading=false;if(revision!==savedRevision)scheduleCloudSync()}
  }
+ window.__pxLoadReminderArchive=async()=>{
+  if(!ready||!account)throw Error('Sign in to load reminders');
+  const existing=nodeStorage.getItem('progressx-reminders');
+  // A saved reminder list represents user-controlled state, even when empty.
+  if(existing!==null)return 0;
+  const rows=await cloud('progressxx_reminder_archive?select=reminder_id,name,amount,reminder_time,enabled&user_id=eq.'+encodeURIComponent(account)+'&order=reminder_id.asc&limit=250');
+  if(!Array.isArray(rows))throw Error('Invalid reminder archive response');
+  const reminders=rows.filter(r=>r?.reminder_id&&r?.name).map(r=>({
+   id:String(r.reminder_id),name:String(r.name),amount:String(r.amount||''),time:String(r.reminder_time||''),enabled:r.enabled!==false
+  }));
+  if(reminders.length)nodeStorage.setItem('progressx-reminders',JSON.stringify(reminders));
+  return reminders.length;
+ };
  window.__pxLoadDailyHistory=async()=>{
   if(!ready||!account)throw Error('Sign in to load Daily history');
   const rows=await cloud('progressxx_daily_history?select=day,history,reminder_done&user_id=eq.'+encodeURIComponent(account)+'&order=day.asc&limit=366');
@@ -9565,6 +9578,7 @@ window.__legacyBoot=init;
   }
   savedRevision=revision;ready=true;tell('✓ Signed in · Supabase connected');
   if(typeof window.__legacyBoot!=='function')throw Error('Original app did not initialize');
+  try{await window.__pxLoadReminderArchive()}catch(err){tell('Reminders archive: '+err.message,true)}
   await window.__legacyBoot();
   try{await window.__pxLoadDailyHistory()}catch(err){tell('Daily history refresh: '+err.message,true)}
   // The snapshot only stores the account UI state; the normalized workout table is
