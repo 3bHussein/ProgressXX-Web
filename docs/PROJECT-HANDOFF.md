@@ -44,6 +44,11 @@
 ## Second-context hydration verification (2026-10-12)
 ## Latest cross-context status checkpoint — 2026-10-12
 ## Independent-browser mock sync VERIFIED — 2026-10-12
+## Real-device sync QA checklist — 2026-10-12
+
+Added `docs/REAL-DEVICE-SYNC-CHECKLIST.md` (commit `f4f8bc5cd4b7e741dfca1c1b5eea01ea6bd29e4f`) for owner-led phone/desktop verification with a single labelled Food product and Diary entry, cloud-ack check, duplicate check and read-only review of existing Workout/Daily/Weight. **Not yet performed.** Pages #38185916722 passed; Full UI #38185916906 still in progress when inspected. No user data changed; security testing deferred.
+
+
 
 Full UI #38185774877 succeeded with exact-value recovery of eight account-scoped snapshot feature groups in a separate Chromium context. Prior Pages #38185774574 succeeded. This remains mocked sync, not real-device, normalized table or two-user RLS validation. User confirmed mobile Settings/Insights buttons display correctly. No production data changes; paid/security stage remains deferred.
 
