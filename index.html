@@ -3556,7 +3556,12 @@ async function syncWeightCheckinsFromSheet(silent=true){
     const r=await apiCall('weight_list');
     if(!r.ok)throw new Error(r.error||'Could not load Weight Log');
     const remote=Array.isArray(r.entries)?r.entries:[];
-    const localPending=migrateLegacyProgressCheckins(progressPhotos()).filter(x=>x._pending);
+    const localRows=migrateLegacyProgressCheckins(progressPhotos());
+    const migrated=PXStore.getItem('pxweight-table-migrated-v1')==='1';
+    // On the first migration, preserve pre-existing account snapshot entries instead
+    // of discarding them merely because the normalized table is initially empty.
+    const localPending=localRows.filter(x=>x._pending||(!migrated&&!remote.some(r=>
+      String(r.id)===String(x.id)||(String(r.date)===String(x.date)&&Math.abs(Number(r.weight)-Number(x.weight))<0.001))))
     // Resolve previously successful but timed-out requests before retrying uploads.
     // Match preexisting rows first so reconnects do not repeatedly create the same weight entry.
     for(const entry of localPending){
@@ -3577,6 +3582,7 @@ async function syncWeightCheckinsFromSheet(silent=true){
     });
     merged.sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
     saveProgressPhotos(merged);
+    if(!merged.some(x=>x._pending))PXStore.setItem('pxweight-table-migrated-v1','1');
     renderProgressPhotos();
     if(!silent&&$('progressPhotoStatus'))$('progressPhotoStatus').textContent=merged.some(x=>x._pending)?'Some check-ins are still pending sync.':'Weight log synced.';
     return true;
