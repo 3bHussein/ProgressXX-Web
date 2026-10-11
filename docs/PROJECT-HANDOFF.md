@@ -37,6 +37,11 @@
 
 ## Daily account roundtrip QA — 2026-10-12
 ## Daily reminders and water QA — 2026-10-12
+## Weight Check-in QA continuation (2026-10-12)
+
+Daily reminders/water regression succeeded in Full UI #38185151840 and Pages #38185151808. Added strict mock account relogin Weight Check-in assertion via progressPhotos in commit `b436894974c4bc38c3fc7412c6b7d16fb93d7fdd`; new CI pending. Workout Log still needs its own record roundtrip. No production data changes; security deferred.
+
+
 
 Full UI #38184630725 and Pages #38184630608 succeeded (Daily History). New `scripts/smoke-full-ui.cjs` test verifies reminder, completion and water current/target through mock account logout/login, commit `ff333b79eef09f37d89e7d85e55dfb5f8441bbcc`; CI pending. No production DB changes, security deferred.
 
