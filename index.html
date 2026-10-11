@@ -2341,6 +2341,9 @@ let bundled=[],data=[],activeDay='All',editingId=null,currentPage='home';const K
 const APP_VERSION='2.0.0';
 const APP_BUILD_DATE='2026-10-10';
 const WORKOUT_QUEUE_KEY='progressx-workout-sync-queue-v1';
+const WORKOUT_DELETED_IDS_KEY='progressx-workout-deleted-ids-v1';
+function workoutDeletedIds(){try{const items=JSON.parse(PXStore.getItem(WORKOUT_DELETED_IDS_KEY)||'[]');return new Set(Array.isArray(items)?items.map(String):[])}catch{return new Set()}}
+function rememberDeletedWorkout(id){const deleted=workoutDeletedIds();deleted.add(String(id));PXStore.setItem(WORKOUT_DELETED_IDS_KEY,JSON.stringify([...deleted]))}
 const SYNC_META_KEY='progressx-sync-meta-v1';
 let workoutSyncBusy=false;
 let workoutLastCloudCheck=0;
@@ -4625,6 +4628,7 @@ async function deleteEntry(){
   if(idx<0)return closeEditor();
   const row=clone(data[idx]);
   data.splice(idx,1);
+  rememberDeletedWorkout(row.id);
   PXStore.setItem(KEY,JSON.stringify(data));
 
   // If it never reached the cloud, just remove its pending insert.
@@ -7711,14 +7715,15 @@ async function syncFromSheet(silent=false,opts={}){
     saveWorkoutQueue(q);
 
     // Cloud is source of truth, but unsynced local changes must NEVER disappear.
-    let merged=remote.map(x=>clone(x));
+    const deletedWorkoutIds=workoutDeletedIds();
+    let merged=remote.filter(x=>!deletedWorkoutIds.has(String(x.id))).map(x=>clone(x));
     for(const item of q){
       if(item.op==='delete'){
         merged=merged.filter(x=>String(x.id)!==String(item.payload.id));
         continue;
       }
       const local=data.find(x=>String(x.id)===String(item.localId)||String(x.id)===String(item.payload.id));
-      if(!local)continue;
+      if(!local||deletedWorkoutIds.has(String(local.id)))continue;
       const idx=item.payload.id
         ?merged.findIndex(x=>String(x.id)===String(item.payload.id))
         :merged.findIndex(x=>workoutKey(x)===item.key);
@@ -9236,7 +9241,7 @@ window.__legacyBoot=init;
  const BASE="https://cleryiplpqhrtqzryhnx.supabase.co",PUB="sb_publishable_zzMo8GM_9JZ7U1uEUnDcgw_xVXn0Crm",SESSION_KEY='pxx_commercial_auth_preview_v1';
  const gate=document.getElementById('pxCommercialGate'),status=document.getElementById('pxLoginMessage'),pill=document.getElementById('pxSyncPill');
  const browserStorage=window.localStorage;
- let auth=null,account=null,values={},revision=0,savedRevision=0,timer=null,uploading=false,ready=false;
+ let auth=null,account=null,values={},revision=0,savedRevision=0,timer=null,uploading=false,ready=false,snapshotVersion=null;
  const storagePrefix=id=>'pxx:full:'+id+':';
  const pendingKey=id=>'pxx:pending:'+id;
  function markPending(){if(account)browserStorage.setItem(pendingKey(account),JSON.stringify({payload:{...values},at:Date.now()}))}
@@ -9408,7 +9413,8 @@ window.__legacyBoot=init;
   }));
   // The snapshot remains authoritative for older records not yet moved to the table.
   const pendingIds=new Set(workoutQueue().map(x=>String(x.localId||x.payload?.id||'')));
-  const deletedIds=new Set(workoutQueue().filter(x=>x.op==='delete').map(x=>String(x.payload?.id||'')));
+  const deletedIds=workoutDeletedIds();
+  for(const item of workoutQueue())if(item.op==='delete')deletedIds.add(String(item.payload?.id||''));
   const local=Array.isArray(data)?data:[];
   const result=new Map(cloudRows.filter(x=>!deletedIds.has(String(x.id))).map(x=>[String(x.id),x]));
   for(const row of local){
@@ -9507,8 +9513,51 @@ window.__legacyBoot=init;
   if(!ready||uploading||!navigator.onLine||revision===savedRevision)return;
   uploading=true;const writing=revision;tell('↻ Syncing to Supabase…');
   try{
-   // Single-account snapshot; originals remain byte-exact strings (including raw performance).
-   await cloud('user_app_snapshots?on_conflict=user_id','POST',{user_id:account,payload:{...values},updated_at:new Date().toISOString()});
+   // Check the latest server tombstones immediately before writing.
+   // Never allow an older open tab to resurrect a workout deleted elsewhere.
+   const latestRows=await cloud('user_app_snapshots?select=payload&user_id=eq.'+encodeURIComponent(account)+'&limit=1');
+   if(!Array.isArray(latestRows))throw Error('Cannot verify remote workout deletions');
+   const latest=latestRows[0]?.payload||{};
+   const asList=value=>{try{const v=JSON.parse(value||'[]');return Array.isArray(v)?v:[]}catch{return []}};
+   const tombstoneKey='progressx-workout-deleted-ids-v1';
+   const remoteDeleted=asList(latest[tombstoneKey]).map(String);
+   const localDeleted=asList(values[tombstoneKey]).map(String);
+   const allDeleted=new Set([...remoteDeleted,...localDeleted]);
+   if(allDeleted.size){
+    const nextDeleted=JSON.stringify([...allDeleted]);
+    if(values[tombstoneKey]!==nextDeleted)nodeStorage.setItem(tombstoneKey,nextDeleted);
+    for(const key of ['progressx-data-v19','progressx-workout-sync-queue-v1']){
+     if(!Object.prototype.hasOwnProperty.call(values,key))continue;
+     const list=asList(values[key]);
+     const filtered=list.filter(x=>key==='progressx-data-v19'
+      ?!allDeleted.has(String(x?.id||''))
+      :x?.op==='delete'||(!allDeleted.has(String(x?.localId||''))&&!allDeleted.has(String(x?.payload?.id||''))));
+     if(filtered.length!==list.length)nodeStorage.setItem(key,JSON.stringify(filtered));
+    }
+   }
+   // This preflight reduces stale writes; concurrent server writes still require
+   // an atomic revision check before a complete cross-device guarantee.
+   // Atomic RPC is opt-in only after its SQL migration is deployed and verified.
+   // Avoid enabling it on the live site before the backend function exists.
+   let confirmedPayload=null;
+   if(window.__pxAtomicSnapshotReady===true){
+    const result=await cloud('rpc/progressxx_sync_snapshot','POST',{p_payload:{...values},p_expected_updated_at:snapshotVersion});
+    confirmedPayload=result?.payload;
+    if(!confirmedPayload||typeof confirmedPayload!=='object'||Array.isArray(confirmedPayload)||!result.updated_at)
+     throw Error('Atomic snapshot write was not confirmed');
+    snapshotVersion=result.updated_at;
+    // The server can remove workouts deleted on another device.
+    // Bring the signed-in account cache into agreement with the confirmed result.
+    for(const key of ['progressx-data-v19','progressx-workout-sync-queue-v1','progressx-workout-deleted-ids-v1']){
+     if(typeof confirmedPayload[key]!=='string')continue;
+     if(values[key]!==confirmedPayload[key]){
+      values[key]=confirmedPayload[key];
+      browserStorage.setItem(storagePrefix(account)+key,confirmedPayload[key]);
+     }
+    }
+   }else{
+    await cloud('user_app_snapshots?on_conflict=user_id','POST',{user_id:account,payload:{...values},updated_at:new Date().toISOString()});
+   }
    await mirrorWorkoutScheduleToTable({...values});
    savedRevision=writing;if(revision===writing)clearPending();tell('✓ Synced to Supabase · '+new Date().toLocaleTimeString());
   }catch(e){tell('Unsynced changes: '+e.message,true)}
@@ -9519,12 +9568,28 @@ window.__legacyBoot=init;
   if(!auth?.user?.id||!auth?.access_token)throw Error('Invalid account session');
   sessionStorage.setItem(SESSION_KEY,JSON.stringify(auth));account=auth.user.id;
   // Do not read unscoped legacy storage. Only load from the signed-in account.
-  const rows=await cloud('user_app_snapshots?select=payload&user_id=eq.'+encodeURIComponent(account)+'&limit=1');
+  const rows=await cloud('user_app_snapshots?select=payload,updated_at&user_id=eq.'+encodeURIComponent(account)+'&limit=1');
+  snapshotVersion=rows[0]?.updated_at??null;
   const cloudValues=rows[0]?.payload||{};
   const pending=readPending(account);
   // Only locally queued edits can override server data; normal cached rows cannot.
   // This prevents an old cache from unexpectedly replacing another device's cloud state.
   const merged=pending?{...cloudValues,...pending}:cloudValues;
+  // A stale offline device must not overwrite a deletion already recorded by another device.
+  // Union tombstones from both sides before accepting any pending workout entries or queue.
+  const parseArray=value=>{try{const x=JSON.parse(value||'[]');return Array.isArray(x)?x:[]}catch{return []}};
+  const deletedWorkoutIds=new Set([
+   ...parseArray(cloudValues['progressx-workout-deleted-ids-v1']),
+   ...parseArray(pending?.['progressx-workout-deleted-ids-v1'])
+  ].map(String));
+  if(deletedWorkoutIds.size){
+   merged['progressx-workout-deleted-ids-v1']=JSON.stringify([...deletedWorkoutIds]);
+   const logKey='progressx-data-v19',queueKey='progressx-workout-sync-queue-v1';
+   const filteredLog=parseArray(merged[logKey]).filter(x=>!deletedWorkoutIds.has(String(x?.id||'')));
+   if(merged[logKey]!=null)merged[logKey]=JSON.stringify(filteredLog);
+   const filteredQueue=parseArray(merged[queueKey]).filter(x=>x?.op==='delete'||(!deletedWorkoutIds.has(String(x?.localId||''))&&!deletedWorkoutIds.has(String(x?.payload?.id||''))));
+   if(merged[queueKey]!=null)merged[queueKey]=JSON.stringify(filteredQueue);
+  }
   values={};
   for(const [k,v] of Object.entries(merged)){
    if(typeof v!=='string'||k.length>100||v.length>1000000)continue;

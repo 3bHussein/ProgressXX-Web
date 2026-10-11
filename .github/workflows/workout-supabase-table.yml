@@ -4,6 +4,12 @@ on:
     paths:
       - 'index.html'
       - 'tests/workout-supabase-table.cjs'
+      - 'tests/workout-deletion-tombstone.cjs'
+      - 'tests/workout-cross-device-deletion.cjs'
+      - 'tests/atomic-snapshot-contract.cjs'
+      - 'tests/workout-migration-plan.cjs'
+      - 'scripts/plan-workout-migration.cjs'
+      - 'supabase/migrations/20261011_progressxx_atomic_snapshot.sql'
       - '.github/workflows/workout-supabase-table.yml'
   workflow_dispatch:
 jobs:
@@ -17,4 +23,9 @@ jobs:
         with:
           node-version: '24'
       - name: Test account-scoped workout table CRUD and idempotent retries
-        run: node tests/workout-supabase-table.cjs
+        run: |
+          node tests/workout-supabase-table.cjs
+          node tests/workout-deletion-tombstone.cjs
+          node tests/workout-cross-device-deletion.cjs
+          node tests/atomic-snapshot-contract.cjs
+          node tests/workout-migration-plan.cjs
