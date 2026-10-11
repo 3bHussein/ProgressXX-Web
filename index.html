@@ -1219,6 +1219,10 @@ textarea{resize:vertical}
 }
 </style>
 <style id="px-settings-insights-mobile-20261012">
+#settings .pxSettingsQuickNav{display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;padding:4px 2px 12px;margin-bottom:8px}
+#settings .pxSettingsQuickNav button{flex:0 0 auto;min-height:44px;border:1px solid var(--line);border-radius:12px;background:var(--card2);color:var(--text);font-weight:700;padding:8px 13px;cursor:pointer}
+#settings .pxSettingsQuickNav button:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+#settings #pxSettingsAccount,#settings #pxSettingsHub,#settings #pxSettingsBackup,#settings #pxSettingsSyncCenter,#settings #pxSettingsSchedule{scroll-margin-top:24px}
 #settings .pxSettingsHero{margin-bottom:14px}
 #settings .pxRealAccountPanel{margin-bottom:14px}
 #settings .settingsGrid,#settings .settingsGrid>.panel{min-width:0}
@@ -2019,7 +2023,14 @@ textarea{resize:vertical}
 
 <section id="settings" class="section">
 <div class="hero pxSettingsHero"><div class="eyebrow">PREFERENCES & ACCOUNT</div><h2>⚙ Settings</h2><p>Manage your account, backups, sync, appearance and notifications in one place.</p></div>
-<div class="panel pxRealAccountPanel">
+<nav class="pxSettingsQuickNav" aria-label="Settings quick navigation">
+ <button type="button" onclick="document.getElementById('pxSettingsAccount')?.scrollIntoView({behavior:'smooth',block:'start'})">☁ Account</button>
+ <button type="button" onclick="document.getElementById('pxSettingsBackup')?.scrollIntoView({behavior:'smooth',block:'start'})">💾 Backup</button>
+ <button type="button" onclick="document.getElementById('pxSettingsSyncCenter')?.scrollIntoView({behavior:'smooth',block:'start'})">↻ Sync</button>
+ <button type="button" onclick="document.getElementById('pxSettingsHub')?.scrollIntoView({behavior:'smooth',block:'start'})">🎛 Preferences</button>
+ <button type="button" onclick="document.getElementById('pxSettingsSchedule')?.scrollIntoView({behavior:'smooth',block:'start'})">🏋 Schedule</button>
+</nav>
+<div class="panel pxRealAccountPanel" id="pxSettingsAccount">
  <div class="panelHead"><div><h3>☁ Account & cloud sync</h3><p class="tiny muted">Your changes remain tied to the signed-in account.</p></div><span class="pill" id="pxSettingsConnection">Checking connection…</span></div>
  <div class="actions"><button class="btn primary" type="button" id="pxSettingsSync" onclick="document.getElementById('pxSyncNow')?.click()">↻ Sync now</button><button class="btn soft" type="button" id="pxSettingsSignOut" onclick="document.getElementById('pxLogout')?.click()">Sign out</button></div>
  <p class="tiny muted">Sync requires a connection. Check the sync status before signing out with pending changes.</p>
@@ -2031,7 +2042,7 @@ textarea{resize:vertical}
 <details><summary>🔔 Notification Preferences</summary><label><input id="pxNotifyEnabled" type="checkbox" onchange="pxSaveNotificationPrefs()"> Enable app reminder alerts</label><label class="tiny muted">Quiet hours start</label><input id="pxQuietStart" type="time" onchange="pxSaveNotificationPrefs()"><label class="tiny muted">Quiet hours end</label><input id="pxQuietEnd" type="time" onchange="pxSaveNotificationPrefs()"><p class="tiny muted">Preferences are stored locally. Quiet hours are applied to supported in-app alerts; OS notifications depend on browser and Android permissions.</p></details>
 <details><summary>💾 Storage Inspector</summary><button class="btn soft" onclick="pxInspectStorage()">Inspect local storage</button><div id="pxStorageInfo" class="callout">Shows storage usage without exposing saved values or deleting anything.</div></details>
 <details><summary>🩺 Diagnostics & Error Log</summary><div class="actions"><button class="btn soft" onclick="pxRenderDiagnostics()">Refresh diagnostics</button><button class="btn soft" onclick="pxCopyDiagnostics()">Copy sanitized report</button><button class="btn soft" onclick="pxClearDiagnostics()">Clear diagnostic events only</button></div><div id="pxDiagnosticsInfo" class="callout">Diagnostic events remain on this device. Reports exclude URLs, credentials and workout details.</div></details></div>
-  <div class="panel">
+  <div class="panel" id="pxSettingsBackup">
     <div class="panelHead"><h3>Data & backup</h3></div>
     <div class="actions">
       <button class="btn soft" onclick="exportJSON()">Workout JSON</button>
@@ -2047,7 +2058,7 @@ textarea{resize:vertical}
     </div>
   </div>
 
-  <div class="panel">
+  <div class="panel" id="pxSettingsSyncCenter">
     <div class="panelHead">
       <h3>Sync Center</h3>
       <button class="btn soft" onclick="refreshAllSync()">↻ Refresh all</button>
@@ -2069,7 +2080,7 @@ textarea{resize:vertical}
     <div id="syncCenterLast" class="callout" style="margin-top:10px">Last sync: —</div>
   </div>
 
-  <div class="panel">
+  <div class="panel" id="pxSettingsSchedule">
     <div class="panelHead">
       <div><h3>Workout Schedule</h3><div class="tiny muted">Map each weekday to a training day or Rest. Rest days are then detected automatically.</div></div>
       <span id="scheduleTodayBadge" class="pill">—</span>
