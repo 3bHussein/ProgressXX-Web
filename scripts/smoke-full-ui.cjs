@@ -22,6 +22,11 @@ const {chromium}=require('playwright');
    const rows=matching.map((x,i)=>({id:'cccccccc-cccc-4ccc-8ccc-'+String(i+1).padStart(12,'0'),...x}));
    await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(rows)});return;
   }
+  if(req.url().includes('/food_entries')&&req.method()==='DELETE'){
+   const clientId=new URL(req.url()).searchParams.get('client_id')?.replace(/^eq\./,'');
+   foodEntryWrites=foodEntryWrites.filter(x=>x.client_id!==clientId);
+   await route.fulfill({status:204,body:''});return;
+  }
   if(isPost&&req.url().includes('/food_entries')){
    const row=req.postDataJSON();foodEntryWrites.push(row);
    await route.fulfill({status:201,contentType:'application/json',body:JSON.stringify([{id:'cccccccc-cccc-4ccc-8ccc-cccccccccccc',...row}])});
@@ -116,6 +121,14 @@ const {chromium}=require('playwright');
  if(!foodEntryWrites.some(x=>x.client_id==='pxlegacy:qa-log-record'&&x.food_name==='[Snack] QA only'))throw Error('No real food_entries database upsert');
  if(productWrites.filter(x=>x.source_id==='qa-test-record').length!==0)throw Error('Deleted Food Library item reappeared after offline-to-online retry');
  if(foodEntryWrites.filter(x=>x.client_id==='pxlegacy:qa-log-record').length!==1)throw Error('Food Diary retry created duplicate');
+ // Deletion must reach Supabase and remain deleted after a second page load.
+ const removed=await page.evaluate(async()=>apiCall('food_log_delete',{id:'qa-log-record'}));
+ if(!removed?.ok)throw Error('Food Diary delete not confirmed: '+JSON.stringify(removed));
+ if(foodEntryWrites.some(x=>x.client_id==='pxlegacy:qa-log-record'))throw Error('Deleted Food Diary entry remained in cloud fixture');
+ await page.reload({waitUntil:'domcontentloaded'});
+ await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:15000});
+ if(foodEntryWrites.some(x=>x.client_id==='pxlegacy:qa-log-record'))throw Error('Deleted Food Diary entry resurrected after account refresh');
+
  const readReply=await page.evaluate(async()=>apiCall('food_products_list'));
  if(!readReply?.ok)throw Error('Food products read bridge failed');
  // Core feature smoke: schedule, weight goal and workout log operate in the real index.html.
