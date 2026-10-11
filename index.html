@@ -7693,8 +7693,12 @@ async function syncFromSheet(silent=false,opts={}){
 
     workoutLastCloudCheck=Date.now();
 
-    const deduped=dedupeRemoteWorkouts(remoteWorkoutRows(r.rows));
-    let remote=deduped.rows;
+    // Historical rows have stable IDs. The same exercise may legitimately be logged twice
+    // during the same week; never collapse records by workoutKey during cloud refresh.
+    const remoteRows=remoteWorkoutRows(r.rows);
+    const remoteById=new Map();
+    for(const row of remoteRows){if(row.id!=null&&String(row.id))remoteById.set(String(row.id),row)}
+    let remote=[...remoteById.values()];
     let q=workoutQueue();
 
     // Resolve queued NEW rows that already exist remotely.
@@ -7726,9 +7730,9 @@ async function syncFromSheet(silent=false,opts={}){
       if(idx>=0)merged[idx]=pending;else merged.push(pending);
     }
 
-    // Final local uniqueness guard: W + training day + exercise can only occur once.
+    // IDs, not exercise/week names, define workout history uniqueness.
     const unique=new Map();
-    merged.forEach(row=>unique.set(workoutKey(row),row));
+    merged.forEach(row=>{if(row.id!=null&&String(row.id))unique.set(String(row.id),row)});
     data=[...unique.values()];
 
     const autoCandidate=isWeekComplete(latestWeek())?latestWeek()+1:latestWeek();
@@ -7742,7 +7746,7 @@ async function syncFromSheet(silent=false,opts={}){
     else updateSyncUI(true,`Cloud refreshed • ${data.length} workout rows • ${new Date().toLocaleTimeString()}.`);
 
     // Existing accidental duplicates in Sheet are cleaned automatically.
-    if(deduped.duplicates.length)cleanupRemoteWorkoutDuplicates(deduped.duplicates);
+    // Do not auto-delete historic records: repeated exercises are valid entries.
 
     if(opts.processQueue!==false&&q.length)processWorkoutQueue();
     if(!silent)alert(`Synced ${data.length} workout rows from Google Sheet.`);
@@ -9540,6 +9544,9 @@ window.__legacyBoot=init;
   savedRevision=revision;ready=true;tell('✓ Signed in · Supabase connected');
   if(typeof window.__legacyBoot!=='function')throw Error('Original app did not initialize');
   await window.__legacyBoot();
+  // The snapshot only stores the account UI state; the normalized workout table is
+  // canonical history. Fetch it after login even if the snapshot contains one row.
+  try{await startupWorkoutSync()}catch(err){tell('Workout history refresh: '+err.message,true)}
   if(pending)scheduleCloudSync();
   setTimeout(()=>window.__pxRefreshNutrition?.(true).catch(e=>tell('Food sync: '+e.message,true)),1500);
   gate.hidden=true;document.getElementById('pxAccountTools').hidden=false;
