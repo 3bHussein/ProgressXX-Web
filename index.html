@@ -6503,7 +6503,7 @@ async function pxFlushFoodOutbox(){
     PXStore.setItem(isProduct?FOOD_PRODUCTS_KEY:FOOD_LOG_KEY,JSON.stringify(rows));
     PXStore.setItem(PX_FOOD_OUTBOX_KEY,JSON.stringify(pxFoodOutbox().filter(x=>!(x.id===item.id&&x.type===item.type))));
    }catch(e){
-    setNutritionSyncState('Food saved on this device; sync pending: '+String(e.message||e),false);
+    setNutritionSyncState('Food was NOT saved to food_entries. Kept locally: '+String(e.message||e),false);
     break; // preserve order so products sync before diary references
    }
   }
@@ -9222,9 +9222,19 @@ window.__legacyBoot=init;
   const record={user_id:account,client_id:'pxlegacy:'+id,logged_at:timestamp,
    food_name:'['+String(p.meal||'Snack')+'] '+String(p.name||'Food').slice(0,180),
    calories:numeric(p.calories),protein_g:numeric(p.protein),carbs_g:numeric(p.carbs),fat_g:numeric(p.fat)};
-  const rows=await cloud('food_entries?on_conflict=user_id,client_id','POST',record);
-  if(!Array.isArray(rows)||!rows[0]?.id)throw Error('Database did not confirm food entry');
-  return rows[0];
+  // Look up the stable client id before writing; retrying must not duplicate a meal.
+  const where='food_entries?select=id&client_id=eq.'+encodeURIComponent(record.client_id)+'&limit=1';
+  const existing=await cloud(where);
+  let saved;
+  if(Array.isArray(existing)&&existing[0]?.id){
+   saved=await cloud('food_entries?id=eq.'+encodeURIComponent(existing[0].id),'PATCH',record);
+   // Supabase PATCH may return an empty body by default; explicitly verify by reading back.
+  }else{
+   saved=await cloud('food_entries','POST',record);
+  }
+  const verified=await cloud(where);
+  if(!Array.isArray(verified)||!verified[0]?.id)throw Error('Food entry was not found after database write');
+  return verified[0];
  };
  window.__pxBackfillFoodDiary=async()=>{
   if(!ready||!navigator.onLine)return;
