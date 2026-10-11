@@ -3546,11 +3546,11 @@ function migrateLegacyProgressCheckins(list){
     weight:Number(x.weight)||0,
     note:String(x.note||''),
     createdAt:String(x.createdAt||new Date().toISOString()),
-    _pending:String(x.id||'').startsWith('local_')||String(x.id||'').startsWith('checkin_')||!/^\d+$/.test(String(x.id||''))
+    _pending:typeof x._pending==='boolean'?x._pending:String(x.id||'').startsWith('local_')||String(x.id||'').startsWith('checkin_')
   })).filter(x=>x.weight>0);
 }
 async function syncWeightCheckinsFromSheet(silent=true){
-  if(!$('appScriptUrl')?.value.trim())return false;
+  if(!window.__pxCommercialReady?.())return false;
   try{
     if(!silent&&$('progressPhotoStatus'))$('progressPhotoStatus').textContent='Syncing weight log…';
     const r=await apiCall('weight_list');
@@ -3563,7 +3563,7 @@ async function syncWeightCheckinsFromSheet(silent=true){
       const match=remote.find(x=>String(x.date)===entry.date&&Math.abs((Number(x.weight)||0)-entry.weight)<0.001&&String(x.note||'')===entry.note);
       if(match)continue;
       try{
-        const result=await apiCall('weight_upsert',{date:entry.date,weight:entry.weight,note:entry.note});
+        const result=await apiCall('weight_upsert',{id:entry.id,date:entry.date,weight:entry.weight,note:entry.note});
         if(result.ok&&result.id){
           remote.push({...entry,id:String(result.id),_pending:false});
         }
@@ -3610,7 +3610,7 @@ async function saveProgressPhoto(){
   if(status)status.textContent='Saved locally. Syncing Weight Log…';
 
   try{
-    const r=await apiCall('weight_upsert',{date,weight,note});
+    const r=await apiCall('weight_upsert',{id:tempId,date,weight,note});
     if(!r.ok)throw new Error(r.error||'Could not save Weight Log');
     const current=progressPhotos();
     const idx=current.findIndex(x=>String(x.id)===tempId);
@@ -3620,10 +3620,10 @@ async function saveProgressPhoto(){
     $('progressPhotoNote').value='';
     if($('progressPhotoDate'))$('progressPhotoDate').value=localDateKey();
     renderProgressPhotos();
-    if(status)status.textContent='Weight saved to Google Sheet.';
+    if(status)status.textContent='Weight saved to Supabase.';
     await syncWeightCheckinsFromSheet(true);
   }catch(e){
-    if(status)status.textContent='Saved locally • Google Sheet sync pending: '+e.message;
+    if(status)status.textContent='Saved locally • Supabase sync pending: '+e.message;
   }finally{
     if(btn){btn.disabled=false;btn.classList.remove('loading');btn.textContent='＋ Add check-in'}
   }
@@ -3634,11 +3634,11 @@ async function deleteProgressPhoto(id){
   saveProgressPhotos(progressPhotos().filter(x=>String(x.id)!==String(id)));
   renderProgressPhotos();
 
-  if(entry && /^\d+$/.test(String(entry.id))){
+  if(entry && !entry._pending){
     try{
       const r=await apiCall('weight_delete',{id:entry.id});
       if(!r.ok)throw new Error(r.error||'Delete failed');
-      if($('progressPhotoStatus'))$('progressPhotoStatus').textContent='Weight entry deleted from Google Sheet.';
+      if($('progressPhotoStatus'))$('progressPhotoStatus').textContent='Weight entry deleted from Supabase.';
     }catch(e){
       // Restore locally if cloud delete fails, so data is not lost silently.
       const list=progressPhotos();list.push(entry);saveProgressPhotos(list);renderProgressPhotos();
@@ -5170,6 +5170,20 @@ async function apiCall(action,params={}){
    if(!result)throw Error('Supabase product insert was not confirmed');
    return {ok:true,id:sourceId};
   }catch(e){return {ok:false,error:'Supabase products: '+String(e.message||e)}}
+ }
+ if(action==='weight_list'){
+  try{return {ok:true,entries:await window.__pxListWeightCheckins()}}
+  catch(e){return {ok:false,error:'Supabase weight_checkins: '+String(e.message||e)}}
+ }
+ if(action==='weight_upsert'){
+  try{if(!navigator.onLine)throw Error('Offline');
+   const saved=await window.__pxSaveWeightCheckin(params);return {ok:true,id:saved.id};
+  }catch(e){return {ok:false,error:'Supabase weight save: '+String(e.message||e)}}
+ }
+ if(action==='weight_delete'){
+  try{if(!navigator.onLine)throw Error('Offline');
+   await window.__pxDeleteWeightCheckin(String(params.id));return {ok:true};
+  }catch(e){return {ok:false,error:'Supabase weight delete: '+String(e.message||e)}}
  }
  if(action==='food_log_upsert'){
   try{
@@ -9359,6 +9373,41 @@ window.__legacyBoot=init;
   return response.status===204?null:response.json();
  }
  function tell(message,problem=false){pill.textContent=message;pill.style.color=problem?'#fecaca':'#d8faf1';pill.hidden=false;pill.title='Supabase account snapshot · '+(account||'not signed in')}
+ const WEIGHT_CLIENT_PREFIX='pxweight:';
+ window.__pxListWeightCheckins=async()=>{
+  if(!ready||!account)throw Error('Sign in to view weight check-ins');
+  const rows=await cloud('weight_checkins?select=id,client_id,measured_at,weight_kg&user_id=eq.'+encodeURIComponent(account)+'&order=measured_at.desc&limit=2000');
+  if(!Array.isArray(rows))throw Error('Invalid weight check-ins response');
+  const local=progressPhotos();
+  return rows.map(row=>{
+   const previous=local.find(x=>String(x.id)===String(row.id)||String(row.client_id||'')===WEIGHT_CLIENT_PREFIX+String(x.id));
+   const date=new Date(row.measured_at);
+   return {id:String(row.id),date:Number.isNaN(date.getTime())?localDateKey():date.toISOString().slice(0,10),
+    weight:Number(row.weight_kg),note:String(previous?.note||''),createdAt:String(row.measured_at||''),_pending:false};
+  });
+ };
+ window.__pxSaveWeightCheckin=async entry=>{
+  if(!ready||!account)throw Error('Sign in to save weight');
+  const date=String(entry.date||'');
+  const weight=Number(entry.weight);
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isFinite(weight)||weight<=0)throw Error('Invalid weight check-in');
+  const id=String(entry.id||'').trim();
+  const clientId=WEIGHT_CLIENT_PREFIX+(id||date+'-'+weight);
+  const existing=await cloud('weight_checkins?select=id,client_id&user_id=eq.'+encodeURIComponent(account)+'&client_id=eq.'+encodeURIComponent(clientId)+'&limit=1');
+  if(!Array.isArray(existing))throw Error('Invalid weight lookup');
+  if(existing.length)return {id:String(existing[0].id)};
+  const inserted=await cloud('weight_checkins','POST',{user_id:account,client_id:clientId,measured_at:date+'T12:00:00.000Z',weight_kg:weight});
+  if(!Array.isArray(inserted)||!inserted[0]?.id)throw Error('Weight record was not confirmed by Supabase');
+  return {id:String(inserted[0].id)};
+ };
+ window.__pxDeleteWeightCheckin=async id=>{
+  if(!ready||!account)throw Error('Sign in to delete weight');
+  if(!/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(String(id)))throw Error('Invalid weight record id');
+  await cloud('weight_checkins?id=eq.'+encodeURIComponent(id)+'&user_id=eq.'+encodeURIComponent(account),'DELETE');
+  const check=await cloud('weight_checkins?select=id&id=eq.'+encodeURIComponent(id)+'&user_id=eq.'+encodeURIComponent(account));
+  if(!Array.isArray(check)||check.length)throw Error('Deletion was not confirmed');
+  return true;
+ };
  const SCHEDULE_ROW_MARKER='progressxx-weekly-schedule-v1';
  const SCHEDULE_KEYS=['sun','mon','tue','wed','thu','fri','sat'];
  // Snapshot remains authoritative; only rows explicitly tagged by ProgressXX are maintained.
