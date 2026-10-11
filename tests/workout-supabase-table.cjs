@@ -9,7 +9,12 @@ async function cloud(path,method='GET',body){
  calls.push({path,method,body});
  const url=new URL('https://qa.invalid/rest/v1/'+path);
  const filter=url.searchParams.get('source_id');
- if(method==='GET')return records.filter(x=>!filter||(filter.startsWith('eq.')?x.source_id===filter.slice(3):filter.startsWith('like.')?x.source_id.startsWith(filter.slice(5,-1):true));
+ if(method==='GET')return records.filter(x=>{
+  if(!filter)return true;
+  if(filter.startsWith('eq.'))return x.source_id===filter.slice(3);
+  if(filter.startsWith('like.'))return x.source_id.startsWith(filter.slice(5,-1));
+  return true;
+ });
  if(method==='POST'){const index=records.findIndex(x=>x.source_id===body.source_id);if(index>=0)records[index]={...records[index],...body};else records.push({...body});return [records.find(x=>x.source_id===body.source_id)]}
  if(method==='DELETE'){records=records.filter(x=>x.source_id!==filter?.slice(3));return null}
  throw Error('Unexpected REST method '+method);
