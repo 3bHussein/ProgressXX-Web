@@ -22,6 +22,15 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Fix mocked snapshot payload crash in logout/login CI
+
+- Full UI [#38183773942](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38183773942) **FAILED**: Playwright mock handler `Object.keys(savedCloudPayload)` raised TypeError on undefined/null during new logout/login scenario.
+- Fixed **test fixture only** in `scripts/smoke-full-ui.cjs`: update mock snapshot payload only for proper `user_app_snapshots` POST body and tolerate absent snapshot values. Commit `53c9829090ab24d9285115b1a8758fbf0c4f1cec`.
+- Previous Pages [#38183773691](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38183773691) succeeded. Fresh CI result pending; do not assert logout/login roundtrip success yet.
+- No production app data or database changes. Security stage `SECURITY-DEFERRED-2026-10-12` remains deferred.
+- Next: inspect new CI; fix any genuine snapshot persistence failure without masking lost records.
+
+
 ### 2026-10-12 — Logout/login persistence browser regression
 
 - User confirmed on real phone that Settings and Insights mobile buttons now display correctly. Existing 320px/390px mock Chromium coverage passed.
