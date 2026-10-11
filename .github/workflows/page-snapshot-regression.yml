@@ -30,4 +30,5 @@ jobs:
           cat /tmp/progressxx-server.log
           exit 1
       - name: Confirm page state synchronizes across browser contexts
-        run: node tests/account-pages-snapshot-sync.cjs
+        run: |
+          node tests/account-pages-snapshot-sync.cjs

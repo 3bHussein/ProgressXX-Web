@@ -2517,8 +2517,8 @@ async function init(){
   $('appScriptUrl').value=PXStore.getItem(SCRIPT_URL_KEY)||DEFAULT_APPS_SCRIPT_URL;
   if(PXStore.getItem('theme'))document.documentElement.dataset.theme=PXStore.getItem('theme');
   wire();
-  pxInitExtras();
-  pxInitSettingsHub();
+  safeProgressXXRender('Anatomy',pxInitExtras);
+  safeProgressXXRender('Settings',pxInitSettingsHub);
   updateSyncUI();
   renderSyncCenter();
   if($('appVersionBadge'))$('appVersionBadge').textContent='v'+APP_VERSION;
@@ -2545,7 +2545,7 @@ async function init(){
 function wire(){
   if($('progressPhotoDate'))$('progressPhotoDate').value=localDateKey();
   if($('bodyMeasureDate'))$('bodyMeasureDate').value=localDateKey();
-  goalExerciseOptions();renderGoalFormState();
+  safeProgressXXRender('Goal form options',goalExerciseOptions);renderGoalFormState();
   const savedTdeeProfile=loadTdeeProfile();
   if(savedTdeeProfile&&savedTdeeProfile.targets){
     nutritionTargets={
@@ -2621,7 +2621,24 @@ function startNextWeek(){
   PXStore.setItem('progressx-manual-active-week-v20',String(next));
   rebuild();
 }
-function rebuild(){buildFilters();renderHome();renderLog();renderAnalytics();buildEditorDays();buildExerciseOptions();renderNutritionHome();if(currentPage==='intelligence')renderIntelligence();}
+function safeProgressXXRender(name,fn){
+ try{return fn()}
+ catch(error){
+  console.error('[ProgressXX] Optional UI panel failed: '+name,error);
+  (window.__pxBootRenderWarnings ||= []).push(name);
+  return null;
+ }
+}
+function rebuild(){
+ safeProgressXXRender('Workout filters',buildFilters);
+ safeProgressXXRender('Home',renderHome);
+ safeProgressXXRender('Workout Log',renderLog);
+ safeProgressXXRender('Analytics',renderAnalytics);
+ safeProgressXXRender('Editor days',buildEditorDays);
+ safeProgressXXRender('Exercise options',buildExerciseOptions);
+ safeProgressXXRender('Nutrition home',renderNutritionHome);
+ if(currentPage==='intelligence')safeProgressXXRender('Insights',renderIntelligence);
+}
 function save(changedRecord=null){PXStore.setItem(KEY,JSON.stringify(data));rebuild();scheduleAutoBackup()}
 function buildFilters(){const ds=['All',...days()];$('dayTabs').innerHTML=ds.map(d=>`<button class="chip ${d===activeDay?'active':''}" onclick='activeDay=${JSON.stringify(d)};buildFilters();renderLog(true)'>${esc(d)}</button>`).join('');const ws=[...new Set(data.map(x=>x.week).filter(Boolean))].sort((a,b)=>b-a);$('weekFilter').innerHTML='<option value="">All weeks</option>'+ws.map(w=>`<option value="${w}">W${w}</option>`).join('');buildProgressFilters()}
 function editorTrainingDays(){
@@ -9604,13 +9621,20 @@ window.__legacyBoot=init;
   if(pending)scheduleCloudSync();
   setTimeout(()=>window.__pxRefreshNutrition?.(true).catch(e=>tell('Food sync: '+e.message,true)),1500);
   gate.hidden=true;document.getElementById('pxAccountTools').hidden=false;
+  if(window.__pxBootRenderWarnings?.length)tell('Signed in · UI diagnostics: '+[...new Set(window.__pxBootRenderWarnings)].join(', '),true);
+ }
+ function reportAccountLoginError(error){
+  console.error('[ProgressXX] Account activation failed:',error);
+  const locationHint=String(error?.stack||'').split('\n').find(line=>/index\.html:\d+:\d+/.test(line))||'';
+  const shortLocation=locationHint.match(/index\.html:\d+:\d+/)?.[0]||'';
+  status.textContent=String(error?.message||error||'Login error')+(shortLocation?' · '+shortLocation:'');
  }
  document.getElementById('pxLogin').addEventListener('submit',async e=>{
   e.preventDefault();status.textContent='Signing in…';
   try{
    const data=await tokenRequest('token?grant_type=password',{email:document.getElementById('pxEmail').value.trim(),password:document.getElementById('pxPassword').value});
    await activate(data);
-  }catch(e){status.textContent=e.message}
+  }catch(e){reportAccountLoginError(e)}
  });
  document.getElementById('pxSignup').addEventListener('click',async()=>{
   status.textContent='Creating account…';
@@ -9618,7 +9642,7 @@ window.__legacyBoot=init;
    const data=await tokenRequest('signup',{email:document.getElementById('pxEmail').value.trim(),password:document.getElementById('pxPassword').value});
    status.textContent=data.access_token?'Account created. Signing in…':'Account created. Check your email, then sign in.';
    if(data.access_token)await activate(data);
-  }catch(e){status.textContent=e.message}
+  }catch(e){reportAccountLoginError(e)}
  });
  let nutritionRefreshInFlight=null,lastNutritionRefreshAt=0;
  window.__pxCommercialReady=()=>ready;
@@ -9655,7 +9679,7 @@ window.__legacyBoot=init;
  try{
   const previous=JSON.parse(sessionStorage.getItem(SESSION_KEY)||'null');
   if(previous?.refresh_token&&previous?.user?.id){
-   auth=previous;void activate(previous).catch(e=>{status.textContent=e.message;gate.hidden=false;ready=false});
+   auth=previous;void activate(previous).catch(e=>{reportAccountLoginError(e);gate.hidden=false;ready=false});
   }
  }catch{}
 })();
