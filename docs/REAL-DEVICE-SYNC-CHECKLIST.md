@@ -1,6 +1,6 @@
 # ProgressX real-device account sync verification
 
-Status: **MANUAL — NOT YET VERIFIED**. Updated 2026-10-12.
+Status: **PARTIAL REAL-DEVICE PASS** (Food Library desktop → phone confirmed by account owner); Food Diary reverse direction remains untested. Updated 2026-10-12.
 
 ## Safety
 - Use the **same personal account** on phone and desktop at https://3bhussein.github.io/ProgressXX-Web/.
@@ -27,3 +27,10 @@ For each row mark PASS / FAIL / NOT TESTED: desktop cloud status; item after des
 - Synthetic account sign-out/sign-in for Food, Daily, Workout and Weight: Playwright smoke regression.
 - Independent Chromium contexts, eight snapshot feature groups with mocked Supabase: [Full UI #38185774877](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38185774877) SUCCESS.
 - Real devices, real account, and real RLS isolation remain **untested**. Paid staging/security testing explicitly deferred (`SECURITY-DEFERRED-2026-10-12`).
+
+## Owner-reported checkpoint (2026-10-12)
+
+- **PASS (reported by user):** Food Library test product created on desktop appeared on phone signed into the same account.
+- **NOT YET TESTED:** creating one Food Diary entry on phone and verifying exactly one matching record on desktop after refresh.
+- **NOT YET TESTED:** read-only reconciliation of existing Workout Log, Daily and Weight; cleanup of test records.
+- Device screenshots, latency, and normalized database audit were not supplied. Do not generalize this partial pass to all sync flows.
