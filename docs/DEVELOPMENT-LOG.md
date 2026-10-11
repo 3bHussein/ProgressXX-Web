@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Verify exact second-browser restored values
+
+- Prior Full UI #38185686778 was in progress at inspection; latest Pages #38185686976 queued. No claims of CI success.
+- Hardened `tests/account-pages-snapshot-sync.cjs` so the **second independent browser context** awaits all eight exact account-scoped fixture values before readback/assertions, rather than trusting an early `Synced` label. First-context server-acknowledgement check remains strict. Commit `3f0b601440eea087ccb981504fd51edce2f776f2`.
+- Fresh CI pending. Test is mocked multi-browser behavior, not actual two-user security or real-device confirmation. No production app/database records modified; `SECURITY-DEFERRED-2026-10-12` remains on hold.
+- Next: inspect CI, investigate concrete failures without relaxing checks.
+
+
 ### 2026-10-12 — Cross-browser sync: await persisted values instead of stale status
 
 - GitHub Actions Full UI [#38185543017](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38185543017) **FAILED** in `tests/account-pages-snapshot-sync.cjs`: `Missing cloud snapshot for Workout Schedule` even though `smoke-full-ui.cjs` passed. Pages [#38185543037](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38185543037) **SUCCESS**.
