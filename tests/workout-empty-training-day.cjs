@@ -8,8 +8,11 @@ const assert = require('node:assert/strict');
     const failures = [];
     page.on('pageerror', error => failures.push(error.message));
     await page.addInitScript(() => {
-      localStorage.setItem('progressx-data-v19','[]');
-      localStorage.setItem('progressx-workout-templates-v1','[]');
+      if (!sessionStorage.getItem('px-workout-smoke-seeded')) {
+        localStorage.setItem('progressx-data-v19','[]');
+        localStorage.setItem('progressx-workout-templates-v1','[]');
+        sessionStorage.setItem('px-workout-smoke-seeded','1');
+      }
     });
     await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});
     await page.waitForFunction(() => typeof window.openEditor === 'function' && document.getElementById('fDay'));
