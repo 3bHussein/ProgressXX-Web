@@ -23,6 +23,17 @@ This is the **append-only** chronological log of completed work, investigations,
 
 ## Entries (newest first)
 
+### 2026-10-12 — Food outbox duplicate/tombstone browser regression
+
+- **Prior results:** Full UI smoke #38180040958 and #38180026886 SUCCESS (mocked Food Diary deletion remains absent on reload).
+- **Change:** `scripts/smoke-full-ui.cjs` now exercises two duplicate queue requests for an active Food Library product and a locally deleted/tombstoned product. Checks queue deduplication, one eventual active product write, no resurrection of deleted product and a drained queue.
+- **Commit:** `7d1b3ef14cc416e97fa951a5ee5e29adac480694`.
+- **Status:** New CI is pending; result not yet verified. Mocked browser test only; no production user records or database changed.
+- **Next:** Verify GitHub full-ui-smoke result, fix failures and then test failed-write retry preservation.
+- **Security:** `SECURITY-DEFERRED-2026-10-12` remains paused.
+
+
+
 ### 2026-10-12 — Food Diary delete confirmation and no-resurrection regression
 
 - **Previous CI:** [Full migration smoke #38179820794](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38179820794) SUCCESS; Food offline rejection and online retry mock checks passed.
