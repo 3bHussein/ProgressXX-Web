@@ -9605,12 +9605,18 @@ window.__legacyBoot=init;
   setTimeout(()=>window.__pxRefreshNutrition?.(true).catch(e=>tell('Food sync: '+e.message,true)),1500);
   gate.hidden=true;document.getElementById('pxAccountTools').hidden=false;
  }
+ function reportAccountLoginError(error){
+  console.error('[ProgressXX] Account activation failed:',error);
+  const locationHint=String(error?.stack||'').split('\\n').find(line=>/index\\.html:\\d+:\\d+/.test(line))||'';
+  const shortLocation=locationHint.match(/index\\.html:\\d+:\\d+/)?.[0]||'';
+  status.textContent=String(error?.message||error||'Login error')+(shortLocation?' · '+shortLocation:'');
+ }
  document.getElementById('pxLogin').addEventListener('submit',async e=>{
   e.preventDefault();status.textContent='Signing in…';
   try{
    const data=await tokenRequest('token?grant_type=password',{email:document.getElementById('pxEmail').value.trim(),password:document.getElementById('pxPassword').value});
    await activate(data);
-  }catch(e){status.textContent=e.message}
+  }catch(e){reportAccountLoginError(e)}
  });
  document.getElementById('pxSignup').addEventListener('click',async()=>{
   status.textContent='Creating account…';
@@ -9618,7 +9624,7 @@ window.__legacyBoot=init;
    const data=await tokenRequest('signup',{email:document.getElementById('pxEmail').value.trim(),password:document.getElementById('pxPassword').value});
    status.textContent=data.access_token?'Account created. Signing in…':'Account created. Check your email, then sign in.';
    if(data.access_token)await activate(data);
-  }catch(e){status.textContent=e.message}
+  }catch(e){reportAccountLoginError(e)}
  });
  let nutritionRefreshInFlight=null,lastNutritionRefreshAt=0;
  window.__pxCommercialReady=()=>ready;
@@ -9655,7 +9661,7 @@ window.__legacyBoot=init;
  try{
   const previous=JSON.parse(sessionStorage.getItem(SESSION_KEY)||'null');
   if(previous?.refresh_token&&previous?.user?.id){
-   auth=previous;void activate(previous).catch(e=>{status.textContent=e.message;gate.hidden=false;ready=false});
+   auth=previous;void activate(previous).catch(e=>{reportAccountLoginError(e);gate.hidden=false;ready=false});
   }
  }catch{}
 })();
