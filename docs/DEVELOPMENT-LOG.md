@@ -16,12 +16,21 @@ This is the **append-only** chronological log of completed work, investigations,
 
 - **Stage:** Pre-release hardening; not certified for sale/public paid launch.
 - **Known risk:** Real-account reproduction of login `undefined.filter` and Food/Daily restored-data sync needs independent confirmation, even though earlier CI ran green.
-- **Primary next step:** Check Pages deployment CI after fixture assertion commit d7d8d0b; verify live restored login, then audit per-account Food/Daily/Workout/Weight sync and RLS.
+- **Primary next step:** Audit two-account Supabase RLS isolation plus per-account Food/Daily/Workout/Weight CRUD/sync; user confirms app working and Pages CI #38156792995 passed.
 - **Data safety:** Preserve all existing user records; do not wipe or silently replace records.
 - **Deployment URL:** https://3bhussein.github.io/ProgressXX-Web/
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+
+### 2026-10-11 — Login regression CI confirmed green; user confirms app works
+
+- **Confirmation:** User reported the application works after the prior restored-account test assertion correction.
+- **Automated evidence:** [Deploy ProgressXX Full App run #38156792995](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38156792995) completed **SUCCESS** for commit `d7d8d0b5a8eba7a4e7e5f2271165417df5354371`.
+- **Scope:** Status verification and project documentation only; no application files, database schema or user records changed in this entry.
+- **Remaining risk:** User confirmation and mocked CI do not establish complete multi-user authorization, live restored-data parity, or all-device sync correctness.
+- **Next:** Audit Supabase table ownership/RLS and verify Food, Daily, Workout and Weight CRUD/sync for two independent test accounts; add negative authorization tests before paid launch.
+
 
 ### 2026-10-11 — Fix restored-account regression fixture count mismatch
 
