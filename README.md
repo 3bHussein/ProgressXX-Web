@@ -4,7 +4,7 @@
 
 **Live application:** https://3bhussein.github.io/ProgressXX-Web/  
 **Source:** https://github.com/3bHussein/ProgressXX-Web  
-**Roadmap:** [ROADMAP.md](ROADMAP.md) · **Continuity / AI handoff:** [docs/PROJECT-HANDOFF.md](docs/PROJECT-HANDOFF.md)
+**Roadmap:** [ROADMAP.md](ROADMAP.md) · **Latest work log:** [docs/DEVELOPMENT-LOG.md](docs/DEVELOPMENT-LOG.md) · **Continuity / AI handoff:** [docs/PROJECT-HANDOFF.md](docs/PROJECT-HANDOFF.md)
 
 ## What is ProgressX?
 
@@ -55,11 +55,15 @@ Mobile-first fitness companion for workouts, training schedules, body-weight che
 - Validate Supabase row-level security for every table/storage bucket and all operations.
 - Establish privacy, account/data deletion, monitoring, backup restoration, billing and support before commercialization.
 
+## Mandatory end-of-task tracking
+
+After every change, append a dated entry to [DEVELOPMENT-LOG](docs/DEVELOPMENT-LOG.md) with changed files, commit, tests, deploy, risks and next step; refresh handoff snapshot and roadmap. Never mark an untested change as verified. This repository file is the durable record between chat sessions, **not an automatic background process**.
+
 ## How to resume this project in a new ChatGPT conversation
 
 Share this GitHub repository and say:
 
-> **Continue ProgressX from the repository documentation. Read README.md, ROADMAP.md and docs/PROJECT-HANDOFF.md first. Check main branch, open PRs and recent GitHub Actions before making edits. Work only on the root index.html production site, preserve all user data, implement the highest-priority unverified item, add regression tests, verify CI and update the handoff files. Do not assume previously described issues are resolved without checking current code and deployment.**
+> **Continue ProgressX from the repository documentation. Read README.md, ROADMAP.md, docs/DEVELOPMENT-LOG.md and docs/PROJECT-HANDOFF.md first. Check main branch, open PRs and recent GitHub Actions before making edits. Work only on the root index.html production site, preserve all user data, implement the highest-priority unverified item, add regression tests, verify CI and update the handoff files. Do not assume previously described issues are resolved without checking current code and deployment.**
 
 See [PROJECT-HANDOFF](docs/PROJECT-HANDOFF.md) for detailed historical context.
 
