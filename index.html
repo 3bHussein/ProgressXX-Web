@@ -39,6 +39,22 @@ body:has(#signedOut:not(.hidden)) main{display:grid;place-items:center}body:has(
 #foodTracker{scroll-margin-top:86px}
 @media(min-width:720px){#dashboard>.dashgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.foodFields{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:560px){main{padding:0}.panel{border:0;border-radius:0;min-height:100dvh;padding:17px 14px 90px}.appNav{position:sticky;top:0;margin:0 -14px;padding:10px 14px}.appNav button{font-size:13px;padding:12px 9px;min-width:98px}.foodFields{grid-template-columns:repeat(2,minmax(0,1fr))}.foodStats{grid-template-columns:repeat(2,minmax(0,1fr))}.setEntry input{flex:1 1 95px}.dashgrid{gap:8px}}
+
+/* Three real views, rather than scrolling through one giant page */
+#dashboard[data-view="overview"] #trainingSection,#dashboard[data-view="overview"] #workoutLogSection,#dashboard[data-view="overview"] #foodTracker,#dashboard[data-view="overview"] #scheduleSection{display:none}
+#dashboard[data-view="training"] #overviewSection,#dashboard[data-view="training"] #weightSection,#dashboard[data-view="training"] #legacyInsights,#dashboard[data-view="training"] #foodTracker,#dashboard[data-view="training"] #recentWorkouts{display:none}
+#dashboard[data-view="food"]> :not(#foodTracker){display:none!important}
+#dashboard{min-height:62vh}
+#signedIn .appNav{top:0}
+#scheduleSection{padding:16px;border:1px solid #2d425a;border-radius:17px;margin:20px 0}
+.scheduleGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.scheduleDay{border:1px solid #2e4160;background:#142239;border-radius:13px;padding:12px}
+.scheduleDay strong{display:block;margin-bottom:8px}
+.scheduleDay input{font-size:14px;padding:10px}
+.scheduleDay button{margin-top:8px;padding:9px 11px;background:#5b48a8;color:#fff;width:100%}
+.scheduleDay small{display:block;color:#9cb4cd;padding-top:6px}
+#dashboard [id$="Section"]{scroll-margin-top:95px}
+@media(max-width:560px){.scheduleGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.scheduleDay{padding:9px}.scheduleDay button{font-size:12px}.appNav{box-shadow:0 8px 22px #0005}}
 </style></head><body><main><section class="panel">
 <div class="brand">Progress<span style="color:#ab8afe">XX</span></div>
 <p class="small">COMMERCIAL ACCOUNT PREVIEW · Separate from your existing personal app</p>
@@ -49,11 +65,11 @@ body:has(#signedOut:not(.hidden)) main{display:grid;place-items:center}body:has(
 <button class="primary" id="submit" type="submit">Sign in</button></form>
 <div class="bar"><button class="textlink" type="button" id="forgot">Forgot password?</button><button class="textlink hidden" id="back" type="button">Back to sign in</button></div>
 </div>
-<div id="signedIn" class="hidden"><h1>Welcome to your fitness hub</h1><p>Account: <strong id="who"></strong></p><p>Your workouts, nutrition and progress are stored privately in Supabase. Legacy import and paid subscriptions are not yet enabled.</p><nav class="appNav" aria-label="App sections"><button type="button" class="active" id="goOverview">🏠 Overview</button><button type="button" id="goTraining">🏋️ Training</button><button type="button" id="goFood">🥗 Food</button></nav><div id="dashboard" class="dashboard">
-<h2>Your progress</h2><p class="viewhint">Private Supabase records for this account. Your old personal data has not been imported.</p>
-<div class="dashgrid"><div class="stat"><span>Workouts logged</span><b id="workoutCount">—</b></div><div class="stat"><span>Latest weight</span><b id="latestWeight">—</b></div></div>
-<div class="dashboard" id="trainingSection"><h2>Workout Programs</h2><p class="viewhint">Browse ready-made training plans. Training is adjustable; choose a level appropriate for you. Home plans support fat-loss goals alongside nutrition and daily activity.</p><div class="sectionbar"><button type="button" id="filterHome" class="selected">🏠 Home</button><button type="button" id="filterGym">🏋️ Gym Splits</button></div><div id="programList" aria-live="polite">Loading programs…</div><div id="programDetails"></div></div><h3>Log a workout</h3><form id="workoutForm"><label for="workoutNotes">Workout name / notes</label><input id="workoutNotes" maxlength="300" required placeholder="e.g. Full body A"><button class="primary" type="submit">Save workout</button></form>
-<h3>Weight check-in</h3><form id="weightForm"><label for="weightKg">Weight in kilograms</label><div class="fieldrow"><input id="weightKg" type="number" required step="0.1" min="20" max="500" placeholder="kg"><button class="primary" type="submit">Save</button></div></form>
+<div id="signedIn" class="hidden"><h1>Welcome to your fitness hub</h1><p>Account: <strong id="who"></strong></p><p>Your workouts, nutrition and progress are stored privately in Supabase. Legacy import and paid subscriptions are not yet enabled.</p><nav class="appNav" aria-label="App sections"><button type="button" class="active" id="goOverview">🏠 Overview</button><button type="button" id="goTraining">🏋️ Training</button><button type="button" id="goFood">🥗 Food</button></nav><div id="dashboard" class="dashboard" data-view="overview">
+<section id="overviewSection"><h2>Your progress</h2><p class="viewhint">Private Supabase records for this account. Your old personal data has not been imported.</p>
+<div class="dashgrid"><div class="stat"><span>Workouts logged</span><b id="workoutCount">—</b></div><div class="stat"><span>Latest weight</span><b id="latestWeight">—</b></div></div></section>
+<div class="dashboard" id="trainingSection"><h2>Workout Programs</h2><p class="viewhint">Browse ready-made training plans. Training is adjustable; choose a level appropriate for you. Home plans support fat-loss goals alongside nutrition and daily activity.</p><div class="sectionbar"><button type="button" id="filterHome" class="selected">🏠 Home</button><button type="button" id="filterGym">🏋️ Gym Splits</button></div><div id="programList" aria-live="polite">Loading programs…</div><div id="programDetails"></div></div><section id="scheduleSection"><h2>📅 Weekly Workout Schedule</h2><p class="viewhint">Your personal weekly plan synced to Supabase. Leave a day blank for rest.</p><div id="scheduleGrid" class="scheduleGrid"></div><p id="scheduleStatus" class="viewhint" role="status"></p></section><section id="workoutLogSection"><h3>Log a workout</h3><form id="workoutForm"><label for="workoutNotes">Workout name / notes</label><input id="workoutNotes" maxlength="300" required placeholder="e.g. Full body A"><button class="primary" type="submit">Save workout</button></form></section>
+<section id="weightSection"><h3>Weight check-in</h3><form id="weightForm"><label for="weightKg">Weight in kilograms</label><div class="fieldrow"><input id="weightKg" type="number" required step="0.1" min="20" max="500" placeholder="kg"><button class="primary" type="submit">Save</button></div></form></section>
 <section class="dashboard" id="legacyInsights"><h2>ProgressXX Insights</h2><p class="viewhint">Personal Records &amp; Weekly Review — rebuilt from your private Supabase logs. No personal Google Sheet data imported.</p><div class="insightsGrid"><div class="insight"><small>Sessions · last 7 days</small><strong id="weeklySessions">—</strong></div><div class="insight"><small>Sets · last 7 days</small><strong id="weeklySets">—</strong></div><div class="insight"><small>Training volume · 7 days</small><strong id="weeklyVolume">—</strong></div><div class="insight"><small>Exercises tracked</small><strong id="exerciseCount">—</strong></div></div><h3>Personal Records (max weight)</h3><ul class="prList" id="personalRecords"><li>Loading your records…</li></ul><p class="insightWarning">PRs are the highest logged weight per exercise, not estimated one-rep maximum. Only the most recent 5000 sets are included in this preview.</p><button id="refreshInsights" type="button" class="textlink">Refresh insights</button></section><section id="foodTracker" class="dashboard">
 <h2>🥗 Food Tracker</h2><p class="viewhint">Private nutrition diary · Supabase sync. Nutrition values are estimates you enter, not verified database facts.</p>
 <form id="foodForm">
@@ -65,8 +81,8 @@ body:has(#signedOut:not(.hidden)) main{display:grid;place-items:center}body:has(
 <h3>Daily nutrition</h3><div class="foodStats"><div class="stat"><span>Calories</span><b id="totalCalories">0</b></div><div class="stat"><span>Protein g</span><b id="totalProtein">0</b></div><div class="stat"><span>Carbs g</span><b id="totalCarbs">0</b></div><div class="stat"><span>Fat g</span><b id="totalFat">0</b></div></div>
 <h3>Food entries</h3><div id="foodList" aria-live="polite">Loading…</div>
 <h3>⭐ Saved Meals</h3><p class="viewhint">Save a reusable meal, then add it to any selected day.</p><div id="savedMealList" aria-live="polite">Loading…</div>
-</section><h3>Recent workouts</h3><ul id="workoutHistory" class="history"></ul>
-<button id="refreshData" type="button" class="textlink">Refresh dashboard</button>
+</section><section id="recentWorkouts"><h3>Recent workouts</h3><ul id="workoutHistory" class="history"></ul>
+<button id="refreshData" type="button" class="textlink">Refresh dashboard</button></section>
 </div><button id="signOut" class="primary">Sign out</button></div>
 <div id="notice" class="notice" role="status" aria-live="polite"></div>
 <p class="small">Do not enter data from your old workout log here. No payments or data migration are active.</p>
@@ -82,7 +98,7 @@ function notice(message,error=false){el('notice').textContent=message;el('notice
 function render(){const logged=!!session?.access_token&&!!session?.user;el('signedIn').classList.toggle('hidden',!logged);el('signedOut').classList.toggle('hidden',logged);el('who').textContent=logged?(session.user.email||'Account'):''}
 function setMode(next){mode=next;notice('');el('authForm').reset();el('tabSignIn').classList.toggle('active',mode==='signin');el('tabSignUp').classList.toggle('active',mode==='signup');el('heading').textContent=mode==='signin'?'Welcome back':mode==='signup'?'Create your account':'Reset your password';el('description').textContent=mode==='signin'?'Sign in to your secure fitness account.':mode==='signup'?'Create a free account to get started.':'We will send a password reset link if your email is registered.';el('passwordRow').classList.toggle('hidden',mode==='reset');el('password').required=mode!=='reset';el('password').autocomplete=mode==='signup'?'new-password':'current-password';el('submit').textContent=mode==='signin'?'Sign in':mode==='signup'?'Create account':'Send reset link';el('forgot').classList.toggle('hidden',mode!=='signin');el('back').classList.toggle('hidden',mode!=='reset')}
 async function api(path,options={}){const headers={'apikey':PUBLIC_KEY,'Content-Type':'application/json',...options.headers};let response;try{response=await fetch(URL_BASE+'/auth/v1/'+path,{...options,headers})}catch{throw Error('Network unavailable. Check your connection.')}const data=await response.json().catch(()=>({}));if(!response.ok)throw Error(data.msg||data.error_description||data.message||data.error||'Authentication request failed.');return data}
-function save(value){session=value;try{if(session)sessionStorage.setItem(sessionKey,JSON.stringify(session));else sessionStorage.removeItem(sessionKey)}catch{}render();if(session?.user){loadDashboard();loadPrograms();loadInsights();loadFood();loadSavedMeals()}}
+function save(value){session=value;try{if(session)sessionStorage.setItem(sessionKey,JSON.stringify(session));else sessionStorage.removeItem(sessionKey)}catch{}render();if(session?.user){loadDashboard();loadPrograms();loadInsights();loadFood();loadSavedMeals();loadSchedule()}}
 async function refresh(){if(!session?.refresh_token)return;const data=await api('token?grant_type=refresh_token',{method:'POST',body:JSON.stringify({refresh_token:session.refresh_token})});save(data)}
 async function init(){try{session=JSON.parse(sessionStorage.getItem(sessionKey)||'null')}catch{session=null}if(session?.refresh_token){try{await refresh()}catch{save(null)}}render();if(session?.user){loadDashboard();loadPrograms();loadInsights()}}
 el('tabSignIn').addEventListener('click',()=>setMode('signin'));el('tabSignUp').addEventListener('click',()=>setMode('signup'));el('forgot').addEventListener('click',()=>setMode('reset'));el('back').addEventListener('click',()=>setMode('signin'));
@@ -93,7 +109,7 @@ async function db(table,method='GET',body=null,query=''){
  if(!session?.access_token)throw Error('Please sign in again.');
  if(session.expires_at && Date.now()/1000 >= session.expires_at-45)await refresh();
  const headers={'apikey':PUBLIC_KEY,'Authorization':'Bearer '+session.access_token,'Content-Type':'application/json'};
- if(method==='POST')headers.Prefer='return=representation';
+ if(method==='POST')headers.Prefer=table==='workout_schedule'?'resolution=merge-duplicates,return=representation':'return=representation';
  let response;
  try{response=await fetch(URL_BASE+'/rest/v1/'+table+query,{method,headers,body:body?JSON.stringify(body):undefined})}
  catch{throw Error('Cannot contact database. Check connection.')}
@@ -318,8 +334,44 @@ el('foodForm').addEventListener('submit',async e=>{
  try{const data=foodPayload();await db('food_entries','POST',{...data,user_id:session.user.id,logged_at:new Date(el('foodDay').value+'T12:00:00').toISOString()});el('foodName').value='';notice('Food entry synced ✓');await loadFood()}
  catch(err){notice(err.message,true)}finally{btn.disabled=false}
 });
-for(const [id,dest] of [['goOverview','dashboard'],['goTraining','trainingSection'],['goFood','foodTracker']]){
- el(id).addEventListener('click',()=>{document.querySelectorAll('.appNav button').forEach(b=>b.classList.remove('active'));el(id).classList.add('active');el(dest).scrollIntoView({behavior:'smooth',block:'start'})})
+
+function selectView(view){
+ el('dashboard').dataset.view=view;
+ for(const [id,name] of [['goOverview','overview'],['goTraining','training'],['goFood','food']])el(id).classList.toggle('active',view===name);
+ el('dashboard').scrollIntoView({behavior:'smooth',block:'start'});
+}
+for(const [id,name] of [['goOverview','overview'],['goTraining','training'],['goFood','food']]){
+ el(id).addEventListener('click',()=>selectView(name))
+}
+async function loadSchedule(){
+ if(!session?.user)return;
+ const grid=el('scheduleGrid');grid.textContent='Loading your week…';
+ try{
+  const entries=await db('workout_schedule','GET',null,'?select=id,weekday,title,notes&order=weekday.asc');
+  const byDay=new Map(entries.map(x=>[x.weekday,x]));
+  grid.replaceChildren();
+  for(const [day,dayName] of ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'].entries()){
+   const record=byDay.get(day);
+   const card=document.createElement('div');card.className='scheduleDay';
+   const heading=document.createElement('strong');heading.textContent=dayName;
+   const input=document.createElement('input');input.value=record?.title||'';input.placeholder='Rest day';input.maxLength=120;input.setAttribute('aria-label',dayName+' workout');
+   const btn=document.createElement('button');btn.type='button';btn.textContent='Save day';
+   const status=document.createElement('small');status.textContent=record?.title?'Saved in cloud':'Rest day';
+   btn.addEventListener('click',async()=>{
+    btn.disabled=true;
+    try{
+     const name=input.value.trim();
+     if(name){
+      await db('workout_schedule','POST',{user_id:session.user.id,weekday:day,title:name},'?on_conflict=user_id,weekday');
+     }else if(record){
+      await db('workout_schedule','DELETE',null,'?id=eq.'+encodeURIComponent(record.id));
+     }
+     status.textContent='Saved ✓';await loadSchedule();
+    }catch(err){status.textContent='Could not save: '+err.message}finally{btn.disabled=false}
+   });
+   card.append(heading,input,btn,status);grid.append(card);
+  }
+ }catch(err){grid.textContent='Schedule unavailable: '+err.message}
 }
 
 init();
