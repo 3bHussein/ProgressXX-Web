@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## Current continuation — 2026-10-12
+
+GitHub Full UI smoke #38179540966 passed. Subsequently the Full UI workflow was extended to run Workout CRUD, schedule mirror and sync-noop regression tests (commit df125ea27849dcc88c748da4ce0468578c2e96f8). Latest workflow outcome pending verification. Continue with Food CRUD/offline retry test coverage after checking Actions. Paid security staging and advanced RLS testing remain deferred at SECURITY-DEFERRED-2026-10-12.
+
 ## Latest CI work — 2026-10-12
 
 Full UI GitHub Actions now additionally runs `tests/account-pages-snapshot-sync.cjs`, `tests/daily-history-supabase-hydration.cjs`, `tests/weight-table-bridge.cjs` (workflow commit `e53bf90ac1e9a83aa9338339fd87cc52f4ce9940`). Inspect latest CI conclusion before marking complete. This is mocked synchronization and browser-context coverage, not two real accounts. Do not resume `SECURITY-DEFERRED-2026-10-12` without user request. Next prioritize Food and Workout sync regression tests. See DEVELOPMENT-LOG.
