@@ -22,6 +22,15 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Workout passed; second browser context auth timing regression
+
+- Full UI #38185419994 **SUCCESS**, including new Workout Log record-level sign-out/sign-in assertion. Pages #38185426186 **SUCCESS**.
+- Subsequent Full UI #38185426244 **FAILED** despite `smoke-full-ui.cjs` PASS; the separate `tests/account-pages-snapshot-sync.cjs` reported `Second-device JavaScript errors: Not authenticated`.
+- Added wait for explicit `Synced to Supabase` readiness for **both browser contexts** after auth gate dismissal, before cross-context comparison. Commit `e77fda465c9d6b7fcb74cab5de188492b1158b17`; new CI pending. Keep strict page-error assertion; don't hide errors.
+- This is mocked multi-context verification only, not real two-user isolation. No production database changes. Security remains deferred as requested (`SECURITY-DEFERRED-2026-10-12`).
+- Next: review new CI and inspect auth race further if `Not authenticated` persists.
+
+
 ### 2026-10-12 — Weight check-in CI passed and Workout Log account roundtrip added
 
 - Full UI [#38185282090](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38185282090) **SUCCESS** and Pages [#38185281890](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38185281890) **SUCCESS**, including Weight Check-in dated row and note after mock logout/login.
