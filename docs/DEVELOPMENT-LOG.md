@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Fix Food queued-row hydration after restart
+
+- **Confirmed CI failure:** #38180555740: queue present, persisted Food product present, but in-memory `foodProducts` absent after reload. Failure was in account-scoped state hydration, not storage deletion.
+- **Runtime code:** `index.html` commits `5c78be9afcf1318b29f8b5040a9ee5e459b87c31` and `4a2c9d22b0967283b215454b5a5f6706ee9e048b`: reconstruct queued Food products/logs in memory after account activation; fallback to scoped persisted payload before a pending flush; retain pending queue instead of discarding an unresolved missing payload.
+- **Safety:** No database operations or legacy data deletions. This is a production app code change; fresh CI must pass before considering it verified.
+- **Next:** Review latest full UI smoke and deploy results; if red, inspect exact job log and fix without weakening retention assertions. Security checkpoint `SECURITY-DEFERRED-2026-10-12` remains deferred.
+
+
 ### 2026-10-12 — Food restart issue confirmed, diagnostic added
 
 - **CI:** [Full UI #38180431308](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38180431308) FAILED with `Food offline queue or local product lost across app restart`. Retrieved job log; failure at `scripts/smoke-full-ui.cjs:159`.
