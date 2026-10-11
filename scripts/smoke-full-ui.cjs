@@ -17,7 +17,9 @@ const {chromium}=require('playwright');
     const record={id:'dddddddd-dddd-4ddd-8ddd-dddddddddddd',client_id:'pxlegacy:cloud-qa-food',logged_at:'2026-10-11T10:53:00+00:00',food_name:'[Snack] Cloud QA Oats',calories:389,protein_g:16.9,carbs_g:66.3,fat_g:6.9};
     await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([record])});return;
    }
-   const rows=foodEntryWrites.length?[{id:'cccccccc-cccc-4ccc-8ccc-cccccccccccc',...foodEntryWrites.at(-1)}]:[];
+   const clientFilter=new URL(req.url()).searchParams.get('client_id');
+   const matching=clientFilter?.startsWith('eq.')?foodEntryWrites.filter(x=>x.client_id===clientFilter.slice(3)):foodEntryWrites;
+   const rows=matching.map((x,i)=>({id:'cccccccc-cccc-4ccc-8ccc-'+String(i+1).padStart(12,'0'),...x}));
    await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(rows)});return;
   }
   if(isPost&&req.url().includes('/food_entries')){
