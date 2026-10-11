@@ -9607,8 +9607,8 @@ window.__legacyBoot=init;
  }
  function reportAccountLoginError(error){
   console.error('[ProgressXX] Account activation failed:',error);
-  const locationHint=String(error?.stack||'').split('\\n').find(line=>/index\\.html:\\d+:\\d+/.test(line))||'';
-  const shortLocation=locationHint.match(/index\\.html:\\d+:\\d+/)?.[0]||'';
+  const locationHint=String(error?.stack||'').split('\n').find(line=>/index\.html:\d+:\d+/.test(line))||'';
+  const shortLocation=locationHint.match(/index\.html:\d+:\d+/)?.[0]||'';
   status.textContent=String(error?.message||error||'Login error')+(shortLocation?' · '+shortLocation:'');
  }
  document.getElementById('pxLogin').addEventListener('submit',async e=>{
