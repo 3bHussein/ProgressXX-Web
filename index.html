@@ -5156,7 +5156,16 @@ async function apiCall(action,params={}){
    return {ok:true,id:sourceId};
   }catch(e){return {ok:false,error:'Supabase products: '+String(e.message||e)}}
  }
- if(['food_log_upsert','food_product_delete','food_log_delete'].includes(action)){
+ if(action==='food_log_upsert'){
+  try{
+   if(!navigator.onLine)throw Error('Offline');
+   const sourceId=String(params.id||'').trim()||('food_'+crypto.randomUUID());
+   const result=await window.__pxSaveFoodEntry({...params,id:sourceId});
+   if(!result?.id)throw Error('No confirmed database row');
+   return {ok:true,id:sourceId};
+  }catch(e){return {ok:false,error:'Supabase food_entries: '+String(e.message||e)}}
+ }
+ if(['food_product_delete','food_log_delete'].includes(action)){
   try{
    if(!navigator.onLine)throw Error('Offline');
    const r=await window.__pxCommitFood();
@@ -6478,7 +6487,7 @@ async function pxFlushFoodOutbox(){
    }
    try{
     const action=isProduct?'food_product_upsert':'food_log_upsert';
-    const payload={...row,id:isProduct?String(row.id):(String(row.id).startsWith('temp_')?'':row.id)};
+    const payload={...row,id:String(row.id)};
     const r=await apiCall(action,payload);
     if(!r?.ok||!r.id)throw Error(r?.error||'Sync failed');
     const oldId=row.id;
@@ -9202,6 +9211,32 @@ window.__legacyBoot=init;
   if(!Array.isArray(saved)||!saved[0]?.id)throw Error('No confirmed database row');
   return saved[0];
  };
+ window.__pxSaveFoodEntry=async p=>{
+  if(!ready||!account)throw Error('Please sign in');
+  const id=String(p.id||'').trim();
+  if(!id)throw Error('Missing entry ID');
+  const numeric=x=>Number.isFinite(Number(x))?Math.max(0,Number(x)):0;
+  const date=/^\\d{4}-\\d{2}-\\d{2}$/.test(String(p.date||''))?String(p.date):new Date().toISOString().slice(0,10);
+  const time=/^\\d{2}:\\d{2}$/.test(String(p.time||''))?String(p.time):'12:00';
+  const timestamp=new Date(date+'T'+time+':00').toISOString();
+  const record={user_id:account,client_id:'pxlegacy:'+id,logged_at:timestamp,
+   food_name:'['+String(p.meal||'Snack')+'] '+String(p.name||'Food').slice(0,180),
+   calories:numeric(p.calories),protein_g:numeric(p.protein),carbs_g:numeric(p.carbs),fat_g:numeric(p.fat)};
+  const rows=await cloud('food_entries?on_conflict=user_id,client_id','POST',record);
+  if(!Array.isArray(rows)||!rows[0]?.id)throw Error('Database did not confirm food entry');
+  return rows[0];
+ };
+ window.__pxBackfillFoodDiary=async()=>{
+  if(!ready||!navigator.onLine)return;
+  let entries=[];try{entries=JSON.parse(nodeStorage.getItem('progressx-food-log')||'[]')}catch{}
+  if(!Array.isArray(entries)||!entries.length)return;
+  let synced=0,failed=0;
+  for(const entry of entries){
+   if(!entry?.id||!entry.name)continue;
+   try{await window.__pxSaveFoodEntry(entry);synced++}catch(e){failed++;console.warn('Food entry pending',e.message)}
+  }
+  tell(failed?'⚠ '+failed+' food entries still pending database sync':'✓ '+synced+' food entries verified in Supabase',!!failed);
+ };
  window.__pxBackfillFoodProducts=async()=>{
   if(!ready||!navigator.onLine)return;
   let products=[];try{products=JSON.parse(nodeStorage.getItem('progressx-food-products')||'[]')}catch{}
@@ -9277,7 +9312,7 @@ window.__legacyBoot=init;
   if(typeof window.__legacyBoot!=='function')throw Error('Original app did not initialize');
   await window.__legacyBoot();
   if(pending)scheduleCloudSync();
-  setTimeout(()=>window.__pxBackfillFoodProducts?.().catch(e=>tell('Food library sync: '+e.message,true)),1500);
+  setTimeout(async()=>{try{await window.__pxBackfillFoodProducts?.();await window.__pxBackfillFoodDiary?.()}catch(e){tell('Food sync: '+e.message,true)}},1500);
   gate.hidden=true;document.getElementById('pxAccountTools').hidden=false;
  }
  document.getElementById('pxLogin').addEventListener('submit',async e=>{
