@@ -6,7 +6,7 @@ const assert=require('node:assert/strict');
  const keys={
   'Workout Log':'progressx-data-v19',
   'Workout Schedule':'progressx-workout-schedule-v1',
-  'Weight Check-ins':'progressx-weight-log-v1',
+  'Weight Check-ins':'progressx-progress-photos-v1',
   'Daily Reminders':'progressx-reminders',
   'Anatomy links':'progressxx-anatomy-exercise-links-v1',
   'Workout Templates':'progressx-workout-templates-v1',
