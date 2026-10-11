@@ -23,6 +23,18 @@ This is the **append-only** chronological log of completed work, investigations,
 
 ## Entries (newest first)
 
+### 2026-10-12 — Workout sync test coverage promoted to CI
+
+- **Previous verification:** [Full UI smoke #38179540966](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38179540966) SUCCESS for Account Snapshot / Daily / Weight checks.
+- **Change:** `.github/workflows/full-ui-smoke.yml` now also runs existing `tests/workout-supabase-table.cjs`, `tests/workout-schedule-table-mirror.cjs`, and `tests/workout-sync-noop-regression.cjs`.
+- **Commit:** `df125ea27849dcc88c748da4ce0468578c2e96f8`.
+- **Tests:** Final CI result for this commit still must be checked. Workout tests use fixtures/mocks and are not live cross-account or real-device sync verification.
+- **Deployment/data:** No application source, database schema, permissions or records changed; only CI workflow and docs.
+- **Next:** Review GitHub Actions result, address test failures without bypass; then expand Food CRUD/offline synchronization coverage.
+- **Security:** `SECURITY-DEFERRED-2026-10-12` remains paused by owner and remains a commercial launch blocker.
+
+
+
 ### 2026-10-12 — Promote account sync, Daily and Weight regression checks into CI
 
 - **Scope:** Automated verification only, no production app/database changes; deferred security item SECURITY-DEFERRED-2026-10-12 remains deferred.
