@@ -9184,12 +9184,9 @@ v2Rows('v2RecoveryInfo',[['Completed entries',data.filter(x=>x.status==='Complet
 
 
 // Initialize only after the V2 anatomy and recovery constants are defined.
-// Original Google Sheet operations are not used for the commercial app.
-syncFromSheet=async()=>true;
-startupWorkoutSync=async()=>true;
-processWorkoutQueue=async()=>true;
-queueWorkoutOperation=()=>{};
-pendingWorkoutCount=()=>0;
+// Keep the real Workout Log sync/queue functions: apiCall routes those actions to
+// authenticated Supabase tables (not Google Sheets). No-op overrides silently
+// discarded real edits and prevented historical records from loading.
 window.__legacyBoot=init;
 </script><div id="dailyNotice" class="reminderNotice"></div>
 <div id="alarmOverlay" class="alarmOverlay">
