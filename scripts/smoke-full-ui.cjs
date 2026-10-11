@@ -243,6 +243,12 @@ const {chromium}=require('playwright');
    PXStore.setItem(DAILY_DONE_KEY,JSON.stringify({...dailyDoneMap(),'qa-daily-roundtrip':true}));
    PXStore.setItem(DAILY_WATER_KEY,JSON.stringify({date:localDateKey(),current:1.25,target:2.75}));
  });
+ // Preserve a synthetic Weight Check-in across an account roundtrip.
+ await page.evaluate(()=>{
+   saveProgressPhotos([...progressPhotos().filter(x=>x.id!=='qa-weight-relogin'),{
+     id:'qa-weight-relogin',date:'2026-10-09',weight:78.4,note:'QA roundtrip',createdAt:'2026-10-09T08:00:00.000Z',_pending:false
+   }]);
+ });
  // Account logout/login regression: retain account-scoped Workout Schedule and Weight Goal.
  // Use mock Supabase credentials and data only; do not touch production accounts.
  await page.locator('#pxLogout').click();
@@ -287,6 +293,9 @@ const {chromium}=require('playwright');
     dailyCheck.done['qa-daily-roundtrip']!==true||
     dailyCheck.water.current!==1.25||dailyCheck.water.target!==2.75)
    throw Error('Daily reminders or water lost after account relogin: '+JSON.stringify(dailyCheck));
+ const weightRow=await page.evaluate(()=>progressPhotos().find(x=>x.id==='qa-weight-relogin'));
+ if(!weightRow||Number(weightRow.weight)!==78.4||weightRow.note!=='QA roundtrip')
+   throw Error('Weight check-in lost or changed on account relogin: '+JSON.stringify(weightRow));
  if(afterRelogin.schedule.tue!=='REST'||Number(afterRelogin.goal)!==80)
    throw Error('Schedule or Weight Goal lost on account logout/login: '+JSON.stringify(afterRelogin));
  // Mobile touch layout regression for the signed-in account and Insights/Settings.
