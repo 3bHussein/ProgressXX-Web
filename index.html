@@ -5176,13 +5176,10 @@ async function apiCall(action,params={}){
   try{return {ok:true,products:await window.__pxLoadProducts()}}
   catch(e){return {ok:false,error:String(e.message||e)}}
  }
- if(['food_log_delete'].includes(action)){
-  try{
-   if(!navigator.onLine)throw Error('Offline');
-   const r=await window.__pxCommitFood();
-   if(!r)throw Error('Supabase sync not confirmed');
-   return {ok:true,id:String(params.id||('food_'+Date.now()+'_'+Math.random().toString(36).slice(2,9)))};
-  }catch(e){return {ok:false,error:'Supabase: '+String(e.message||e)}}
+ if(action==='food_log_delete'){
+  try{if(!navigator.onLine)throw Error('Offline');
+   await window.__pxDeleteFoodEntry(String(params.id));return {ok:true};
+  }catch(e){return {ok:false,error:'Supabase food delete: '+e.message}}
  }
  return {ok:false,error:'Legacy Google Sheets action '+action+' is not yet supported by Supabase'};
 }
@@ -7109,32 +7106,19 @@ async function saveFoodEntryEdit(){
 }
 
 async function deleteFoodLogEntry(id){
-  const idx=foodLog.findIndex(x=>String(x.id)===String(id));
-  const backup=idx>=0?clone(foodLog[idx]):null;
-
-  // Optimistic UI: remove immediately.
-  if(idx>=0)foodLog.splice(idx,1);
-  if(backup)saveFoodEntryTime(backup,'');
-  else saveFoodEntryTime(id,'');
-  PXStore.setItem(FOOD_LOG_KEY,JSON.stringify(foodLog));
-  renderNutrition();
-  setNutritionSyncState('Deleting food in background…');
-
-  try{
-    const r=await apiCall('food_log_delete',{id});
-    if(!r.ok)throw new Error(r.error||'Delete failed');
-    setNutritionSyncState('Food entry deleted',true);
-  }catch(e){
-    if(backup){
-      foodLog.push(backup);
-      if(backup.time)saveFoodEntryTime(backup,backup.time);
-      PXStore.setItem(FOOD_LOG_KEY,JSON.stringify(foodLog));
-      renderNutrition();
-    }
-    setNutritionSyncState('Delete error: '+e.message,false);
-    alert('Could not delete food from Google Sheet: '+e.message);
-  }
+ id=String(id);
+ if(!confirm('Delete this logged food entry?'))return;
+ const tombstoneKey='pxx-food-deleted-log-ids';
+ const deleted=new Set(JSON.parse(PXStore.getItem(tombstoneKey)||'[]'));
+ deleted.add(id);PXStore.setItem(tombstoneKey,JSON.stringify([...deleted]));
+ foodLog=foodLog.filter(x=>String(x.id)!==id);
+ PXStore.setItem(FOOD_LOG_KEY,JSON.stringify(foodLog));
+ markFoodPending(id,false);renderNutrition();
+ setNutritionSyncState('Deleting food entry from Supabase…');
+ const r=await apiCall('food_log_delete',{id});
+ setNutritionSyncState(r.ok?'✓ Food entry deleted from database':'Food delete pending: '+r.error,r.ok);
 }
+
 function toggleNutritionTargets(open){
   const f=$('nutritionTargetsForm');if(!f)return;
   const next=typeof open==='boolean'?open:!f.classList.contains('open');
@@ -9244,6 +9228,15 @@ window.__legacyBoot=init;
   if(!Array.isArray(saved)||!saved[0]?.id)throw Error('No confirmed database row');
   return saved[0];
  };
+ window.__pxDeleteFoodEntry=async id=>{
+  if(!ready||!account)throw Error('Sign in first');
+  const clientId='pxlegacy:'+id;
+  await cloud('food_entries?client_id=eq.'+encodeURIComponent(clientId),'DELETE');
+  // Also handle old rows imported without client_id, which use their UUID as UI id.
+  if(/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(id))await cloud('food_entries?id=eq.'+encodeURIComponent(id),'DELETE');
+  const remaining=await cloud('food_entries?select=id&client_id=eq.'+encodeURIComponent(clientId)+'&limit=1');
+  if(remaining?.length)throw Error('Delete not confirmed');
+ };
  window.__pxSaveFoodEntry=async p=>{
   if(!ready||!account)throw Error('Please sign in');
   const id=String(p.id||'').trim();
@@ -9274,7 +9267,8 @@ window.__legacyBoot=init;
   const rows=await cloud('food_entries?select=id,client_id,logged_at,food_name,calories,protein_g,carbs_g,fat_g&order=logged_at.desc&limit=1500');
   if(!Array.isArray(rows))throw Error('Invalid food diary response');
   const local=Array.isArray(foodLog)?foodLog:[];
-  const map=new Map(local.filter(x=>x?.id).map(x=>[String(x.id),x]));
+  const deletedIds=new Set(JSON.parse(nodeStorage.getItem('pxx-food-deleted-log-ids')||'[]'));
+  const map=new Map(local.filter(x=>x?.id&&!deletedIds.has(String(x.id))).map(x=>[String(x.id),x]));
   const formatLocal=stamp=>{
    const d=new Date(stamp);
    if(Number.isNaN(d.getTime()))return {date:'',time:''};
@@ -9284,7 +9278,7 @@ window.__legacyBoot=init;
   };
   for(const r of rows){
    const id=String(r.client_id||'').startsWith('pxlegacy:')?String(r.client_id).slice(9):String(r.id);
-   if(!id)continue;
+   if(!id||deletedIds.has(id))continue;
    const original=map.get(id)||{};
    const parts=String(r.food_name||'').match(/^\[([^\]]+)\]\s*(.*)$/);
    const when=formatLocal(r.logged_at);
@@ -9305,8 +9299,9 @@ window.__legacyBoot=init;
   let entries=[];try{entries=JSON.parse(nodeStorage.getItem('progressx-food-log')||'[]')}catch{}
   if(!Array.isArray(entries)||!entries.length)return;
   let synced=0,failed=0;
+  const deletedIds=new Set(JSON.parse(nodeStorage.getItem('pxx-food-deleted-log-ids')||'[]'));
   for(const entry of entries){
-   if(!entry?.id||!entry.name)continue;
+   if(!entry?.id||!entry.name||deletedIds.has(String(entry.id)))continue;
    try{await window.__pxSaveFoodEntry(entry);synced++}catch(e){failed++;console.warn('Food entry pending',e.message)}
   }
   tell(failed?'⚠ '+failed+' food entries still pending database sync':'✓ '+synced+' food entries verified in Supabase',!!failed);
