@@ -14,7 +14,27 @@ const assert = require('node:assert/strict');
         sessionStorage.setItem('px-workout-smoke-seeded','1');
       }
     });
+    await page.route('**/auth/v1/**', async route => {
+      await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
+        access_token:'mock-auth-token',refresh_token:'mock-refresh-token',
+        expires_at:Math.floor(Date.now()/1000)+3600,
+        user:{id:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',email:'qa@example.test'}
+      })});
+    });
+    let cloudPayload={};
+    await page.route('**/rest/v1/**', async route => {
+      const req=route.request();
+      if(req.method()==='POST'||req.method()==='PATCH'){
+        try{const body=req.postDataJSON();if(body?.payload)cloudPayload=body.payload;}catch{}
+      }
+      await route.fulfill({status:200,contentType:'application/json',
+        body: req.method()==='GET'?JSON.stringify(Object.keys(cloudPayload).length?[{payload:cloudPayload}]:[]):'[{}]'});
+    });
     await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});
+    await page.locator('#pxEmail').fill('qa@example.test');
+    await page.locator('#pxPassword').fill('demo-password');
+    await page.locator('#pxSignin').click();
+    await page.waitForFunction(() => document.querySelector('#pxCommercialGate')?.hidden === true, null, {timeout:15000});
     await page.waitForFunction(() => typeof window.openEditor === 'function' && document.getElementById('fDay'));
     await page.evaluate(() => openEditor());
     assert.equal(await page.locator('#fDay').inputValue(),'','fresh account should start with no training day');
