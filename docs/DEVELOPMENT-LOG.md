@@ -23,6 +23,15 @@ This is the **append-only** chronological log of completed work, investigations,
 
 ## Entries (newest first)
 
+### 2026-10-12 — Fixed Settings shortcuts obscured by bottom mobile nav
+
+- GitHub Actions #38182112021 FAILED in Chromium: Playwright click on `#settings .pxSettingsQuickNav button` was intercepted by `.bottomNav .navbtn[data-page=log]` (explicit job log).
+- GitHub Pages #38182112010 SUCCEEDED separately; deployment success does not imply UI tests passed.
+- Applied CSS in root `index.html` to make Settings quick nav sticky above content with elevated z-index and adequate mobile bottom clearance; commit `c0c39431f735351e69eb234b1c3d5939814d2d0e`.
+- Next: check latest Full UI workflow, inspect click/scroll failures and correct them. No database or user data changes. `SECURITY-DEFERRED-2026-10-12` still deferred.
+
+
+
 ### 2026-10-12 — Settings shortcut click timeout diagnostics
 
 - Previously confirmed: mobile smoke #38181874481 and Pages #38181874600 passed.
