@@ -1,0 +1,20 @@
+name: Weight Check-ins Supabase Bridge
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'tests/weight-table-bridge.cjs'
+      - '.github/workflows/weight-table-bridge.yml'
+  workflow_dispatch:
+jobs:
+  weight-table-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify read/write/retry/delete without touching legacy rows
+        run: node tests/weight-table-bridge.cjs
