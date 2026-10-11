@@ -43,6 +43,11 @@
 ## Cross-context cloud acknowledgement follow-up (2026-10-12)
 ## Second-context hydration verification (2026-10-12)
 ## Latest cross-context status checkpoint — 2026-10-12
+## Independent-browser mock sync VERIFIED — 2026-10-12
+
+Full UI #38185774877 succeeded with exact-value recovery of eight account-scoped snapshot feature groups in a separate Chromium context. Prior Pages #38185774574 succeeded. This remains mocked sync, not real-device, normalized table or two-user RLS validation. User confirmed mobile Settings/Insights buttons display correctly. No production data changes; paid/security stage remains deferred.
+
+
 
 Prior Full UI #38185686778 succeeded; Pages #38185774574 succeeded. New strict second-context run #38185774877 remains in progress at inspection, so its outcome is unverified. No app/data changes; security deferred.
 
