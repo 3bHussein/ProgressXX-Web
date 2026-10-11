@@ -15,7 +15,8 @@ const {chromium}=require('playwright');
   if(req.url().includes('/food_entries')&&req.method()==='GET'){
    if(req.url().includes('select=id%2Cclient_id')||req.url().includes('select=id,client_id')){
     const record={id:'dddddddd-dddd-4ddd-8ddd-dddddddddddd',client_id:'pxlegacy:cloud-qa-food',logged_at:'2026-10-11T10:53:00+00:00',food_name:'[Snack] Cloud QA Oats',calories:389,protein_g:16.9,carbs_g:66.3,fat_g:6.9};
-    await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([record])});return;
+    const saved=foodEntryWrites.map((row,i)=>({id:'eeeeeeee-eeee-4eee-8eee-'+String(i+1).padStart(12,'0'),...row}));
+    await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([record,...saved])});return;
    }
    const clientFilter=new URL(req.url()).searchParams.get('client_id');
    const matching=clientFilter?.startsWith('eq.')?foodEntryWrites.filter(x=>x.client_id===clientFilter.slice(3)):foodEntryWrites;
