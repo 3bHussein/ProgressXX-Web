@@ -14,6 +14,11 @@
 ## Current work — Mobile Settings & Insights (2026-10-12)
 ## Mobile viewport CI continuation (2026-10-12)
 ## Latest Settings work (2026-10-12)
+
+## Latest Settings CI check (2026-10-12)
+
+Shortcut interaction workflow #38182006405 was still running during inspection. A six-second click timeout was added to each mobile Settings shortcut in `scripts/smoke-full-ui.cjs` (commit `5a73b1e76a3fbc08ceed08bd1585a58c8c35a3a8`). Check latest Actions results and logs before claiming pass or changing navigation code. Development Log has context. Security deferred remains paused.
+
 ## Current continuation — Settings shortcut browser clicks (2026-10-12)
 
 Previous CI #38181874481 and Pages #38181874600 successful. Added mobile Chromium clicks and target viewport checks for Settings shortcuts in `scripts/smoke-full-ui.cjs` (latest commit `8c0dd6e9f5d1e7a76579ddef9dac75e50ef78cdf`). New CI pending verification. No production data change. Security checkpoint deferred.
