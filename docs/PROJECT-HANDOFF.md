@@ -10,6 +10,11 @@
 ## Follow-up — 2026-10-12
 ## Latest Food restart diagnosis — 2026-10-12
 ## Current work — queued Food hydration fix (2026-10-12)
+## Latest verified CI (2026-10-12)
+
+Food queued-row recovery full UI CI [#38180732086](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38180732086) passed and Pages deploy [#38180731906](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38180731906) passed. Real-user/mobile confirmation remains outstanding. Next test pending diary hydration and UI. Security defer marker remains unchanged.
+
+
 
 CI #38180555740 proved queued Food ID and stored local product survived reload but in-memory product did not. Fixed `index.html` in commits `5c78be9afcf1318b29f8b5040a9ee5e459b87c31`, `4a2c9d22b0967283b215454b5a5f6706ee9e048b` to hydrate pending account-scoped Food rows at login and before retry. New CI result not yet verified. No database or existing data modified; security checkpoint deferred.
 
