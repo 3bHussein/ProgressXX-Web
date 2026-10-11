@@ -14,6 +14,7 @@ declare
   v_new jsonb;
   v_deleted jsonb;
   v_key text;
+  v_inserted integer;
 begin
   if v_user is null then raise exception 'Authentication required' using errcode = '28000'; end if;
   if p_payload is null or jsonb_typeof(p_payload) <> 'object' then
@@ -24,9 +25,10 @@ begin
   insert into public.user_app_snapshots(user_id,payload)
     values(v_user,'{}'::jsonb)
     on conflict (user_id) do nothing;
+  get diagnostics v_inserted = row_count;
   select payload, updated_at into v_prior, v_timestamp from public.user_app_snapshots
     where user_id=v_user for update;
-  if v_timestamp is distinct from p_expected_updated_at then
+  if v_inserted=0 and v_timestamp is distinct from p_expected_updated_at then
     raise exception 'Snapshot version conflict: reload before saving' using errcode='40001';
   end if;
   if v_prior is null then raise exception 'Snapshot missing or inaccessible'; end if;
