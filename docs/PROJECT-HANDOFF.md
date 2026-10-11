@@ -36,6 +36,11 @@
 ## Food Diary re-login cloud mock fix — 2026-10-12
 
 ## Daily account roundtrip QA — 2026-10-12
+## Daily reminders and water QA — 2026-10-12
+
+Full UI #38184630725 and Pages #38184630608 succeeded (Daily History). New `scripts/smoke-full-ui.cjs` test verifies reminder, completion and water current/target through mock account logout/login, commit `ff333b79eef09f37d89e7d85e55dfb5f8441bbcc`; CI pending. No production DB changes, security deferred.
+
+
 
 Full UI #38184364104 and Pages #38184364239 passed, including mocked Food product+diary record checks. Added synthetic Daily history entry persistence across account logout/login in smoke test commit `40d45def60a708b7e013d3c60b9b910b279bf54a`; new CI pending. This is Daily history only, not complete Daily sync. No production changes; security deferred.
 
