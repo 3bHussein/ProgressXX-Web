@@ -32,6 +32,17 @@ jobs:
             echo 'Potential private configuration found; blocking deployment'
             exit 1
           fi
+      - name: Validate inline JavaScript
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),vm=require('vm'),assert=require('assert');
+          const html=fs.readFileSync('index.html','utf8');
+          const scripts=[...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/g)];
+          assert(scripts.length>0,'Missing script');
+          for(const [,script] of scripts) new vm.Script(script);
+          for(const id of ['authForm','signedIn','dashboard','weightForm','workoutForm'])assert(html.includes('id="'+id+'"'),'Missing '+id);
+          console.log('Commercial auth and dashboard syntax/element checks passed');
+          NODE
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
