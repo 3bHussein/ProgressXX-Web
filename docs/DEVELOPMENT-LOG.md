@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Investigate failed Food restart-recovery smoke
+
+- CI #38180320704 **FAILED** at Full UI browser smoke; GitHub Pages deployment #38180320858 **SUCCEEDED**. Failure should not be reported as a passing recovery test. Original log unavailable through current connector; likely test race identified by inspection, not yet proven as root cause.
+- Updated `scripts/smoke-full-ui.cjs`: persist queued synthetic product locally before reload; hold simulated HTTP 503 throughout restart; release server failure only after inspecting saved queue and product, then retry. Commit `6e5b9454b2dbc46eb0bbe9784d0a9941b326f9f9`.
+- CI outcome for new commit pending. No production database changes. Security deferred marker unchanged.
+- Next: check current CI; if failure persists inspect available error details and repair the specific app/test defect.
+
+
 
 ### 2026-10-12 — Food outbox survives app restart: regression gate
 
