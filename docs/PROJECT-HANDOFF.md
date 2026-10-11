@@ -9,6 +9,11 @@
 ## Current verification / follow-up — 2026-10-12
 ## Follow-up — 2026-10-12
 ## Latest Food restart diagnosis — 2026-10-12
+## Current work — queued Food hydration fix (2026-10-12)
+
+CI #38180555740 proved queued Food ID and stored local product survived reload but in-memory product did not. Fixed `index.html` in commits `5c78be9afcf1318b29f8b5040a9ee5e459b87c31`, `4a2c9d22b0967283b215454b5a5f6706ee9e048b` to hydrate pending account-scoped Food rows at login and before retry. New CI result not yet verified. No database or existing data modified; security checkpoint deferred.
+
+
 
 CI #38180431308 failed at Food offline queue/product state after reload. Pages #38180431218 passed. Added detailed smoke failure diagnostics (commit `1ec489976ec4b145ea770b21515fcb0dbbdc8afa`) and await new CI to determine which state disappears. Not fixed yet. Preserve user data; `SECURITY-DEFERRED-2026-10-12` stays deferred.
 
