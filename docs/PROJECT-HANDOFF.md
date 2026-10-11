@@ -6,6 +6,12 @@
 
 ## Latest 2026-10-12 — Food server retry coverage
 
+## Current verification / follow-up — 2026-10-12
+
+New Food mock regression (commit `6a4134bfd113df58c784783e99ee12ab45a525e5`) requires offline queued product and its local record to survive full page reload after simulated HTTP 503, then retry once. CI result pending; diagnose if red. Full UI smoke #38180217072 passed before this change. Pages run #38180217307 failed at deploy step despite successful build; check latest deployment status. Keep security work deferred.
+
+
+
 Added transient HTTP 503 Food outbox test, commit `76c8b0e97fa40f6bda48abefcc30299c6164c1a8`. Check GitHub Actions for pass/failure before claiming verification. Security checkpoint remains deferred; no production data modified.
 
 
