@@ -40,6 +40,11 @@
 ## Weight Check-in QA continuation (2026-10-12)
 ## Workout Log account roundtrip QA (2026-10-12)
 ## Current cross-context CI follow-up (2026-10-12)
+## Cross-context cloud acknowledgement follow-up (2026-10-12)
+
+Full UI #38185543017 failed in second test due to `Missing cloud snapshot for Workout Schedule`, despite smoke passing; Pages #38185543037 succeeded. Fixed test race by waiting for server-side mock snapshot to actually contain all eight newly written values instead of trusting a stale `Synced` label; commit `cabc8e8b4f1a76a00d1914b5c8bc1671b50eb685`. Await new CI. No production DB changes. Security deferred.
+
+
 
 Full UI #38185419994 passed Workout Log record roundtrip, Pages #38185426186 succeeded. Later #38185426244 failed only in separate browser-context snapshot test (second-context `Not authenticated` page error). Updated test to wait for `Synced to Supabase` before assertions, commit `e77fda465c9d6b7fcb74cab5de188492b1158b17`; awaiting CI. Strict error check retained. Production data untouched, security deferred.
 
