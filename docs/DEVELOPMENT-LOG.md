@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Mobile Settings shortcut interaction regression
+
+- Prior mobile Settings shortcut CI #38181874481 passed, Pages #38181874600 succeeded.
+- Updated `scripts/smoke-full-ui.cjs` to click all 5 Settings quick-navigation buttons in 390px Chromium and check corresponding target panel visible in viewport. Commits `8ff92fa978d112708347af1de721c728c4481bbc`, `8c0dd6e9f5d1e7a76579ddef9dac75e50ef78cdf`.
+- New CI run result pending; this is synthetic UI data, not real-device validation. No runtime app or database data changed.
+- Next: verify fresh GitHub Actions; fix any interaction or scroll failure; maintain security checkpoint `SECURITY-DEFERRED-2026-10-12` deferred.
+
+
 ### 2026-10-12 — Settings quick navigation after mobile CI success
 
 - Confirmed Full UI run #38181679627 SUCCESS and Pages deploy #38181678866 SUCCESS for the prior mobile Settings/Insights build.
