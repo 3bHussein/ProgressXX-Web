@@ -39,6 +39,11 @@
 ## Daily reminders and water QA — 2026-10-12
 ## Weight Check-in QA continuation (2026-10-12)
 ## Workout Log account roundtrip QA (2026-10-12)
+## Current cross-context CI follow-up (2026-10-12)
+
+Full UI #38185419994 passed Workout Log record roundtrip, Pages #38185426186 succeeded. Later #38185426244 failed only in separate browser-context snapshot test (second-context `Not authenticated` page error). Updated test to wait for `Synced to Supabase` before assertions, commit `e77fda465c9d6b7fcb74cab5de188492b1158b17`; awaiting CI. Strict error check retained. Production data untouched, security deferred.
+
+
 
 Weight Check-in mock re-login test succeeded in Full UI #38185282090; Pages #38185281890 succeeded. Added synthetic Workout Log entry save and record-level assertion after account sign out/in to smoke script, commit `4fd2fcd9135f3b94a30cc64d47d303a2caa81d7e`. New CI pending. Production data untouched, security deferred.
 
