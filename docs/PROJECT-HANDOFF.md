@@ -10,6 +10,12 @@
 ## Follow-up — 2026-10-12
 ## Latest Food restart diagnosis — 2026-10-12
 ## Current work — queued Food hydration fix (2026-10-12)
+
+## Current work — Mobile Settings & Insights (2026-10-12)
+
+Root `index.html` now has a functional Settings cloud/account panel with status, usable Sync now/Sign out, improved mobile Insights and account toolbar, no “Previous commercial data” link, and hidden disabled Google Sheet panels. Commits `e3db54931a43a79a06a4307af05e3c7e5098633b`, `5b0420b19fdb7cf76bb329f25955ddeb5f538934`. New static regression test and CI wiring commits `6ed2353bc0d6e5206d803d2ffe0539ee4af1f951`, `d745e384e5973940019a03cb4e63f6ceb33077e5`. Check latest CI/deploy and real mobile appearance; no database change. Security defer remains.
+
+
 ## Latest verified CI (2026-10-12)
 
 Food queued-row recovery full UI CI [#38180732086](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38180732086) passed and Pages deploy [#38180731906](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38180731906) passed. Real-user/mobile confirmation remains outstanding. Next test pending diary hydration and UI. Security defer marker remains unchanged.
