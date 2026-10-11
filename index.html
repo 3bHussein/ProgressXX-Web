@@ -5146,7 +5146,17 @@ async function apiCall(action,params={}){
  if(action==='food_log_list'){const data=simpleRead('progressx-food-log','entries');data.entries=data.entries.filter(x=>!params.date||String(x.date)===String(params.date));return data}
  if(action==='meal_templates_list')return simpleRead('progressx-saved-meals-v1','templates');
  if(action==='nutrition_targets_get'){try{return {ok:true,targets:JSON.parse(PXStore.getItem('progressx-nutrition-targets')||'{}')}}catch{return {ok:true,targets:{}}}}
- if(['food_product_upsert','food_log_upsert','food_product_delete','food_log_delete'].includes(action)){
+ if(action==='food_product_upsert'){
+  try{
+   if(!navigator.onLine)throw Error('Offline');
+   if(!params.name)throw Error('Product name is required');
+   const sourceId=String(params.id||'').trim()||('product_'+crypto.randomUUID());
+   const result=await window.__pxSaveProduct({...params,id:sourceId});
+   if(!result)throw Error('Supabase product insert was not confirmed');
+   return {ok:true,id:sourceId};
+  }catch(e){return {ok:false,error:'Supabase products: '+String(e.message||e)}}
+ }
+ if(['food_log_upsert','food_product_delete','food_log_delete'].includes(action)){
   try{
    if(!navigator.onLine)throw Error('Offline');
    const r=await window.__pxCommitFood();
@@ -9182,6 +9192,28 @@ window.__legacyBoot=init;
   get length(){return Object.keys(values).length}
  };
  window.__pxActiveStore=nodeStorage;
+ window.__pxSaveProduct=async p=>{
+  if(!ready||!account)throw Error('Please sign in');
+  const numeric=x=>Number.isFinite(Number(x))?Number(x):0;
+  const row={user_id:account,source_id:String(p.id),barcode:String(p.barcode||'')||null,
+   name:String(p.name).slice(0,120),serving_qty:numeric(p.servingQty)||1,serving_unit:String(p.servingUnit||'g'),
+   calories:numeric(p.calories),protein_g:numeric(p.protein),carbs_g:numeric(p.carbs),fat_g:numeric(p.fat)};
+  const saved=await cloud('food_products?on_conflict=user_id,source_id','POST',row);
+  if(!Array.isArray(saved)||!saved[0]?.id)throw Error('No confirmed database row');
+  return saved[0];
+ };
+ window.__pxBackfillFoodProducts=async()=>{
+  if(!ready||!navigator.onLine)return;
+  let products=[];try{products=JSON.parse(nodeStorage.getItem('progressx-food-products')||'[]')}catch{}
+  if(!Array.isArray(products)||!products.length)return;
+  let failures=0;
+  for(const product of products){
+   if(!product?.name||!product.id)continue;
+   try{await window.__pxSaveProduct(product)}catch(e){failures++;console.warn('Food product backfill pending:',e.message)}
+  }
+  if(failures)tell('⚠ '+failures+' products still awaiting database sync',true);
+  else tell('✓ '+products.length+' food products verified in Supabase');
+ };
  window.__pxCommitFood=async()=>{
   if(!ready||!account)throw Error('Sign in before saving');
   if(uploading)await new Promise(resolve=>{const check=()=>uploading?setTimeout(check,80):resolve();check()});
@@ -9245,6 +9277,7 @@ window.__legacyBoot=init;
   if(typeof window.__legacyBoot!=='function')throw Error('Original app did not initialize');
   await window.__legacyBoot();
   if(pending)scheduleCloudSync();
+  setTimeout(()=>window.__pxBackfillFoodProducts?.().catch(e=>tell('Food library sync: '+e.message,true)),1500);
   gate.hidden=true;document.getElementById('pxAccountTools').hidden=false;
  }
  document.getElementById('pxLogin').addEventListener('submit',async e=>{
