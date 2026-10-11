@@ -85,6 +85,19 @@ const {chromium}=require('playwright');
  if(!deleted.ok||productWrites.some(x=>x.source_id==='qa-test-record'))throw Error('Food product not deleted in database');
  const again=await page.evaluate(async()=>apiCall('food_products_list'));
  if(again.products.some(x=>x.id==='qa-test-record'))throw Error('Deleted product was resurrected');
+ // A stale cached item must never be uploaded again merely by signing in.
+ await page.evaluate(()=>{
+   PXStore.setItem('progressx-food-products',JSON.stringify([{id:'qa-test-record',name:'QA only',servingQty:100,servingUnit:'g',calories:100}]));
+   PXStore.setItem('progressx-food-offline-outbox-v1','[]');
+ });
+ const postsBefore=productWrites.length;
+ await page.reload({waitUntil:'domcontentloaded'});
+ await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:12000});
+ await page.evaluate(()=>window.__pxRefreshNutrition());
+ const afterReload=await page.evaluate(()=>({products:foodProducts.map(x=>x.id),foodCount:document.querySelector('#foodEntryCount')?.textContent}));
+ if(afterReload.products.includes('qa-test-record'))throw Error('Stale local product appeared after refresh');
+ if(productWrites.length!==postsBefore)throw Error('Stale cached products were re-uploaded to database');
+
  const logReply=await page.evaluate(async()=>apiCall('food_log_upsert',{name:'QA only',id:'qa-log-record'}));
  if(!logReply?.ok)throw Error('Food log Supabase bridge failed: '+JSON.stringify(logReply));
  if(!foodEntryWrites.some(x=>x.client_id==='pxlegacy:qa-log-record'&&x.food_name==='[Snack] QA only'))throw Error('No real food_entries database upsert');
