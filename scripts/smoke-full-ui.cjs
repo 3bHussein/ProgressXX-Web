@@ -34,6 +34,15 @@ const {chromium}=require('playwright');
  await page.reload({waitUntil:'domcontentloaded'});
  try{await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:10000})}catch(error){console.error('Reload failure diagnostics:',await page.evaluate(()=>({status:document.querySelector('#pxLoginMessage')?.textContent,gateHidden:document.querySelector('#pxCommercialGate')?.hidden,session:sessionStorage.getItem('pxx_commercial_auth_preview_v1')?.slice(0,160),sync:document.querySelector('#pxSyncPill')?.textContent})),errors.slice(-8));throw error}
  if(await page.evaluate(()=>PXStore.getItem('qa-sentinel'))!=='abc123')throw Error('Cloud reload lost the record');
+ // Simulate an offline change that survives a reload and is safely retried.
+ await page.context().setOffline(true);
+ await page.evaluate(()=>PXStore.setItem('offline-sentinel','survive-reload'));
+ await page.reload({waitUntil:'domcontentloaded'});
+ await page.context().setOffline(false);
+ await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:15000});
+ if(await page.evaluate(()=>PXStore.getItem('offline-sentinel'))!=='survive-reload')throw Error('Offline queued edit lost after reload');
+ await page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Saved to Supabase'),null,{timeout:15000});
+ if(savedCloudPayload['offline-sentinel']!=='survive-reload')throw Error('Offline edit did not reconcile to cloud');
  if(legacyGoogleCalls)throw Error('Called personal Google Sheets endpoint');
  if(errors.length)throw Error('Browser errors after reload: '+errors.slice(0,5).join(' ; '));
  console.log('PASS: full UI boot, auth gate, 8 tabs, isolated storage, Supabase save and reload, no personal Google requests');
