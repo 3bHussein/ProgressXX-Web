@@ -154,9 +154,12 @@ const {chromium}=require('playwright');
  await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:15000});
  const pendingAfterRestart=await page.evaluate(()=>({
    queued:pxFoodOutbox().some(x=>x.id==='qa-outbox-retry'&&x.type==='product'),
-   local:foodProducts.some(x=>x.id==='qa-outbox-retry')
+   local:foodProducts.some(x=>x.id==='qa-outbox-retry'),
+   storedProduct:(JSON.parse(PXStore.getItem('progressx-food-products')||'[]')).some(x=>x.id==='qa-outbox-retry'),
+   pending: pxFoodOutbox().map(x=>({type:x.type,id:x.id})),
+   nutritionSync:document.querySelector('#nutritionSyncState')?.textContent
  }));
- if(!pendingAfterRestart.queued||!pendingAfterRestart.local)throw Error('Food offline queue or local product lost across app restart');
+ if(!pendingAfterRestart.queued||!pendingAfterRestart.local)throw Error('Food offline queue or local product lost across app restart: '+JSON.stringify(pendingAfterRestart));
  await page.unroute('**/rest/v1/food_products?**');
  await page.evaluate(()=>pxFlushFoodOutbox());
  const pendingAfterSuccess=await page.evaluate(()=>pxFoodOutbox().some(x=>x.id==='qa-outbox-retry'&&x.type==='product'));
