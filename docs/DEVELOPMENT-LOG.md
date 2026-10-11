@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Weight check-in CI passed and Workout Log account roundtrip added
+
+- Full UI [#38185282090](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38185282090) **SUCCESS** and Pages [#38185281890](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38185281890) **SUCCESS**, including Weight Check-in dated row and note after mock logout/login.
+- Added a synthetic Workout Log entry with id `qa-workout-relogin`, week 20, day Monday, exercise `QA dumbbell row`, and notes; test invokes app `save()`, signs out/in, and checks record fields in `scripts/smoke-full-ui.cjs`. Commit `4fd2fcd9135f3b94a30cc64d47d303a2caa81d7e`. Fresh CI pending.
+- All tests use mocked accounts; not proof of real two-account/cross-device syncing. No production DB changes; security phase remains deferred (`SECURITY-DEFERRED-2026-10-12`).
+- Next: inspect CI, fix any Workout Log hydration/persistence errors without weakening tests.
+
+
 ### 2026-10-12 — Daily QA green and weight check-in logout/login test
 
 - Full UI #38185151840 **SUCCESS** and Pages #38185151808 **SUCCESS**, including synthetic Daily reminder completion and water state after re-login.
