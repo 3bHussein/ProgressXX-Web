@@ -55,8 +55,11 @@ const assert=require('node:assert/strict');
   await a.page.evaluate(({keys,samples})=>{
    Object.entries(keys).forEach(([name,key])=>PXStore.setItem(key,samples[name]));
   },{keys,samples:sampleValues});
-  await a.page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Synced to Supabase'),null,{timeout:20000});
-  await a.page.waitForTimeout(500);
+  // A stale "Synced" label may predate this batch of edits. Wait for actual
+  // server-acknowledged values instead of a status label or fixed sleep.
+  const deadline=Date.now()+25000;
+  while(Object.entries(keys).some(([name,key])=>snapshot[key]!==sampleValues[name])&&Date.now()<deadline)
+   await a.page.waitForTimeout(250);
   for(const [name,key] of Object.entries(keys))assert.equal(snapshot[key],sampleValues[name],'Missing cloud snapshot for '+name);
   assert.ok(writes>0,'No snapshot POST was sent');
   // A separate browser context simulates another device: no local storage is shared.
