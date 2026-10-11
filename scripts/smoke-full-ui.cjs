@@ -247,6 +247,17 @@ const {chromium}=require('playwright');
  }));
  if(!Array.isArray(foodEntryWrites)||!Array.isArray(productWrites))
    throw Error('Food mock table state was lost during account roundtrip');
+ // Real record assertions, not counts: Food Library and Diary must survive sign-out/sign-in.
+ const foodRoundtrip=await page.evaluate(()=>({
+   product:foodProducts.find(x=>String(x.id)==='qa-outbox-retry'),
+   entry:foodLog.find(x=>String(x.id)==='qa-offline-diary'),
+   queued:pxFoodOutbox().filter(x=>x.id==='qa-outbox-retry'||x.id==='qa-offline-diary')
+ }));
+ if(!foodRoundtrip.product||Number(foodRoundtrip.product.calories)!==11)
+   throw Error('Food Library product missing or changed after sign-in: '+JSON.stringify(foodRoundtrip));
+ if(!foodRoundtrip.entry||foodRoundtrip.entry.name!=='Queued QA meal')
+   throw Error('Food Diary record missing or changed after sign-in: '+JSON.stringify(foodRoundtrip));
+ if(foodRoundtrip.queued.length)throw Error('Already synced Food items unexpectedly pending after sign-in');
  if(afterRelogin.schedule.tue!=='REST'||Number(afterRelogin.goal)!==80)
    throw Error('Schedule or Weight Goal lost on account logout/login: '+JSON.stringify(afterRelogin));
  // Mobile touch layout regression for the signed-in account and Insights/Settings.
