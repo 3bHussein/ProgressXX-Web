@@ -22,6 +22,15 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Eight-group independent-browser snapshot recovery VERIFIED
+
+- Full UI [#38185774877](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38185774877) **SUCCESS** including strict second independent Chromium-context wait for exact eight cloud snapshot keys, all restored and compared.
+- Previously verified Pages [#38185774574](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38185774574) **SUCCESS**. New documentation-triggered runs may still be in progress and are not evidence of a code failure.
+- Scope: **mocked** Supabase and independent browser contexts; not real multi-user RLS, real devices, real-account dataset reconciliation or independent normalized table sync.
+- No production code, database, secrets, or user-data modifications; security phase stays deferred (`SECURITY-DEFERRED-2026-10-12`).
+- Next: request voluntary real-device/account verification, or add offline/recovery and conflict regression tests using synthetic data before broader rollout.
+
+
 ### 2026-10-12 — Cross-context status checkpoint
 
 - Full UI #38185686778 SUCCESS for prior mock sync patch; GitHub Pages #38185774574 SUCCESS.
