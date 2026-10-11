@@ -6590,6 +6590,9 @@ async function deleteFoodProduct(id){
  try{
   const result=await apiCall('food_product_delete',{id:String(id)});
   if(!result?.ok)throw Error(result?.error||'Delete not confirmed');
+  const deleted=JSON.parse(PXStore.getItem('pxx-food-deleted-ids')||'[]');
+  if(!deleted.includes(String(id)))deleted.push(String(id));
+  PXStore.setItem('pxx-food-deleted-ids',JSON.stringify(deleted));
   foodProducts=foodProducts.filter(x=>String(x.id)!==String(id));
   PXStore.setItem(FOOD_PRODUCTS_KEY,JSON.stringify(foodProducts));
   PXStore.setItem(PX_FOOD_OUTBOX_KEY,JSON.stringify(pxFoodOutbox().filter(x=>!(x.type==='product'&&String(x.id)===String(id)))));
@@ -9303,8 +9306,9 @@ window.__legacyBoot=init;
   let products=[];try{products=JSON.parse(nodeStorage.getItem('progressx-food-products')||'[]')}catch{}
   if(!Array.isArray(products)||!products.length)return;
   let failures=0;
+  const deletedIds=new Set(JSON.parse(nodeStorage.getItem('pxx-food-deleted-ids')||'[]'));
   for(const product of products){
-   if(!product?.name||!product.id)continue;
+   if(!product?.name||!product.id||deletedIds.has(String(product.id)))continue;
    try{await window.__pxSaveProduct(product)}catch(e){failures++;console.warn('Food product backfill pending:',e.message)}
   }
   if(failures)tell('⚠ '+failures+' products still awaiting database sync',true);
