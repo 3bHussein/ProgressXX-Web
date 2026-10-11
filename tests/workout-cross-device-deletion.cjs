@@ -78,7 +78,7 @@ console.log('PASS: stale device offline edits cannot restore workouts deleted in
   window:{__pxAtomicSnapshotReady:true},
   browserStorage:{setItem:(k,v)=>cache.set(k,v)},
   storagePrefix:id=>'pxx:full:'+id+':',
-  nodeStorage:{setItem:(k,v)=>{values[k]=v;context.revision++;}},
+  nodeStorage:{setItem:(k,v)=>{values[k]=v;cache.set('pxx:full:'+context.account+':'+k,v);context.revision++;}},
   tell(){},clearPending(){},scheduleCloudSync(){},mirrorWorkoutScheduleToTable:async()=>{},
   cloud:async(path,method,body)=>{
    calls.push({path,method,body});
