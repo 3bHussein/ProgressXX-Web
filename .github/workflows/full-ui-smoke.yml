@@ -23,3 +23,6 @@ jobs:
           python3 -m http.server 8765 > /tmp/full-ui-server.log 2>&1 &
           sleep 2
           node scripts/smoke-full-ui.cjs
+          node tests/account-pages-snapshot-sync.cjs
+          node tests/daily-history-supabase-hydration.cjs
+          node tests/weight-table-bridge.cjs
