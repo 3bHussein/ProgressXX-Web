@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Daily reminder and water re-login regression
+
+- Full UI #38184630725 SUCCESS and Pages #38184630608 SUCCESS, including Daily History synthetic account roundtrip.
+- Added new mocked account sign-out/sign-in assertions preserving a synthetic Daily reminder, its completion marker, and today's water current/target in `scripts/smoke-full-ui.cjs`. Commit `ff333b79eef09f37d89e7d85e55dfb5f8441bbcc`. New CI pending.
+- No production data or database changes; security verification remains deferred (`SECURITY-DEFERRED-2026-10-12`).
+- Next: examine CI result; distinguish test setup failure from actual data persistence bug and verify without weakening assertions.
+
+
 
 ### 2026-10-12 — Food complete; Daily history account roundtrip test added
 
