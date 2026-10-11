@@ -133,10 +133,8 @@ const {chromium}=require('playwright');
  if(productWrites.some(x=>x.source_id===queueProbe.dead))throw Error('Tombstoned Food product was resurrected by outbox');
  if(productWrites.filter(x=>x.source_id===queueProbe.alive).length!==1)throw Error('Outbox retry failed to save active product exactly once');
  // Simulate a transient server rejection: pending Food write remains queued for retry.
- let rejectOneProduct=true;
  await page.route('**/rest/v1/food_products?**',async route=>{
-   if(rejectOneProduct&&route.request().method()==='POST'){
-     rejectOneProduct=false;
+   if(route.request().method()==='POST'){
      return route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({message:'temporary outage'})});
    }
    return route.fallback();
@@ -144,6 +142,7 @@ const {chromium}=require('playwright');
  const retry=await page.evaluate(async()=>{
    const id='qa-outbox-retry';
    foodProducts.push({id,name:'Retry food',servingQty:1,servingUnit:'serving',calories:11});
+   PXStore.setItem(FOOD_PRODUCTS_KEY,JSON.stringify(foodProducts));
    pxFoodQueue('product',id);
    await pxFlushFoodOutbox();
    const pendingAfterFailure=pxFoodOutbox().some(x=>x.id===id&&x.type==='product');
@@ -158,9 +157,9 @@ const {chromium}=require('playwright');
    local:foodProducts.some(x=>x.id==='qa-outbox-retry')
  }));
  if(!pendingAfterRestart.queued||!pendingAfterRestart.local)throw Error('Food offline queue or local product lost across app restart');
+ await page.unroute('**/rest/v1/food_products?**');
  await page.evaluate(()=>pxFlushFoodOutbox());
  const pendingAfterSuccess=await page.evaluate(()=>pxFoodOutbox().some(x=>x.id==='qa-outbox-retry'&&x.type==='product'));
- await page.unroute('**/rest/v1/food_products?**');
  if(pendingAfterSuccess)throw Error('Food outbox failed to retry after app restart');
  if(productWrites.filter(x=>x.source_id==='qa-outbox-retry').length!==1)throw Error('Food outbox retry duplicated or lost product');
  const logReply=await page.evaluate(async()=>apiCall('food_log_upsert',{name:'QA only',id:'qa-log-record'}));
