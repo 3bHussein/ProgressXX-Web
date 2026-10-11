@@ -63,6 +63,10 @@ jobs:
           python3 -m http.server 8765 > /tmp/progressxx-test-server.log 2>&1 &
           sleep 2
           node scripts/smoke-full-ui.cjs
+      - name: Required login render isolation regression
+        run: node tests/login-optional-render-recovery.cjs
+      - name: Required restored Food and Daily account login regression
+        run: node tests/login-imported-archive-regression.cjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
