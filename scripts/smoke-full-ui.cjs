@@ -105,6 +105,28 @@ const {chromium}=require('playwright');
  if(!foodEntryWrites.some(x=>x.client_id==='pxlegacy:qa-log-record'&&x.food_name==='[Snack] QA only'))throw Error('No real food_entries database upsert');
  const readReply=await page.evaluate(async()=>apiCall('food_products_list'));
  if(!readReply?.ok)throw Error('Food products read bridge failed');
+ // Core feature smoke: schedule, weight goal and workout log operate in the real index.html.
+ const feature=await page.evaluate(()=>{
+   const saved=JSON.stringify({sun:'REST',mon:'REST'});
+   PXStore.setItem('progressx-workout-schedule-v1',saved);
+   renderWorkoutSchedule();
+   if(document.querySelector('#schedule_sun')?.value!=='REST')throw Error('Schedule UI failed to read saved data');
+   const first=document.querySelector('#schedule_tue');
+   if(!first)throw Error('Weekly schedule selector missing');
+   first.value='REST';saveWorkoutSchedule();
+   if(workoutSchedule().tue!=='REST')throw Error('Schedule failed to save');
+   const goal=document.querySelector('#weightGoalInput');
+   if(!goal)throw Error('Weight goal input missing');
+   goal.value='80';saveWeightGoal();renderWeightTrend();
+   if(Number(PXStore.getItem('progressx-weight-goal-v1'))!==80)throw Error('Weight goal failed to persist');
+   renderLog();
+   if(!document.querySelector('#logList'))throw Error('Workout Log missing');
+   return {schedule:workoutSchedule(),goal:PXStore.getItem('progressx-weight-goal-v1')};
+ });
+ await page.reload({waitUntil:'domcontentloaded'});
+ await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:15000});
+ const afterFeatureReload=await page.evaluate(()=>({schedule:workoutSchedule(),goal:PXStore.getItem('progressx-weight-goal-v1')}));
+ if(afterFeatureReload.schedule.tue!=='REST'||Number(afterFeatureReload.goal)!==80)throw Error('Core feature data lost after reload');
  if(legacyGoogleCalls)throw Error('Called personal Google Sheets endpoint');
  if(errors.length)throw Error('Browser errors after reload: '+errors.slice(0,5).join(' ; '));
  console.log('PASS: full UI boot, auth gate, 8 tabs, isolated storage, Supabase save and reload, no personal Google requests');
