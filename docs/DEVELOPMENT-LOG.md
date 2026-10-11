@@ -22,6 +22,16 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+
+### 2026-10-12 — Settings shortcut click timeout diagnostics
+
+- Previously confirmed: mobile smoke #38181874481 and Pages #38181874600 passed.
+- New interactive Settings quick-navigation test run #38182006405 was still in progress at review (Full UI browser smoke step); not yet a proven pass or failure.
+- Added a 6-second timeout to each Playwright shortcut click to avoid long silent hangs; commit `5a73b1e76a3fbc08ceed08bd1585a58c8c35a3a8` in `scripts/smoke-full-ui.cjs`.
+- New CI result unverified. No production app or user database changes.
+- Next: inspect finished workflow, diagnose any click or scroll failure; preserve `SECURITY-DEFERRED-2026-10-12` pause.
+
+
 ### 2026-10-12 — Mobile Settings shortcut interaction regression
 
 - Prior mobile Settings shortcut CI #38181874481 passed, Pages #38181874600 succeeded.
