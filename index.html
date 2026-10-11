@@ -14,7 +14,7 @@ input{width:100%;border:1px solid #394b66;border-radius:12px;padding:14px;backgr
 .hidden{display:none!important}.small{font-size:12px;color:#91a5bf}strong{overflow-wrap:anywhere}@media(max-width:420px){main{padding:12px}.panel{border-radius:18px;padding:22px}}
 
 .dashboard{margin-top:22px;border-top:1px solid #394b66;padding-top:18px}.dashgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{background:#0c1626;border:1px solid #30405a;border-radius:14px;padding:14px}.stat b{display:block;font-size:25px;margin-top:7px}.stat span{font-size:12px;color:#9eb1ca}.fieldrow{display:flex;gap:8px;align-items:end}.fieldrow input{min-width:0;flex:1}.fieldrow button{margin:0;white-space:nowrap}.history{margin:12px 0;padding:0;list-style:none}.history li{padding:10px 0;border-bottom:1px solid #2c3750;font-size:14px}.viewhint{font-size:13px}
-</style></head><body><main><section class="panel">
+.programCard{padding:13px;border:1px solid #354560;border-radius:14px;background:#0a1525;margin:10px 0}.programCard h4{margin:0 0 5px}.programCard p{margin:4px 0 10px}.programCard button{padding:10px;background:#352a58;color:#fff}.programDay{margin:13px 0;border-top:1px solid #354560;padding-top:12px}.programDay li{line-height:1.6}.pill{display:inline-block;background:#243653;color:#cae5ff;border-radius:20px;padding:4px 9px;font-size:11px}.sectionbar{display:flex;gap:8px;margin:12px 0}.sectionbar button{flex:1;background:#25354b;color:#fff;padding:10px}.sectionbar button.selected{background:#6548bd}</style></head><body><main><section class="panel">
 <div class="brand">Progress<span style="color:#ab8afe">XX</span></div>
 <p class="small">COMMERCIAL ACCOUNT PREVIEW · Separate from your existing personal app</p>
 <div id="signedOut"><div class="tabs"><button id="tabSignIn" class="active" type="button">Sign in</button><button id="tabSignUp" type="button">Create account</button></div>
@@ -27,7 +27,7 @@ input{width:100%;border:1px solid #394b66;border-radius:12px;padding:14px;backgr
 <div id="signedIn" class="hidden"><h1>You're signed in</h1><p>Account: <strong id="who"></strong></p><p>Your account is authenticated. Workout data migration and commercial subscriptions are not enabled in this preview.</p><div id="dashboard" class="dashboard">
 <h2>Your progress</h2><p class="viewhint">Private Supabase records for this account. Your old personal data has not been imported.</p>
 <div class="dashgrid"><div class="stat"><span>Workouts logged</span><b id="workoutCount">—</b></div><div class="stat"><span>Latest weight</span><b id="latestWeight">—</b></div></div>
-<h3>Log a workout</h3><form id="workoutForm"><label for="workoutNotes">Workout name / notes</label><input id="workoutNotes" maxlength="300" required placeholder="e.g. Full body A"><button class="primary" type="submit">Save workout</button></form>
+<div class="dashboard"><h2>Workout Programs</h2><p class="viewhint">Browse ready-made training plans. Training is adjustable; choose a level appropriate for you. Home plans support fat-loss goals alongside nutrition and daily activity.</p><div class="sectionbar"><button type="button" id="filterHome" class="selected">🏠 Home</button><button type="button" id="filterGym">🏋️ Gym Splits</button></div><div id="programList" aria-live="polite">Loading programs…</div><div id="programDetails"></div></div><h3>Log a workout</h3><form id="workoutForm"><label for="workoutNotes">Workout name / notes</label><input id="workoutNotes" maxlength="300" required placeholder="e.g. Full body A"><button class="primary" type="submit">Save workout</button></form>
 <h3>Weight check-in</h3><form id="weightForm"><label for="weightKg">Weight in kilograms</label><div class="fieldrow"><input id="weightKg" type="number" required step="0.1" min="20" max="500" placeholder="kg"><button class="primary" type="submit">Save</button></div></form>
 <h3>Recent workouts</h3><ul id="workoutHistory" class="history"></ul>
 <button id="refreshData" type="button" class="textlink">Refresh dashboard</button>
@@ -46,7 +46,7 @@ function notice(message,error=false){el('notice').textContent=message;el('notice
 function render(){const logged=!!session?.access_token&&!!session?.user;el('signedIn').classList.toggle('hidden',!logged);el('signedOut').classList.toggle('hidden',logged);el('who').textContent=logged?(session.user.email||'Account'):''}
 function setMode(next){mode=next;notice('');el('authForm').reset();el('tabSignIn').classList.toggle('active',mode==='signin');el('tabSignUp').classList.toggle('active',mode==='signup');el('heading').textContent=mode==='signin'?'Welcome back':mode==='signup'?'Create your account':'Reset your password';el('description').textContent=mode==='signin'?'Sign in to your secure fitness account.':mode==='signup'?'Create a free account to get started.':'We will send a password reset link if your email is registered.';el('passwordRow').classList.toggle('hidden',mode==='reset');el('password').required=mode!=='reset';el('password').autocomplete=mode==='signup'?'new-password':'current-password';el('submit').textContent=mode==='signin'?'Sign in':mode==='signup'?'Create account':'Send reset link';el('forgot').classList.toggle('hidden',mode!=='signin');el('back').classList.toggle('hidden',mode!=='reset')}
 async function api(path,options={}){const headers={'apikey':PUBLIC_KEY,'Content-Type':'application/json',...options.headers};let response;try{response=await fetch(URL_BASE+'/auth/v1/'+path,{...options,headers})}catch{throw Error('Network unavailable. Check your connection.')}const data=await response.json().catch(()=>({}));if(!response.ok)throw Error(data.msg||data.error_description||data.message||data.error||'Authentication request failed.');return data}
-function save(value){session=value;try{if(session)sessionStorage.setItem(sessionKey,JSON.stringify(session));else sessionStorage.removeItem(sessionKey)}catch{}render();if(session?.user)loadDashboard()}
+function save(value){session=value;try{if(session)sessionStorage.setItem(sessionKey,JSON.stringify(session));else sessionStorage.removeItem(sessionKey)}catch{}render();if(session?.user){loadDashboard();loadPrograms()}}
 async function refresh(){if(!session?.refresh_token)return;const data=await api('token?grant_type=refresh_token',{method:'POST',body:JSON.stringify({refresh_token:session.refresh_token})});save(data)}
 async function init(){try{session=JSON.parse(sessionStorage.getItem(sessionKey)||'null')}catch{session=null}if(session?.refresh_token){try{await refresh()}catch{save(null)}}render();if(session?.user)loadDashboard()}
 el('tabSignIn').addEventListener('click',()=>setMode('signin'));el('tabSignUp').addEventListener('click',()=>setMode('signup'));el('forgot').addEventListener('click',()=>setMode('reset'));el('back').addEventListener('click',()=>setMode('signin'));
@@ -93,6 +93,47 @@ el('weightForm').addEventListener('submit',async e=>{
  catch(err){notice(err.message,true)}finally{btn.disabled=false}
 });
 el('refreshData').addEventListener('click',loadDashboard);
+
+
+let programCatalog=[],programFilter='home';
+const escapeSafe=s=>String(s??'');
+async function loadPrograms(){
+ try{programCatalog=await db('program_templates','GET',null,'?select=id,title,category,level,days_per_week,slug&is_published=eq.true&order=days_per_week.asc');renderProgramList()}
+ catch(err){el('programList').textContent='Could not load programs: '+err.message}
+}
+function renderProgramList(){
+ el('filterHome').classList.toggle('selected',programFilter==='home');el('filterGym').classList.toggle('selected',programFilter==='gym');
+ let list=el('programList');list.replaceChildren();
+ let matches=programCatalog.filter(x=>x.category===programFilter);
+ if(!matches.length){list.textContent='No programs yet.';return}
+ for(const p of matches){
+ const card=document.createElement('article');card.className='programCard';
+ const h=document.createElement('h4');h.textContent=p.title;
+ const description=document.createElement('p');description.textContent=p.days_per_week+' days/week · '+p.level;
+ const button=document.createElement('button');button.type='button';button.textContent='View exercises';button.addEventListener('click',()=>viewProgram(p));
+ card.append(h,description,button);list.append(card);
+ }
+}
+async function viewProgram(program){
+ const area=el('programDetails');area.textContent='Loading exercises…';
+ try{
+  const days=await db('program_days','GET',null,'?select=id,title,day_index&template_id=eq.'+encodeURIComponent(program.id)+'&order=day_index.asc');
+  const wrapper=document.createElement('div');wrapper.className='programCard';
+  const title=document.createElement('h3');title.textContent=program.title;wrapper.append(title);
+  for(const d of days){
+   const section=document.createElement('section');section.className='programDay';
+   const h=document.createElement('h4');h.textContent='Day '+d.day_index+' · '+d.title;section.append(h);
+   const exercises=await db('program_exercises','GET',null,'?select=exercise_name,sets,rep_range,rest_seconds&day_id=eq.'+encodeURIComponent(d.id)+'&order=sort_order.asc');
+   const ul=document.createElement('ul');
+   for(const ex of exercises){const li=document.createElement('li');li.textContent=ex.exercise_name+' — '+ex.sets+' × '+ex.rep_range+(ex.rest_seconds?' · '+ex.rest_seconds+'s rest':'');ul.append(li)}
+   section.append(ul);
+   const start=document.createElement('button');start.type='button';start.textContent='Log this day';start.addEventListener('click',()=>{el('workoutNotes').value=program.title+' — '+d.title;el('workoutNotes').scrollIntoView({behavior:'smooth',block:'center'});el('workoutNotes').focus()});section.append(start);wrapper.append(section);
+  }
+  area.replaceChildren(wrapper);
+ }catch(err){area.textContent='Unable to open program: '+err.message}
+}
+el('filterHome').addEventListener('click',()=>{programFilter='home';renderProgramList();el('programDetails').replaceChildren()});
+el('filterGym').addEventListener('click',()=>{programFilter='gym';renderProgramList();el('programDetails').replaceChildren()});
 
 init();
 </script></body></html>
