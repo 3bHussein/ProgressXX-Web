@@ -1,0 +1,33 @@
+name: Cross-device page snapshot regression
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'tests/account-pages-snapshot-sync.cjs'
+      - '.github/workflows/page-snapshot-regression.yml'
+  workflow_dispatch:
+jobs:
+  cross-device-snapshot:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start test server
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/progressxx-server.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8765/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/progressxx-server.log
+          exit 1
+      - name: Confirm page state synchronizes across browser contexts
+        run: node tests/account-pages-snapshot-sync.cjs
