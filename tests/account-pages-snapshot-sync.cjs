@@ -65,6 +65,10 @@ const assert=require('node:assert/strict');
   // A separate browser context simulates another device: no local storage is shared.
   const second=await browser.newContext();
   const b=await login(second);
+  // Wait for actual second-context hydration, not only the sync status indicator.
+  await b.page.waitForFunction(({keys,samples})=>
+   Object.entries(keys).every(([name,key])=>PXStore.getItem(key)===samples[name]),
+   {keys,samples:sampleValues},{timeout:20000});
   const restored=await b.page.evaluate(keys=>Object.fromEntries(Object.entries(keys).map(([n,k])=>[n,PXStore.getItem(k)])),keys);
   for(const [name,value] of Object.entries(restored))assert.equal(value,sampleValues[name],'Cross-device snapshot restore failed for '+name);
   assert.deepEqual(a.errors,[],'First-device JavaScript errors');
