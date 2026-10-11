@@ -6554,10 +6554,18 @@ async function pxFlushFoodOutbox(){
   for(const item of pxFoodOutbox().slice().sort((a,b)=>(a.type==='product'?0:1)-(b.type==='product'?0:1)||a.createdAt-b.createdAt)){
    const isProduct=item.type==='product';
    const rows=isProduct?foodProducts:foodLog;
-   const row=rows.find(x=>String(x.id)===String(item.id));
+   let row=rows.find(x=>String(x.id)===String(item.id));
+   // Account-scoped storage may hydrate after initial UI variables are initialized.
+   // Preserve queued changes across reload instead of dropping their only retry intent.
    if(!row){
-    PXStore.setItem(PX_FOOD_OUTBOX_KEY,JSON.stringify(pxFoodOutbox().filter(x=>!(x.id===item.id&&x.type===item.type))));
-    continue;
+    const persisted=loadLocalArray(isProduct?FOOD_PRODUCTS_KEY:FOOD_LOG_KEY,[]);
+    row=persisted.find(x=>String(x.id)===String(item.id));
+    if(row)rows.push(isProduct?normalizeFoodProduct(row):row);
+   }
+   if(!row){
+    // Missing payload cannot be safely retried; retain queue for recovery rather than losing data.
+    setNutritionSyncState('Food sync paused: pending item '+String(item.id)+' not yet restored locally',false);
+    break;
    }
    try{
     const isDeleted=JSON.parse(PXStore.getItem(isProduct?'pxx-food-deleted-ids':'pxx-food-deleted-log-ids')||'[]').includes(String(row.id));
