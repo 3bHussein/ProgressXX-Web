@@ -35,6 +35,12 @@
 
 ## Food Diary re-login cloud mock fix — 2026-10-12
 
+## Daily account roundtrip QA — 2026-10-12
+
+Full UI #38184364104 and Pages #38184364239 passed, including mocked Food product+diary record checks. Added synthetic Daily history entry persistence across account logout/login in smoke test commit `40d45def60a708b7e013d3c60b9b910b279bf54a`; new CI pending. This is Daily history only, not complete Daily sync. No production changes; security deferred.
+
+
+
 Full UI #38184268033 failed because mocked Food Diary list GET excluded saved POST rows, although Food Library re-login passed. Corrected fixture in `scripts/smoke-full-ui.cjs` commit `002f743ea97634b22a80a5959dc683c49d9cb0b4`; strict Food record test retained. Check fresh CI. No production data/security change.
 
 
