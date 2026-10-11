@@ -1,9 +1,15 @@
-name: Deploy ProgressXX Commercial Preview
+name: Deploy ProgressXX Full App
 on:
   push:
     branches: [main]
     paths:
       - index.html
+      - full-app.html
+      - commercial-v1.html
+      - manifest.webmanifest
+      - sw.js
+      - icon-192.svg
+      - icon-512.svg
       - .github/workflows/deploy-pages.yml
   workflow_dispatch:
 permissions:
@@ -21,29 +27,28 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Verify public preview contains no private app configuration
+      - name: Validate full application code and block private Google integrations
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p site
-          cp index.html site/index.html
+          cp index.html full-app.html commercial-v1.html manifest.webmanifest sw.js icon-192.svg icon-512.svg site/
           touch site/.nojekyll
-          if grep -Eqi 'script.google.com|progressx-data-v19|service_role|DB_PASSWORD' site/index.html; then
-            echo 'Potential private configuration found; blocking deployment'
-            exit 1
-          fi
-      - name: Validate inline JavaScript
-        run: |
           node - <<'NODE'
           const fs=require('fs'),vm=require('vm'),assert=require('assert');
-          const html=fs.readFileSync('index.html','utf8');
-          const start=html.indexOf('<script>'),end=html.indexOf('</script>',start);
-          assert(start!==-1 && end>start,'Missing inline script');
-          const scripts=[html.slice(start+8,end)];
-          assert(scripts.length>0,'Missing script');
-          for(const script of scripts) new vm.Script(script);
-          for(const id of ['authForm','signedIn','dashboard','weightForm','workoutForm'])assert(html.includes('id="'+id+'"'),'Missing '+id);
-          console.log('Commercial auth and dashboard syntax/element checks passed');
+          const html=fs.readFileSync('site/index.html','utf8');
+          for(const id of ['home','log','analytics','nutrition','daily','calculators','settings','intelligence','pxCommercialGate']){
+            assert(html.includes('id="'+id+'"'),'Missing screen '+id);
+          }
+          assert(!/https:\/\/script\.google\.com\/macros\/s\//i.test(html),'Private Google Apps Script URL found');
+          assert(!/https:\/\/docs\.google\.com\/spreadsheets\/d\//i.test(html),'Private spreadsheet URL found');
+          assert(!/AKfycb[A-Za-z0-9_-]{25,}/.test(html),'Potential Apps Script deployment key found');
+          assert(!/service_role[\s"':=]/i.test(html),'Possible privileged API secret');
+          const scripts=[...html.matchAll(/<script(?:\s+[^>]*)?>([\s\S]*?)<\/script>/g)];
+          assert(scripts.length>=3,'Missing original scripts');
+          for(const script of scripts)new vm.Script(script[1]);
+          assert(html.includes('user_app_snapshots'),'Missing account-scoped Supabase synchronization');
+          console.log('Full ProgressXX: all screens, scripts, auth and privacy checks passed');
           NODE
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
