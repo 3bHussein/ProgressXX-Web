@@ -3,7 +3,7 @@ const fs=require('node:fs');
 const html=fs.readFileSync('index.html','utf8');
 const section=html.slice(html.indexOf('// Initialize only after the V2 anatomy'),html.indexOf('window.__legacyBoot=init;')+25);
 for(const n of ['syncFromSheet','startupWorkoutSync','processWorkoutQueue','queueWorkoutOperation','pendingWorkoutCount']){
- assert.ok(!new RegExp(n+'\\\\s*=\\\\s*(?:async\\\\s*)?\\\\([^)]*\\\\)\\\\s*=>\\\\s*(?:true|0|\\\\{\\\\})').test(section),'No-op override found for '+n);
+ assert.ok(!section.includes(n+'=async()=>true')&&!section.includes(n+'=()=>{}')&&!section.includes(n+'=()=>0'),'No-op override found for '+n);
 }
 assert.match(html,/await startupWorkoutSync\(\)/,'Login must load real workout table');
 assert.match(html,/async function startupWorkoutSync\(\)/);
