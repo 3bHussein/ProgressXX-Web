@@ -22,6 +22,15 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Mobile Settings and Insights height fix verified
+
+- Full UI regression [#38182804267](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38182804267) **SUCCESS**: synthetic Chromium at 320px / 390px validates tab row and button heights for Settings and Insights.
+- Pages [#38182804147](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38182804147) **SUCCESS**.
+- CSS fix commit `786c9ffba74b22b463900f28c2c3d1d0aacea9c8`; computed-geometry test commit `8a307957d417797322fb8d5ad9212167027acdcd`.
+- Real mobile screenshot verification still outstanding; CI is simulated only. No user data, database, or security changes; `SECURITY-DEFERRED-2026-10-12` remains on hold.
+- Next: wait for user real phone check; prioritize any remaining Insights/Settings layout regressions.
+
+
 
 ### 2026-10-12 — Fix full-height mobile Settings & Insights tabs shown in screenshots
 
