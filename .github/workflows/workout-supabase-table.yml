@@ -7,6 +7,7 @@ on:
       - 'tests/workout-history-login-regression.cjs'
       - 'tests/workout-sync-noop-regression.cjs'
       - 'tests/daily-history-supabase-hydration.cjs'
+      - 'tests/legacy-nutrition-settings-restore.cjs'
       - '.github/workflows/workout-supabase-table.yml'
   workflow_dispatch:
 jobs:
@@ -25,3 +26,4 @@ jobs:
           node tests/workout-history-login-regression.cjs
           node tests/workout-sync-noop-regression.cjs
           node tests/daily-history-supabase-hydration.cjs
+          node tests/legacy-nutrition-settings-restore.cjs

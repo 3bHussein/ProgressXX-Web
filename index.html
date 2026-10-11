@@ -9515,6 +9515,22 @@ window.__legacyBoot=init;
   }catch(e){tell('Unsynced changes: '+e.message,true)}
   finally{uploading=false;if(revision!==savedRevision)scheduleCloudSync()}
  }
+ window.__pxRestoreLegacySettings=async()=>{
+  if(!ready||!account)throw Error('Sign in to restore legacy settings');
+  const rows=await cloud('progressxx_legacy_settings?select=setting_key,setting_value&user_id=eq.'+encodeURIComponent(account)+'&limit=50');
+  if(!Array.isArray(rows))throw Error('Invalid legacy settings response');
+  const allowed=new Set(['progressx-nutrition-targets','progressx-meal-templates-v1']);
+  let restored=0;
+  for(const row of rows){
+   const key=String(row?.setting_key||'');
+   if(!allowed.has(key)||nodeStorage.getItem(key)!==null)continue;
+   const value=row.setting_value;
+   if(key==='progressx-meal-templates-v1'&&!Array.isArray(value))continue;
+   if(key==='progressx-nutrition-targets'&&(!value||typeof value!=='object'||Array.isArray(value)))continue;
+   nodeStorage.setItem(key,JSON.stringify(value));restored++;
+  }
+  return restored;
+ };
  window.__pxLoadReminderArchive=async()=>{
   if(!ready||!account)throw Error('Sign in to load reminders');
   const existing=nodeStorage.getItem('progressx-reminders');
@@ -9578,6 +9594,7 @@ window.__legacyBoot=init;
   }
   savedRevision=revision;ready=true;tell('✓ Signed in · Supabase connected');
   if(typeof window.__legacyBoot!=='function')throw Error('Original app did not initialize');
+  try{await window.__pxRestoreLegacySettings()}catch(err){tell('Legacy settings: '+err.message,true)}
   try{await window.__pxLoadReminderArchive()}catch(err){tell('Reminders archive: '+err.message,true)}
   await window.__legacyBoot();
   try{await window.__pxLoadDailyHistory()}catch(err){tell('Daily history refresh: '+err.message,true)}
