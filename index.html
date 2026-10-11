@@ -9241,7 +9241,7 @@ window.__legacyBoot=init;
  const BASE="https://cleryiplpqhrtqzryhnx.supabase.co",PUB="sb_publishable_zzMo8GM_9JZ7U1uEUnDcgw_xVXn0Crm",SESSION_KEY='pxx_commercial_auth_preview_v1';
  const gate=document.getElementById('pxCommercialGate'),status=document.getElementById('pxLoginMessage'),pill=document.getElementById('pxSyncPill');
  const browserStorage=window.localStorage;
- let auth=null,account=null,values={},revision=0,savedRevision=0,timer=null,uploading=false,ready=false;
+ let auth=null,account=null,values={},revision=0,savedRevision=0,timer=null,uploading=false,ready=false,snapshotVersion=null;
  const storagePrefix=id=>'pxx:full:'+id+':';
  const pendingKey=id=>'pxx:pending:'+id;
  function markPending(){if(account)browserStorage.setItem(pendingKey(account),JSON.stringify({payload:{...values},at:Date.now()}))}
@@ -9541,9 +9541,11 @@ window.__legacyBoot=init;
    // Avoid enabling it on the live site before the backend function exists.
    let confirmedPayload=null;
    if(window.__pxAtomicSnapshotReady===true){
-    confirmedPayload=await cloud('rpc/progressxx_sync_snapshot','POST',{p_payload:{...values}});
-    if(!confirmedPayload||typeof confirmedPayload!=='object'||Array.isArray(confirmedPayload))
+    const result=await cloud('rpc/progressxx_sync_snapshot','POST',{p_payload:{...values},p_expected_updated_at:snapshotVersion});
+    confirmedPayload=result?.payload;
+    if(!confirmedPayload||typeof confirmedPayload!=='object'||Array.isArray(confirmedPayload)||!result.updated_at)
      throw Error('Atomic snapshot write was not confirmed');
+    snapshotVersion=result.updated_at;
     // The server can remove workouts deleted on another device.
     // Bring the signed-in account cache into agreement with the confirmed result.
     for(const key of ['progressx-data-v19','progressx-workout-sync-queue-v1','progressx-workout-deleted-ids-v1']){
@@ -9566,7 +9568,8 @@ window.__legacyBoot=init;
   if(!auth?.user?.id||!auth?.access_token)throw Error('Invalid account session');
   sessionStorage.setItem(SESSION_KEY,JSON.stringify(auth));account=auth.user.id;
   // Do not read unscoped legacy storage. Only load from the signed-in account.
-  const rows=await cloud('user_app_snapshots?select=payload&user_id=eq.'+encodeURIComponent(account)+'&limit=1');
+  const rows=await cloud('user_app_snapshots?select=payload,updated_at&user_id=eq.'+encodeURIComponent(account)+'&limit=1');
+  snapshotVersion=rows[0]?.updated_at??null;
   const cloudValues=rows[0]?.payload||{};
   const pending=readPending(account);
   // Only locally queued edits can override server data; normal cached rows cannot.
