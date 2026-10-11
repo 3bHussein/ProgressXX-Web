@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## Latest CI work — 2026-10-12
+
+Full UI GitHub Actions now additionally runs `tests/account-pages-snapshot-sync.cjs`, `tests/daily-history-supabase-hydration.cjs`, `tests/weight-table-bridge.cjs` (workflow commit `e53bf90ac1e9a83aa9338339fd87cc52f4ce9940`). Inspect latest CI conclusion before marking complete. This is mocked synchronization and browser-context coverage, not two real accounts. Do not resume `SECURITY-DEFERRED-2026-10-12` without user request. Next prioritize Food and Workout sync regression tests. See DEVELOPMENT-LOG.
+
 ## Current priority and pause marker — SECURITY-DEFERRED-2026-10-12
 
 User explicitly **paused** staging, privilege-migration application and advanced two-user RLS testing. Do not create paid Supabase resources or run this migration until user asks to resume. It is still a **P0 commercial-launch blocker**, not a pass. Full details in [DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) and [ROADMAP](../ROADMAP.md). When user says `Resume SECURITY-DEFERRED-2026-10-12`, revisit the outstanding security audit. For now continue safe application UX, Food/Daily/Workout/Weight synchronization test improvements, mobile functionality and performance, logging each completed change.
