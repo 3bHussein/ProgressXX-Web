@@ -22,6 +22,15 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Food restart issue confirmed, diagnostic added
+
+- **CI:** [Full UI #38180431308](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38180431308) FAILED with `Food offline queue or local product lost across app restart`. Retrieved job log; failure at `scripts/smoke-full-ui.cjs:159`.
+- **Deploy:** [GitHub Pages #38180431218](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38180431218) succeeded; do not confuse deployment success with app regression passing.
+- **Code:** `scripts/smoke-full-ui.cjs` now emits structured queue, in-memory product and persisted product diagnostics on failure; commit `1ec489976ec4b145ea770b21515fcb0dbbdc8afa`. This is diagnostic-only, **not a confirmed fix**.
+- **Data:** No production database writes; deferred security checkpoint remains on hold.
+- **Next:** Retrieve the next failed/passing job logs, identify whether missing queue or missing local product and repair the correct startup hydration path; do not weaken assertions.
+
+
 ### 2026-10-12 — Investigate failed Food restart-recovery smoke
 
 - CI #38180320704 **FAILED** at Full UI browser smoke; GitHub Pages deployment #38180320858 **SUCCEEDED**. Failure should not be reported as a passing recovery test. Original log unavailable through current connector; likely test race identified by inspection, not yet proven as root cause.
