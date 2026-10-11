@@ -147,12 +147,21 @@ const {chromium}=require('playwright');
    pxFoodQueue('product',id);
    await pxFlushFoodOutbox();
    const pendingAfterFailure=pxFoodOutbox().some(x=>x.id===id&&x.type==='product');
-   await pxFlushFoodOutbox();
-   const pendingAfterSuccess=pxFoodOutbox().some(x=>x.id===id&&x.type==='product');
-   return {pendingAfterFailure,pendingAfterSuccess};
+   return {pendingAfterFailure};
  });
+ if(!retry.pendingAfterFailure)throw Error('Food outbox lost operation after temporary server failure');
+ // Simulate app restart between failure and retry: both queued operation and local row must survive.
+ await page.reload({waitUntil:'domcontentloaded'});
+ await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:15000});
+ const pendingAfterRestart=await page.evaluate(()=>({
+   queued:pxFoodOutbox().some(x=>x.id==='qa-outbox-retry'&&x.type==='product'),
+   local:foodProducts.some(x=>x.id==='qa-outbox-retry')
+ }));
+ if(!pendingAfterRestart.queued||!pendingAfterRestart.local)throw Error('Food offline queue or local product lost across app restart');
+ await page.evaluate(()=>pxFlushFoodOutbox());
+ const pendingAfterSuccess=await page.evaluate(()=>pxFoodOutbox().some(x=>x.id==='qa-outbox-retry'&&x.type==='product'));
  await page.unroute('**/rest/v1/food_products?**');
- if(!retry.pendingAfterFailure||retry.pendingAfterSuccess)throw Error('Food outbox failed to retain and retry temporary server failure');
+ if(pendingAfterSuccess)throw Error('Food outbox failed to retry after app restart');
  if(productWrites.filter(x=>x.source_id==='qa-outbox-retry').length!==1)throw Error('Food outbox retry duplicated or lost product');
  const logReply=await page.evaluate(async()=>apiCall('food_log_upsert',{name:'QA only',id:'qa-log-record'}));
  if(!logReply?.ok)throw Error('Food log Supabase bridge failed: '+JSON.stringify(logReply));
