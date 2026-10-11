@@ -482,7 +482,7 @@ function renderTemplateEditor(){
   const heading=document.createElement('label');heading.textContent='Day '+(i+1);
   const title=document.createElement('input');title.value=day.title;title.maxLength=120;title.required=true;title.setAttribute('aria-label','Day name');title.oninput=()=>day.title=title.value;
   const exlabel=document.createElement('label');exlabel.textContent='Exercises — one per line: Name | Sets | Reps';
-  const input=document.createElement('textarea');input.rows=4;input.value=day.exercises.map(e=>e.name+' | '+e.sets+' | '+e.reps).join('\n');input.setAttribute('aria-label','Day exercises');
+  const input=document.createElement('textarea');input.rows=4;input.value=day.raw===undefined?day.exercises.map(e=>e.name+' | '+e.sets+' | '+e.reps).join('\n'):day.raw;input.setAttribute('aria-label','Day exercises');
   input.oninput=()=>{day.raw=input.value};
   const buttons=document.createElement('div');buttons.className='templateRow';
   for(const [caption,action] of [['↑ Up',()=>{if(i){[templateDraft[i-1],templateDraft[i]]=[templateDraft[i],templateDraft[i-1]];renderTemplateEditor()}}],['↓ Down',()=>{if(i<templateDraft.length-1){[templateDraft[i],templateDraft[i+1]]=[templateDraft[i+1],templateDraft[i]];renderTemplateEditor()}}],['Remove',()=>{if(confirm('Remove this day from the editor?')){templateDraft.splice(i,1);renderTemplateEditor()}}]]){
