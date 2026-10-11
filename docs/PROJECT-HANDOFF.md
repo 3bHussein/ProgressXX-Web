@@ -29,6 +29,11 @@
 ## Latest deploy confirmed (2026-10-12)
 ## Current persistence continuation (2026-10-12)
 ## Logout/login mock fixture fix (2026-10-12)
+## Current QA follow-up — 2026-10-12
+
+Full UI #38183861962 passed after mock snapshot fixture fix. Added Food library, diary and queue state diagnostics around sign-out/sign-in in commit `5ee366c7e7f2ddf60cae7bbf779059787bd15dd8`, but this does not yet certify Food/Daily end-to-end persistence. Check new CI. No production DB changes; security review remains deferred.
+
+
 
 CI #38183773942 failed due to test fixture TypeError on `Object.keys(savedCloudPayload)` after mock returned empty/missing payload. Test-only fix `53c9829090ab24d9285115b1a8758fbf0c4f1cec`; fresh CI pending. Pages #38183773691 passed; no production data changed. Security deferred remains.
 
