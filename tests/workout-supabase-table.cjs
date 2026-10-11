@@ -5,7 +5,6 @@ assert.ok(start>0&&end>start,'Workout REST bridge missing');
 const account='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const original={source_id:'prior-import',user_id:account,day_name:'OLD',exercise_name:'Historic exercise'};
 let records=[original],calls=[];
-const get=path=>{const url=new URL('https://qa.invalid/rest/v1/'+path);const source=url.searchParams.get('source_id')||'';return records.filter(x=>!source||source.startsWith('eq.')?(!source||x.source_id===source.slice(3)):source.startsWith('like.')?x.source_id.startsWith(source.slice(5,-1)):true)};
 async function cloud(path,method='GET',body){
  calls.push({path,method,body});
  const url=new URL('https://qa.invalid/rest/v1/'+path);
