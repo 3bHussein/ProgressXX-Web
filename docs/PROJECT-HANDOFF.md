@@ -7,6 +7,11 @@
 ## Latest 2026-10-12 — Food server retry coverage
 
 ## Current verification / follow-up — 2026-10-12
+## Follow-up — 2026-10-12
+
+The Food restart-recovery test failed CI #38180320704; Pages #38180320858 succeeded. Test was amended in commit `6e5b9454b2dbc46eb0bbe9784d0a9941b326f9f9` to persist local row and keep simulated 503 until after reload; result is not yet verified. Read newest DEVELOPMENT-LOG and inspect latest CI before further changes. No production data altered.
+
+
 
 New Food mock regression (commit `6a4134bfd113df58c784783e99ee12ab45a525e5`) requires offline queued product and its local record to survive full page reload after simulated HTTP 503, then retry once. CI result pending; diagnose if red. Full UI smoke #38180217072 passed before this change. Pages run #38180217307 failed at deploy step despite successful build; check latest deployment status. Keep security work deferred.
 
