@@ -22,6 +22,15 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Food queued-row recovery verified by CI
+
+- Full UI regression run [#38180732086](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38180732086) **SUCCESS**, including Food offline queued-row reload recovery after runtime hydration fixes.
+- GitHub Pages [#38180731906](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38180731906) **SUCCESS**.
+- Runtime fix commits: `5c78be9afcf1318b29f8b5040a9ee5e459b87c31`, `4a2c9d22b0967283b215454b5a5f6706ee9e048b`.
+- Tests simulate a backend; cross-device real-account confirmation remains outstanding. No direct production database writes by assistant.
+- Next: strengthen regression for pending Food diary hydration and verify actual mobile UX; respect `SECURITY-DEFERRED-2026-10-12`.
+
+
 ### 2026-10-12 — Fix Food queued-row hydration after restart
 
 - **Confirmed CI failure:** #38180555740: queue present, persisted Food product present, but in-memory `foodProducts` absent after reload. Failure was in account-scoped state hydration, not storage deletion.
