@@ -47,6 +47,14 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Offline reconnect browser mock contract
+
+- Verified earlier Pages [#38213131525](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38213131525) SUCCESS; Full UI #38213131256 was still running at check. Previous Full UI #38213128534 SUCCESS.
+- Added `tests/offline-reconnect-browser-contract.cjs` (`9a7e4aabdbc8fff17062112bbebbd41062aee58d`) and CI registration (`97aec49701db0464bb85f57c68eea459c8e694cf`). Isolated Chromium JavaScript mock verifies offline pending delete stays queued, reconnect acknowledges it once, stale restoration gets conflict 409, and synthetic preview uses no browser storage.
+- **Scope limitation:** does not exercise the real production offline queue/Supabase, actual network loss, persistent reload or cross-device propagation. No application or database change; fresh CI/deployment NOT VERIFIED.
+- Commercial sync P0 remains OPEN; subjective readiness 55–65% and conditional beta/commercial estimates unchanged. Paid security checkpoint deferred but normal development continues.
+- **Exact next step:** inspect latest Full UI/Pages run, fix regression if any; extend mock tests to persistence across reload/duplicate delivery and identify real production outbox hooks before asserting data safety.
+
 ### 2026-10-12 — Concurrent offline edit contract and safe-production acceptance checklist
 
 - Verified prior main Full UI [#38212922901](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38212922901) SUCCESS and Pages [#38212922692](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38212922692) SUCCESS.
