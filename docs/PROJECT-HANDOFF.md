@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Batched deletion conflict contract QA
+
+Last confirmed Full UI #38212635321 and Pages #38212635346 SUCCESS. In one batch added mock conflict REST contract `tests/sync-delete-resolution-api-contract.cjs` (`69d783e`), strict no-persistence UI reload assertions (`1de6ddc`), and CI registration (`b1aef87`). Synthetic 409 stale and 403 wrong-user behavior is specification only; NOT production API or RLS proof. New CI unverified, no real data changed. Cross-device sync P0 OPEN; commercial readiness rough 55–65% unchanged. Paid-security work remains deferred/nonblocking for development. Next inspect Actions, then mock offline delete replay.
+
 ## 2026-10-12 — Read-only deletion conflict preview across four data domains
 
 Prior Full UI #38212177834, Pages #38212178030 SUCCESS. Added `prototypes/sync-delete-conflict-preview.html` (`5d16187`), 320/390/768 Chromium regression `tests/sync-delete-conflict-preview-browser.cjs` (`66181f4`), CI wiring `78d2912`. Shows keep deletion / restoration preview / defer for Food, Daily, Workout, Weight with no storage or network writes. New CI NOT VERIFIED. Do NOT call this production sync fix; production CAS still unapplied, P0 sync OPEN, commercial estimate unchanged. Next review CI and non-writing conflict contract tests.
