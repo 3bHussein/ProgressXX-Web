@@ -47,6 +47,10 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — CAS delete + stale unrelated edit acceptance contract
+
+Previous Pages #38234329041 SUCCESS; Full UI #38234329379 still running at first check; earlier Full UI #38234324518 SUCCESS. Added synthetic two-device scenario `tests/cas-delete-unrelated-edit-acceptance.cjs` (`bb596961`) and workflow registration (`6a41b9f2`): server CAS rejects stale unrelated update after remote Daily deletion; pending draft survives 409, reviewed merge preserves deletion and workout edit; stale replay is refused. No production CAS, RLS, schema or real data changed. Latest CI unverified. P0 real conflict protection remains OPEN, commercial readiness 55–65% unchanged, paid security work deferred/nonblocking. Next: inspect Actions and fix failing synthetic test if needed.
+
 ## 2026-10-12 — Conflict-safe rollout plan, no production change
 
 Checked Full UI #38234118749 and Pages #38234118392: both still in progress when checked, no verified result yet. Added `docs/CONFLICT-SAFE-ROLLOUT-PLAN.md` (`6510e9ed`) detailing safe prerequisites, atomic server-side version/CAS and ownership, 409 client queue preservation, deletion tombstones, review flows, real staging acceptance, gated rollback and explicit owner approval. Documentation only; no app code, database, migrations, credentials or live user data changed. Standalone conflict preview remains fake UX. P0 cross-device overwrite/RLS OPEN, commercial readiness estimate 55–65% unchanged, paid security stage deferred/nonblocking. Next: check CI and continue free tests without claiming live protection.
