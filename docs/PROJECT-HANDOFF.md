@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Paid security exception is non-blocking for development
+
+Owner explicitly says do not pause or delay other ProgressX work for paid staging/security costs. Keep `SECURITY-DEFERRED-2026-10-12` deferred (no paid resources, migrations, or unauthorized security testing), but continue free mock QA, sync tests, product improvements and documentation without waiting for budget. P0 security must STILL pass before actual commercial sale or external-user onboarding. Existing 55–65% and timeline estimates unchanged. Full UI #38210413129 and Pages #38210413145 succeeded; browser auth wrong-account regression added at `1851cb3`, fresh CI unverified. Next check new CI and continue free sync/conflict work.
+
 ## 2026-10-12 — Persistent commercial readiness tracker (owner instruction)
 
 Owner requests the commercial-release time/completion estimate be stored in `docs/DEVELOPMENT-LOG.md` and updated **after each completed milestone**. Added baseline tracker in commit `8b36d95b699adedabdc4e7f76e1d9e32b4380f4c`: subjective 55–65% product-readiness estimate, approximately 4–8 weeks to private beta and 10–16 weeks to first commercial release, all conditional, **not verified completion metrics or deadlines**. Track five gates: account/RLS, persistence and synchronization, QA, operations/billing/legal, and private beta; use evidence-backed OPEN/IN PROGRESS/VERIFIED statuses. Prior Full UI #38210119914 and Pages #38210118315 SUCCESS. Commercial release NOT APPROVED. Do not resume `SECURITY-DEFERRED-2026-10-12` without owner authorization. After EVERY completed milestone update Development Log, this handoff and ROADMAP with actual CI, deployed SHA and effect on data; do not raise percent automatically. Next technical gate: browser concurrency follow-up and P0 data safety.
