@@ -47,6 +47,14 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Actual pending-sync UI plus CI regression repairs
+
+- Previous Full UI [#38217432254](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38217432254) FAILED, while Pages #38217432714 SUCCESS. GitHub logs identified missing `syncRetryFailures` in extracted flush mocks and `timer` in retry-backoff mock after source change; not evidence of a production runtime failure.
+- Repaired synthetic VM/Chromium harnesses in `tests/production-flush-failure-retry-contract.cjs`, `tests/production-flush-chromium-contract.cjs`, `tests/production-sync-retry-backoff.cjs`; updated full-app 503 mock expected status language. Commits `419b24b`, `91929d1`, `6a8d6a0`, `9ad9a6d`, `65db42b`, `30bd9a9`.
+- **Production root UI update `5c94267`**: account-scoped storage changes now display `Saved locally · waiting to sync`; failed upload displays `Saved locally · sync pending` and reason; successful upload shows Synced only when no newer in-flight edits exist. This is a status/UX accuracy fix, not conflict detection or atomic CAS.
+- Latest CI/Pages run **NOT VERIFIED** as logged. No production Supabase data/schema, real user account or local browser records touched by deployment process. Sync P0 OPEN and rough commercial readiness **55–65% unchanged**. `SECURITY-DEFERRED-2026-10-12` paid checkpoint remains deferred/nonblocking.
+- Next: check latest CI, diagnose any failing smoke assertions, verify local/remote/pending UI and determine realistic no-cost conflict mitigation without claiming cross-device safety.
+
 ### 2026-10-12 — Production retry backoff for transient sync failures
 
 - Verified previous Full UI [#38216887326](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38216887326) SUCCESS and Pages [#38216887034](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38216887034) SUCCESS. Two-browser test now reports observed state, does not assert every schedule update resurrects Daily.
