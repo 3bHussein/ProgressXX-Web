@@ -420,7 +420,8 @@ Initial root keyboard/reduced-motion/mobile-zoom regressions VERIFIED at 320/390
 
 - [ ] E2E in Chromium, Firefox and WebKit; mobile widths and touch navigation; real Android devices.
 - [ ] Verify Food, barcode manual/scanner, anatomy illustrations and workout library image links.
-- [ ] Validate PWA install/update, service worker rollback, stale cached assets, offline mode and browser permission denial.
+- [x] Public PWA root/query offline shell, scoped cache update/error retention and API exclusion (PR #19; Chromium/local and CI verified).
+- [ ] Validate real-device PWA install/update, service worker rollback, offline authenticated data and browser permission denial.
 - [ ] Review GitHub Actions required check configuration so failing tests prevent production publish; do not assume current checks cover all scenarios.
 - [ ] Error boundaries/recovery: a broken optional widget must not break login or core sync.
 - [ ] Accessibility: keyboard, contrast, labels, Arabic RTL and reduced-motion support where relevant.
@@ -494,3 +495,10 @@ Keep this table honest; a green CI run alone is not proof that the product is pr
 Fixed `sw.js` root-folder and query-string offline fallback using canonical scope-local public asset keys; v2 cache update excludes API/other paths, waits for cache writes, and retains the working shell after HTTP errors/redirects. No root `index.html`, browser account storage or database changes. Added VM lifecycle/cache regression and actual Chromium offline-shell regression to Full UI CI. Unrelated caches and synthetic draft localStorage are preserved; zero Supabase requests in the offline browser fixture.
 
 Local verification: 62/63 checks passed in the parallel sweep; full UI smoke initially timed out at mock sign-out, then passed on an isolated rerun without code changes. Both new PWA tests PASS. Remote CI/deployment NOT VERIFIED pending this PR. Physical Android install, cross-engine support, offline authenticated data and rollback remain unverified. Database experiments remain paused; commercial launch NOT APPROVED. Next: verify PR/Main UI checks and deployed root/sw bytes, then continue mobile/PWA permission and update checks with mocks.
+
+
+## 2026-10-13 Cairo — PR #19 verified PWA closeout
+
+[PR #19](https://github.com/3bHussein/ProgressXX-Web/pull/19), source `74c9a514`, merged as `86a5c13a611c97f567a243c2ea1f4be565be500f`. PR [Full UI 38312547067](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38312547067) and [Fast 38312547060](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38312547060) SUCCESS. Matching main [Full UI 38312780947](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38312780947), [Deploy Full App 38312780922](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38312780922) and [Pages 38312780450](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38312780450) SUCCESS. No PostgreSQL workflow triggered; main Fast has path filters and was not triggered for this service-worker-only runtime change.
+
+Live root and `sw.js` fetched over HTTP and compared byte-for-byte with source: root SHA-256 `dea490dc4038b1a6bd0d12f5d027333c29844c26f0c243bd1eeebfb03a11fb9f`, worker SHA-256 `323f5022828b49efc6b39105e1c53e92716f73e74a9da738aec0dd1d56db4515`. Public offline shell regression VERIFIED locally and in CI; this does not certify offline authenticated data or real-device PWA installation. No database requests/experiments, schema/grants/RLS changes or user-data migration. Database pause remains in force; Milestone 2 incomplete and commercial launch NOT APPROVED. Next: mock-only PWA permission denial/update and further mobile accessibility; owner-device Android acceptance remains outstanding.

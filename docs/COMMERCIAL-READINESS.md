@@ -17,7 +17,7 @@
 | SYNC-02 | P0 | Two real devices: Food, Food Library, Saved Meals, Daily, Workout and Weight add/edit/delete, refresh and sign-out/in | NOT VERIFIED |
 | SYNC-03 | P0 | Offline retry, simultaneous write, deletion resurrection and conflict-resolution acceptance | NOT VERIFIED |
 | ACCOUNT-01 | P0 | Signup, confirmation, login, refresh, reset and deletion verified; old restored-data filter error retested | NOT VERIFIED |
-| QA-01 | P1 | Latest required Full UI, fast contracts and Pages runs green for same deployed SHA | VERIFIED for UI runtime e772ab3 — matching Full UI/Fast/Pages and byte-exact root deployment; PostgreSQL experiments paused |
+| QA-01 | P1 | Latest required Full UI, fast contracts and Pages runs green for same deployed SHA | VERIFIED for PWA runtime 86a5c13 — PR Full UI/Fast and main Full UI/Deploy/Pages SUCCESS; root/worker byte-exact; database experiments paused |
 | MOBILE-01 | P1 | Real Android and responsive PWA checks, accessible navigation and cross-browser smoke | NOT VERIFIED |
 | OPS-01 | P1 | Restore/rollback playbook, monitoring, incident owner and support route | NOT VERIFIED |
 | LEGAL-01 | P1 | Reviewed privacy notice, terms, retention/deletion process and country-specific legal requirements | NOT VERIFIED |
@@ -163,3 +163,10 @@ Milestone 2 remains IN PROGRESS. Sequential PostgreSQL 17 CAS reference run [#38
 Fixed `sw.js` root-folder and query-string offline fallback using canonical scope-local public asset keys; v2 cache update excludes API/other paths, waits for cache writes, and retains the working shell after HTTP errors/redirects. No root `index.html`, browser account storage or database changes. Added VM lifecycle/cache regression and actual Chromium offline-shell regression to Full UI CI. Unrelated caches and synthetic draft localStorage are preserved; zero Supabase requests in the offline browser fixture.
 
 Local verification: 62/63 checks passed in the parallel sweep; full UI smoke initially timed out at mock sign-out, then passed on an isolated rerun without code changes. Both new PWA tests PASS. Remote CI/deployment NOT VERIFIED pending this PR. Physical Android install, cross-engine support, offline authenticated data and rollback remain unverified. Database experiments remain paused; commercial launch NOT APPROVED. Next: verify PR/Main UI checks and deployed root/sw bytes, then continue mobile/PWA permission and update checks with mocks.
+
+
+## 2026-10-13 Cairo — PR #19 verified PWA closeout
+
+[PR #19](https://github.com/3bHussein/ProgressXX-Web/pull/19), source `74c9a514`, merged as `86a5c13a611c97f567a243c2ea1f4be565be500f`. PR [Full UI 38312547067](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38312547067) and [Fast 38312547060](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38312547060) SUCCESS. Matching main [Full UI 38312780947](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38312780947), [Deploy Full App 38312780922](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38312780922) and [Pages 38312780450](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38312780450) SUCCESS. No PostgreSQL workflow triggered; main Fast has path filters and was not triggered for this service-worker-only runtime change.
+
+Live root and `sw.js` fetched over HTTP and compared byte-for-byte with source: root SHA-256 `dea490dc4038b1a6bd0d12f5d027333c29844c26f0c243bd1eeebfb03a11fb9f`, worker SHA-256 `323f5022828b49efc6b39105e1c53e92716f73e74a9da738aec0dd1d56db4515`. Public offline shell regression VERIFIED locally and in CI; this does not certify offline authenticated data or real-device PWA installation. No database requests/experiments, schema/grants/RLS changes or user-data migration. Database pause remains in force; Milestone 2 incomplete and commercial launch NOT APPROVED. Next: mock-only PWA permission denial/update and further mobile accessibility; owner-device Android acceptance remains outstanding.
