@@ -66,6 +66,10 @@ Expanded `tests/production-flush-failure-retry-contract.cjs` (`4218067`) for wor
 
 `tests/production-flush-chromium-contract.cjs` extended in `4a51dc4` with snapshot success and mock Workout Schedule mirror failure, asserting pending not cleared. Previous Full UI #38215604331 PASS; fresh CI NOT VERIFIED. This is synthetic browser test only; P0 sync OPEN and commercial estimate unchanged.
 
+## 2026-10-12 — Full app network-route mock for failed sync/reload
+
+`tests/full-app-sync-503-reload-browser.cjs` (`b4f06de`), CI `e6ebae2`: real browser opens production root with fake Supabase routes, verifies POST 503 preserves pending edit across reload, then manual successful retry. Fresh CI not verified; P0 data safety remains OPEN, percent 55–65% unchanged. Paid security exception remains nonblocking.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
