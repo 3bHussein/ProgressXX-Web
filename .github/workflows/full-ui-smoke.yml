@@ -25,6 +25,7 @@ jobs:
           node scripts/smoke-full-ui.cjs
           node tests/account-pages-snapshot-sync.cjs
           node tests/daily-history-supabase-hydration.cjs
+          node tests/daily-concurrent-conflict-regression.cjs
           node tests/weight-table-bridge.cjs
           node tests/workout-supabase-table.cjs
           node tests/workout-schedule-table-mirror.cjs
