@@ -20,6 +20,14 @@ const {createConflictBoundary}=require('../scripts/conflict-boundary.cjs');
  const bad=createConflictBoundary({accountId:'C',storage,fetchLatest:async()=>null});
  await assert.rejects(bad.handle({status:409,draft}),/Verified remote revision/);
  assert.equal(bad.pending(),null);
+ for(const data of [undefined,null,[],42]){
+  const invalid=createConflictBoundary({accountId:'invalid-'+String(data),storage,fetchLatest:async()=>({revision:9,data})});
+  await assert.rejects(invalid.handle({status:409,draft:{daily:{a:1}}}),/Verified remote snapshot/);
+  assert.equal(invalid.pending(),null);
+ }
+ const negative=createConflictBoundary({accountId:'negative',storage,fetchLatest:async()=>({revision:-1,data:{}})});
+ await assert.rejects(negative.handle({status:409,draft:{daily:{a:1}}}),/Verified remote revision/);
+ assert.equal(negative.pending(),null);
  console.log('PASS: isolated pending-conflict boundary has no replay, no account bleed and safe failed fetch');
  console.log('NOT LIVE: production index.html does not import the boundary');
 })().catch(e=>{console.error(e);process.exitCode=1});
