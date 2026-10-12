@@ -21,6 +21,31 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Deployment URL:** https://3bhussein.github.io/ProgressXX-Web/
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
+## Commercial readiness tracker — baseline 2026-10-12 (update after each completed milestone)
+
+**Purpose:** Keep a durable, evidence-backed progress record toward selling ProgressX. The owner requests updating this tracker **every time a milestone or part is completed**, not just mentioning it in chat. Append dated evidence entries below and update this living summary; preserve all earlier chronological history.
+
+**Initial rough engineering estimate, NOT a tested completion score:** **55–65%** toward an initial commercial product. This reflects existing feature breadth more than verified security/reliability. It is subjective and must not be represented as an official metric. **Private beta:** approximately **4–8 weeks**; **initial commercial release:** approximately **10–16 weeks** of sustained development and QA, conditional on no major architectural findings, approved staging/security work, and successful beta. Timelines may shift substantially; phases overlap and the estimates are not deadlines. **Commercial launch approval: NO.**
+
+**Latest verified technical baseline:** Full UI [#38210119914](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38210119914) SUCCESS; GitHub Pages [#38210118315](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38210118315) SUCCESS, both on `0f66010`. A successful CI run does not certify real-user data isolation, backups or commercial readiness.
+
+| Milestone | Initial estimate | Current status / acceptance requirement |
+| --- | --- | --- |
+| P0 Account and database safety | 2–3 weeks | **OPEN / SECURITY DEFERRED** — two-user direct API denial for reads/writes, RLS and grants review, real login/password reset, restore drill |
+| P0 Persistence and cross-device sync | 2–3 weeks | **OPEN** — full Food/Daily/Workout/Weight/Saved Meals CRUD lifecycle on two real devices, offline retry, no deletion resurrection, atomic conflict protection |
+| P1 Mobile, performance and QA | 1–2 weeks | **OPEN** — Android/PWA, Chromium/Firefox/WebKit, real device behavior, performance/load, accessibility |
+| P1 Operations, privacy and commercial infrastructure | 2–3 weeks | **OPEN** — monitoring, backup/restore, privacy/terms/account deletion, subscriptions with server-verified entitlement and webhook, customer support |
+| P1 Private beta and release validation | 3–5 weeks | **OPEN** — opt-in 5–10 separate-user testers, bug triage, release/rollback evidence and P0/P1 sign-off |
+
+**Critical constraint:** `SECURITY-DEFERRED-2026-10-12` is still paused by owner instruction. Do not spend on staging, apply privilege migrations or declare sale-ready without explicit authorization. Remaining estimates assume this gate is eventually resumed and passed.
+
+**Required update procedure after EVERY completed part:**
+1. Add an append-only dated Development Log entry with scope, changed files, commit/PR, CI links and actual results, deployment, user data impact, remaining risk and exact next step.
+2. Update the corresponding row above: `OPEN` → `IN PROGRESS` → `VERIFIED` **only with evidence**. Record what portion was verified; never claim a full phase based on one unit test.
+3. Update the commercial percentage/timeline **only if supported by meaningful new scope or evidence**; otherwise explicitly keep the baseline estimate unchanged. Never automatically add percentages per commit.
+4. Synchronize current state with `ROADMAP.md` and `docs/PROJECT-HANDOFF.md`, so the next chat starts from the true next gate.
+5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
+
 ## Entries (newest first)
 ### 2026-10-12 — Browser concurrent Supabase token renewal mock added
 
