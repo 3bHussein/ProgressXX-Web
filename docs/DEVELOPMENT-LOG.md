@@ -47,6 +47,12 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Fail-closed commercial gate correction
+
+Updated `tests/sync-commercial-release-gate.cjs` in commit `6abde928`: a release gate now requires explicitly verified boolean evidence for every prerequisite, including an explicit `false` for unconditional snapshot upserts. Missing fields and string values like `"true"` or `"false"` no longer count as proof. Added assertions for missing/invalid fields. This is a policy unit test, NOT evidence that production meets the conditions. GitHub Actions and local test execution for this commit: NOT VERIFIED (GitHub run index unavailable; container outbound GitHub network unavailable). No production `index.html`, Supabase schema, user data, migrations, auth grants or settings were changed. P0 CAS/RLS, two-device verification and restore drill remain OPEN. Commercial readiness rough estimate 55–65% unchanged; deferred paid security work remains nonblocking for ordinary development.
+
+Exact next step: inspect CI for `6abde928`, run the updated Node test and fix any failure. Then prioritize tangible non-destructive production sync/data improvements backed by real browser tests.
+
 ## 2026-10-12 — Five-gate commercial sync classifier (verified locally)
 
 Added `tests/sync-commercial-release-gate.cjs` (4f97468b) and wired into Fast conflict CI (a92f938f) and Full UI CI (9eed707c). The standalone pure Node test explicitly rejects sale-readiness unless all five independent checks are satisfied: no unconditional snapshot upsert, verified server CAS, verified two-account RLS, verified two-device data lifecycle, and verified backup restore. The classifier is not a runtime production gate or security certification; it prevents confusion between passing mock checks and actual launch acceptance.
