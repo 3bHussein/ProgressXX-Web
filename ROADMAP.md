@@ -124,6 +124,10 @@ CI #38223040123 failed at startup smoke due to unhandled `Not authenticated`; `s
 
 Previous Pages #38224272376 SUCCESS; Full UI #38224271404 still running when checked, with earlier #38224263039 SUCCESS. Tightened mobile Anatomy smoke test (`0f4382d`) to explicitly assert the Daily alarm overlay has disappeared after the normal dismiss action before performing actual mobile pointer clicks. No production code, data, Supabase schema or RLS changes. New CI unverified; commercial readiness 55–65% rough baseline unchanged, synchronization and security release gates remain OPEN; paid security work still deferred/nonblocking. Next: inspect latest CI and investigate any test failure.
 
+## 2026-10-12 — Daily Reminder dialog accessibility
+
+Production `index.html` `bda6928` adds labelled dialog semantics and scoped Escape dismissal. Browser test `ac45bb2` wired to CI `69b948e`; new run unverified. No database changes; readiness 55–65% unchanged, security/sync P0 still open.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
