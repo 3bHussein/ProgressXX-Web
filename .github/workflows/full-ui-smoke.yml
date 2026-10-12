@@ -32,6 +32,8 @@ jobs:
             tests/mobile-motion-anatomy-accessibility.cjs \
             tests/pwa-shell-cache-contract.cjs \
             tests/pwa-offline-shell-browser.cjs \
+            tests/pwa-install-permission-recovery-browser.cjs \
+            tests/pwa-update-failure-browser.cjs \
             tests/auth-retry-browser.cjs \
             tests/auth-refresh-singleflight.cjs \
             tests/auth-refresh-browser-concurrency.cjs \
