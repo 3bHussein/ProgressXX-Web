@@ -6,5 +6,5 @@ assert.match(html,/aria-live="polite"/);
 assert.match(html,/@media\(max-width:620px\)/);
 assert.match(html,/PROTOTYPE ONLY/);
 assert.match(html,/No changes saved/);
-assert.doesNotMatch(html,/<script[^>]*src=|fetch\(|https?:\\/\\/|localStorage\.|sessionStorage\./i,'Standalone prototype must have no external calls or storage mutation');
+assert.doesNotMatch(html,/<script[^>]*src=|fetch\(|https?:\/\/|localStorage\.|sessionStorage\./i,'Standalone prototype must have no external calls or storage mutation');
 console.log('PASS: Daily conflict prototype exposes four accessible, preview-only actions and does not access live data');
