@@ -58,6 +58,10 @@ New `tests/production-flush-failure-retry-contract.cjs` (`29d3d59`), CI `1b568c8
 
 Expanded `tests/production-flush-failure-retry-contract.cjs` (`4218067`) for workout mirror failure and edits during upload; previous CI #38214690902 PASS, new run NOT VERIFIED. Synthetic only, no production release claim. Data sync P0 OPEN; commercial estimate unchanged.
 
+## 2026-10-12 — Production flush exercised in Chromium with synthetic dependencies
+
+`tests/production-flush-chromium-contract.cjs` (`83b530c`) and CI `f21cbfd` cover failed POST, retry acknowledgment and concurrent user edit using production `flush()` extracted into browser mock. Fresh CI not yet verified, not live Supabase or actual app route test. Commercial estimate 55–65% unchanged; sync P0 still OPEN and paid security exception unchanged.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
