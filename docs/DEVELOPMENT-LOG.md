@@ -47,6 +47,13 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Fix failing two-device Chromium test's false assumption
+
+- Full UI run [#38216603946](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38216603946) **FAILED** while Pages #38216603412 SUCCEEDED. Workflow job log identified `tests/full-app-two-device-daily-resurrection.cjs` assertion expecting deleted Daily record resurrection; mock returned `false`. Other suite entries passed.
+- Fixed test in `d9360d80ecbeb8538a097fe927693e444319d571` to wait for actual device B Workout Schedule write to reach fake REST endpoint and report whether Daily record returns rather than assume unsafe outcome. This does **not** prove the full-snapshot protocol safe, nor resolve known theoretical last-writer-wins risk; scenario can fail to reproduce if device state/sequence differs.
+- New CI **NOT VERIFIED** yet. No production source, real accounts, schema or data changed. Commercial readiness 55–65% unchanged; cross-device P0 OPEN. Paid security checkpoint still deferred while other development continues.
+- Next: inspect new Actions; if passing, instrument the mock to verify exact stale B payload and consider production-safe visibility/warning rather than attempting unsafe unilateral merging.
+
 ### 2026-10-12 — Full-app two-browser stale Daily resurrection regression
 
 - Verified prior Full UI [#38216252905](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38216252905) and Pages [#38216251867](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38216251867) SUCCESS.
