@@ -7,7 +7,7 @@ function createReviewQueue({accountId,storage}){
  const key=keyFor(accountId);
  const owner=accountId.trim();
  function load(){const raw=storage.getItem(key);if(raw===null)return null;const record=JSON.parse(raw);if(!record||record.accountId!==owner||record.status!=='awaiting-review'||!record.draft)throw Error('Invalid conflict record');return clone(record)}
- function capture({draft,remote,revision}){if(!draft||typeof draft!=='object')throw Error('Draft required');const existing=load();if(existing)throw Error('Pending conflict already exists; review before replacing');const record={accountId:owner,status:'awaiting-review',draft:clone(draft),remote:remote==null?null:clone(remote),revision:revision??null};storage.setItem(key,JSON.stringify(record));return load()}
+ function capture({draft,remote,revision}){if(!draft||typeof draft!=='object')throw Error('Draft required');const existing=load();if(existing)throw Error('Pending conflict already exists; review before replacing');const record={accountId:owner,status:'awaiting-review',draft:clone(draft),remote:remote==null?null:clone(remote),revision:revision??null};storage.setItem(key,JSON.stringify(record));const persisted=load();if(!persisted||JSON.stringify(persisted)!==JSON.stringify(record))throw Error('Conflict draft not persisted');return persisted}
  function clearAfterAcknowledgement(approved){if(approved!==true)throw Error('Explicit acknowledged approval required');const existing=load();if(!existing)return false;if(typeof storage.removeItem!=='function')throw Error('Remove adapter required');storage.removeItem(key);if(storage.getItem(key)!==null)throw Error('Conflict removal not persisted');return true}
  return {load,capture,clearAfterAcknowledgement,key};
 }
