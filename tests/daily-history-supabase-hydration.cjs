@@ -49,3 +49,17 @@ vm.runInNewContext(s.slice(remindersStart,remindersEnd),reminderCtx);
  assert.equal(archiveCalls,1,'Existing reminder edits must not be overwritten');
  console.log('PASS: archived reminders hydrate only when account has no saved reminder list');
 })().catch(e=>{console.error(e);process.exitCode=1});
+
+const loaderStart=s.indexOf('function loadDailyReminders(){');
+const loaderEnd=s.indexOf('function saveDailyReminders(){',loaderStart);
+assert.ok(loaderStart>0&&loaderEnd>loaderStart,'Daily reminder loader missing');
+const reminderStore={'progressx-reminders':'[]'};
+const reminderLoadCtx={PXStore:{getItem:key=>reminderStore[key]??null},JSON,Array,clone:x=>JSON.parse(JSON.stringify(x)),DEFAULT_DAILY_REMINDERS:[{id:'default'}]};
+vm.runInNewContext(s.slice(loaderStart,loaderEnd),reminderLoadCtx);
+assert.equal(reminderLoadCtx.loadDailyReminders().length,0,'Explicitly empty account reminder list must remain empty');
+reminderStore['progressx-reminders']=JSON.stringify([{id:'qa-on-device',name:'User saved reminder'}]);
+assert.equal(reminderLoadCtx.loadDailyReminders()[0].id,'qa-on-device','Saved reminder should load from account');
+delete reminderStore['progressx-reminders'];
+assert.equal(reminderLoadCtx.loadDailyReminders()[0].id,'default','Defaults should appear only with missing account list');
+assert.match(s,/dailyReminders=loadDailyReminders\(\);\s*await window\.__legacyBoot\(\)/,'Rehydrate in-memory reminders after account login before rendering');
+console.log('PASS: account Daily reminder list loads saved and intentionally empty values before UI boot');
