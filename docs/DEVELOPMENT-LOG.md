@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Refresh expired session on startup before unlocking account
+
+- Previous Full UI [#38209115469](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38209115469) and Pages [#38209115679](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38209115679) SUCCESS.
+- Production root `index.html` commit `98d17e29d555590116a0aa8eb964ac531ab92c11` now renews expired/near-expiry cached auth via existing Supabase refresh token endpoint *before* activating an account. Requires valid future expiry and same user ID; failure leaves login gate visible and removes cached session only, not account-scoped data.
+- Browser test `tests/auth-retry-browser.cjs` commit `191f91d1ad3cd6f2a83dd33f650e19f8c4a3fbac` now covers refresh success, unchanged user identity, no redundant password login, and refresh failure returning to locked login UI. New CI and deployment NOT VERIFIED at this writing.
+- Production data: no Supabase migration/grant/row changes and no account history deletion. Risks: real refresh token rotation, concurrent requests and multi-user isolation not yet independently verified; `SECURITY-DEFERRED-2026-10-12` still on hold.
+- **Exact next step:** inspect fresh Full UI job logs and Pages deploy; fix failures without relaxing assertions, then evaluate session renewal concurrency using synthetic tests.
+
 ### 2026-10-12 — Reject expired cached session on reload, preserve account data
 
 - Prior main Full UI [#38204834720](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38204834720) SUCCESS and Pages [#38204834143](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38204834143) SUCCESS.
