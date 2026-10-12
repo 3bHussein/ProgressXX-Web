@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Fixed pending snapshot activation replay
+
+Prior Full UI #38218406646 and Pages #38218403472 passed. Production `activate()` `ca6bc5e` now marks a restored pending snapshot as unsynced (previously `savedRevision=revision` caused auto `flush()` no-op). Updated full app Chromium test `26b2457` requires automatic retry after reload, no manual Sync now button. Fresh CI not verified; cross-device P0 remains OPEN and intermittent auth error not proven resolved. Data/schema unchanged; 55–65% commercial estimate and paid security deferral unchanged.
+
 ## 2026-10-12 — Login retry regression investigation and sync status QA
 
 Previous Full UI #38217998624 failed: auth retry test saw uncaught `Not authenticated` during login; Pages succeeded. Enhanced full-app Chromium mock status assertions (`93966b94`) and auth-error stack logging (`7570ba36`). Fresh CI unverified. No production/data changes this step. Sync conflict P0 and authentication race remain open, commercial readiness 55–65% unchanged, security paid checkpoint deferred.
