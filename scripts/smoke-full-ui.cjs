@@ -359,6 +359,7 @@ const {chromium}=require('playwright');
  for(const width of [320,390]){
    await page.setViewportSize({width,height:780});
    await page.evaluate(()=>go('intelligence'));
+   await page.evaluate(()=>{if(document.getElementById('alarmOverlay')?.classList.contains('show'))dismissActiveAlarm()});
    for(const [id,expected] of [['pxAnatomyTabCoverage','coverage'],['pxAnatomyTabAtlas','atlas']]){
      await page.locator('#'+id).click({timeout:6000});
      const state=await page.evaluate(buttonId=>({
