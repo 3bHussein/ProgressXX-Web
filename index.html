@@ -9769,7 +9769,15 @@ window.__legacyBoot=init;
  try{
   const previous=JSON.parse(sessionStorage.getItem(SESSION_KEY)||'null');
   if(previous?.refresh_token&&previous?.user?.id){
-   auth=previous;void activate(previous).catch(e=>{reportAccountLoginError(e);gate.hidden=false;ready=false});
+   // Never restore an expired token as an authenticated workspace.
+   // Keep account-scoped pending data intact; user can sign in again.
+   const expiry=Number(previous.expires_at);
+   if(Number.isFinite(expiry)&&expiry>Math.floor(Date.now()/1000)){
+    auth=previous;void activate(previous).catch(e=>{reportAccountLoginError(e);gate.hidden=false;ready=false});
+   }else{
+    sessionStorage.removeItem(SESSION_KEY);
+    status.textContent='Session expired. Sign in again to restore your workspace.';
+   }
   }
  }catch{}
 })();
