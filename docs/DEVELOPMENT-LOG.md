@@ -22,6 +22,13 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — CAS simulation passes; Daily conflict UI recovery spec drafted
+
+- Full UI #38189120475 **SUCCESS**, Pages #38189120489 **SUCCESS** for prior simulated CAS contract.
+- Added `docs/DAILY-CONFLICT-RECOVERY-SPEC.md`, commit `9b9361278bd4933e45be3a69a2428313fe04bd3f`: proposed non-destructive conflict notice, field-by-field comparison, Keep Cloud / Keep Device / Merge / Later, durable local pending and retry against latest cloud baseline. **Design only; no conflict UI or server RPC deployed.**
+- Next requires explicit DB migration approval and authenticated integration tests before production CAS activation. No production data, schema, or existing sync flow changed. Paid security verification remains deferred (`SECURITY-DEFERRED-2026-10-12`).
+
+
 ### 2026-10-12 — CAS two-device contract simulation, no database changes
 
 - Confirmed Full UI #38188790240 SUCCESS and Pages #38188790364 SUCCESS for the prior unapplied SQL proposal.
