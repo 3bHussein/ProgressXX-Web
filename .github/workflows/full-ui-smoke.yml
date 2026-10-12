@@ -42,6 +42,7 @@ jobs:
             tests/production-stale-snapshot-release-gate.cjs \
             tests/live-sync-release-classifier.cjs \
             tests/sync-commercial-release-gate.cjs \
+            tests/backup-integrity-contract.cjs \
             tests/versioned-cas-reference-contract.cjs \
             tests/snapshot-cas-transition-contract.cjs \
             tests/cas-delete-unrelated-edit-acceptance.cjs \
