@@ -28,6 +28,10 @@ jobs:
           --health-retries 10
     steps:
       - uses: actions/checkout@v4
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y postgresql-client
       - name: Verify synthetic PostgreSQL CAS and deletion protection
         env:
           PGPASSWORD: test-only
