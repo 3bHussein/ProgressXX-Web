@@ -47,6 +47,14 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Two isolated browser sessions: pending recovery after reload
+
+- Verified prior Full UI [#38219664190](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38219664190) SUCCESS and Pages [#38219663464](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38219663464) SUCCESS.
+- Added `tests/two-context-pending-recovery-browser.cjs` (`59f83c15`) and CI registration (`8fc113c2`). Real root app runs in two isolated Chromium contexts with fake Supabase REST/auth. Device A encounters mock 503 and preserves a queued Daily reminder; after reload, automatic recovery uploads to the synthetic backend. Device B reloads and hydrates it from remote fake state. No user account, live Supabase or real records used.
+- New CI/deployment NOT VERIFIED at log time. The test verifies sequenced recovery, **not** concurrent delete conflict safety; production last-writer-wins P0 remains OPEN.
+- Rough commercial readiness 55–65% unchanged; paid security exception `SECURITY-DEFERRED-2026-10-12` remains deferred/nonblocking for normal development.
+- Next: inspect CI failure logs if any and fix; continue production conflict safety planning without applying schema changes.
+
 ### 2026-10-12 — Restore pending snapshot as unsynced, auto-retry without manual Sync Now
 
 - Verified previous Full UI [#38218406646](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38218406646) SUCCESS and Pages [#38218403472](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38218403472) SUCCESS. Previously intermittent auth retry `Not authenticated` was not reproduced on latest successful CI; root cause remains unproven, not marked fixed.
