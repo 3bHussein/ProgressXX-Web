@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Browser rejected-login then retry regression
+
+Created synthetic auth retry browser test `tests/auth-retry-browser.cjs` (`04f96b9`) and added it to Full UI CI (`a6e6dad`). Test rejects first login and checks gate/no writes, then accepts retry and checks activated app; no production code or user data touched. CI NOT VERIFIED. Next inspect Actions and diagnose any failures; real-account auth still not certified; security deferred.
+
 ## 2026-10-12 — Daily manual merge reload assertion
 
 Full UI #38190604096 and #38190623136 SUCCESS, Pages #38190627334 SUCCESS. Added explicit manual merge panel reset-after-reload check to isolated conflict prototype browser test (`d0a0169`); CI for this commit NOT VERIFIED. Next inspect Actions and proceed to mocked auth retry coverage. No production or database changes; security deferred.
