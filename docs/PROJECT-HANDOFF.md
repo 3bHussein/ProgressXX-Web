@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Production transient sync retry backoff
+
+Verified Full UI #38216887326 / Pages #38216887034 successful. Modified production `index.html` (`6b52ba0`) to gradually back off failed cloud flush retries 2.4–30 seconds and reset after success; preserve pending edits. Added regression test `tests/production-sync-retry-backoff.cjs` (`fc0f28c`) to CI (`9054f72`). New CI NOT VERIFIED; actual data unchanged. This is outage stability, **not cross-device CAS protection**. P0 sync OPEN, readiness 55–65% unchanged, paid security deferred/nonblocking.
+
 ## 2026-10-12 — Correct failed two-device browser test
 
 CI #38216603946 failed because the test falsely asserted that one mock sequence MUST resurrect Daily; Pages passed. Updated test `d9360d8` to wait for actual device B schedule upload and report observed Daily outcome rather than force it. This is test repair only; last-writer-wins risk remains unverified/OPEN until atomic CAS implemented and validated. New CI pending. No production data changes, commercial estimate unchanged, paid security deferred and nonblocking.
