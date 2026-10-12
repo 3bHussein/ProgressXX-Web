@@ -82,6 +82,10 @@ Full UI #38216603946 failure was from hard-coded resurrection expectation; mock 
 
 Production `index.html` (`6b52ba0`) reduces failed sync retry frequency with capped exponential backoff; synthetic regression `tests/production-sync-retry-backoff.cjs` (`fc0f28c`), CI `9054f72`. Fresh CI pending; cross-device conflict risk remains OPEN, estimate 55–65% unchanged, paid security stage deferred.
 
+## 2026-10-12 — User-visible pending versus confirmed sync
+
+Production root status UI updated in `5c94267`: show local save, pending remote sync and success only after last revision confirmed, including mid-flight edits. CI mock compatibility repaired. Prior CI failure due to mock scope issues; new run not verified. P0 cross-device sync OPEN, 55–65% readiness unchanged. Paid security deferred.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
