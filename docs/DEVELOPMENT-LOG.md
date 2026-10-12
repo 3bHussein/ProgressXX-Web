@@ -47,6 +47,10 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Three-conflict decision preview and Daily focus regression correction
+
+Verified previous Full UI #38232392630 FAILED at `tests/full-app-daily-alarm-keyboard-browser.cjs` focus restoration (after actual conflict preview test passed); Pages #38232391829 SUCCESS. Repaired focus test setup with a stable connected synthetic control (`a3d56db8`), rather than one changed by app rendering. Added explicit preview summary of all three example conflict decisions to isolated `conflict-review-prototype.html` (`d69da2ec`), plus browser assertions for reviewed outcomes and reset (`7ef87a68`). These are *mock UX only*, no backend changes or real Supabase writes, and are not live conflict resolution. New CI not yet verified; P0 real CAS and RLS remain OPEN, commercial readiness ~55–65% unchanged, paid security stage deferred/nonblocking. Next: review latest CI and fix any failures before further scope.
+
 ## 2026-10-12 — Multi-conflict review isolated prototype
 
 Verified prior Full UI #38231907104 SUCCESS and Pages #38231907453 SUCCESS. Extended standalone `conflict-review-prototype.html` (`ab7d31b`) with three synthetic conflicts (Daily, Food, Workout Schedule), independent keep-cloud/keep-local radio decisions, reviewed count, and reset. Updated `tests/conflict-review-prototype-browser.cjs` (`81e31cf`) to verify decisions and reset in Chromium. No backend requests, account integration or data writes; this remains a preview-only demonstration, NOT production CAS protection. New CI not yet verified. Real conflict safety and RLS P0 open, commercial readiness 55–65% unchanged, paid security stage deferred/nonblocking.
