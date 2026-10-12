@@ -1,3 +1,7 @@
+## 2026-10-12 — Daily modal Tab containment
+
+Verified preceding Full UI #38225396383 and Pages #38225396494 SUCCESS. Added production Tab/Shift+Tab focus containment to visible Daily Reminder dialog (`756b820d`) and aligned accessibility test source assertions (`b48fd12c`). Preserves Escape and dismissal focus restoration. Fresh CI NOT VERIFIED. No Supabase/data changes; P0 cross-device conflict and real RLS remain OPEN, commercial estimate 55–65% unchanged, paid security deferred/nonblocking.
+
 ## 2026-10-12 — Daily Reminder keyboard focus
 
 Production focus handling `1f6fe323` and regression assertions `789a3767`; current CI unverified. P0 sync/security gates unchanged, readiness estimate 55–65%; paid security remains deferred.
