@@ -54,7 +54,7 @@ const loaderStart=s.indexOf('function loadDailyReminders(){');
 const loaderEnd=s.indexOf('function saveDailyReminders(){',loaderStart);
 assert.ok(loaderStart>0&&loaderEnd>loaderStart,'Daily reminder loader missing');
 const reminderStore={'progressx-reminders':'[]'};
-const reminderLoadCtx={PXStore:{getItem:key=>reminderStore[key]??null},JSON,Array,clone:x=>JSON.parse(JSON.stringify(x)),DEFAULT_DAILY_REMINDERS:[{id:'default'}]};
+const reminderLoadCtx={DAILY_REMINDERS_KEY:'progressx-reminders',PXStore:{getItem:key=>reminderStore[key]??null},JSON,Array,clone:x=>JSON.parse(JSON.stringify(x)),DEFAULT_DAILY_REMINDERS:[{id:'default'}]};
 vm.runInNewContext(s.slice(loaderStart,loaderEnd),reminderLoadCtx);
 assert.equal(reminderLoadCtx.loadDailyReminders().length,0,'Explicitly empty account reminder list must remain empty');
 reminderStore['progressx-reminders']=JSON.stringify([{id:'qa-on-device',name:'User saved reminder'}]);
