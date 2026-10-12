@@ -8,6 +8,12 @@
 - **P0:** blocks inviting outside users or any paid launch; **P1:** blocks broad beta/reliable operations; **P2:** product growth/commercial enhancements.
 - This roadmap is **not** a claim that implementation is missing; a feature may exist yet remain unverified.
 
+## Commercial readiness estimate and reporting rule — 2026-10-12
+
+Owner requested a permanent commercial milestone tracker in [Development Log](docs/DEVELOPMENT-LOG.md). Baseline subjective engineering estimate: **55–65%** toward an initial saleable version; tentative **4–8 weeks private beta**, **10–16 weeks initial commercial launch** under sustained work and passed P0/P1 gates. These are **not verified completion scores or guaranteed schedules**. Full UI #38210119914 and Pages #38210118315 were green for previous baseline. **No sale approval.** See Development Log for the five milestone table and remaining acceptance criteria.
+
+**Mandatory on each milestone:** append dated evidence in the Development Log; update that tracker and relevant Roadmap checkbox only when proven, sync Project Handoff, include commits, actual CI/deployment status and data impact, and revise timing only with justification. Paid staging/security work remains deferred until explicit owner approval.
+
 ## Deferred security checkpoint — SECURITY-DEFERRED-2026-10-12
 
 **On hold by owner, resume only on explicit request.** Paid staging and advanced two-account RLS/CRUD testing are deferred because of budget/priorities. Existing excessive TRUNCATE/TRIGGER grants remain; the migration is prepared but NOT applied. No commercial release sign-off is possible until this P0 gate is revisited and passed. See [development log](docs/DEVELOPMENT-LOG.md) and [Supabase security audit](docs/SUPABASE-SECURITY-AUDIT.md).
