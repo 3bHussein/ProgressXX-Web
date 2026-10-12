@@ -1,3 +1,7 @@
+## 2026-10-12 — Synthetic CAS concurrency matrix checkpoint
+
+Added four-domain in-memory CAS delete-versus-stale-edit tests and same-version concurrent writer rejection in `tests/cas-concurrency-matrix.cjs` (`f0fcdd87`); registered mandatory Full UI check (`d6c874e1`). Previous Full UI #38234329379 and Pages #38234329041 SUCCESS; fresh CI/Pages NOT VERIFIED. No production changes or user data impact; real CAS and RLS remain P0 OPEN, estimate 55–65% unchanged; paid staging/security still deferred. **Next:** verify new Actions and add guarded client-side conflict error tests, without live DB mutation.
+
 ## 2026-10-12 — CAS delete + stale unrelated edit acceptance contract
 
 Previous Pages #38234329041 SUCCESS; Full UI #38234329379 still running at first check; earlier Full UI #38234324518 SUCCESS. Added synthetic two-device scenario `tests/cas-delete-unrelated-edit-acceptance.cjs` (`bb596961`) and workflow registration (`6a41b9f2`): server CAS rejects stale unrelated update after remote Daily deletion; pending draft survives 409, reviewed merge preserves deletion and workout edit; stale replay is refused. No production CAS, RLS, schema or real data changed. Latest CI unverified. P0 real conflict protection remains OPEN, commercial readiness 55–65% unchanged, paid security work deferred/nonblocking. Next: inspect Actions and fix failing synthetic test if needed.
