@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Browser mock authentication rejection and successful retry
+
+- Previous Full UI [#38190701909](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190701909) SUCCESS; latest Pages [#38190722189](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190722189) SUCCESS. Remaining newer CI run pending at inspection.
+- Created `tests/auth-retry-browser.cjs` in commit `04f96b99585bbf4590ca94621fc7cf9d75cbcaf9`: mock first password login returns HTTP 400, assert auth gate remains visible, app unready, and no DB writes; second mock login returns account token, assert gate hidden and app ready with no uncaught browser errors.
+- Wired into `.github/workflows/full-ui-smoke.yml` in commit `a6e6dad73ac322c19013471b536be44a051e7725`. Fresh CI NOT VERIFIED at logging time. Synthetic test is not evidence of real-user session robustness.
+- Production `index.html`, Supabase grants/data and existing storage unchanged. CAS remains unapplied and `SECURITY-DEFERRED-2026-10-12` remains deferred.
+- Exact next action: inspect latest Full UI run. If failure, use its logs to correct test fixture or application race with regression, never weaken the assertions; continue real-account login verification separately.
+
 ### 2026-10-12 — Daily conflict manual merge reload regression
 
 - Confirmed prior prototype browser change CI [#38190604096](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190604096) SUCCESS and later Full UI [#38190623136](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190623136) SUCCESS. Pages [#38190627334](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190627334) SUCCESS.
