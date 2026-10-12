@@ -102,4 +102,6 @@ To resume: `Resume SECURITY-DEFERRED-2026-10-12` or `ارجع لاختبارات
 
 | 2026-10-12 | Daily conflict preview read-only test strengthening | [34abfd21](https://github.com/3bHussein/ProgressXX-Web/commit/34abfd21f0faf145bc6ec3ff6bc8fd2c826bc5ca) | Prior Full UI #38190518693 SUCCESS; fresh CI NOT VERIFIED | Prototype only; no real-device test | Assert no write requests, local/session persistence or retained choice after reload; production conflict mitigation pending |
 
+| 2026-10-12 | Prototype manual-merge reset regression | [d0a0169](https://github.com/3bHussein/ProgressXX-Web/commit/d0a0169b5eea77d4ad38b193f0ddde028f6127c7) | Prior Full UI #38190604096 SUCCESS; fresh run NOT VERIFIED | No live data tested | Merge controls must reset on reload; conflict CAS still not deployed |
+
 Keep this table honest; a green CI run alone is not proof that the product is production-ready.
