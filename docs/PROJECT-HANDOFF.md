@@ -51,6 +51,11 @@
 ## Daily reminder list follow-up (2026-10-12)
 ## Latest smoke test timeout fix — 2026-10-12
 ## Concurrent edit safety review (2026-10-12)
+## Synthetic Daily concurrency regression — 2026-10-12
+
+Full UI #38188317333 and Pages #38188317315 previously succeeded. New synthetic test `tests/daily-concurrent-conflict-regression.cjs` reproduces lost writes from two device copies and defines a three-way conflict predicate; wired in full UI workflow, commits `c96d0c3` + `84f7b77d`. **Not yet protected in production:** safe resolution requires server-side atomic version checking, not only client preflight. No production data/schema edits; security paid work remains deferred.
+
+
 
 Full UI #38188317333 SUCCESS; Pages #38188317315 SUCCESS. User confirmed ordinary Daily add/delete across devices. **Concurrency unresolved:** `flush()` upserts a whole-account snapshot; `__pxRefreshAccountDailyReminders()` protects pending local edits from incoming refresh but cannot block stale outbound upserts. A second-device edit can be overwritten by last write. Do not claim conflict safety. Avoid parallel edits to the same reminder until conditional-write and explicit conflict recovery are tested with synthetic accounts. No production data changes; security review remains deferred.
 
