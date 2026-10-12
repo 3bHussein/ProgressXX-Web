@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Concurrent refresh single-flight guard
+
+Previously Full UI #38209521762 and Pages #38209522098 succeeded. Root `index.html` now shares a single in-flight refresh Promise across concurrent callers (`e0fffa4`), rejects wrong-account responses; synthetic contract test `tests/auth-refresh-singleflight.cjs` (`d724d93`) is in Full UI CI (`964bb9a`). Fresh CI/deploy NOT VERIFIED. No Supabase or personal record changes. Next inspect Actions, then browser-level concurrency mock. Security deferred.
+
 ## 2026-10-12 — Refresh cached expired auth during boot
 
 Prior Full UI #38209115469 and Pages #38209115679 SUCCESS. Root `index.html` updated in `98d17e2` to refresh expired/near-expiry session before account activation, strictly reject account ID change, and keep login locked if refresh fails. `tests/auth-retry-browser.cjs` extended in `191f91d` to verify mock renewal success/failure. Fresh CI NOT VERIFIED. No production DB or user record modification. Next check Actions and test concurrent refresh behavior; security audit deferral and unapplied CAS remain.
