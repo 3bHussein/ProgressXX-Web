@@ -47,6 +47,10 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Preview-only multi-conflict completion gate
+
+Verified prior Full UI #38233632648 SUCCESS and Pages #38233633179 SUCCESS. Standalone `conflict-review-prototype.html` (`ea87eda8`) now disables "Complete example review" until all three synthetic conflicts have an explicit keep-cloud or keep-local decision, shows completion only as a **local demonstration**, and resets completion state on changed/reset choices. Chromium regression `tests/conflict-review-prototype-browser.cjs` (`357ba235`) checks incomplete denial, three-decision enablement, completion and reset. Latest CI NOT VERIFIED. No production app wiring, Supabase schema, server CAS, account data, or real writes changed. P0 multi-device conflict and RLS OPEN; commercial readiness 55–65% unchanged; paid security deferred and not blocking ordinary development.
+
 ## 2026-10-12 — Three-conflict decision preview and Daily focus regression correction
 
 Verified previous Full UI #38232392630 FAILED at `tests/full-app-daily-alarm-keyboard-browser.cjs` focus restoration (after actual conflict preview test passed); Pages #38232391829 SUCCESS. Repaired focus test setup with a stable connected synthetic control (`a3d56db8`), rather than one changed by app rendering. Added explicit preview summary of all three example conflict decisions to isolated `conflict-review-prototype.html` (`d69da2ec`), plus browser assertions for reviewed outcomes and reset (`7ef87a68`). These are *mock UX only*, no backend changes or real Supabase writes, and are not live conflict resolution. New CI not yet verified; P0 real CAS and RLS remain OPEN, commercial readiness ~55–65% unchanged, paid security stage deferred/nonblocking. Next: review latest CI and fix any failures before further scope.
