@@ -9314,8 +9314,8 @@ window.__legacyBoot=init;
  function readPending(id){try{const data=JSON.parse(browserStorage.getItem(pendingKey(id))||'null');return data&&data.payload&&typeof data.payload==='object'?data.payload:null}catch{return null}}
  const nodeStorage={
   getItem(key){if(!account)return null;return browserStorage.getItem(storagePrefix(account)+key)},
-  setItem(key,value){if(!account)throw Error('Not authenticated');const k=String(key),v=String(value);browserStorage.setItem(storagePrefix(account)+k,v);values[k]=v;revision++;markPending();scheduleCloudSync()},
-  removeItem(key){if(!account)throw Error('Not authenticated');const k=String(key);browserStorage.removeItem(storagePrefix(account)+k);delete values[k];revision++;markPending();scheduleCloudSync()},
+  setItem(key,value){if(!account)throw Error('Not authenticated');const k=String(key),v=String(value);browserStorage.setItem(storagePrefix(account)+k,v);values[k]=v;revision++;markPending();tell('◷ Saved locally · waiting to sync');scheduleCloudSync()},
+  removeItem(key){if(!account)throw Error('Not authenticated');const k=String(key);browserStorage.removeItem(storagePrefix(account)+k);delete values[k];revision++;markPending();tell('◷ Saved locally · waiting to sync');scheduleCloudSync()},
   clear(){throw Error('This commercial app never permits clearing all local storage.')},
   key(i){return Object.keys(values)[i]??null},
   get length(){return Object.keys(values).length}
@@ -9611,8 +9611,8 @@ window.__legacyBoot=init;
    // Single-account snapshot; originals remain byte-exact strings (including raw performance).
    await cloud('user_app_snapshots?on_conflict=user_id','POST',{user_id:account,payload:{...values},updated_at:new Date().toISOString()});
    await mirrorWorkoutScheduleToTable({...values});
-   savedRevision=writing;syncRetryFailures=0;if(revision===writing)clearPending();tell('✓ Synced to Supabase · '+new Date().toLocaleTimeString());
-  }catch(e){syncRetryFailures++;tell('Unsynced changes: '+e.message,true)}
+   savedRevision=writing;syncRetryFailures=0;if(revision===writing){clearPending();tell('✓ Synced to Supabase · '+new Date().toLocaleTimeString())}else tell('◷ New changes saved locally · waiting to sync');
+  }catch(e){syncRetryFailures++;tell('◷ Saved locally · sync pending: '+e.message,true)}
   finally{uploading=false;if(revision!==savedRevision)scheduleCloudSync()}
  }
  window.__pxRestoreLegacySettings=async()=>{
