@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Full CI green; concurrent Daily edit conflict risk reviewed
+
+- Full UI [#38188317333](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38188317333) **SUCCESS**, Pages [#38188317315](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38188317315) **SUCCESS**. Owner previously confirmed ordinary cross-device Daily creation/deletion works.
+- Reviewed `flush()` account snapshot upsert and `__pxRefreshAccountDailyReminders()` read guard. Snapshot writes are whole-payload last-writer-wins; local pending edits prevent refresh overwrite but cannot prevent a stale device from overwriting a newer remote change on POST. **Concurrent-edit safety is NOT VERIFIED**.
+- Intentionally made no untested automatic merge or destructive real-data changes. Before implementing safe conflict resolution, test with synthetic separate browser contexts, a captured baseline/version and a guarded conditional write that explicitly detects conflicts. Avoid simultaneous editing of same reminder on real devices pending fix.
+- Paid security phase remains deferred (`SECURITY-DEFERRED-2026-10-12`).
+
+
 
 ### 2026-10-12 — Owner confirms Daily create/delete cross-device sync; CI fixture fix
 
