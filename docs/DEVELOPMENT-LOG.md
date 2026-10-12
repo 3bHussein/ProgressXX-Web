@@ -47,6 +47,13 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Chromium regression: snapshot succeeds, workout mirror fails
+
+- Verified preceding Full UI [#38215604331](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38215604331) SUCCESS and Pages [#38215604219](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38215604219) SUCCESS.
+- Extended `tests/production-flush-chromium-contract.cjs` in commit `4a51dc44a0f686d6825fbac78abbc7627e2f4fc7` to execute real extracted `flush()` inside Chromium with simulated successful snapshot POST followed by failing Workout Schedule mirror. Requires pending revision NOT acknowledged, pending NOT cleared and error surfaced. Previous failed POST/retry/concurrent-edit assertions retained.
+- Fresh CI/deployment NOT VERIFIED at checkpoint. No production `index.html`, Supabase, account or real data change. Chromium test uses synthetic dependencies; production cross-device conflict still P0 OPEN. Commercial readiness rough 55–65% unchanged; paid security scope deferred and nonblocking for normal development.
+- **Next:** inspect latest CI and correct failures, then mock full login + snapshot failure/recovery through browser routes while avoiding live data.
+
 ### 2026-10-12 — Chromium-executed production flush with synthetic transport
 
 - Verified preceding Full UI [#38215286386](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38215286386) and Pages [#38215285902](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38215285902) both SUCCESS.
