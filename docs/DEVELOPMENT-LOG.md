@@ -47,6 +47,14 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Concurrent offline edit contract and safe-production acceptance checklist
+
+- Verified prior main Full UI [#38212922901](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38212922901) SUCCESS and Pages [#38212922692](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38212922692) SUCCESS.
+- Added `tests/offline-same-record-conflict-contract.cjs` (`15cd7fd41473c55992ec9e59a8421fd8b682c637`) and CI registration (`0fe61f31687fad1eecc0b14a8a7e9fc8ae428fc9`). Synthetic model exercises simultaneous edits on the same record in Daily/Workout/Weight/Food, 409 stale rejection, preservation of first write, explicit rebase, and rejection of delayed offline retries.
+- Added `docs/SYNC-CONFLICT-PRODUCTION-ACCEPTANCE.md` (`3ab9b849c9bb6141cb266ce24661c7ddcf1bfa20`), specifying approval/backup, atomic CAS, RLS, two-account authorization, offline replay, restore drill, staged rollout and rollback before any production change. NO migration applied, no Supabase account data modified.
+- Current new CI and Pages deployment: **NOT VERIFIED**. The tests are mock specifications only, not proof of a deployed fix. Commercial readiness estimate **55–65% unchanged**, cross-device sync P0 OPEN, conditional beta/commercial timelines unchanged. Paid security stage remains deferred but development continues.
+- **Exact next action:** inspect Actions on the latest commit, fix any failing tests; keep working on no-cost standalone browser/offline QA pending explicit owner authorization for staging/security work.
+
 ### 2026-10-12 — Offline delete replay idempotency mock (fourth batch step)
 
 - Added `tests/offline-delete-replay-contract.cjs` (`2a6599c83c355f177b9485991639ee1fd82c888a`) and wired Full UI (`45db7a286d98f684c5fd13986369ac453bf5224a`). Synthetic account-scoped queue model verifies queued delete, duplicate-event replay idempotency, stale resurrection 409 rejection, and wrong owner 403 across Daily/Workout/Weight/Food.
