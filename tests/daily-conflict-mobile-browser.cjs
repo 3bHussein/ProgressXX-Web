@@ -31,6 +31,7 @@ const assert=require('node:assert/strict');
    assert.equal(persistence.local,0,'Prototype wrote localStorage at '+width);
    assert.equal(persistence.session,0,'Prototype wrote sessionStorage at '+width);
    await page.reload();
+   assert.equal(await page.locator('#merge').isVisible(),false,'Manual merge panel persisted after reload at '+width);
    assert.match(await page.locator('#status').innerText(),/No action taken/,'Prototype actions unexpectedly persisted at '+width);
    await page.close();
   }
