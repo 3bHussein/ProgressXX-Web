@@ -47,6 +47,14 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Restore pending snapshot as unsynced, auto-retry without manual Sync Now
+
+- Verified previous Full UI [#38218406646](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38218406646) SUCCESS and Pages [#38218403472](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38218403472) SUCCESS. Previously intermittent auth retry `Not authenticated` was not reproduced on latest successful CI; root cause remains unproven, not marked fixed.
+- **Production fix** `index.html` (`ca6bc5e7f8ed290997764aa1f9b8278cce9a5193`): `activate()` had set `savedRevision=revision` even when restoring queued pending edits, causing scheduled `flush()` to skip because `revision===savedRevision`. Now keeps pending revision unacknowledged (`savedRevision=revision-1`) and reports locally queued edits awaiting sync; normal no-pending accounts retain prior semantics.
+- Updated full-app mock Chromium test `tests/full-app-sync-503-reload-browser.cjs` (`26b24578a8c905a1e7c3307982275a249db07c56`) to require **automatic** replay after reload with no `Sync now` button. The existing mocked HTTP 503/pending/reload/ack checks remain.
+- New CI/Pages **NOT VERIFIED** as of this checkpoint. No Supabase schema or real user records changed. This addresses queued local retry behavior, **not** cross-device atomic stale-write conflicts or confirmed auth race. Sync P0 remains OPEN; commercial rough 55–65% unchanged and `SECURITY-DEFERRED-2026-10-12` remains deferred/nonblocking for ordinary development.
+- Next: verify fresh CI and fix errors; investigate remaining auth error only if it recurs with stack trace; keep real account deletion safety as release gate.
+
 ### 2026-10-12 — Browser sync status assertions and auth retry failure diagnosis
 
 - Previous Pages #38217999123 SUCCESS but Full UI [#38217998624](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38217998624) FAILURE. Exact job log: `tests/auth-retry-browser.cjs` received unhandled `Not authenticated` page error during retry login; other tests in CI may have passed. Do not claim full suite green.
