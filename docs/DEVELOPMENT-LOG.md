@@ -47,6 +47,14 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Isolated cross-device deletion conflict review UX
+
+- Verified prior Full UI [#38212177834](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38212177834) SUCCESS and Pages [#38212178030](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38212178030) SUCCESS.
+- Added standalone synthetic read-only UI `prototypes/sync-delete-conflict-preview.html` in commit `5d16187bd10ebe0599eebd78290032627eaf6ef4`: selector Daily/Workout/Weight/Food and options keep deletion, preview restoring, or review later. Explicitly prevents confusion with active conflict resolution; no connection to real database.
+- Added Chromium responsive safety test `tests/sync-delete-conflict-preview-browser.cjs` in commit `66181f45f812b649fd76187532ce136abfebf457`, wired to Full UI Actions in `78d29122d93d471d081a124dc8916da31372b91c`. Checks all four data types, controls, widths 320/390/768, no network writes, no local/session storage, no JS errors or overflow, reset after reload.
+- Fresh CI/deployment **NOT VERIFIED** at checkpoint. No changes to production `index.html`, Supabase schema, real accounts or records. Production last-writer-wins deletion resurrection remains **UNFIXED**. Commercial readiness baseline **55–65% rough estimate unchanged**, sync P0 OPEN. Paid security work remains deferred, not a dev blocker.
+- **Exact next step:** inspect fresh workflow success/failure; then advance mock conflict decisions and API contract design without activating unapproved migration.
+
 ### 2026-10-12 — Safe cross-device deletion rebase contract simulation
 
 - Verified Full UI [#38211635242](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38211635242) SUCCESS and Pages [#38211635745](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38211635745) SUCCESS on prior main `c04b242`.
