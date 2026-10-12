@@ -62,6 +62,10 @@ Expanded `tests/production-flush-failure-retry-contract.cjs` (`4218067`) for wor
 
 `tests/production-flush-chromium-contract.cjs` (`83b530c`) and CI `f21cbfd` cover failed POST, retry acknowledgment and concurrent user edit using production `flush()` extracted into browser mock. Fresh CI not yet verified, not live Supabase or actual app route test. Commercial estimate 55–65% unchanged; sync P0 still OPEN and paid security exception unchanged.
 
+## 2026-10-12 — Chromium partial upload/mirror failure QA
+
+`tests/production-flush-chromium-contract.cjs` extended in `4a51dc4` with snapshot success and mock Workout Schedule mirror failure, asserting pending not cleared. Previous Full UI #38215604331 PASS; fresh CI NOT VERIFIED. This is synthetic browser test only; P0 sync OPEN and commercial estimate unchanged.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
