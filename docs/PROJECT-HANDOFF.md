@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Correct failed two-device browser test
+
+CI #38216603946 failed because the test falsely asserted that one mock sequence MUST resurrect Daily; Pages passed. Updated test `d9360d8` to wait for actual device B schedule upload and report observed Daily outcome rather than force it. This is test repair only; last-writer-wins risk remains unverified/OPEN until atomic CAS implemented and validated. New CI pending. No production data changes, commercial estimate unchanged, paid security deferred and nonblocking.
+
 ## 2026-10-12 — Full-app two-device Daily resurrection reproduction
 
 Previous Full UI #38216252905 and Pages #38216251867 SUCCESS. Added `tests/full-app-two-device-daily-resurrection.cjs` (`de851d5`) with two isolated Chromium app sessions, fake Supabase, A deletes Daily and B posts stale Workout Schedule update; expects known whole-snapshot delete resurrection. CI `e9a2f35`; fresh run unverified. This is a failing-safety contract documenting known production architecture risk, not a fix. No live data/schema changed; sync P0 OPEN, commercial 55–65% unchanged, paid security work deferred without blocking other work.
