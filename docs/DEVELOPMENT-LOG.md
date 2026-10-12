@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Browser concurrent Supabase token renewal mock added
+
+- Verified existing Full UI [#38209687913](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38209687913) SUCCESS and Pages [#38209688147](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38209688147) SUCCESS for main `8b163c6`.
+- New `tests/auth-refresh-browser-concurrency.cjs` commit `8cca2f27a289e90cbb1c781b0e9336de23c296e5` executes extracted production `cloud()` and `refreshToken()` functions inside an isolated Chromium page against mock auth and mock fetch. It asserts 3 concurrent Supabase reads cause exactly 1 token refresh, all 3 use the rotated access token and refreshed session is stored only once.
+- Added to `.github/workflows/full-ui-smoke.yml` in commit `395a8c9805dbcdef9d16b34f2fe578365a8a1975`. New CI **NOT VERIFIED** at commit time. This is a browser-executed unit integration of production functions, not a live Supabase or full UI race test. No database, user records or `index.html` changed.
+- Commercial gates remain open: two-user RLS/write isolation, staged migration and recovery backup, real-account login/refresh, full CRUD/sync across devices, offline conflict CAS, multi-browser/mobile QA, legal/billing/onboarding and private beta. Owner deferred paid security checkpoint `SECURITY-DEFERRED-2026-10-12`; do not start it implicitly.
+- **Next exact step:** inspect fresh CI and correct any browser test failures; then perform isolated mock browser identity mismatch/session refresh rejection, followed by owner-approved staging security work when resumed.
+
 ### 2026-10-12 — Serialize concurrent session refresh requests
 
 - Baseline Full UI [#38209521762](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38209521762) SUCCESS and Pages [#38209522098](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38209522098) SUCCESS.
