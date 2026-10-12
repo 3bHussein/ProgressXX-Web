@@ -22,6 +22,15 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Real-device Daily mismatch, account reminder rehydration fix
+
+- User verified Workout Log and Weight Check-ins match across phone/desktop, but Daily is **different or missing**; field/date unknown.
+- Root cause candidate: global `dailyReminders=loadDailyReminders()` runs pre-login while `PXStore` is not yet account-scoped, so the in-memory UI may retain defaults despite correct restored account snapshot/archive.
+- Production root `index.html` now reloads `dailyReminders` **after** cloud snapshot and reminder archive, **before** legacy boot: commit `65685b1366e3a59ec5d50d4b2286061a4699e0c5`.
+- Strengthened full Chromium smoke to require in-memory Daily reminder list to include the account-scoped QA reminder after sign-out/sign-in: commit `216ca4ca903dda7077b3b8e9b99a7bc22f8deb66`.
+- Fresh CI and real-device Daily retest PENDING. Do not claim completion or mutate existing Daily history. No production database changes; security testing still deferred (`SECURITY-DEFERRED-2026-10-12`).
+
+
 ### 2026-10-12 — User-verified bidirectional Food sync on real devices
 
 - Owner confirmed one Food Diary record entered from phone appeared **exactly once with correct data** on desktop.
