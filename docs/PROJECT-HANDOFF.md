@@ -48,6 +48,11 @@
 ## User-confirmed live Food Library sync (2026-10-12)
 ## Live bidirectional Food sync confirmed by owner (2026-10-12)
 ## Daily discrepancy on real devices (2026-10-12)
+## Daily reminder list follow-up (2026-10-12)
+
+Real-device Daily reminder lists still differ. Root fixes: account global rehydration `65685b1`; preserve intentionally empty saved list `fdedf5537`. New regression `27b488d` checks missing, populated, and empty lists plus post-login boot. Prior CI #38186516050 failed earlier at Food Diary preload timeout, not on Daily check; Pages #38186515911 succeeded. Await fresh CI and user's Daily retest. No production DB changes; security deferred.
+
+
 
 Owner: Workout and Weight match between devices, Daily does not. Root fix rehydrates in-memory `dailyReminders` after account cloud/archive hydration and before legacy boot (commit `65685b1366e3a59ec5d50d4b2286061a4699e0c5`); stronger mock relogin UI-model assertion (commit `216ca4ca903dda7077b3b8e9b99a7bc22f8deb66`). Await fresh CI and owner retest; exact Daily field/date mismatch not identified. No DB updates and paid security phase deferred.
 
