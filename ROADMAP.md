@@ -1,14 +1,14 @@
 ## Current Work task state — 2026-10-12
 
-Milestone 2 — Data Safety & Synchronization: **IN PROGRESS; commercial NO-GO**. Root `index.html` recovery fixes and regression suite are being verified in this task. Actual Full UI failure #38270847453 was inspected. PostgreSQL 17 sequential CAS reference #38270129009 is verified SUCCESS (synthetic only). Production CAS is still NOT DEPLOYED; no production database/grants/RLS/migrations changed. Paid security remains deferred.
+Milestone 2 — Data Safety & Synchronization: **IN PROGRESS; commercial NO-GO**. Root `index.html` recovery fixes and regression suite are being verified in this task. Actual Full UI failure #38270847453 was inspected. Implementation commit 3f24165 in PR #16 has seven green PR workflows; Full UI #38273401866 identified status-wording and pre-existing alarm fixture follow-ups, now fixed with focused browser passes. PostgreSQL 17 sequential CAS reference #38270129009 is verified SUCCESS (synthetic only). Production CAS is still NOT DEPLOYED; no production database/grants/RLS/migrations changed. Paid security remains deferred.
 
-Additional fix: locked-workspace focus/pageshow refreshes now wait for readiness; deterministic browser test asserts zero private requests/storage writes before login. New PostgreSQL harness tests eight independent sessions per race in the disposable CI service; new SQL runtime result is pending.
+Additional fix: locked-workspace focus/pageshow refreshes now wait for readiness; deterministic browser test asserts zero private requests/storage writes before login. New PostgreSQL harness tests eight independent sessions per race in the disposable CI service; PostgreSQL 17 race run #38273401672 is VERIFIED SUCCESS (one winner per eight sessions), synthetic only.
 
 Completed source fixes: pending draft baseline follows acknowledged POST even when new edits or schedule mirror failure remain; account workout memory is hydrated before ready/focus refresh; Analytics receives a metrics object rather than sets array. Browser regressions now assert a stale device pauses rather than overwrites, retains its draft across reload, and reviews/exports both versions without writes. Restored-account test forces the boot/refresh race and checks 32 cloud rows + 1 local snapshot row are retained. See the appended Work task entry in DEVELOPMENT-LOG for exact scope and evidence.
 
 **Local verification:** 59/59 Node/Chromium checks PASS, including Full UI registrations, security migration source check and optional-render login regression. Python harness compile and diff whitespace checks PASS. This does not prove production CAS/RLS/restore.
 
-**Next:** Verify the matching GitHub Full UI/Fast/PostgreSQL results and deployed SHA, including the new independent-session CAS race test. Then approved separate staging, verified restore, authenticated owner CAS/negative RLS tests and real two-device acceptance. No request to approve production changes is made before those concrete prerequisites exist. Previous dated sections below are historical evidence, not current signoff.
+**Next:** Verify follow-up PR #16 GitHub Full UI/Fast/PostgreSQL results and deployed SHA, including the new independent-session CAS race test. Then approved separate staging, verified restore, authenticated owner CAS/negative RLS tests and real two-device acceptance. No request to approve production changes is made before those concrete prerequisites exist. Previous dated sections below are historical evidence, not current signoff.
 
 ## 2026-10-12 — Verified P0 overbroad database grants
 
@@ -390,6 +390,10 @@ To resume: `Resume SECURITY-DEFERRED-2026-10-12` or `ارجع لاختبارات
 **Exit:** automated auth + isolation negative tests and manual device verification.
 
 ## Phase 2 — Persistence & sync correctness (P0)
+
+**Milestone 2 status: IN PROGRESS.** [PR #16](https://github.com/3bHussein/ProgressXX-Web/pull/16) repairs root recovery/hydration and CI. Live acceptance items below remain open.
+- [x] Disposable PostgreSQL 17 sequential and independent-session CAS race assertions — [#38273401672](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38273401672) SUCCESS; synthetic reference, not deployed RPC.
+- [x] Local synthetic recovery regressions for in-flight edits, mirror failure, stale deletion hold/reload and both-version export; 59 checks PASS on implementation source. Follow-up CI result pending.
 
 - [ ] For **Food**, **Food Library**, **Daily**, **Saved Meals**: add/edit/delete -> reload -> logout/login -> second device -> confirm server source-of-truth.
 - [ ] For **Workout**, exercise name changes, templates, sessions and **Workout Schedule**: repeat complete lifecycle.

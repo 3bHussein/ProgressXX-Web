@@ -41,6 +41,8 @@ const assert=require('node:assert/strict');
   const pendingKey='pxx:pending:'+account;
   const pending=await b.page.evaluate(k=>JSON.parse(localStorage.getItem(k)),pendingKey);
   assert.equal(pending.payload['progressx-workout-schedule-v1'],'{"mon":"REST"}','B edit remains recoverable');
+  await b.page.evaluate(()=>PXStore.setItem('qa-conflict-note','retained'));
+  assert.match(await b.page.locator('#pxSyncPill').textContent(),/Sync paused/,'Local changes during hold must not hide conflict status');
   await b.page.reload({waitUntil:'domcontentloaded'});
   await b.page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Sync paused'),null,{timeout:20000});
   assert.equal(snapshot['progressx-reminders'],'[]','Stale pending replay after reload must not resurrect deletion');

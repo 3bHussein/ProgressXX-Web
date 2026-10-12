@@ -15,6 +15,7 @@ This is the **append-only** chronological log of completed work, investigations,
 ## Latest handoff snapshot
 
 - **Stage:** Pre-release hardening; not certified for sale/public paid launch.
+- **Work task progress:** PR #16; disposable PostgreSQL concurrent CAS run #38273401672 verified SUCCESS. Recovery/hydration/auth-callback fixes tested locally; fresh follow-up Full UI and deployment pending.
 - **Known risk:** Real-account reproduction of login `undefined.filter` and Food/Daily restored-data sync needs independent confirmation, even though earlier CI ran green.
 - **Primary next step:** Test prepared migration on separate staging Supabase project/branch (none currently available); verify postflight grants and two-user RLS, then Food/Daily/Workout/Weight CRUD/sync. Production grants are unchanged.
 - **Data safety:** Preserve all existing user records; do not wipe or silently replace records.
@@ -1235,3 +1236,13 @@ Previous Pages #38224272376 SUCCESS; Full UI #38224271404 still running when che
 **Impact / risks:** No production database, grants, RLS, migrations, paid features, real accounts or personal exports touched. No deployment claim yet. Milestone 2 remains IN PROGRESS; real server CAS/auth/RLS, verified restoration and real devices remain release blockers. Next: verify all matching PR workflows, merge tested code if green, inspect root Pages deployment and append exact evidence. Commercial launch remains NO-GO.
 
 **Local Work task verification (2026-10-12):** 59/59 Node/Chromium checks PASS on the current source, covering all Full UI registered tests plus security migration source safety and login optional-render isolation. `git diff --check` and Python concurrency-harness compilation PASS. PostgreSQL concurrency runtime and fresh remote CI/deployment remain NOT VERIFIED until recorded below. No live-account or production SQL tests were performed.
+
+## 2026-10-12 — Work task PR #16: verified concurrent PostgreSQL CAS and CI follow-up
+
+**Commit / PR:** [3f24165](https://github.com/3bHussein/ProgressXX-Web/commit/3f241652c573e8f2b4c6daa8bb5569ce2e336d8a), [PR #16](https://github.com/3bHussein/ProgressXX-Web/pull/16). PostgreSQL 17 [#38273401672](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38273401672) SUCCESS; both sequential rollback assertions and eight independent-session first-write/update races are verified from job logs. Each race has exactly one winner, seven conflicts, and stale deleted-list replay rejection. Synthetic SQL reference only, not Supabase authenticated RPC/RLS.
+
+**CI results on implementation commit:** Fast conflict [#38273401690](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38273401690), cross-device snapshot #38273401813, workout Chromium #38273401683, workout table #38273401641, weight #38273401608, schedule #38273401605 all SUCCESS. Full UI [#38273401866](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38273401866) FAILED despite 59/59 local checks: automatic Daily alarm already open invalidated the keyboard test's focus origin, and account normalization status overwrote paused-conflict wording after reload.
+
+**Follow-up source / tests:** `index.html` `tell()` now keeps explicit `Sync paused for conflict review` in every status while a conflict hold exists. Browser stale-device regression also asserts a new local edit cannot hide the hold. Alarm keyboard fixture waits for full gate-hidden initialization and dismisses an existing automatic alarm before opening its test dialog; real focus restoration assertions remain unchanged. Focused Chromium tests PASS. Fresh remote Full UI/deployment pending verification; do not claim merged/deployed yet.
+
+**Impact / next:** Production Supabase data/tables/grants/RLS/migrations unchanged; paid features untouched. Milestone 2 IN PROGRESS and commercial NO-GO. Verify follow-up PR workflows, merge only after all checks green, inspect matching root Pages deployment, then record evidence. Approved staging/verified backup/authenticated isolation and real-device acceptance remain required before production CAS.
