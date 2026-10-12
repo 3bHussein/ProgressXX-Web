@@ -47,6 +47,7 @@ jobs:
             tests/two-context-pending-recovery-browser.cjs \
             tests/daily-alarm-dismiss-accessibility.cjs \
             tests/daily-alarm-tab-focus-browser.cjs \
+            tests/full-app-daily-alarm-keyboard-browser.cjs \
             tests/full-app-two-device-daily-resurrection.cjs \
             tests/production-sync-retry-backoff.cjs \
             tests/snapshot-cas-proposal-safety.cjs \
