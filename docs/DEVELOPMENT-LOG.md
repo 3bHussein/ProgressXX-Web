@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — CAS two-device contract simulation, no database changes
+
+- Confirmed Full UI #38188790240 SUCCESS and Pages #38188790364 SUCCESS for the prior unapplied SQL proposal.
+- New `tests/snapshot-cas-contract-simulation.cjs` demonstrates a synthetic desktop write accepted, stale phone write rejected, preserved pending phone edit, and an explicitly resolved retry against the latest baseline. Commit `5f814a19ad6002a867999c668dff040e9992138e`.
+- Wired contract test into `.github/workflows/full-ui-smoke.yml` commit `b3c79416771de9b34119d0ab552e306b73b7bfbf`. New CI result pending.
+- This is **only a model/contract test**; the actual server RPC is NOT deployed, real RLS/grants, atomic concurrency and browser conflict UI are not verified. The live site continues last-writer-wins until an explicitly approved, tested migration/client rollout. No production DB or user data touched. `SECURITY-DEFERRED-2026-10-12` remains.
+
+
 ### 2026-10-12 — Draft server-guarded snapshot CAS, not applied
 
 - Full UI #38188634435 SUCCESS and GitHub Pages #38188634220 SUCCESS for prior concurrency-risk reproduction.
