@@ -50,6 +50,11 @@
 ## Daily discrepancy on real devices (2026-10-12)
 ## Daily reminder list follow-up (2026-10-12)
 ## Latest smoke test timeout fix — 2026-10-12
+## Live Daily reminder delete-sync fix (2026-10-12)
+
+User observed Daily reminder deletions not propagating between mobile/desktop in both directions and the obsolete `Apps Script URL is missing.` warning. Replaced legacy Daily pull with Supabase snapshot read, honoring empty lists and guarding unsynced edits (root commit `c7fd95ea6`); added regression (`7dbbeb8d5`). New CI, mobile/desktop retest pending. No real data deleted; security paid stage deferred.
+
+
 
 User said "تم نكمل" after Daily check, but did not explicitly state both reminder lists matched. Pages #38186670494 success; Full UI #38186670763 failed on initial hidden Food Diary DOM wait. Changed smoke to explicitly hydrate Food and inspect account-scoped Food row, commit `87f698debd69995b015b36a577bf4a3567ab6f6e`, CI pending. Do not assert Daily real-device issue resolved without confirmation. No production DB edits; security deferred.
 
