@@ -40,8 +40,7 @@ begin
     return;
   end if;
 
-  -- Absent-row races are serialized by a transaction-scoped account-specific advisory lock.
-  -- The lock MUST be acquired before checking for an existing row.
+  -- Fail closed for missing accounts; do not silently create or overwrite records.
   raise exception 'Missing snapshot: establish initial snapshot via audited account bootstrap';
 end;
 $$;
