@@ -39,6 +39,9 @@ BEGIN
  IF NOT result.accepted OR result.actual_revision<>2 THEN RAISE EXCEPTION 'delete failed'; END IF;
  SELECT * INTO result FROM demo.save_snapshot(a,1,'{"food":["resurrect"],"daily":["new"]}');
  IF result.accepted OR result.actual_payload->'food'<>'[]'::jsonb THEN RAISE EXCEPTION 'deletion resurrected'; END IF;
+ SELECT * INTO result FROM demo.save_snapshot(b,8,'{"food":["must-not-insert"]}');
+ IF result.accepted OR result.actual_revision<>0 THEN RAISE EXCEPTION 'invalid first revision accepted'; END IF;
+ IF EXISTS(SELECT 1 FROM demo.snapshots WHERE user_id=b) THEN RAISE EXCEPTION 'invalid first revision inserted row'; END IF;
  SELECT * INTO result FROM demo.save_snapshot(b,0,'{"food":["other"]}');
  IF NOT result.accepted THEN RAISE EXCEPTION 'second account failed'; END IF;
  IF (SELECT payload->'food' FROM demo.snapshots WHERE user_id=a)<>'[]'::jsonb THEN RAISE EXCEPTION 'cross-account corruption'; END IF;
