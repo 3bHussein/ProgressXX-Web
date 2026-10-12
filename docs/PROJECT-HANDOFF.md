@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Daily preview read-only browser assertions
+
+Prior `7ccd98d` Full UI #38190518693 and Pages #38190518674 SUCCESS; Full App #38190483562 SUCCESS. Added browser no-HTTP-write/no-local-session-storage/reload-reset assertions for prototype actions at three mobile/tablet widths in `tests/daily-conflict-mobile-browser.cjs`, commit `34abfd21`. Fresh CI NOT VERIFIED at commit. No real CAS, production app/data changes. Next check new CI and add synthetic auth retry coverage; deferred security marker unchanged.
+
 ## 2026-10-12 — Auth smoke timeout correction
 
 Corrected Playwright auth-gate 15-second timeout argument on main in `scripts/smoke-full-ui.cjs`, commit `9e05d56`. New CI pending/NOT VERIFIED. Production app/data unchanged. Next check Actions, investigate intermittent `Not authenticated` if reproduced, and keep security checkpoint deferred.
