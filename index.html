@@ -9475,10 +9475,18 @@ window.__legacyBoot=init;
   const response=await fetch(BASE+'/auth/v1/'+path,{method:'POST',headers:{'apikey':PUB,'Content-Type':'application/json'},body:JSON.stringify(body)});
   const data=await response.json();if(!response.ok)throw Error(data.error_description||data.msg||data.message||'Authentication failed');return data;
  }
+ let refreshInFlight=null;
  async function refreshToken(){
-  if(!auth?.refresh_token)throw Error('Not signed in');
-  const next=await tokenRequest('token?grant_type=refresh_token',{refresh_token:auth.refresh_token});
-  auth=next;sessionStorage.setItem(SESSION_KEY,JSON.stringify(auth));
+  if(refreshInFlight)return refreshInFlight;
+  if(!auth?.refresh_token||!auth?.user?.id)throw Error('Not signed in');
+  const originalUser=auth.user.id,originalRefresh=auth.refresh_token;
+  refreshInFlight=(async()=>{
+   const next=await tokenRequest('token?grant_type=refresh_token',{refresh_token:originalRefresh});
+   if(!next?.access_token||!next?.refresh_token||next?.user?.id!==originalUser||auth?.user?.id!==originalUser)throw Error('Invalid refreshed account session');
+   auth=next;sessionStorage.setItem(SESSION_KEY,JSON.stringify(auth));
+   return next;
+  })();
+  try{return await refreshInFlight}finally{refreshInFlight=null}
  }
  async function cloud(path,method='GET',body){
   if(Date.now()/1000 > (auth?.expires_at||0)-50)await refreshToken();
