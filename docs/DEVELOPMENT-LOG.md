@@ -47,6 +47,10 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Remove CI PostgreSQL client dependency ambiguity
+
+Inspected isolated PostgreSQL CAS workflow and SQL integration scenario. Added explicit `postgresql-client` installation to `.github/workflows/postgres-cas-integration.yml` (commit `543907b8`) before invoking `psql`, so a runner missing PostgreSQL tools cannot fail before reaching the actual disposable database test. The live GitHub Actions run-list endpoint is unavailable to this session; the GitHub commit-run connector reports only PR runs, so **no latest push CI PASS claimed**. Local container has no PostgreSQL binaries or Docker; local SQL execution not performed. Existing synthetic CAS assertions have not been validated against Supabase. No production app, DB, RLS, user data or permissions changed. Next: inspect CI run results; fix any actual SQL failure and implement authenticated server CAS only on approved separately backed-up staging. P0 data safety remains OPEN and paid security remains deferred.
+
 ## 2026-10-12 — Additional PostgreSQL CAS invalid-payload regression
 
 At latest head, commit-associated workflow query returned zero runs (this API filters PR runs; not proof no push runs exist). Public Actions listing also unavailable. Added negative test to synthetic disposable PostgreSQL CAS integration (`0056ff5c`): malformed array payload must be rejected and must leave original revision/data unchanged. Test is registered in existing isolated PostgreSQL workflow, but fresh SQL runtime result remains NOT VERIFIED because local PostgreSQL binaries are absent and latest Actions results inaccessible. No changes to production index.html, Supabase schema, grants, RLS, accounts or records. **P0 CAS remains not deployed / commercial NO-GO.** Next: verify the workflow via GitHub Actions page, fix any runtime errors and then use disposable isolated environment to test authenticated owner-specific RPC before any live migration.
