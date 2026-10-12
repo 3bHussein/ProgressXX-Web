@@ -22,6 +22,15 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Real-device Daily deletion not syncing; retired Apps Script warning
+
+- Owner reported real Daily reminder create sometimes appears on other device, but **deletion does not propagate in either direction**. Daily UI said `Apps Script URL is missing.`, caused by retired `syncRemindersFromSheet()` being called on Daily navigation, focus and timer while still requiring legacy Apps Script.
+- Replaced that Daily list refresh with signed-in **Supabase snapshot GET**, including an explicitly empty `[]` list as authoritative deletion. Never overwrite local unsynced/pending edits or write fetched values back to cloud; refresh UI from the restored account list. Root commit `c7fd95ea628b5cb94de8f35548c4ce089746721e`.
+- Added regression for remotely added/removed lists, empty list, pending local edits, and absence of Apps Script calls in `tests/daily-history-supabase-hydration.cjs`, commit `7dbbeb8d53ba888c7081f3928470c8fca3b360b3`.
+- CI and real-device confirmation **pending**. Previous CI #38186889487 failed, new tests await verification. No production data deletion/schema edits. User's security-cost deferral `SECURITY-DEFERRED-2026-10-12` remains in effect.
+- Follow-up: check Actions then retest creation/deletion on two devices only with labelled test reminders; do not delete historic reminders.
+
+
 ### 2026-10-12 — Owner Daily recheck acknowledged; repair Food smoke preload timeout
 
 - User responded "تم نكمل" after request to retest Daily reminder list. This confirms they completed a check but does **not explicitly confirm** the lists now match; ask if mismatch persists.
