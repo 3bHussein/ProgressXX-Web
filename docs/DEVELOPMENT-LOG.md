@@ -47,6 +47,12 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Isolated client 409/412 draft guard (NOT production-wired)
+
+Created opt-in `scripts/snapshot-conflict-guard.cjs` (`e7db6a94`) and `tests/snapshot-conflict-guard-contract.cjs` (`89e29795`), registered mandatory Full UI test (`f010b9f8`). The helper intercepts hypothetical HTTP 409/412 responses, saves a cloned local draft, requests explicit review and never blindly retries. Test source asserts 409/412 draft preservation, isolation from mutations, exactly one review callback, 503 passthrough and missing pending-store rejection. **New CI: NOT VERIFIED; local execution NOT VERIFIED.** Attempts to fetch current Actions via public API failed in this environment; prior Full UI #38234329379 and Pages #38234329041 were verified successful in previous session, not proof for new commits. Production `index.html` and Supabase untouched; no data/schema/RLS/grants/migration impact, no live deployment behavior change. P0 concurrency and RLS remain OPEN. Commercial readiness 55–65% rough baseline unchanged; owner-paid-security deferral remains nonblocking for free work.
+
+**Exact next step:** Inspect Full UI GitHub Actions for `f010b9f8` and repair any failure; then develop integration behind a disabled-by-default flag ONLY after real server CAS is authorized and safely verified. Do not claim production conflicts are protected.
+
 ## 2026-10-12 — Synthetic CAS concurrency matrix for four data domains
 
 **Scope:** Free P0 sync QA only. Verified previous Full UI #38234329379 SUCCESS and Pages #38234329041 SUCCESS (historical runs; not a claim about new commits). Added `tests/cas-concurrency-matrix.cjs` (commit `f0fcdd87`) and registered it in `.github/workflows/full-ui-smoke.yml` (commit `d6c874e1`). The pure in-memory matrix covers remote deletion versus stale unrelated edits across Daily, Food, Workout and Weight; confirms 409 retains pending data, explicitly reviewed merge preserves cloud deletion and independent edit, and later stale replay is rejected. It also asserts one of two same-revision concurrent writers is rejected.
