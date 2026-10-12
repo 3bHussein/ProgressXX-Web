@@ -5,7 +5,7 @@ const {chromium}=require('playwright');
  const errors=[];
  let savedCloudPayload={},cloudWrites=0,legacyGoogleCalls=0,productWrites=[],foodEntryWrites=[];
  page.on('request',req=>{if(/script\.google\.com|docs\.google\.com/.test(req.url()))legacyGoogleCalls++});
- page.on('pageerror',error=>errors.push(error.message));
+ page.on('pageerror',error=>errors.push(error.stack||error.message));
  await page.route('**/auth/v1/**',async route=>{
   const url=route.request().url();
   await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({access_token:'mock-auth-token',refresh_token:'mock-refresh-token',expires_at:Math.floor(Date.now()/1000)+3600,user:{id:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',email:'qa@example.test'}})});
