@@ -34,6 +34,10 @@ Mock API contract `tests/sync-delete-resolution-api-contract.cjs` (`69d783e`) sp
 
 `tests/offline-delete-replay-contract.cjs` (`2a6599c`) and CI `45db7a2` specify idempotent queued deletion replay, stale conflict and owner checks. **Mock only**; does not imply production support. Fresh CI unverified, P0 sync OPEN, readiness unchanged. Owner's paid-security deferral remains nonblocking for development.
 
+## 2026-10-12 — Same-record offline editing and production acceptance gates
+
+Mock concurrent same-record editing contract `tests/offline-same-record-conflict-contract.cjs` (`15cd7fd`), CI `0fe61f3`. Deployment/rollback, CAS, per-account RLS and restore test checklist: [SYNC-CONFLICT-PRODUCTION-ACCEPTANCE](docs/SYNC-CONFLICT-PRODUCTION-ACCEPTANCE.md), commit `3ab9b84`. CI of new tests not yet verified. These are **not production fixes**; cross-device data safety remains P0 OPEN, paid staging still explicitly deferred. 55–65% estimate unchanged.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
