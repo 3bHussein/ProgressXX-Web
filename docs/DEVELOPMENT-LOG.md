@@ -47,6 +47,10 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Durable conflict-clear acknowledgement guard
+
+Updated isolated `scripts/conflict-review-queue.cjs` (d9a8c85a) to verify that storage really removed the pending draft before confirming clearance; previously a no-op storage adapter could report success and leave unresolved data behind. Added regression in `tests/conflict-review-queue-contract.cjs` (8002bbd8) that simulates failed removal and requires an error while the draft stays recoverable. Existing Full UI and Fast conflict workflows include this test. New CI and local execution NOT VERIFIED. This is not wired to production index.html and does not repair live CAS. No real user data, Supabase schemas, grants or deployments changed. Commercial readiness estimate stays 55–65%; P0 synchronization and RLS remain open, paid security staging deferred. Next step: verify latest Actions results and perform safe real-device sync/restore acceptance before shipping CAS.
+
 ## 2026-10-12 — Validate account identity before conflict queue use
 
 Reviewed production-independent conflict review module. Fixed a real input-validation bug: `createReviewQueue()` previously called `.trim()` before checking an account ID, which raised an unintended TypeError for null, undefined or non-string callers. Commit `280d9992` now uses validated `keyFor(accountId)` before normalization. Added null/undefined/number/object/blank-string regression assertions in `tests/conflict-review-queue-contract.cjs` (`412851fd`). Already registered in Fast and Full UI workflows. CI execution NOT VERIFIED; no local test pass claimed. Production `index.html`, database, authentication records and all user data untouched. Live CAS and real RLS remain P0 OPEN; commercial estimate 55–65% unchanged; paid security staging remains deferred. Next: verify Fast conflict CI and Full UI job outcomes; then return to real-device sync correctness and backups.
