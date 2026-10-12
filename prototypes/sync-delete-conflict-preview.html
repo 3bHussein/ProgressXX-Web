@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ProgressX · Delete conflict preview</title>
+<style>
+:root{font:16px system-ui,-apple-system,Segoe UI,sans-serif;color-scheme:dark;background:#101827;color:#f1f5f9}body{margin:0;padding:18px;line-height:1.55}main{max-width:940px;margin:auto}h1{margin:.4em 0}.notice{color:#fcd34d;font-weight:700;font-size:.8rem}.panel{background:#1e293b;border:1px solid #475569;border-radius:15px;padding:18px;margin:16px 0}.comparison{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.version{background:#0f172a;border:1px solid #475569;border-radius:12px;padding:15px;overflow-wrap:anywhere}.actions{display:flex;flex-wrap:wrap;gap:10px}button{font:inherit;padding:10px 14px;border-radius:9px;background:#334155;color:white;border:1px solid #64748b;cursor:pointer}button:focus-visible,select:focus-visible{outline:3px solid #38bdf8}select{font:inherit;padding:9px;color:#fff;background:#0f172a;border:1px solid #64748b;border-radius:8px}#status{color:#fde68a;font-weight:650}small{color:#cbd5e1}@media(max-width:620px){.comparison{grid-template-columns:1fr}.actions button{width:100%}body{padding:12px}}
+</style></head><body><main>
+<div class="notice">ISOLATED PREVIEW · SYNTHETIC DATA · NO DATABASE CONNECTION</div>
+<h1>Cross-device deletion conflict</h1>
+<p>Device A deleted a record; Device B still has an older copy. Review before resolving. No real data is loaded or saved.</p>
+<section class="panel"><label for="domain">Preview data type: </label><select id="domain"><option value="Daily">Daily</option><option value="Workout">Workout</option><option value="Weight">Weight</option><option value="Food">Food</option></select><div class="comparison">
+<article class="version"><h2>Cloud · newer</h2><p id="cloudState">Daily entry deleted on device A.</p><small>Authoritative cloud state contains no record.</small></article>
+<article class="version"><h2>This device · older</h2><p id="deviceState">Daily entry still exists on device B.</p><small>This copy is stale and must not silently recreate the entry.</small></article>
+</div></section>
+<section class="panel"><h2>Review options</h2><div class="actions"><button data-choice="keep-delete">Keep deletion</button><button data-choice="restore">Restore record (preview)</button><button data-choice="later">Review later</button></div>
+<p id="status" role="status" aria-live="polite">No action taken. Both simulated states remain unchanged.</p></section>
+<p><small>Preview-only: enabling real conflict resolution requires authenticated server-side atomic version checks, durable pending edits and verified account isolation. Nothing on this page writes to Supabase, localStorage or sessionStorage.</small></p>
+</main><script>
+(()=>{'use strict';
+const domain=document.querySelector('#domain'),cloud=document.querySelector('#cloudState'),device=document.querySelector('#deviceState'),status=document.querySelector('#status');
+function reset(){cloud.textContent=domain.value+' entry deleted on device A.';device.textContent=domain.value+' entry still exists on device B.';status.textContent='No action taken. Both simulated states remain unchanged.'}
+domain.addEventListener('change',reset);
+document.querySelectorAll('[data-choice]').forEach(btn=>btn.addEventListener('click',()=>{
+ const c=btn.dataset.choice;
+ status.textContent=c==='keep-delete'?'Preview only: deletion remains authoritative. No changes saved.':c==='restore'?'Preview only: restoration would require explicit approval and atomic server check. No changes saved.':'Review deferred. No changes saved.';
+}));
+})();
+</script></body></html>
