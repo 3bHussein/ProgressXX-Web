@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+
+### 2026-10-12 — Owner confirms Daily create/delete cross-device sync; CI fixture fix
+
+- Owner explicitly confirmed Daily now works after Supabase add/delete refresh fix. This is user-confirmed real-device behavior, not proof of concurrent edit conflict safety.
+- Pages #38187392355 and Deploy Full App #38187338277 SUCCESS. Full UI #38187392401 FAILED after successful app smoke and eight-group cross-context snapshot tests because isolated VM test forgot `DAILY_REMINDERS_KEY`, causing false failure `1 !== 0` for an explicit empty list.
+- Corrected fixture constant in `tests/daily-history-supabase-hydration.cjs`, commit `d3ac97721e470d7770c89f325c6ade2e60d1fb53`. Await new full CI result.
+- No production data / schema changed and no security scope expanded. `SECURITY-DEFERRED-2026-10-12` remains.
+
 ### 2026-10-12 — Real-device Daily deletion not syncing; retired Apps Script warning
 
 - Owner reported real Daily reminder create sometimes appears on other device, but **deletion does not propagate in either direction**. Daily UI said `Apps Script URL is missing.`, caused by retired `syncRemindersFromSheet()` being called on Daily navigation, focus and timer while still requiring legacy Apps Script.
