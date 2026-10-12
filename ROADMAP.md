@@ -14,6 +14,10 @@ Owner requested a permanent commercial milestone tracker in [Development Log](do
 
 **Mandatory on each milestone:** append dated evidence in the Development Log; update that tracker and relevant Roadmap checkbox only when proven, sync Project Handoff, include commits, actual CI/deployment status and data impact, and revise timing only with justification. Paid staging/security work remains deferred until explicit owner approval.
 
+## 2026-10-12 — P0 sync risk evidence: deletion resurrection
+
+`tests/cross-device-delete-resurrection-regression.cjs` (`72be687`) shows a two-device stale whole-account snapshot may resurrect removed Daily, Workout, Weight or Food records after another unrelated edit. CI wiring `008dc95`; new CI not yet verified. This **does not correct production last-writer-wins behavior**; commercial milestone cross-device sync remains OPEN. Safe snapshot concurrency/CAS requires separate review and must not be silently deployed. Paid security deferral does not stop free synthetic QA.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
