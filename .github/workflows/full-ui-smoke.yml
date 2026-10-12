@@ -37,6 +37,7 @@ jobs:
             tests/snapshot-cas-contract-simulation.cjs \
             tests/daily-conflict-prototype-safety.cjs \
             tests/daily-conflict-mobile-browser.cjs \
+            tests/sync-delete-conflict-preview-browser.cjs \
             tests/weight-table-bridge.cjs \
             tests/workout-supabase-table.cjs \
             tests/workout-schedule-table-mirror.cjs \
