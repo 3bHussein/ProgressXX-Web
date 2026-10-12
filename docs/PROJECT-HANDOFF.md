@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Offline same-record concurrency and production checklist
+
+Prior Full UI #38212922901 and Pages #38212922692 succeeded. Added mock `tests/offline-same-record-conflict-contract.cjs` (`15cd7fd`) and CI wiring (`0fe61f3`) to model stale same-record edits, approved merge and delayed retry across Daily/Workout/Weight/Food. Production acceptance checklist `docs/SYNC-CONFLICT-PRODUCTION-ACCEPTANCE.md` (`3ab9b84`) documents prerequisites. Fresh CI unverified; production data and schema unchanged. Sync P0 OPEN, estimate unchanged, paid security work deferred without blocking normal development.
+
 ## 2026-10-12 — Offline delete idempotency contract
 
 Added synthetic `tests/offline-delete-replay-contract.cjs` (`2a6599c`) and CI (`45db7a2`) to verify same event cannot replay twice, stale deletes are rejected, and wrong-user writes denied in an isolated model. Actual offline queue/prod backend remains unchanged. CI NOT VERIFIED; commercial percentage unchanged. Next inspect Actions, continue safe sync.
