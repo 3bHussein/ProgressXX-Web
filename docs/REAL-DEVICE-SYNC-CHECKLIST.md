@@ -41,3 +41,11 @@ For each row mark PASS / FAIL / NOT TESTED: desktop cloud status; item after des
 - Together with earlier desktop → phone Food Library pass, this confirms **bidirectional Food feature flow** on the user's devices for these two test items. It does not establish all products/entries or long-term conflict guarantees.
 - **NEXT — READ ONLY:** compare one known Workout Log row, one Daily History day and one Weight Check-in on both devices. Check exercise/week/sets, daily checkmarks/water, and weight/date. No editing or deletion until both match.
 - Test cleanup should happen only when the owner chooses to delete labelled QA entries; confirm no unintended records were affected.
+
+## Owner-reported Daily discrepancy (2026-10-12)
+
+- Workout Log: PASS, matching on computer and phone.
+- Weight Check-ins: PASS, matching on computer and phone.
+- Daily: **FAIL or incomplete** according to owner; exact mismatched field/date is not yet identified.
+- Root app fix submitted: account-scoped `dailyReminders` global is reloaded from account storage immediately after snapshot/archive hydration and before boot (commit `65685b1366e3a59ec5d50d4b2286061a4699e0c5`); smoke assertion added for in-memory reminders (`216ca4ca903dda7077b3b8e9b99a7bc22f8deb66`). Await CI and owner retest; this is a candidate fix, not proof all Daily discrepancies are resolved.
+- On both devices after Pages deployment, reopen app and check same day's reminder list, completion state, and water amount. Do not edit/delete records until discrepancy isolated.
