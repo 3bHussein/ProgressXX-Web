@@ -27,6 +27,7 @@ jobs:
           node tests/daily-history-supabase-hydration.cjs
           node tests/daily-concurrent-conflict-regression.cjs
           node tests/snapshot-cas-proposal-safety.cjs
+          node tests/snapshot-cas-contract-simulation.cjs
           node tests/weight-table-bridge.cjs
           node tests/workout-supabase-table.cjs
           node tests/workout-schedule-table-mirror.cjs
