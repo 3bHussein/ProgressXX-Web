@@ -47,6 +47,7 @@ jobs:
             tests/live-snapshot-preflight-contract.cjs \
             tests/live-conflict-draft-export-contract.cjs \
             tests/live-conflict-review-contract.cjs \
+            tests/live-conflict-pair-export-contract.cjs \
             tests/versioned-cas-reference-contract.cjs \
             tests/snapshot-cas-transition-contract.cjs \
             tests/cas-delete-unrelated-edit-acceptance.cjs \
