@@ -1,6 +1,6 @@
 # Disposable owner CAS, RLS and restore acceptance
 
-Status: PREPARED; PostgreSQL CI runtime evidence pending. No production rollout authorized.
+Status: VERIFIED on PostgreSQL 17 in disposable CI; no production rollout authorized. PR #17 merged as f1004cf.
 
 This test extends the PostgreSQL 17 service in `.github/workflows/postgres-cas-integration.yml`. It creates only synthetic roles/schema in `synthetic_cas`, restores a real `pg_dump` into a fresh `synthetic_cas_restore`, and removes only assets it created. Existing schema/role/database collisions fail instead of replacing data. No Supabase project, account, grants, RLS, migration or production record is changed. No paid branch/service is enabled.
 
@@ -33,3 +33,7 @@ CI uses the PostgreSQL service container's **pg_dump 17** to avoid a client/serv
 ## Next gate
 
 After a verified CI result, retain live AUTH-01, DATA-01 and SYNC-01/02/03 as OPEN. Prepare a real restorable backup, separate approved Supabase staging, real JWT/two-user direct API negatives, client CAS integration/legacy cutover and real two-device acceptance before requesting a reviewed production rollout.
+
+## Verified execution — 2026-10-12
+
+[PR PostgreSQL #38301607318](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38301607318), [main PostgreSQL #38301837684](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38301837684), [main Full UI #38301837754](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38301837754) SUCCESS. All executable assertions in the matrix above passed. Real pg_dump restored three synthetic owners with identical full manifests, forced RLS, restricted grants and constrained function ownership. Stale CAS remained rejected, valid CAS succeeded in the restored database, and source stayed unchanged. Temporary files/databases/schema/roles were cleaned up. These results do not close production JWT/API/backup/physical-device gates. Exact commit and CI history are in DEVELOPMENT-LOG.

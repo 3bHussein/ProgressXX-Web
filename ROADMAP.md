@@ -1,6 +1,6 @@
 ## Current Work task state — 2026-10-12
 
-**Active continuation:** Disposable owner CAS/RLS/legacy-write lockout and real pg_dump/restore acceptance are prepared. Local guard tests PASS; new SQL runtime evidence is pending. See [isolated acceptance](docs/ISOLATED-OWNER-CAS-RESTORE.md). Root application and production database unchanged.
+**Latest completed continuation:** [PR #17](https://github.com/3bHussein/ProgressXX-Web/pull/17) MERGED as f1004cf. Disposable PostgreSQL owner CAS/RLS, legacy-write denial, 8-session CAS races and real pg_dump restore are VERIFIED PASS. Main PostgreSQL [#38301837684](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38301837684), Full UI [#38301837754](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38301837754) and Pages #38301836988 SUCCESS. The restored database retained all 3 owner/revision/payload manifests and restrictive RLS/grants; valid restored CAS succeeded without changing source. Identity claims are synthetic, not verified Supabase JWTs. See [isolated acceptance](docs/ISOLATED-OWNER-CAS-RESTORE.md). Root application, real accounts, production database and paid features unchanged.
 
 Milestone 2 — Data Safety & Synchronization: **IN PROGRESS / partially verified; commercial NO-GO**. [PR #16](https://github.com/3bHussein/ProgressXX-Web/pull/16) merged as [c1a6d6f](https://github.com/3bHussein/ProgressXX-Web/commit/c1a6d6f421bfdeb52e6790f84df5d9dc28de4a5e). 59/59 local Node/Chromium checks PASS; all eight PR workflows PASS. Main Full UI [#38274340006](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38274340006), Fast #38274340125, PostgreSQL #38274339969, Deploy Full App #38274339939 and Pages #38274338554 SUCCESS on matching runtime SHA. Root index.html retrieved over HTTP matches tested source byte-for-byte (SHA-256 beb238837feef781adb5dd40c8fea4aa75d5b3217b379c1c5178270ff727b4a5).
 
@@ -389,7 +389,9 @@ To resume: `Resume SECURITY-DEFERRED-2026-10-12` or `ارجع لاختبارات
 
 ## Phase 2 — Persistence & sync correctness (P0)
 
-**Milestone 2 status: IN PROGRESS.** [PR #16](https://github.com/3bHussein/ProgressXX-Web/pull/16) repairs root recovery/hydration and CI. Live acceptance items below remain open.
+**Milestone 2 status: IN PROGRESS.**
+- [x] Isolated owner RLS/CAS, anonymous/cross-owner negatives, direct-upsert/TRUNCATE denial and actual pg_dump restore — PR #17, main PostgreSQL #38301837684 SUCCESS. Only simulated identities and synthetic data; live acceptance remains open.
+ [PR #16](https://github.com/3bHussein/ProgressXX-Web/pull/16) repairs root recovery/hydration and CI. Live acceptance items below remain open.
 - [x] Disposable PostgreSQL 17 sequential and independent-session CAS race assertions — [#38273401672](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38273401672) SUCCESS; synthetic reference, not deployed RPC.
 - [x] Local synthetic recovery regressions for in-flight edits, mirror failure, stale deletion hold/reload and both-version export; 59 checks PASS on implementation source. All eight PR checks and matching main runtime checks SUCCESS; root deployment verified.
 
