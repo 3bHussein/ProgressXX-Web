@@ -1309,6 +1309,15 @@ textarea{resize:vertical}
 #pxAccountTools{position:fixed;z-index:95;top:40px;right:10px;display:flex;gap:8px;align-items:center;background:#101d33;color:#fff;border:1px solid #304463;border-radius:10px;padding:7px;font:12px system-ui}
 #pxAccountTools[hidden]{display:none}#pxAccountTools a{color:#e3d7ff;text-decoration:underline}#pxAccountTools button{border:0;border-radius:7px;background:#334766;color:#fff;padding:6px}
 </style>
+<style id="px-accessible-motion">
+:where(button,a,input,select,textarea,[role="button"]):focus-visible{outline:3px solid var(--cyan,#22d3ee);outline-offset:3px}
+.pxAtlasPlate img[role="button"]{cursor:zoom-in}
+.pxAnatomyZoomToolbar button{min-height:44px;min-width:44px}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto!important}
+ *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -2057,11 +2066,11 @@ textarea{resize:vertical}
 <section id="settings" class="section">
 <div class="hero pxSettingsHero"><div class="eyebrow">PREFERENCES & ACCOUNT</div><h2>⚙ Settings</h2><p>Manage your account, backups, sync, appearance and notifications in one place.</p></div>
 <nav class="pxSettingsQuickNav" aria-label="Settings quick navigation">
- <button type="button" onclick="document.getElementById('pxSettingsAccount')?.scrollIntoView({behavior:'smooth',block:'start'})">☁ Account</button>
- <button type="button" onclick="document.getElementById('pxSettingsBackup')?.scrollIntoView({behavior:'smooth',block:'start'})">💾 Backup</button>
- <button type="button" onclick="document.getElementById('pxSettingsSyncCenter')?.scrollIntoView({behavior:'smooth',block:'start'})">↻ Sync</button>
- <button type="button" onclick="document.getElementById('pxSettingsHub')?.scrollIntoView({behavior:'smooth',block:'start'})">🎛 Preferences</button>
- <button type="button" onclick="document.getElementById('pxSettingsSchedule')?.scrollIntoView({behavior:'smooth',block:'start'})">🏋 Schedule</button>
+ <button type="button" onclick="document.getElementById('pxSettingsAccount')?.scrollIntoView({behavior:pxScrollBehavior(),block:'start'})">☁ Account</button>
+ <button type="button" onclick="document.getElementById('pxSettingsBackup')?.scrollIntoView({behavior:pxScrollBehavior(),block:'start'})">💾 Backup</button>
+ <button type="button" onclick="document.getElementById('pxSettingsSyncCenter')?.scrollIntoView({behavior:pxScrollBehavior(),block:'start'})">↻ Sync</button>
+ <button type="button" onclick="document.getElementById('pxSettingsHub')?.scrollIntoView({behavior:pxScrollBehavior(),block:'start'})">🎛 Preferences</button>
+ <button type="button" onclick="document.getElementById('pxSettingsSchedule')?.scrollIntoView({behavior:pxScrollBehavior(),block:'start'})">🏋 Schedule</button>
 </nav>
 <div class="panel pxRealAccountPanel" id="pxSettingsAccount">
  <div class="panelHead"><div><h3>☁ Account & cloud sync</h3><p class="tiny muted">Your changes remain tied to the signed-in account.</p></div><span class="pill" id="pxSettingsConnection">Checking connection…</span></div>
@@ -2656,8 +2665,10 @@ if($('foodQuickProduct'))$('foodQuickProduct').addEventListener('change',()=>{
   if($('foodQuickTime')&&!$('foodQuickTime').dataset.changed)$('foodQuickTime').value=currentTimeHHMM();
   updateFoodQuickPreview()
 });if($('foodQuickAmount'))$('foodQuickAmount').addEventListener('input',()=>{$('foodQuickAmount').dataset.changed='1';updateFoodQuickPreview()});['search','weekFilter','statusFilter','logSort'].forEach(id=>{const el=$(id);if(el)el.addEventListener('input',()=>renderLog(true))});$('exerciseSelect').addEventListener('change',renderExercise);$('progressDaySelect').addEventListener('change',()=>{buildProgressFilters();renderExercise()});$('importFile').addEventListener('change',importJSON);if($('restoreFullBackupFile'))$('restoreFullBackupFile').addEventListener('change',restoreFullBackup);$('fDay').addEventListener('change',()=>{buildExerciseOptions($('fDay').value);if(editingId===null){$('fExercise').value='';$('fPerformance').value='';$('lastPerfHint').textContent=''}});$('fExercise').addEventListener('change',prefillLastPerformance);$('fExercise').addEventListener('input',()=>{const name=$('fExercise').value.trim();if(exercisesForDay($('fDay').value).some(x=>x.toLowerCase()===name.toLowerCase()))prefillLastPerformance()});}
-function go(p){currentPage=p;document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===p));document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===p));const activeNav=document.querySelector('.navbtn.active');if(activeNav&&window.innerWidth<=820){setTimeout(()=>activeNav.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'}),0)}if(p==='intelligence'){renderIntelligence()}if(p==='analytics'){renderAnalytics();if($('progressPhotoDate')&&!$('progressPhotoDate').value)$('progressPhotoDate').value=localDateKey();syncWeightCheckinsFromSheet(true);}if(p==='daily'){renderDaily();syncRemindersFromSheet()}if(p==='nutrition'){renderNutrition();syncNutritionFromSheet(null,true)}if(p==='home'){renderNutritionHome();syncNutritionFromSheet(localDateKey(),true)}if(p==='settings'){renderSyncCenter();renderWorkoutSchedule();renderDataHealth(false);renderAutoBackupList();previewDataRepairs();updatePwaInstallUI();}scrollTo(0,0)}
+function pxScrollBehavior(){return window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?'auto':'smooth'}
+function go(p){currentPage=p;document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===p));document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===p));const activeNav=document.querySelector('.navbtn.active');if(activeNav&&window.innerWidth<=820){setTimeout(()=>activeNav.scrollIntoView({behavior:pxScrollBehavior(),block:'nearest',inline:'center'}),0)}if(p==='intelligence'){renderIntelligence()}if(p==='analytics'){renderAnalytics();if($('progressPhotoDate')&&!$('progressPhotoDate').value)$('progressPhotoDate').value=localDateKey();syncWeightCheckinsFromSheet(true);}if(p==='daily'){renderDaily();syncRemindersFromSheet()}if(p==='nutrition'){renderNutrition();syncNutritionFromSheet(null,true)}if(p==='home'){renderNutritionHome();syncNutritionFromSheet(localDateKey(),true)}if(p==='settings'){renderSyncCenter();renderWorkoutSchedule();renderDataHealth(false);renderAutoBackupList();previewDataRepairs();updatePwaInstallUI();}scrollTo(0,0)}
 function handleAndroidBack(){
+  if($('pxAnatomyZoom')){pxCloseAnatomyZoom();return true}
   if($('workoutSessionOverlay')?.classList.contains('show')){closeWorkoutSession();return true}
   if($('barcodeModal')?.classList.contains('show')){closeBarcodeScanner();return true}
   if($('editorWrap')?.classList.contains('open')){closeEditor();return true}
@@ -5695,7 +5706,7 @@ function renderOnlineFoodResults(){
   box.innerHTML=onlineFoodResultsCache.map((p,i)=>`
     <div class="onlineFoodCard">
       ${p.image
-        ? `<img class="onlineFoodImage" src="${esc(p.image)}" alt="" loading="lazy">`
+        ? `<img class="onlineFoodImage" src="${esc(p.image)}" alt="" loading="lazy" decoding="async">`
         : `<div class="onlineFoodImage placeholder">${p.source==='common'?'🥗':'🍽️'}</div>`}
       <div>
         <div class="onlineFoodName">${esc(p.name)}</div>
@@ -6447,7 +6458,7 @@ function prepareProteinSuggestion(productId,amount){
   $('foodQuickAmount').value=Number(amount)||1;
   if($('foodQuickTime'))$('foodQuickTime').value=currentTimeHHMM();
   updateFoodQuickPreview();
-  $('foodQuickProduct').scrollIntoView({behavior:'smooth',block:'center'});
+  $('foodQuickProduct').scrollIntoView({behavior:pxScrollBehavior(),block:'center'});
 }
 function renderNutritionHome(){
   const today=nutritionTotals(localDateKey());
@@ -7213,7 +7224,7 @@ function openFoodEntryEdit(id){
   $('foodEntryEditAmountLabel').textContent='Amount ('+(x.servingUnit||'serving')+')';
   $('foodEntryEditForm').classList.add('open');
   updateFoodEntryEditPreview();
-  $('foodEntryEditForm').scrollIntoView({behavior:'smooth',block:'nearest'});
+  $('foodEntryEditForm').scrollIntoView({behavior:pxScrollBehavior(),block:'nearest'});
 }
 function updateFoodEntryEditPreview(){
   const id=$('foodEntryEditId')?.value;
@@ -8772,7 +8783,7 @@ function pxAnatomyPartMedia(index,ar){
  const description=entry.scope==='heads'
   ?(ar?'الصورة توضّح رؤوس العضلة معًا؛ التحديد ليس عزلًا للجزء المختار.':'Illustrates the muscle heads together; not an isolated view of the selected head.')
   :(ar?'صورة للعضلة ضمن المجموعة، وليست لكل جزء على حدة.':'Shows a group muscle, not each individual part.');
- return '<figure class="pxAtlasPlate" style="margin:12px 0"><img onclick="pxOpenAnatomyZoom(this.src,this.alt)" title="Tap to enlarge" src="'+url+'" loading="lazy" referrerpolicy="no-referrer" alt="'+esc(PX_ANATOMY[index][0])+'" onerror="pxAnatomyImageFailed(this)"><p class="pxAtlasImgFallback" hidden>'+(ar?'تعذر تحميل الصورة؛ افتح المصدر.':'Could not load illustration; open the source.')+'</p><figcaption class="tiny muted" style="margin:7px 0">'+description+' <a href="'+source+'" target="_blank" rel="noopener noreferrer">'+esc(entry.credit)+' · '+esc(entry.license)+'</a></figcaption></figure>';
+ return '<figure class="pxAtlasPlate" style="margin:12px 0"><img role="button" aria-label="'+esc(PX_ANATOMY[index][0])+' — '+(ar?'تكبير الصورة':'Enlarge image')+'" tabindex="0" onkeydown="pxAnatomyImageKey(event,this)" decoding="async" onclick="pxOpenAnatomyZoom(this.src,this.alt)" title="Tap to enlarge" src="'+url+'" loading="lazy" referrerpolicy="no-referrer" alt="'+esc(PX_ANATOMY[index][0])+'" onerror="pxAnatomyImageFailed(this)"><p class="pxAtlasImgFallback" hidden>'+(ar?'تعذر تحميل الصورة؛ افتح المصدر.':'Could not load illustration; open the source.')+'</p><figcaption class="tiny muted" style="margin:7px 0">'+description+' <a href="'+source+'" target="_blank" rel="noopener noreferrer">'+esc(entry.credit)+' · '+esc(entry.license)+'</a></figcaption></figure>';
 }
 function pxAnatomyPartVisual(index,selected,ar){
  const parts=PX_ANATOMY_PARTS[index]||[];
@@ -8843,27 +8854,42 @@ function pxAnatomyPlate(index,view){
  const file=plate[view]||'';
  return {file,specific:Boolean(file)};
 }
-let pxAnatomyZoomScale=1;
+let pxAnatomyZoomScale=1,pxAnatomyZoomPreviousFocus=null;
+function pxAnatomyImageKey(event,img){if((event.key==='Enter'||event.key===' ')&&!event.repeat){event.preventDefault();pxOpenAnatomyZoom(img.src,img.alt)}}
 function pxOpenAnatomyZoom(url,label){
  if(!url||!/^https:\/\/commons\.wikimedia\.org\//.test(url))return;
- pxCloseAnatomyZoom();
- const dialog=document.createElement('div');dialog.id='pxAnatomyZoom';dialog.className='pxAnatomyZoom';dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');
- dialog.innerHTML='<div class="pxAnatomyZoomToolbar"><button class="btn soft" onclick="pxAnatomyZoomBy(-.25)">−</button><button class="btn soft" onclick="pxAnatomyZoomReset()">100%</button><button class="btn soft" onclick="pxAnatomyZoomBy(.25)">＋</button><button class="btn primary" onclick="pxCloseAnatomyZoom()">✕ Close</button></div><div class="pxAnatomyZoomViewport"><img alt=""></div><p class="pxAnatomyZoomNote"></p>';
- const img=dialog.querySelector('img');img.src=url;img.alt=label||'Anatomy';dialog.querySelector('.pxAnatomyZoomNote').textContent=label||'Anatomy';
+ pxCloseAnatomyZoom();pxAnatomyZoomPreviousFocus=document.activeElement;
+ const dialog=document.createElement('div');dialog.id='pxAnatomyZoom';dialog.className='pxAnatomyZoom';dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-label',label||'Anatomy image zoom');
+ dialog.innerHTML='<div class="pxAnatomyZoomToolbar"><button class="btn soft" aria-label="Zoom out" onclick="pxAnatomyZoomBy(-.25)">−</button><button class="btn soft" aria-label="Reset zoom" onclick="pxAnatomyZoomReset()">100%</button><button class="btn soft" aria-label="Zoom in" onclick="pxAnatomyZoomBy(.25)">＋</button><button class="btn primary" onclick="pxCloseAnatomyZoom()">✕ Close</button></div><div class="pxAnatomyZoomViewport"><img alt=""></div><p class="pxAnatomyZoomNote"></p>';
+ const img=dialog.querySelector('img');img.decoding='async';img.src=url;img.alt=label||'Anatomy';dialog.querySelector('.pxAnatomyZoomNote').textContent=label||'Anatomy';
  dialog.addEventListener('click',e=>{if(e.target===dialog)pxCloseAnatomyZoom()});
  document.body.appendChild(dialog);pxAnatomyZoomScale=1;pxAnatomyZoomReset();dialog.querySelector('button:last-child').focus();
 }
 function pxAnatomyZoomBy(delta){pxAnatomyZoomScale=Math.max(.5,Math.min(3,pxAnatomyZoomScale+delta));const img=document.querySelector('#pxAnatomyZoom img');if(img)img.style.transform='scale('+pxAnatomyZoomScale+')';}
 function pxAnatomyZoomReset(){pxAnatomyZoomScale=1;const img=document.querySelector('#pxAnatomyZoom img');if(img)img.style.transform='scale(1)';}
-function pxCloseAnatomyZoom(){document.getElementById('pxAnatomyZoom')?.remove();}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')pxCloseAnatomyZoom()});
+function pxCloseAnatomyZoom(){
+ const dialog=document.getElementById('pxAnatomyZoom');if(!dialog)return;
+ dialog.remove();const previous=pxAnatomyZoomPreviousFocus;pxAnatomyZoomPreviousFocus=null;
+ if(previous?.isConnected)previous.focus({preventScroll:true});
+}
+document.addEventListener('keydown',e=>{
+ const dialog=document.getElementById('pxAnatomyZoom');if(!dialog)return;
+ if(e.key==='Escape'){e.preventDefault();pxCloseAnatomyZoom();return}
+ if(e.key!=='Tab')return;
+ const buttons=[...dialog.querySelectorAll('button')].filter(b=>!b.disabled);
+ const first=buttons[0],last=buttons.at(-1);if(!first)return;
+ const current=document.activeElement;
+ if(!dialog.contains(current)){e.preventDefault();(e.shiftKey?last:first).focus()}
+ else if(e.shiftKey&&current===first){e.preventDefault();last.focus()}
+ else if(!e.shiftKey&&current===last){e.preventDefault();first.focus()}
+});
 
 function pxAnatomyImage(index,view,ar){
  const item=pxAnatomyPlate(index,view);
  if(!item.specific)return '<div class="pxAtlasBlock"><p class="tiny muted">'+(ar?'لا يتوفر رسم تشريحي متخصص لهذه الزاوية؛ اختر الزاوية الأخرى.':'No muscle-specific illustration for this angle; select the other view.')+'</p></div>';
  const url='https://commons.wikimedia.org/wiki/Special:FilePath/'+encodeURIComponent(item.file);
  const alt=esc(PX_ANATOMY[index][0])+' — '+(view==='front'?'anterior':'posterior')+' anatomical illustration';
- return '<div class="pxAtlasPlate"><img onclick="pxOpenAnatomyZoom(this.src,this.alt)" title="Tap to enlarge" src="'+url+'" alt="'+alt+'" loading="lazy" referrerpolicy="no-referrer" onerror="pxAnatomyImageFailed(this)"><p class="pxAtlasImgFallback" hidden>'+(ar?'تعذر تحميل الصورة من Wikimedia؛ افتح رابط المصدر أدناه.':'Image could not load from Wikimedia; use the source link below.')+'</p></div>';
+ return '<div class="pxAtlasPlate"><img role="button" aria-label="'+esc(PX_ANATOMY[index][0])+' — '+(ar?'تكبير الصورة':'Enlarge image')+'" tabindex="0" onkeydown="pxAnatomyImageKey(event,this)" decoding="async" onclick="pxOpenAnatomyZoom(this.src,this.alt)" title="Tap to enlarge" src="'+url+'" alt="'+alt+'" loading="lazy" referrerpolicy="no-referrer" onerror="pxAnatomyImageFailed(this)"><p class="pxAtlasImgFallback" hidden>'+(ar?'تعذر تحميل الصورة من Wikimedia؛ افتح رابط المصدر أدناه.':'Image could not load from Wikimedia; use the source link below.')+'</p></div>';
 }
 function pxAnatomyImageFailed(img){
  img.hidden=true;
@@ -8953,7 +8979,7 @@ function pxCoverageOpen(index){
  if($('pxAnatomySearch'))$('pxAnatomySearch').value='';
  pxSetAnatomyMobileTab('atlas');
  pxRenderAnatomy();
- $('pxAnatomyDetail')?.scrollIntoView({behavior:'smooth',block:'nearest'});
+ $('pxAnatomyDetail')?.scrollIntoView({behavior:pxScrollBehavior(),block:'nearest'});
 }
 function pxCoverageSuggestions(index,ar){
  const saved=pxAnatomyExerciseNames();

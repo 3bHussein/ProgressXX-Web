@@ -24,9 +24,11 @@ The earlier SECURITY INVOKER proposal requires the caller to retain table write 
 
 This is a test-only architectural experiment, not a deployable Supabase migration. Identity comes from a session claim injected by the administrator test harness. SQL users who can set arbitrary claims are outside this simulated gateway boundary; real JWT/API negatives still require independently authorized staging. Exposed-schema wrapper design, function ownership, privilege inheritance, advisors and old-client migration need review before any production proposal.
 
-## Repeatable execution
+## Repeatable execution — PAUSED by owner
 
-Use the existing GitHub Actions `Isolated PostgreSQL CAS integration` workflow (PR, main relevant-path push, or workflow_dispatch). The guard unit test is `python3 tests/postgres-owner-cas-guard.py`; it never opens a database connection. The acceptance runner requires literal localhost, database `synthetic_cas`, administrator `postgres` and port 5432, with no connection URL accepted.
+As of 2026-10-13 Cairo, no database experiment may run until a new explicit owner request. The workflow has no push/PR trigger, defaults its manual resume input to false, and skips the SQL job without workflow_dispatch plus true opt-in. Preserve earlier evidence; do not rerun for routine frontend changes.
+
+After explicit owner resumption only, use the existing manual GitHub Actions `Isolated PostgreSQL CAS integration` workflow with the owner-resume input. The guard unit test is `python3 tests/postgres-owner-cas-guard.py`; it never opens a database connection. The acceptance runner requires literal localhost, database `synthetic_cas`, administrator `postgres` and port 5432, with no connection URL accepted.
 
 CI uses the PostgreSQL service container's **pg_dump 17** to avoid a client/server major-version mismatch. Backup files live in a private temporary directory, are removed after testing and are not uploaded as artifacts. Only synthetic pass/fail evidence is logged.
 
