@@ -47,6 +47,10 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+
+### 2026-10-12 — Daily reminder / mobile anatomy test guard
+
+Previous Pages #38224272376 SUCCESS; Full UI #38224271404 still running when checked, with earlier #38224263039 SUCCESS. Tightened mobile Anatomy smoke test (`0f4382d`) to explicitly assert the Daily alarm overlay has disappeared after the normal dismiss action before performing actual mobile pointer clicks. No production code, data, Supabase schema or RLS changes. New CI unverified; commercial readiness 55–65% rough baseline unchanged, synchronization and security release gates remain OPEN; paid security work still deferred/nonblocking. Next: inspect latest CI and investigate any test failure.
 ### 2026-10-12 — Fix mobile anatomy smoke blocked by Daily reminder overlay
 
 - Verified Full UI [#38223565793](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38223565793) FAILED while Pages #38223565495 succeeded. Workflow log pinpointed Playwright `locator.click` timeout on `#pxAnatomyTabCoverage` because the real `#alarmOverlay.show` intercepted pointer input; this run did **not** fail due to an uncaught Not authenticated error.
