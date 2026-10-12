@@ -6,7 +6,7 @@ const schedule=html.match(/let syncRetryFailures=0;[\s\S]*?function scheduleClou
 const flush=html.match(/async function flush\(\)\{[\s\S]*?\n \}/);
 assert.ok(schedule&&flush,'Production retry helpers missing');
 const delays=[];let pending=true,attempt=0;
-const env={ready:true,uploading:false,revision:1,savedRevision:0,account:'mock',
+const env={timer:null,ready:true,uploading:false,revision:1,savedRevision:0,account:'mock',
  values:{'progressx-reminders':'[]'},navigator:{onLine:true},
  clearTimeout:()=>{},setTimeout:(fn,delay)=>{delays.push(delay);return 1},
  cloud:async()=>{if(++attempt<=3)throw Error('synthetic 503')},
