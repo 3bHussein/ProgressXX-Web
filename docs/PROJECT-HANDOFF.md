@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Two-context browser pending restore QA
+
+Verified Full UI #38219664190 and Pages #38219663464 succeeded. Added `tests/two-context-pending-recovery-browser.cjs` (`59f83c15`), CI (`8fc113c2`), testing two separate Chromium contexts with fake Supabase, A failed 503/reload/automatic retry and B reload hydration. New CI unverified; this is not a concurrent CAS fix. No real data or schema changed; commercial estimate unchanged, paid security deferred.
+
 ## 2026-10-12 — Fixed pending snapshot activation replay
 
 Prior Full UI #38218406646 and Pages #38218403472 passed. Production `activate()` `ca6bc5e` now marks a restored pending snapshot as unsynced (previously `savedRevision=revision` caused auto `flush()` no-op). Updated full app Chromium test `26b2457` requires automatic retry after reload, no manual Sync now button. Fresh CI not verified; cross-device P0 remains OPEN and intermittent auth error not proven resolved. Data/schema unchanged; 55–65% commercial estimate and paid security deferral unchanged.
