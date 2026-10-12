@@ -31,6 +31,7 @@ jobs:
             tests/account-pages-snapshot-sync.cjs \
             tests/daily-history-supabase-hydration.cjs \
             tests/daily-concurrent-conflict-regression.cjs \
+            tests/cross-device-delete-resurrection-regression.cjs \
             tests/snapshot-cas-proposal-safety.cjs \
             tests/snapshot-cas-contract-simulation.cjs \
             tests/daily-conflict-prototype-safety.cjs \
