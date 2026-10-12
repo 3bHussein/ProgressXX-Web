@@ -47,6 +47,14 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Production retry backoff for transient sync failures
+
+- Verified previous Full UI [#38216887326](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38216887326) SUCCESS and Pages [#38216887034](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38216887034) SUCCESS. Two-browser test now reports observed state, does not assert every schedule update resurrects Daily.
+- **Production source change:** `index.html` `6b52ba0` adds capped exponential delay to `scheduleCloudSync()` when `flush()` fails: 2.4s, 4.8s, 9.6s, and maximum 30s; reset to 1.2s after successful snapshot upload and workout mirror. Existing pending edits remain untouched on failures. Reduces repeated requests during outages. No server CAS or stale-write protection implemented.
+- Added `tests/production-sync-retry-backoff.cjs` (`9c286c9`, corrected `fc0f28c`) using real extracted production retry and flush functions, and mandatory CI registration (`9054f72`). New CI/deployment NOT VERIFIED at checkpoint.
+- No Supabase migration or real account records changed. Rough commercial readiness 55–65% unchanged; data synchronization P0 OPEN and paid security checkpoint deferred/nonblocking.
+- **Next:** check new CI; fix any failures. Only after passing consider showing sync outage/retry status and plan atomic CAS rollout separately.
+
 ### 2026-10-12 — Fix failing two-device Chromium test's false assumption
 
 - Full UI run [#38216603946](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38216603946) **FAILED** while Pages #38216603412 SUCCEEDED. Workflow job log identified `tests/full-app-two-device-daily-resurrection.cjs` assertion expecting deleted Daily record resurrection; mock returned `false`. Other suite entries passed.
