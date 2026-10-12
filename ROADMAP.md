@@ -22,6 +22,10 @@ Owner requested a permanent commercial milestone tracker in [Development Log](do
 
 `tests/cross-device-safe-rebase-simulation.cjs` (`744f064`), CI registration `543aed3`, models version-based stale-write rejection and approved rebase without resurrecting records across Daily, Workout, Weight, Food. **Simulation only**: production remains vulnerable to stale whole-snapshot overwrite. Fresh CI not yet verified. Cross-device sync P0 remains OPEN and commercial percentage unchanged. Paid security checkpoint remains an exception for ongoing dev only.
 
+## 2026-10-12 — Read-only delete conflict preview
+
+New isolated `prototypes/sync-delete-conflict-preview.html` (`5d16187`), Chromium no-write/mobile regression `tests/sync-delete-conflict-preview-browser.cjs` (`66181f4`), CI integration `78d2912`. This covers four data domains and three preview choices, but **does not resolve or block live stale writes**. New CI NOT VERIFIED, sync P0 OPEN and rough 55–65% estimate unchanged. Continue development without paid security work.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
