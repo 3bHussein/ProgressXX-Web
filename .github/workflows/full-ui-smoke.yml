@@ -41,6 +41,7 @@ jobs:
             tests/two-account-pending-isolation-contract.cjs \
             tests/production-stale-snapshot-release-gate.cjs \
             tests/snapshot-cas-transition-contract.cjs \
+            tests/cas-delete-unrelated-edit-acceptance.cjs \
             tests/conflict-review-prototype-browser.cjs \
             tests/full-app-two-account-isolation-browser.cjs \
             tests/offline-upload-failure-reload-browser.cjs \
