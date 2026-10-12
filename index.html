@@ -9331,7 +9331,7 @@ window.__legacyBoot=init;
  const snapshotDigest=payload=>JSON.stringify(Object.entries(payload||{}).sort(([a],[b])=>a.localeCompare(b)));
  const storagePrefix=id=>'pxx:full:'+id+':';
  const pendingKey=id=>'pxx:pending:'+id;
- function markPending(){if(account)browserStorage.setItem(pendingKey(account),JSON.stringify({payload:{...values},at:Date.now()}))}
+ function markPending(){if(account)browserStorage.setItem(pendingKey(account),JSON.stringify({payload:{...values},baseDigest:snapshotBaseline,at:Date.now()}))}
  function clearPending(){if(account)browserStorage.removeItem(pendingKey(account))}
  function readPending(id){try{const data=JSON.parse(browserStorage.getItem(pendingKey(id))||'null');return data&&data.payload&&typeof data.payload==='object'?data.payload:null}catch{return null}}
  const nodeStorage={
@@ -9710,6 +9710,10 @@ window.__legacyBoot=init;
   const cloudValues=rows[0]?.payload||{};
   snapshotBaseline=snapshotDigest(cloudValues);syncConflictHold=false;
   const pending=readPending(account);
+  // An older local draft must never be blindly replayed after remote changes.
+  let pendingRecord=null;
+  try{pendingRecord=JSON.parse(browserStorage.getItem(pendingKey(account))||'null')}catch{}
+  if(pending && pendingRecord?.baseDigest!==snapshotBaseline)syncConflictHold=true;
   // Only locally queued edits can override server data; normal cached rows cannot.
   // This prevents an old cache from unexpectedly replacing another device's cloud state.
   const merged=pending?{...cloudValues,...pending}:cloudValues;
@@ -9725,7 +9729,7 @@ window.__legacyBoot=init;
    for(let i=0;i<browserStorage.length;i++){const key=browserStorage.key(i);if(key?.startsWith(prefix)&&!(key.slice(prefix.length) in values))stale.push(key)}
    stale.forEach(key=>browserStorage.removeItem(key));
   }
-  savedRevision=pending?revision-1:revision;ready=true;tell(pending?'◷ Locally queued edits restored · waiting to sync':'✓ Signed in · Supabase connected');
+  savedRevision=pending?revision-1:revision;ready=true;tell(syncConflictHold?'⚠ Local edits preserved; remote data changed. Sync paused for review':pending?'◷ Locally queued edits restored · waiting to sync':'✓ Signed in · Supabase connected');
   const connectionLabel=document.getElementById('pxSettingsConnection');
   if(connectionLabel)connectionLabel.textContent=navigator.onLine?'Connected':'Offline';
   // Restore queued Food rows into the in-memory UI before the login boot/render.
