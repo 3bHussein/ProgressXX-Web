@@ -39,6 +39,16 @@ BEGIN
  IF NOT result.accepted OR result.actual_revision<>2 THEN RAISE EXCEPTION 'delete failed'; END IF;
  SELECT * INTO result FROM demo.save_snapshot(a,1,'{"food":["resurrect"],"daily":["new"]}');
  IF result.accepted OR result.actual_payload->'food'<>'[]'::jsonb THEN RAISE EXCEPTION 'deletion resurrected'; END IF;
+ BEGIN
+  PERFORM * FROM demo.save_snapshot(a,2,'[]'::jsonb);
+  RAISE EXCEPTION 'array snapshot unexpectedly accepted' USING ERRCODE='PX001';
+ EXCEPTION WHEN SQLSTATE 'PX001' THEN RAISE;
+           WHEN OTHERS THEN NULL;
+ END;
+ IF (SELECT revision FROM demo.snapshots WHERE user_id=a)<>2
+    OR (SELECT payload->'food' FROM demo.snapshots WHERE user_id=a)<>'[]'::jsonb THEN
+  RAISE EXCEPTION 'invalid payload altered saved snapshot';
+ END IF;
  SELECT * INTO result FROM demo.save_snapshot(b,8,'{"food":["must-not-insert"]}');
  IF result.accepted OR result.actual_revision<>0 THEN RAISE EXCEPTION 'invalid first revision accepted'; END IF;
  IF EXISTS(SELECT 1 FROM demo.snapshots WHERE user_id=b) THEN RAISE EXCEPTION 'invalid first revision inserted row'; END IF;
