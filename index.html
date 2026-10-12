@@ -7988,7 +7988,16 @@ function dismissActiveAlarm(){
   activeAlarmReminder=null;
 }
 document.addEventListener('keydown',event=>{
-  if(event.key==='Escape'&&document.getElementById('alarmOverlay')?.classList.contains('show')){
+  const dialog=document.getElementById('alarmOverlay');
+  if(event.key==='Tab'&&dialog?.classList.contains('show')){
+    const buttons=[...dialog.querySelectorAll('button:not([disabled])')].filter(button=>button.getClientRects().length);
+    if(buttons.length){
+      const first=buttons[0],last=buttons[buttons.length-1];
+      if(event.shiftKey&&(document.activeElement===first||!dialog.contains(document.activeElement))){event.preventDefault();last.focus()}
+      else if(!event.shiftKey&&(document.activeElement===last||!dialog.contains(document.activeElement))){event.preventDefault();first.focus()}
+    }
+  }
+  if(event.key==='Escape'&&dialog?.classList.contains('show')){
     event.preventDefault();
     dismissActiveAlarm();
   }
