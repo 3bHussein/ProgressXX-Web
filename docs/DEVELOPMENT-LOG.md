@@ -22,6 +22,13 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Daily conflict manual merge reload regression
+
+- Confirmed prior prototype browser change CI [#38190604096](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190604096) SUCCESS and later Full UI [#38190623136](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190623136) SUCCESS. Pages [#38190627334](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190627334) SUCCESS.
+- Added strict reload assertion to `tests/daily-conflict-mobile-browser.cjs`: manual merge panel must be hidden again after reloading the isolated conflict prototype, commit [`d0a0169`](https://github.com/3bHussein/ProgressXX-Web/commit/d0a0169b5eea77d4ad38b193f0ddde028f6127c7). This complements the no-write/no-persistent-storage regression on mobile widths 320/390/768.
+- Fresh CI after code change: **NOT VERIFIED** at commit time. Deployment of this change: **NOT VERIFIED**. No production app runtime, database schema, real account or stored data changed. Prototype remains a read-only UX concept, not deployed CAS. `SECURITY-DEFERRED-2026-10-12` stays deferred.
+- **Exact next step:** inspect CI for the manual-merge reset assertion, then add mock auth failure/retry regression without weakening login browser error checks or changing real data.
+
 ### 2026-10-12 — Verify green deployment and harden Daily preview no-write invariants
 
 - Verified Full UI [#38190518693](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190518693) SUCCESS and Pages [#38190518674](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190518674) SUCCESS for `7ccd98d`; Full App [#38190483562](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190483562) SUCCESS for `9e05d56`.
