@@ -57,6 +57,11 @@
 ## Daily conflict recovery UX design — 2026-10-12
 ## Daily conflict UI prototype (2026-10-12)
 ## Prototype CI syntax correction — 2026-10-12
+## Preview mobile browser QA — 2026-10-12
+
+Prior Full UI #38189690942 and Pages #38189690828 SUCCESS. New browser test `tests/daily-conflict-mobile-browser.cjs` checks 320/390/768 px screens, all four choices, manual merge, overflow and page errors. Wired to Full UI CI (`fa2b946b`, `ce7a3b65`), result pending. Standalone prototype only; no real CAS or production data changes; security deferred.
+
+
 
 Pages #38189538258 SUCCESS; Full UI #38189538324 FAILED on invalid regex flags in new static preview-safety test, with preceding smoke checks successful. Fixed test regex (`08cfb50`); fresh CI pending. Standalone preview only; CAS unapplied, security deferred, no account data modified.
 
