@@ -47,6 +47,10 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Explicit stale snapshot production release gate
+
+Verified Full UI #38227539007 SUCCESS and Pages #38227539343 SUCCESS. Added `tests/production-stale-snapshot-release-gate.cjs` (`7d6a291`) and workflow registration (`b19d546`): reads the **actual production flush** to assert that it still uses unconditional `user_app_snapshots?on_conflict=user_id` upsert, demonstrates data erased by a stale second-device write in synthetic backend, and demonstrates hypothetical CAS rejecting stale writes with HTTP 409. This test is a transparent **known-risk release gate, not a conflict fix**; no real CAS/RLS or database changes. Fresh CI unverified. Commercial readiness ~55–65% unchanged; paid security exception deferred/nonblocking for regular feature work. Next: only mark resolved after authorized server-side CAS migration plus end-to-end simultaneous device conflict tests.
+
 ## 2026-10-12 — Correct Daily keyboard test focus origin
 
 Full UI #38227092177 FAILED because the test selected hidden `#pxSyncNow` as previous focus; Pages #38227091994 SUCCESS. Updated `tests/full-app-daily-alarm-keyboard-browser.cjs` (`174eaa9d`) to select an actually visible, enabled button outside the Daily overlay and verify initial focus before modal opens and focus returns on Escape. No production or Supabase changes. Fresh CI not yet verified. Real multi-device overwrite P0 remains OPEN; commercial estimate 55–65% unchanged; deferred paid security remains nonblocking.
