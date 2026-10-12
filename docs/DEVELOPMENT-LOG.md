@@ -47,6 +47,13 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Intermittent pre-login unauthenticated write error: obtain stack
+
+- Reviewed Full UI [#38223040123](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38223040123): FAILED at `scripts/smoke-full-ui.cjs` with page error `Not authenticated`, while Pages [#38223039968](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38223039968) succeeded. Other auth retry tests can pass, indicating potentially timing-dependent startup write.
+- Changed `scripts/smoke-full-ui.cjs` in `c8bfa2d6d72268c565c6570c1f840c70baf16192` to report the **full stack** of browser page exceptions instead of message only, enabling precise source-line diagnosis on next run. No blanket suppression of auth errors or production data/logic change.
+- Fresh CI NOT VERIFIED. Cross-device CAS P0 remains OPEN, auth startup race remains OPEN; 55–65% rough commercial estimate unchanged. Paid security deferral remains nonblocking.
+- Next: inspect new failed run stack and fix root callsite in `index.html` with a targeted regression; do not mask startup writes globally.
+
 ### 2026-10-12 — Full root-app two-account isolation with mocked backend
 
 - Verified prior Full UI [#38222291951](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38222291951) SUCCESS and Pages [#38222292109](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38222292109) SUCCESS.
