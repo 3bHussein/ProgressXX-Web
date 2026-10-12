@@ -47,6 +47,14 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Synthetic CAS concurrency matrix for four data domains
+
+**Scope:** Free P0 sync QA only. Verified previous Full UI #38234329379 SUCCESS and Pages #38234329041 SUCCESS (historical runs; not a claim about new commits). Added `tests/cas-concurrency-matrix.cjs` (commit `f0fcdd87`) and registered it in `.github/workflows/full-ui-smoke.yml` (commit `d6c874e1`). The pure in-memory matrix covers remote deletion versus stale unrelated edits across Daily, Food, Workout and Weight; confirms 409 retains pending data, explicitly reviewed merge preserves cloud deletion and independent edit, and later stale replay is rejected. It also asserts one of two same-revision concurrent writers is rejected.
+
+**Tests:** Local Node execution of equivalent scenario matrix PASS (5 cases). New GitHub Actions CI after `d6c874e1`: NOT VERIFIED at writing. **Deployment:** Production `index.html` unchanged; Pages status for latest commits NOT VERIFIED. **Data/migrations:** None. No Supabase writes, grants, RLS, schema changes, credentials or account data modified. **Risk:** Actual production snapshot upsert is still unconditional: no deployed CAS, no real 409 handling, and no certified multi-device deletion safety. Paid security staging `SECURITY-DEFERRED-2026-10-12` remains deferred/nonblocking for free development. Commercial readiness baseline **55–65% unchanged**; P0 persistence and authorization still OPEN.
+
+**Exact next step:** Inspect GitHub Actions Full UI and Pages for commits `d6c874e1` and documentation commits; fix any failed test, then add a controlled client-side conflict-handling test without activating server CAS or production migrations before explicit approval.
+
 ## 2026-10-12 — CAS delete + stale unrelated edit acceptance contract
 
 Previous Pages #38234329041 SUCCESS; Full UI #38234329379 still running at first check; earlier Full UI #38234324518 SUCCESS. Added synthetic two-device scenario `tests/cas-delete-unrelated-edit-acceptance.cjs` (`bb596961`) and workflow registration (`6a41b9f2`): server CAS rejects stale unrelated update after remote Daily deletion; pending draft survives 409, reviewed merge preserves deletion and workout edit; stale replay is refused. No production CAS, RLS, schema or real data changed. Latest CI unverified. P0 real conflict protection remains OPEN, commercial readiness 55–65% unchanged, paid security work deferred/nonblocking. Next: inspect Actions and fix failing synthetic test if needed.
