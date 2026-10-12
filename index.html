@@ -9769,14 +9769,20 @@ window.__legacyBoot=init;
  try{
   const previous=JSON.parse(sessionStorage.getItem(SESSION_KEY)||'null');
   if(previous?.refresh_token&&previous?.user?.id){
-   // Never restore an expired token as an authenticated workspace.
-   // Keep account-scoped pending data intact; user can sign in again.
    const expiry=Number(previous.expires_at);
-   if(Number.isFinite(expiry)&&expiry>Math.floor(Date.now()/1000)){
+   if(Number.isFinite(expiry)&&expiry>Math.floor(Date.now()/1000)+50){
     auth=previous;void activate(previous).catch(e=>{reportAccountLoginError(e);gate.hidden=false;ready=false});
    }else{
-    sessionStorage.removeItem(SESSION_KEY);
-    status.textContent='Session expired. Sign in again to restore your workspace.';
+    // Refresh an expired/near-expiry session before unlocking any account data.
+    // Never change account identity; keep all account-scoped data/pending writes intact on failure.
+    status.textContent='Renewing session…';
+    void tokenRequest('token?grant_type=refresh_token',{refresh_token:previous.refresh_token}).then(next=>{
+     if(!next?.access_token||!next?.refresh_token||next?.user?.id!==previous.user.id||!Number.isFinite(Number(next.expires_at))||Number(next.expires_at)<=Date.now()/1000+50)throw Error('Invalid refreshed account session');
+     return activate(next);
+    }).catch(()=>{
+     sessionStorage.removeItem(SESSION_KEY);auth=null;ready=false;account=null;gate.hidden=false;
+     status.textContent='Session expired. Sign in again to restore your workspace.';
+    });
    }
   }
  }catch{}
