@@ -50,6 +50,10 @@ Mock concurrent same-record editing contract `tests/offline-same-record-conflict
 
 Added `tests/offline-upload-failure-reload-browser.cjs` (`8a00903`) and CI (`f0dc07c`) for synthetic localStorage pending retention across reload/503 and clearing after mock ack. Fresh CI not verified. **Not production flush verification**. Sync P0 OPEN, readiness unchanged, paid security exception unchanged.
 
+## 2026-10-12 — Real flush mock retry test (not live sync)
+
+New `tests/production-flush-failure-retry-contract.cjs` (`29d3d59`), CI `1b568c8`, executes production `flush()` under mocked 503 then success. Previous Full UI #38214335824 PASS, fresh CI NOT VERIFIED. It does not prove deployed cross-device CAS or offline idempotency. Sync P0 OPEN; commercial readiness 55–65% estimate unchanged.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
