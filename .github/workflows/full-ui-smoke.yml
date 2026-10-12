@@ -25,6 +25,7 @@ jobs:
           failed=0
           for test_file in \
             scripts/smoke-full-ui.cjs \
+            tests/auth-retry-browser.cjs \
             tests/account-pages-snapshot-sync.cjs \
             tests/daily-history-supabase-hydration.cjs \
             tests/daily-concurrent-conflict-regression.cjs \
