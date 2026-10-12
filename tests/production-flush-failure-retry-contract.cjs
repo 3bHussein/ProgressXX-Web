@@ -20,7 +20,7 @@ assert.ok(match,'Production flush function missing');
  await context.runFlush();
  assert.equal(pending,true,'Failed POST must preserve local pending data');
  assert.equal(context.savedRevision,0,'Failed POST must not acknowledge revision');
- assert.match(notes.at(-1),/Unsynced changes: HTTP 503/);
+ assert.match(notes.at(-1),/sync pending: HTTP 503/);
  await context.runFlush();
  assert.equal(pending,false,'Successful POST and mirror should clear pending');
  assert.equal(context.savedRevision,1);
@@ -33,7 +33,7 @@ assert.ok(match,'Production flush function missing');
   cloud:async()=>{},mirrorWorkoutScheduleToTable:async()=>{throw Error('mirror failed')},
   clearPending:()=>{throw Error('Must not clear pending after mirror failure')},
   tell:()=>{},scheduleCloudSync:()=>{}};
- vm.runInNewContext(match[0]+'\nthis.runFlush=flush;',mirrorCtx);
+ vm.runInNewContext('let syncRetryFailures=0;\n'+match[0]+'\nthis.runFlush=flush;',mirrorCtx);
  await mirrorCtx.runFlush();
  assert.equal(mirrorCtx.savedRevision,0,'Failed workout mirror must leave snapshot pending');
  // If user edits during upload, prior acknowledgment must never clear their new edit.
@@ -44,7 +44,7 @@ assert.ok(match,'Production flush function missing');
   values:{sample:'old'},navigator:{onLine:true},Date,JSON,Error,Object,
   cloud:async()=>{await waiting},mirrorWorkoutScheduleToTable:async()=>{},
   clearPending:()=>{clears++},tell:()=>{},scheduleCloudSync:()=>{}};
- vm.runInNewContext(match[0]+'\nthis.runFlush=flush;',concurrentCtx);
+ vm.runInNewContext('let syncRetryFailures=0;\n'+match[0]+'\nthis.runFlush=flush;',concurrentCtx);
  const inflight=concurrentCtx.runFlush();
  concurrentCtx.revision=2;concurrentCtx.values.sample='new';release();
  await inflight;
