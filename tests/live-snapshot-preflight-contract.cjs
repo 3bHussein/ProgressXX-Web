@@ -1,0 +1,18 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const html=fs.readFileSync(require('node:path').join(__dirname,'..','index.html'),'utf8');
+const section=html.slice(html.indexOf('async function flush(){'),html.indexOf('window.__pxRestoreLegacySettings='));
+assert.ok(section.length>500,'production flush found');
+const preflight=section.indexOf("cloud('user_app_snapshots?select=payload");
+const write=section.indexOf("cloud('user_app_snapshots?on_conflict=user_id'");
+assert.ok(preflight>=0 && write>preflight,'read latest before snapshot write');
+assert.match(section,/snapshotBaseline!==snapshotDigest\(current\[0\]\?\.payload\|\|\{\}\)/);
+assert.match(section,/syncConflictHold=true;markPending\(\)/);
+assert.match(section,/if\(!syncConflictHold&&revision!==savedRevision\)scheduleCloudSync\(\)/);
+assert.match(section,/snapshotBaseline=snapshotDigest\(submitted\)/);
+assert.match(html,/snapshotBaseline=snapshotDigest\(cloudValues\);syncConflictHold=false/);
+assert.match(html,/function scheduleCloudSync\(\)\{if\(!ready\|\|syncConflictHold\)return/);
+assert.ok(/on_conflict=user_id/.test(section),'old unsafe write still exists (CAS not deployed)');
+console.log('PASS: production flush guards against detected stale remote snapshot, retains local pending data');
+console.log('LIMITATION: preflight is non-atomic; live server CAS is still mandatory.');
