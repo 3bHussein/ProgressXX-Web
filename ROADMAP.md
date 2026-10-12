@@ -108,4 +108,6 @@ To resume: `Resume SECURITY-DEFERRED-2026-10-12` or `ارجع لاختبارات
 
 | 2026-10-12 | Mock login session restore after reload | [eeb7747](https://github.com/3bHussein/ProgressXX-Web/commit/eeb774740e5d1641a66df79dc6d961a04af93621) | Prior Full UI #38190835357 SUCCESS; new CI NOT VERIFIED | Synthetic only | Assert same-account restore without duplicate password request; real session expiration unverified |
 
+| 2026-10-12 | Prevent expired cached auth from unlocking workspace | [254b2c7](https://github.com/3bHussein/ProgressXX-Web/commit/254b2c72511bd6af1d63db0e6a2c2412b21cea92), [39c64cc](https://github.com/3bHussein/ProgressXX-Web/commit/39c64ccc1118dce295c7ec89707b0d30f8f8c282) | Prior Full UI #38204834720 SUCCESS; new CI NOT VERIFIED | Real account not tested | No account data cleared; expired browser session requires manual sign-in; token renewal still unverified |
+
 Keep this table honest; a green CI run alone is not proof that the product is production-ready.
