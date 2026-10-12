@@ -1,0 +1,14 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8');
+assert.match(html,/id="pxExportPending" hidden/);
+assert.match(html,/getElementById\('pxExportPending'\)\?\.addEventListener\('click'/);
+assert.match(html,/if\(!account\|\|!syncConflictHold\)return/);
+assert.match(html,/browserStorage\.getItem\(pendingKey\(account\)\)/);
+assert.match(html,/format:'progressx-pending-draft-v1'/);
+assert.match(html,/new Blob\(/);
+assert.match(html,/link\.download='progressx-pending-draft-'/);
+assert.match(html,/Sync remains paused until conflict is reviewed/);
+assert.match(html,/exportButton\.hidden=!syncConflictHold/);
+console.log('PASS: production account toolbar exposes local export only on sync conflict hold');
+console.log('NOT VERIFIED: actual browser download and atomic server-side CAS.');
