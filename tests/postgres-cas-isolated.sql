@@ -11,7 +11,7 @@ LANGUAGE plpgsql AS $$
 DECLARE current_row demo.snapshots%ROWTYPE;
 BEGIN
  IF p_owner IS NULL OR p_expected IS NULL OR p_expected<0 OR p_payload IS NULL OR jsonb_typeof(p_payload)<>'object' THEN
-   RAISE EXCEPTION 'Invalid CAS input';
+   RAISE EXCEPTION 'Invalid CAS input' USING ERRCODE='22023';
  END IF;
  IF p_expected=0 THEN
    INSERT INTO demo.snapshots(user_id,payload,revision) VALUES(p_owner,p_payload,1)
@@ -43,7 +43,7 @@ BEGIN
   PERFORM * FROM demo.save_snapshot(a,2,'[]'::jsonb);
   RAISE EXCEPTION 'array snapshot unexpectedly accepted' USING ERRCODE='PX001';
  EXCEPTION WHEN SQLSTATE 'PX001' THEN RAISE;
-           WHEN OTHERS THEN NULL;
+           WHEN SQLSTATE '22023' THEN NULL;
  END;
  IF (SELECT revision FROM demo.snapshots WHERE user_id=a)<>2
     OR (SELECT payload->'food' FROM demo.snapshots WHERE user_id=a)<>'[]'::jsonb THEN
