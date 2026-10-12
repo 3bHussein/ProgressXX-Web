@@ -47,6 +47,14 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Safe cross-device deletion rebase contract simulation
+
+- Verified Full UI [#38211635242](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38211635242) SUCCESS and Pages [#38211635745](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38211635745) SUCCESS on prior main `c04b242`.
+- Created `tests/cross-device-safe-rebase-simulation.cjs` commit `744f06499e8d80b2690ab694ebecae21d5cbebc0`, included in Full UI CI at `543aed326532f53dce4cb65c7b1e0c3551c39cb5`. Synthetic version-checked CAS model tests Daily, Workout, Weight, Food deletion; stale device update rejection; explicit disjoint-key rebase preserving deletion; and rejection of stale same-key edits.
+- **This is a specification/test only, NOT an application fix**. Production whole-snapshot writes remain last-writer-wins and security/CAS SQL migration remains unapplied. No Supabase or user data changes; new CI/deployment NOT VERIFIED as logged.
+- **Commercial tracker:** data sync milestone remains OPEN, rough 55–65% readiness and conditional timelines unchanged. Paid-security exception does not stop mock/dev work.
+- **Next:** inspect Actions, then design an opt-in non-writing conflict-detection preview with test evidence, without modifying production data protocol.
+
 ### 2026-10-12 — Cross-device deletion resurrection regression (known P0 risk)
 
 - Prior GitHub Full UI [#38211091071](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38211091071) SUCCESS and Pages [#38211091264](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38211091264) SUCCESS.
