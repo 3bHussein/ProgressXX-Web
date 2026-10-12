@@ -47,6 +47,14 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Production flush mock 503 and recovery regression
+
+- Verified prior Full UI [#38214335824](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38214335824) SUCCESS and Pages [#38214335377](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38214335377) SUCCESS.
+- Added `tests/production-flush-failure-retry-contract.cjs` (`29d3d599297650054038a6cc1725c7e913152739`), extracting the actual `flush()` helper from production `index.html` and running it against mocked HTTP 503 followed by successful cloud upload and workout schedule mirror. Asserts pending edits remain after failure, revision is not acknowledged, and pending clears only after successful upload and mirror.
+- CI includes the new test (`1b568c8b78f670c3db57a6ca4b4e0a1a26f8d840`); new run/deployment NOT VERIFIED when committed. No live Supabase data, production code, schema or personal storage modified.
+- **Limitations:** synthetic dependency mocks; not live browser offline/network reconnect, cross-device CAS, or server idempotency proof. Commercial sync P0 OPEN, 55–65% subjective estimate unchanged, paid security work deferred and not blocking further normal work.
+- **Next:** inspect fresh CI and fix any test regression; extend mock to mirror failure and intervening edits without losing pending state.
+
 ### 2026-10-12 — Synthetic browser failed-upload and reload retention
 
 - Prior Full UI [#38213728521](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38213728521) SUCCESS and Pages [#38213729175](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38213729175) SUCCESS.
