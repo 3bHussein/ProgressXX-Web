@@ -37,7 +37,7 @@ const assert=require('node:assert/strict');
   failWrites=false;
   await page.reload({waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>window.__pxCommercialReady?.()===true,null,{timeout:20000});
-  await page.locator('#pxSyncNow').click();
+  // A restored pending snapshot must retry automatically without pressing Sync now.
   const until=Date.now()+25000;
   while(snapshot['progressx-reminders']!=='[]'&&Date.now()<until)await page.waitForTimeout(250);
   assert.equal(snapshot['progressx-reminders'],'[]','Retry must reach mock database');
