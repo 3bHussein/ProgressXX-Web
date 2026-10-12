@@ -47,6 +47,13 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Browser sync status assertions and auth retry failure diagnosis
+
+- Previous Pages #38217999123 SUCCESS but Full UI [#38217998624](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38217998624) FAILURE. Exact job log: `tests/auth-retry-browser.cjs` received unhandled `Not authenticated` page error during retry login; other tests in CI may have passed. Do not claim full suite green.
+- Extended full production-root Chromium mock `tests/full-app-sync-503-reload-browser.cjs` (`93966b94`) with explicit status-presentation assertions for saved locally, pending on mocked 503 and Synced after successful retry. Updated `tests/auth-retry-browser.cjs` (`7570ba36`) to capture full error stack for intermittent auth race diagnosis.
+- New Full UI/Pages run NOT VERIFIED. No real database or app data changed. Pending-state message is deployed from prior commit, but cross-device P0 and intermittent auth retry remain OPEN. Commercial 55–65% estimate unchanged; paid security deferred/nonblocking.
+- Next: inspect next CI; resolve auth race based on captured error stack and verify actual UI state test.
+
 ### 2026-10-12 — Actual pending-sync UI plus CI regression repairs
 
 - Previous Full UI [#38217432254](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38217432254) FAILED, while Pages #38217432714 SUCCESS. GitHub logs identified missing `syncRetryFailures` in extracted flush mocks and `timer` in retry-backoff mock after source change; not evidence of a production runtime failure.
