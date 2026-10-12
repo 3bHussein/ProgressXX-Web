@@ -13,6 +13,8 @@ assert.match(section,/if\(!syncConflictHold&&revision!==savedRevision\)scheduleC
 assert.match(section,/snapshotBaseline=snapshotDigest\(submitted\)/);
 assert.match(html,/snapshotBaseline=snapshotDigest\(cloudValues\);syncConflictHold=false/);
 assert.match(html,/function scheduleCloudSync\(\)\{if\(!ready\|\|syncConflictHold\)return/);
+assert.match(html,/baseDigest:snapshotBaseline/);
+assert.match(html,/pendingRecord\?\.baseDigest!==snapshotBaseline\)syncConflictHold=true/);
 assert.ok(/on_conflict=user_id/.test(section),'old unsafe write still exists (CAS not deployed)');
 console.log('PASS: production flush guards against detected stale remote snapshot, retains local pending data');
 console.log('LIMITATION: preflight is non-atomic; live server CAS is still mandatory.');
