@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Two-browser pending cleanup and isolation
+
+Previous Full UI #38220196004 and Pages #38220195871 successful. Extended `tests/two-context-pending-recovery-browser.cjs` (`6ff3fd8`) to assert pending data clears only after mock server acknowledgment and second browser does not obtain first browser's local storage. New CI unverified. Cross-device CAS P0 OPEN; no production data change, commercial readiness 55–65% unchanged, paid-security stage deferred.
+
 ## 2026-10-12 — Two-context browser pending restore QA
 
 Verified Full UI #38219664190 and Pages #38219663464 succeeded. Added `tests/two-context-pending-recovery-browser.cjs` (`59f83c15`), CI (`8fc113c2`), testing two separate Chromium contexts with fake Supabase, A failed 503/reload/automatic retry and B reload hydration. New CI unverified; this is not a concurrent CAS fix. No real data or schema changed; commercial estimate unchanged, paid security deferred.
