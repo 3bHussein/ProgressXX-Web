@@ -47,6 +47,10 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Conflict-safe rollout plan, no production change
+
+Checked Full UI #38234118749 and Pages #38234118392: both still in progress when checked, no verified result yet. Added `docs/CONFLICT-SAFE-ROLLOUT-PLAN.md` (`6510e9ed`) detailing safe prerequisites, atomic server-side version/CAS and ownership, 409 client queue preservation, deletion tombstones, review flows, real staging acceptance, gated rollback and explicit owner approval. Documentation only; no app code, database, migrations, credentials or live user data changed. Standalone conflict preview remains fake UX. P0 cross-device overwrite/RLS OPEN, commercial readiness estimate 55–65% unchanged, paid security stage deferred/nonblocking. Next: check CI and continue free tests without claiming live protection.
+
 ## 2026-10-12 — Preview-only multi-conflict completion gate
 
 Verified prior Full UI #38233632648 SUCCESS and Pages #38233633179 SUCCESS. Standalone `conflict-review-prototype.html` (`ea87eda8`) now disables "Complete example review" until all three synthetic conflicts have an explicit keep-cloud or keep-local decision, shows completion only as a **local demonstration**, and resets completion state on changed/reset choices. Chromium regression `tests/conflict-review-prototype-browser.cjs` (`357ba235`) checks incomplete denial, three-decision enablement, completion and reset. Latest CI NOT VERIFIED. No production app wiring, Supabase schema, server CAS, account data, or real writes changed. P0 multi-device conflict and RLS OPEN; commercial readiness 55–65% unchanged; paid security deferred and not blocking ordinary development.
