@@ -1,3 +1,7 @@
+## 2026-10-12 — Full signed-in Daily alarm keyboard browser test
+
+Verified prior Full UI #38226022019 and Pages #38226021927 SUCCESS (SHA `7efcfd6e`). Added `tests/full-app-daily-alarm-keyboard-browser.cjs` (`72355455`) and CI registration (`1880081b`). Actual root `index.html` launches with mocked auth/database; Chromium checks 390px modal role, initial action focus, Shift+Tab wrap, Tab wrap, Escape and restoration to previously focused Sync Now control. New CI NOT VERIFIED. No production or Supabase data modifications. P0 multi-device last-write conflict and real account RLS checks OPEN; commercial readiness rough 55–65% unchanged; security-cost exception deferred/nonblocking.
+
 ## 2026-10-12 — Real Chromium Daily modal Tab focus regression
 
 Previous Pages #38225758944 succeeded; previous Full UI #38225758805 was still in progress at first review (not claimed green). Added `tests/daily-alarm-tab-focus-browser.cjs` (`b37b8c4b`) running the actual production keyboard handler in Chromium: Tab last-to-first, Shift+Tab first-to-last, ordinary middle Tab, outside focus containment and Esc release. Registered in Full UI workflow (`1225192b`). Fresh CI NOT VERIFIED. No app production, user records or Supabase changes. Commercial readiness 55–65% unchanged, cross-device CAS/RLS P0 OPEN and paid security deferred/nonblocking.
