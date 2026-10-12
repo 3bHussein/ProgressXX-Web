@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Auth smoke timeout correction
+
+Corrected Playwright auth-gate 15-second timeout argument on main in `scripts/smoke-full-ui.cjs`, commit `9e05d56`. New CI pending/NOT VERIFIED. Production app/data unchanged. Next check Actions, investigate intermittent `Not authenticated` if reproduced, and keep security checkpoint deferred.
+
 ## 2026-10-12 — CI verification and auth smoke timeout follow-up
 
 Full UI #38190178638 SUCCESS and Pages #38190178527 SUCCESS on `c2079a4`. The prior sporadic `Not authenticated` failure has not been reproduced in this completed run; do not mark it definitively fixed. Read-only review of `scripts/smoke-full-ui.cjs` found the initial `page.waitForFunction` passes `{timeout:15000}` as its second argument rather than its third Playwright options argument; targeted correction was attempted but the GitHub write action was blocked, so no test-source change was applied. Next: correct this exact call to `waitForFunction(predicate, null, {timeout:15000})`, then run CI and check for auth bootstrap errors; preserve all strict pageerror assertions and account data. Security deferral remains.
