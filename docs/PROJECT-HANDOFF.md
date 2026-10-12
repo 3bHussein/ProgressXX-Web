@@ -1,3 +1,7 @@
+## 2026-10-12 — Example field-level Daily conflict comparison
+
+Verified Full UI #38231507717 SUCCESS and Pages #38231509490 SUCCESS for previous release. Updated standalone read-only `conflict-review-prototype.html` (`c874978a`) to show a 3-row field-level comparison for deleted cloud vs unsynced local reminder with explicit illustrative-only disclaimer; extended browser regression `tests/conflict-review-prototype-browser.cjs` (`bfb57694`) to require the comparison table. No connection to live Supabase, no production data writes; new CI not verified. Real CAS / RLS P0 OPEN, commercial readiness estimate 55–65% unchanged, paid security deferred/nonblocking.
+
 ## 2026-10-12 — Conflict review side-by-side comparison
 
 Verified prior Full UI #38231059282 SUCCESS and Pages #38231058825 SUCCESS. Enhanced standalone conflict preview `conflict-review-prototype.html` (`5184f3d`) with separate cloud-deleted vs local-edited Daily state cards and responsive layout; strengthened Chromium preview assertion (`55ced99`) requiring two comparison cards. No production app binding, network or Supabase changes. New CI NOT VERIFIED. P0 real atomic CAS and Supabase authorization remain OPEN, estimated commercial readiness 55–65% unchanged; paid security phase deferred/nonblocking.
