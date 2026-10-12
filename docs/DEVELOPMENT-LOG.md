@@ -47,6 +47,12 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Isolated conflict boundary regression
+
+Added test-only helper `scripts/conflict-boundary.cjs` (c7551eb7) and contract `tests/conflict-boundary-contract.cjs` (fcc6d31d), registered in Full UI workflow (58e0d4bc). The standalone asynchronous handler retains a pending draft upon hypothetical HTTP 409/412, prevents replacing a prior pending review, enforces account-specific persistence and refuses missing latest server revision. Not imported into root production `index.html`. No production database or actual user data changes. New CI and Pages: NOT VERIFIED; no local test execution claimed. Prior confirmed CI from earlier handoff is not proof for this batch. Commercial readiness estimate 55–65% unchanged; live atomic server CAS and two-account security remain P0 OPEN, paid security checkpoint deferred as instructed.
+
+Exact next step: verify fresh Full UI/Pages runs and correct any failures; prioritize real production sync/data safety planning before further isolated mock expansion.
+
 ## 2026-10-12 — Batched conflict-review queue and CI contract
 
 Created standalone per-account review queue in `scripts/conflict-review-queue.cjs` (commit `08420eb7`) with durable storage adapter, explicit acknowledgment before clearing, prevention of overwriting an already pending review, and strict account key separation. Added synthetic unit regression `tests/conflict-review-queue-contract.cjs` (`7ec06f1b`) and wired it to mandatory Full UI workflow (`5ff2dee6`). This is a standalone helper NOT imported by production `index.html`. No Supabase changes, production migrations, credentials, or actual user records touched. New workflow/Pages completion NOT VERIFIED and no local Node test run verified; previous results do not certify these commits. Commercial readiness estimate remains 55–65%; real cross-device CAS and RLS P0 gates remain OPEN, paid security checkpoint remains deferred per owner. **Next:** verify Actions runs for this series, fix any failing tests, then create a separately controlled integration readiness checklist without enabling production write behavior.
