@@ -27,7 +27,7 @@ assert.ok(match,'Production flush helper not found');
    const concurrent={...env,revision:1,savedRevision:0,uploading:false,
     values:{sample:'old'},cloud:async()=>wait,clearPending:()=>events.push('unexpected-clear'),
     mirrorWorkoutScheduleToTable:async()=>{},tell:()=>{},scheduleCloudSync:()=>{}};
-   const inFlight=new Function('env','with(env){'+source+';return flush}')(concurrent);
+   const inFlight=new Function('env','with(env){let syncRetryFailures=0;'+source+';return flush}')(concurrent);
    const running=inFlight();concurrent.revision=2;concurrent.values.sample='new';unlock();await running;
    // Snapshot succeeds, but workout schedule mirror fails: no acknowledgment allowed.
    const mirrorEvents=[];
@@ -36,7 +36,7 @@ assert.ok(match,'Production flush helper not found');
     mirrorWorkoutScheduleToTable:async()=>{mirrorEvents.push('mirror-attempt');throw Error('mock mirror 503')},
     clearPending:()=>mirrorEvents.push('incorrect-clear'),
     tell:m=>mirrorEvents.push(String(m)),scheduleCloudSync:()=>mirrorEvents.push('retry-scheduled')};
-   const mirrorFlush=new Function('env','with(env){'+source+';return flush}')(mirrorEnv);
+   const mirrorFlush=new Function('env','with(env){let syncRetryFailures=0;'+source+';return flush}')(mirrorEnv);
    await mirrorFlush();
    const mirrorFailure={saved:mirrorEnv.savedRevision,cleared:mirrorEvents.includes('incorrect-clear'),posted:mirrorEvents.includes('snapshot-post'),reported:mirrorEvents.some(x=>x.includes('mock mirror 503'))};
    return {failed,restored,latest:{saved:concurrent.savedRevision,revision:concurrent.revision,cleared:events.includes('unexpected-clear')},mirrorFailure};
