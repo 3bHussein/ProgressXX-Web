@@ -47,6 +47,10 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Full-app Daily focus return CI diagnosis
+
+Full UI #38226647401 FAILED: full-app Daily browser test expected focus to return to `#pxSyncNow` after Escape but saw element with empty id; Pages #38226647235 SUCCESS. Updated browser test `d20b934c` to assert the expected previous control is actually focusable/focused before opening modal; this distinguishes invalid test setup from actual focus restore issue. Fresh CI unverified. No production or Supabase data changes; P0 conflict/RLS open and commercial readiness 55–65% unchanged, security spending deferred/nonblocking.
+
 ## 2026-10-12 — Full signed-in Daily alarm keyboard browser test
 
 Verified prior Full UI #38226022019 and Pages #38226021927 SUCCESS (SHA `7efcfd6e`). Added `tests/full-app-daily-alarm-keyboard-browser.cjs` (`72355455`) and CI registration (`1880081b`). Actual root `index.html` launches with mocked auth/database; Chromium checks 390px modal role, initial action focus, Shift+Tab wrap, Tab wrap, Escape and restoration to previously focused Sync Now control. New CI NOT VERIFIED. No production or Supabase data modifications. P0 multi-device last-write conflict and real account RLS checks OPEN; commercial readiness rough 55–65% unchanged; security-cost exception deferred/nonblocking.
