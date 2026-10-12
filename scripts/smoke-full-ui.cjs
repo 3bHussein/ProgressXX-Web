@@ -57,7 +57,11 @@ const {chromium}=require('playwright');
  await page.fill('#pxPassword','demo-password');
  await page.click('#pxSignin');
  await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,{timeout:15000});
- await page.waitForFunction(()=>document.querySelector('#foodDiaryList')?.textContent.includes('Cloud QA Oats'),null,{timeout:12000});
+ // Explicitly await normalized Food hydration; a hidden tab's DOM may not render immediately.
+ await page.evaluate(()=>window.__pxRefreshNutrition(true));
+ await page.waitForFunction(()=>{
+  try{return JSON.parse(PXStore.getItem('progressx-food-log')||'[]').some(x=>x.id==='cloud-qa-food')}catch{return false}
+ },null,{timeout:15000});
  const readback=await page.evaluate(()=>({rows:JSON.parse(PXStore.getItem('progressx-food-log')||'[]'),shown:document.querySelector('#foodDiaryList')?.textContent}));
  if(!readback.rows.some(x=>x.id==='cloud-qa-food'&&x.date==='2026-10-11'&&x.time==='13:53'))throw Error('Cloud Food Diary row missing after load or timezone conversion wrong');
  if(errors.length)throw Error('Browser errors: '+errors.slice(0,5).join(' ; '));
