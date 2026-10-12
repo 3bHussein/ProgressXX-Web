@@ -9723,6 +9723,9 @@ window.__legacyBoot=init;
   if(typeof window.__legacyBoot!=='function')throw Error('Original app did not initialize');
   try{await window.__pxRestoreLegacySettings()}catch(err){tell('Legacy settings: '+err.message,true)}
   try{await window.__pxLoadReminderArchive()}catch(err){tell('Reminders archive: '+err.message,true)}
+  // Daily reminder globals were initialized before sign-in, when account-scoped storage
+  // was unavailable. Rehydrate them after snapshot/archive recovery and before UI boot.
+  dailyReminders=loadDailyReminders();
   await window.__legacyBoot();
   try{await window.__pxLoadDailyHistory()}catch(err){tell('Daily history refresh: '+err.message,true)}
   // The snapshot only stores the account UI state; the normalized workout table is
