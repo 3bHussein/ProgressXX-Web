@@ -9319,7 +9319,7 @@ window.__legacyBoot=init;
   </div>
 </div>
 
-<div id="pxCommercialGate"><div class="pxAuthBox"><h2>⚡ ProgressXX</h2><p>Full original experience · Private Supabase account</p><form id="pxLogin"><input id="pxEmail" type="email" autocomplete="username" required placeholder="Email"><input id="pxPassword" type="password" autocomplete="current-password" required placeholder="Password"><div class="pxAuthActions"><button id="pxSignin" type="submit">Sign in</button><button type="button" class="pxSoft" id="pxSignup">Create account</button></div></form><p id="pxLoginMessage" role="status">Sign in to load your private fitness workspace.</p></div></div><div id="pxSyncPill" hidden role="status">Cloud ready</div><div id="pxAccountTools" hidden><button type="button" id="pxSyncNow">↻ Sync now</button><button type="button" id="pxExportPending" hidden>↓ Save pending edits</button><button type="button" id="pxLogout">Sign out</button></div>
+<div id="pxCommercialGate"><div class="pxAuthBox"><h2>⚡ ProgressXX</h2><p>Full original experience · Private Supabase account</p><form id="pxLogin"><input id="pxEmail" type="email" autocomplete="username" required placeholder="Email"><input id="pxPassword" type="password" autocomplete="current-password" required placeholder="Password"><div class="pxAuthActions"><button id="pxSignin" type="submit">Sign in</button><button type="button" class="pxSoft" id="pxSignup">Create account</button></div></form><p id="pxLoginMessage" role="status">Sign in to load your private fitness workspace.</p></div></div><div id="pxSyncPill" hidden role="status">Cloud ready</div><div id="pxAccountTools" hidden><button type="button" id="pxSyncNow">↻ Sync now</button><button type="button" id="pxExportPending" hidden>↓ Save pending edits</button><button type="button" id="pxReviewConflict" hidden>Review conflict</button><button type="button" id="pxLogout">Sign out</button></div>
 <script id="pxCommercialBridge">
 (()=>{
  'use strict';
@@ -9516,7 +9516,21 @@ window.__legacyBoot=init;
   if(!response.ok){let error;try{error=await response.json()}catch{}throw Error(error?.message||'Sync error '+response.status)}
   return response.status===204?null:response.json();
  }
- function tell(message,problem=false){pill.textContent=message;pill.style.color=problem?'#fecaca':'#d8faf1';pill.hidden=false;pill.title='Supabase account snapshot · '+(account||'not signed in');const exportButton=document.getElementById('pxExportPending');if(exportButton)exportButton.hidden=!syncConflictHold}
+ function tell(message,problem=false){pill.textContent=message;pill.style.color=problem?'#fecaca':'#d8faf1';pill.hidden=false;pill.title='Supabase account snapshot · '+(account||'not signed in');const exportButton=document.getElementById('pxExportPending');if(exportButton)exportButton.hidden=!syncConflictHold;const reviewButton=document.getElementById('pxReviewConflict');if(reviewButton)reviewButton.hidden=!syncConflictHold}
+ document.getElementById('pxReviewConflict')?.addEventListener('click',async()=>{
+  if(!account||!syncConflictHold)return;
+  try{
+   const pending=readPending(account);
+   if(!pending)throw Error('No local draft found; nothing was changed');
+   const rows=await cloud('user_app_snapshots?select=payload&user_id=eq.'+encodeURIComponent(account)+'&limit=1');
+   if(!Array.isArray(rows))throw Error('Remote snapshot unavailable');
+   const remote=rows[0]?.payload||{};
+   const keys=new Set([...Object.keys(pending),...Object.keys(remote)]);
+   const changed=[...keys].filter(k=>pending[k]!==remote[k]);
+   const summary=changed.length?changed.slice(0,15).map(k=>k.slice(0,70)).join(', '):'No different fields';
+   tell('⚠ Conflict review: '+changed.length+' differing fields ('+summary+'). Save pending edits before any manual recovery. No changes applied.',true);
+  }catch(e){tell('⚠ Review unavailable: '+e.message,true)}
+ });
  document.getElementById('pxExportPending')?.addEventListener('click',()=>{
   if(!account||!syncConflictHold)return;
   const raw=browserStorage.getItem(pendingKey(account));
