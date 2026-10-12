@@ -52,6 +52,9 @@
 ## Latest smoke test timeout fix — 2026-10-12
 ## Live Daily reminder delete-sync fix (2026-10-12)
 
+Update: Owner confirms Daily sync works across devices. Pages #38187392355 SUCCESS. Full UI #38187392401 failed in an isolated regression test missing a storage-key constant; browser smoke and snapshot sync passed. Fixed test fixture in commit d3ac97721. Recheck CI; no production data changed.
+
+
 User observed Daily reminder deletions not propagating between mobile/desktop in both directions and the obsolete `Apps Script URL is missing.` warning. Replaced legacy Daily pull with Supabase snapshot read, honoring empty lists and guarding unsynced edits (root commit `c7fd95ea6`); added regression (`7dbbeb8d5`). New CI, mobile/desktop retest pending. No real data deleted; security paid stage deferred.
 
 
