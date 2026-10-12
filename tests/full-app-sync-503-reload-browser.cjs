@@ -28,7 +28,7 @@ const assert=require('node:assert/strict');
   await page.waitForFunction(()=>window.__pxCommercialReady?.()===true,null,{timeout:20000});
   failWrites=true;
   await page.evaluate(()=>PXStore.setItem('progressx-reminders','[]'));
-  await page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Unsynced changes'),null,{timeout:25000});
+  await page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('sync pending'),null,{timeout:25000});
   assert.ok(failedWrites>=1,'Failure route must be reached');
   const pendingKey='pxx:pending:aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
   assert.notEqual(await page.evaluate(key=>localStorage.getItem(key),pendingKey),null,'Failed sync must keep pending record');
