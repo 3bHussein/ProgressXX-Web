@@ -9602,7 +9602,8 @@ window.__legacyBoot=init;
    }
   }
  }
- function scheduleCloudSync(){if(!ready)return;clearTimeout(timer);timer=setTimeout(()=>{void flush()},1200)}
+ let syncRetryFailures=0;
+ function scheduleCloudSync(){if(!ready)return;clearTimeout(timer);timer=setTimeout(()=>{void flush()},syncRetryFailures?Math.min(30000,1200*Math.pow(2,Math.min(syncRetryFailures,5))):1200)}
  async function flush(){
   if(!ready||uploading||!navigator.onLine||revision===savedRevision)return;
   uploading=true;const writing=revision;tell('↻ Syncing to Supabase…');
@@ -9610,8 +9611,8 @@ window.__legacyBoot=init;
    // Single-account snapshot; originals remain byte-exact strings (including raw performance).
    await cloud('user_app_snapshots?on_conflict=user_id','POST',{user_id:account,payload:{...values},updated_at:new Date().toISOString()});
    await mirrorWorkoutScheduleToTable({...values});
-   savedRevision=writing;if(revision===writing)clearPending();tell('✓ Synced to Supabase · '+new Date().toLocaleTimeString());
-  }catch(e){tell('Unsynced changes: '+e.message,true)}
+   savedRevision=writing;syncRetryFailures=0;if(revision===writing)clearPending();tell('✓ Synced to Supabase · '+new Date().toLocaleTimeString());
+  }catch(e){syncRetryFailures++;tell('Unsynced changes: '+e.message,true)}
   finally{uploading=false;if(revision!==savedRevision)scheduleCloudSync()}
  }
  window.__pxRestoreLegacySettings=async()=>{
