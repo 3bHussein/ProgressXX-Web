@@ -17,7 +17,7 @@ assert.ok(match,'Production flush helper not found');
     mirrorWorkoutScheduleToTable:async()=>events.push('mirror'),
     clearPending:()=>events.push('clear'),
     tell:m=>events.push(String(m)),scheduleCloudSync:()=>events.push('schedule')};
-   const flush=new Function('env','with(env){'+source+';return flush}')(env);
+   const flush=new Function('env','with(env){let syncRetryFailures=0;'+source+';return flush}')(env);
    await flush();
    const failed={saved:env.savedRevision,cleared:events.includes('clear'),reported:events.some(x=>x.includes('503'))};
    await flush();
