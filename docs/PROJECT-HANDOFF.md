@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Chromium snapshot/mirror partial failure regression
+
+Last Full UI #38215604331 and Pages #38215604219 SUCCESS. Extended Chromium production `flush()` mock test `4a51dc4` to assert snapshot upload success + workout mirror failure retains pending edits and unacknowledged revision; new CI NOT VERIFIED. No production/data modifications. Cross-device sync P0 OPEN; readiness 55–65% baseline unchanged. Paid security exception continues. Next inspect Actions and then full app browser-route integration.
+
 ## 2026-10-12 — Chromium production flush contract
 
 Preceding Full UI #38215286386 and Pages #38215285902 green. New `tests/production-flush-chromium-contract.cjs` (`83b530c`) runs production flush function in Chromium against mock dependencies; checks failed POST, successful retry and edits during upload. CI wired (`f21cbfd`), new run NOT VERIFIED. No production or user data changes. P0 sync OPEN, estimate 55–65% unchanged; paid security work deferred/nonblocking. Next inspect Actions and add mirror failure to Chromium QA.
