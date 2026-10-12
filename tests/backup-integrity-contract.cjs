@@ -1,0 +1,16 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {verifyBackup}=require('../scripts/backup-integrity.cjs');
+const input=JSON.stringify({daily:[{id:'fake-1'}],food:[],workout:[{id:'fake-2'}]});
+const a=verifyBackup(input),b=verifyBackup(input);
+assert.equal(a.valid,true);
+assert.equal(a.sha256,b.sha256);
+assert.equal(a.sha256.length,64);
+assert.equal(a.recordCounts.daily,1);
+assert.equal(a.recordCounts.food,0);
+assert.equal(a.recordCounts.workout,1);
+assert.deepEqual(a.topLevelKeys,['daily','food','workout']);
+assert.notEqual(verifyBackup(input+' ').sha256,a.sha256);
+for(const bad of ['', 'null', '[]', '42','invalid'])assert.throws(()=>verifyBackup(bad));
+console.log('PASS: offline synthetic backup JSON integrity, counts, SHA-256 and malformed data rejection');
+console.log('No backups exported or restored; real production data not accessed.');
