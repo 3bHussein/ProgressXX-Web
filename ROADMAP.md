@@ -104,4 +104,6 @@ To resume: `Resume SECURITY-DEFERRED-2026-10-12` or `ارجع لاختبارات
 
 | 2026-10-12 | Prototype manual-merge reset regression | [d0a0169](https://github.com/3bHussein/ProgressXX-Web/commit/d0a0169b5eea77d4ad38b193f0ddde028f6127c7) | Prior Full UI #38190604096 SUCCESS; fresh run NOT VERIFIED | No live data tested | Merge controls must reset on reload; conflict CAS still not deployed |
 
+| 2026-10-12 | Mock sign-in rejected then successful retry | [04f96b9](https://github.com/3bHussein/ProgressXX-Web/commit/04f96b99585bbf4590ca94621fc7cf9d75cbcaf9), [a6e6dad](https://github.com/3bHussein/ProgressXX-Web/commit/a6e6dad73ac322c19013471b536be44a051e7725) | Fresh CI NOT VERIFIED | No real-account test | Synthetic auth gate, retry, no DB writes and no JS errors; real auth remains pending |
+
 Keep this table honest; a green CI run alone is not proof that the product is production-ready.
