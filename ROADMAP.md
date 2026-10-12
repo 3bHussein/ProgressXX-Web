@@ -110,4 +110,6 @@ To resume: `Resume SECURITY-DEFERRED-2026-10-12` or `ارجع لاختبارات
 
 | 2026-10-12 | Prevent expired cached auth from unlocking workspace | [254b2c7](https://github.com/3bHussein/ProgressXX-Web/commit/254b2c72511bd6af1d63db0e6a2c2412b21cea92), [39c64cc](https://github.com/3bHussein/ProgressXX-Web/commit/39c64ccc1118dce295c7ec89707b0d30f8f8c282) | Prior Full UI #38204834720 SUCCESS; new CI NOT VERIFIED | Real account not tested | No account data cleared; expired browser session requires manual sign-in; token renewal still unverified |
 
+| 2026-10-12 | Expired session renewal before restoring account | [98d17e2](https://github.com/3bHussein/ProgressXX-Web/commit/98d17e29d555590116a0aa8eb964ac531ab92c11), [191f91d](https://github.com/3bHussein/ProgressXX-Web/commit/191f91d1ad3cd6f2a83dd33f650e19f8c4a3fbac) | Fresh CI NOT VERIFIED | Real account renewal pending | Strict account ID check; renewal failures stay locked and preserve account data |
+
 Keep this table honest; a green CI run alone is not proof that the product is production-ready.
