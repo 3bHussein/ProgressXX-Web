@@ -16,7 +16,7 @@ assert.ok(match,'Production flush function missing');
   tell:message=>notes.push(message),scheduleCloudSync:()=>calls.push('scheduled'),
   Date,JSON,Error,Object
  };
- vm.runInNewContext(match[0]+'\nthis.runFlush=flush;',context);
+ vm.runInNewContext('let syncRetryFailures=0;\n'+match[0]+'\nthis.runFlush=flush;',context);
  await context.runFlush();
  assert.equal(pending,true,'Failed POST must preserve local pending data');
  assert.equal(context.savedRevision,0,'Failed POST must not acknowledge revision');
