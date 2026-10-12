@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Serialize concurrent session refresh requests
+
+- Baseline Full UI [#38209521762](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38209521762) SUCCESS and Pages [#38209522098](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38209522098) SUCCESS.
+- Changed root `index.html` at commit `e0fffa42843c3115a45ba677d46115cfbbd7df2f`: concurrent calls to `refreshToken()` share one in-flight Promise. Refreshed credentials must match original account ID; failure releases the lock for future retries.
+- Created synthetic `tests/auth-refresh-singleflight.cjs` (`d724d930aeb941e7516bf116fc4434fd32305e1e`), wired to Full UI workflow (`964bb9a40b52aaea1eb79c3e50ea26958d808e7b`). It verifies one refresh request for simultaneous calls, retry behavior after rejection and protection against other-account response.
+- Updated tests and documentation; fresh CI and deployment **NOT VERIFIED** at commit time. No Supabase schema or record changes, no bulk data operation. Risk: real device/browser refresh rotation and two-account authorization remain unverified; `SECURITY-DEFERRED-2026-10-12` still paused.
+- **Exact next step:** inspect new Full UI and Pages results; fix any failure, then exercise real browser concurrent cloud request paths in mock conditions while keeping user records intact.
+
 ### 2026-10-12 — Refresh expired session on startup before unlocking account
 
 - Previous Full UI [#38209115469](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38209115469) and Pages [#38209115679](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38209115679) SUCCESS.
