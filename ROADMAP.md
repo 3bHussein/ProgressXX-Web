@@ -74,6 +74,10 @@ Expanded `tests/production-flush-failure-retry-contract.cjs` (`4218067`) for wor
 
 `tests/full-app-two-device-daily-resurrection.cjs` (`de851d5`) and CI (`e9a2f35`) use synthetic sessions on production root to reproduce known whole-snapshot stale-write risk. Fresh CI unverified. A passing regression **demonstrates an unresolved unsafe behavior**, not a production fix. P0 cross-device sync OPEN; readiness estimate remains 55–65%; paid security deferred.
 
+## 2026-10-12 — Failed two-device browser test corrected
+
+Full UI #38216603946 failure was from hard-coded resurrection expectation; mock result was false. Test `d9360d8` now confirms B's unrelated write reached mocked server and reports actual outcome. Production risk still open, not considered fixed; CI rerun pending, commercial readiness estimate unchanged.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
