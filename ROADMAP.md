@@ -1,3 +1,7 @@
+## 2026-10-12 — Conflict queue account normalization fix
+
+Fixed `scripts/conflict-review-queue.cjs` (7b7564ec) to consistently canonicalize account IDs for key construction, ownership checking and saved records. Previously an ID with surrounding whitespace generated the same storage key as its trimmed form but mismatched the stored owner ID when loading, leaving that pending review unreadable. Extended `tests/conflict-review-queue-contract.cjs` (b53367e1) to cover shared keys and round-trip recovery across whitespace and canonical forms. Existing Fast and Full UI workflows already include this test; fresh execution and Actions results NOT VERIFIED. This isolated module is not imported by production `index.html`; no Supabase, runtime data or schema changed. Rough commercial readiness 55–65% unchanged, CAS/RLS P0 open and paid security deferred. Next: verify CI and prioritize actual cross-device CAS proof on authorized staging.
+
 ## 2026-10-12 — Local release-gate check
 
 The current `tests/sync-commercial-release-gate.cjs` was reproduced and executed under local Node: PASS for fail-closed policy assertions. This does not establish production readiness or verify any remote GitHub Actions run. Remote CI status remains NOT VERIFIED because the Actions endpoint could not be reached. No runtime or Supabase data changes. Commercial estimate unchanged (55–65%); live CAS/RLS P0 OPEN and paid staging deferred. Next: obtain current CI results and implement only an authorized, independently tested server CAS rollout.
