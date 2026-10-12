@@ -14,7 +14,7 @@ const problems=[];
 page.on('pageerror',e=>problems.push(e.stack||e.message));
 page.on('console',m=>{if(m.type()==='error')problems.push(m.text())});
 await page.route('**/auth/v1/**',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify({access_token:'mock',refresh_token:'mock',expires_at:Math.floor(Date.now()/1000)+7200,user:{id:account,email:'test@example.com'}})}));
-await page.route('**/rest/v1/**',r=>{
+await page.route('**/rest/v1/**',async r=>{
  const url=new URL(r.request().url());
  let rows=[];
  if(url.pathname.includes('user_app_snapshots'))rows=[{payload:snapshot}];
@@ -22,13 +22,24 @@ await page.route('**/rest/v1/**',r=>{
  if(url.pathname.includes('progressxx_reminder_archive'))rows=[{reminder_id:'multivitamin',name:'Multivitamin',amount:'1 serving',reminder_time:'09:00',enabled:true}];
  if(url.pathname.includes('progressxx_daily_history'))rows=[{day:'2026-10-09',history:{date:'2026-10-09',done:1,total:1,doneIds:[],doneNames:[],doneItems:[],waterCurrent:.25,waterTarget:3},reminder_done:{}}];
  if(url.pathname.includes('progressxx_legacy_settings'))rows=[{setting_key:'progressx-nutrition-targets',setting_value:{calories:2006,protein:182,carbs:156,fat:73}},{setting_key:'progressx-meal-templates-v1',setting_value:[{id:'excelmeal:1',name:'d',defaultMeal:'Breakfast',mealTime:'13:46',items:[{name:'Fig تين',calories:150,protein:.45,carbs:11.508,fat:.18}]}]}];
+ if(url.pathname.includes('progressxx_legacy_settings'))await new Promise(resolve=>setTimeout(resolve,250));
  r.fulfill({status:200,contentType:'application/json',body:JSON.stringify(rows)});
+});
+await page.route('https://unpkg.com/**',r=>r.fulfill({status:200,contentType:'application/javascript',body:''}));
+await page.addInitScript(()=>{
+ const timer=setInterval(()=>{
+  if(window.__pxCommercialReady?.()===true && !document.querySelector('#pxCommercialGate')?.hidden){
+   window.__qaEarlyWorkoutRefresh=true;clearInterval(timer);scheduleWorkoutHealthCheck(0);
+  }
+ },10);
 });
 await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});
 await page.locator('#pxEmail').fill('test@example.com');await page.locator('#pxPassword').fill('test');await page.locator('#pxSignin').click();
-await page.waitForTimeout(4500);
+await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true && Array.isArray(data) && data.length===33,null,{timeout:15000});
+await page.waitForTimeout(1000);
 const status=await page.locator('#pxLoginMessage').textContent();
 const result=await page.evaluate(()=>({hidden:document.getElementById('pxCommercialGate').hidden,entries:typeof data==='object'&&Array.isArray(data)?data.length:null,localFixtureCount:Array.isArray(data)?data.filter(x=>String(x.id)==='local-test').length:null,reminders:Array.isArray(dailyReminders)?dailyReminders.length:null}));
+assert.equal(await page.evaluate(()=>window.__qaEarlyWorkoutRefresh),true,'Exercise refresh during asynchronous account boot');
 // Snapshot intentionally contains one separate local workout plus 32 cloud history entries.
 // Verify the merge retains exactly that local record instead of masking the count mismatch.
 if(!result.hidden||result.entries!==workouts.length+1||result.localFixtureCount!==1||problems.length)throw Error(JSON.stringify({status,result,problems:problems.slice(0,6)},null,2));

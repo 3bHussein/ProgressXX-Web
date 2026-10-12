@@ -10,7 +10,7 @@ const browserStorage={
  getItem:key=>stored.get(key)??null,
  removeItem:key=>stored.delete(key)
 };
-const context={account:'mock-account-A',values:{'progressx-reminders':'[]'},browserStorage,Date,JSON,Object};
+const context={account:'mock-account-A',values:{'progressx-reminders':'[]'},browserStorage,snapshotBaseline:'synthetic-base',Date,JSON,Object};
 vm.runInNewContext(marker[0]+'\nthis.api={markPending,readPending,clearPending,pendingKey};',context);
 context.api.markPending();
 assert.equal(JSON.parse(stored.get('pxx:pending:mock-account-A')).payload['progressx-reminders'],'[]');

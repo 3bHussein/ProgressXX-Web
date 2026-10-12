@@ -25,6 +25,8 @@ jobs:
           failed=0
           for test_file in \
             scripts/smoke-full-ui.cjs \
+            tests/login-imported-archive-regression.cjs \
+            tests/locked-workspace-refresh-browser.cjs \
             tests/auth-retry-browser.cjs \
             tests/auth-refresh-singleflight.cjs \
             tests/auth-refresh-browser-concurrency.cjs \
@@ -45,6 +47,7 @@ jobs:
             tests/backup-integrity-contract.cjs \
             tests/backup-offline-restore-rehearsal.cjs \
             tests/live-snapshot-preflight-contract.cjs \
+            tests/live-snapshot-runtime-regression.cjs \
             tests/live-conflict-draft-export-contract.cjs \
             tests/live-conflict-review-contract.cjs \
             tests/live-conflict-pair-export-contract.cjs \

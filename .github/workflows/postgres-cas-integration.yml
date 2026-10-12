@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'tests/postgres-cas-isolated.sql'
+      - 'tests/postgres-cas-concurrency.py'
       - 'index.html'
       - '.github/workflows/postgres-cas-integration.yml'
   pull_request:
@@ -38,3 +39,10 @@ jobs:
         run: |
           psql -h localhost -U postgres -d synthetic_cas -v ON_ERROR_STOP=1 -f tests/postgres-cas-isolated.sql
           echo 'Only disposable PostgreSQL tested. Supabase production CAS is NOT deployed.'
+      - name: Verify independent-session PostgreSQL CAS races
+        env:
+          PGHOST: localhost
+          PGUSER: postgres
+          PGDATABASE: synthetic_cas
+          PGPASSWORD: test-only
+        run: python3 tests/postgres-cas-concurrency.py

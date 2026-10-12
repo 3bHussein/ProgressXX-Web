@@ -1,3 +1,4 @@
+const {fixture}=require('./helpers/production-snapshot-fixture.cjs');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
@@ -8,9 +9,9 @@ assert.ok(match,'Production flush function missing');
  const calls=[],notes=[];
  let attempt=0,pending=true,ready=true,uploading=false,revision=1,savedRevision=0;
  const context={
-  ready,uploading,revision,savedRevision,account:'synthetic-user',
+  ...fixture(),ready,uploading,revision,savedRevision,account:'synthetic-user',
   values:{'progressx-reminders':'[]'},navigator:{onLine:true},
-  cloud:async()=>{attempt++;if(attempt===1)throw Error('HTTP 503');calls.push('cloud')},
+  cloud:async(path,method='GET')=>{if(method==='GET')return [{payload:{}}];attempt++;if(attempt===1)throw Error('HTTP 503');calls.push('cloud');return []},
   mirrorWorkoutScheduleToTable:async()=>{calls.push('mirror')},
   clearPending:()=>{pending=false;calls.push('clear')},
   tell:message=>notes.push(message),scheduleCloudSync:()=>calls.push('scheduled'),
@@ -28,9 +29,9 @@ assert.ok(match,'Production flush function missing');
  assert.deepEqual(calls.filter(x=>x==='mirror'),['mirror']);
  assert.deepEqual(calls.filter(x=>x==='clear'),['clear']);
  // Mirror failure after successful snapshot POST must retain pending for retry.
- const mirrorCtx={ready:true,uploading:false,revision:1,savedRevision:0,account:'test',
+ const mirrorCtx={...fixture(),ready:true,uploading:false,revision:1,savedRevision:0,account:'test',
   values:{sample:'one'},navigator:{onLine:true},Date,JSON,Error,Object,
-  cloud:async()=>{},mirrorWorkoutScheduleToTable:async()=>{throw Error('mirror failed')},
+  mirrorWorkoutScheduleToTable:async()=>{throw Error('mirror failed')},
   clearPending:()=>{throw Error('Must not clear pending after mirror failure')},
   tell:()=>{},scheduleCloudSync:()=>{}};
  vm.runInNewContext('let syncRetryFailures=0;\n'+match[0]+'\nthis.runFlush=flush;',mirrorCtx);
@@ -40,9 +41,9 @@ assert.ok(match,'Production flush function missing');
  let release;
  const waiting=new Promise(resolve=>release=resolve);
  let clears=0;
- const concurrentCtx={ready:true,uploading:false,revision:1,savedRevision:0,account:'test',
+ const concurrentCtx={...fixture(),ready:true,uploading:false,revision:1,savedRevision:0,account:'test',
   values:{sample:'old'},navigator:{onLine:true},Date,JSON,Error,Object,
-  cloud:async()=>{await waiting},mirrorWorkoutScheduleToTable:async()=>{},
+  cloud:async(path,method='GET')=>{if(method==='GET')return [{payload:{}}];await waiting;return []},mirrorWorkoutScheduleToTable:async()=>{},
   clearPending:()=>{clears++},tell:()=>{},scheduleCloudSync:()=>{}};
  vm.runInNewContext('let syncRetryFailures=0;\n'+match[0]+'\nthis.runFlush=flush;',concurrentCtx);
  const inflight=concurrentCtx.runFlush();

@@ -36,6 +36,7 @@ jobs:
           node tests/conflict-review-queue-contract.cjs
           node tests/conflict-boundary-contract.cjs
           node tests/versioned-cas-reference-contract.cjs
+          node tests/live-snapshot-runtime-regression.cjs
           node tests/live-sync-release-classifier.cjs
           node tests/sync-commercial-release-gate.cjs
           echo 'Fast contracts complete; production CAS remains NOT DEPLOYED'

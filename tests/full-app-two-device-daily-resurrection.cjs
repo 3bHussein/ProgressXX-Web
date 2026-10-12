@@ -26,7 +26,8 @@ const assert=require('node:assert/strict');
   return {context,page};
  }
  try{
-  const a=await device(),b=await device();
+  // B becomes the stale device only after its initial writes have settled.
+  const b=await device(),a=await device();
   const initial=await b.page.evaluate(()=>PXStore.getItem('progressx-reminders'));
   assert.match(initial,/daily-qa-deleted/,'Second device needs stale record in memory');
   await a.page.evaluate(()=>PXStore.setItem('progressx-reminders','[]'));
@@ -34,12 +35,26 @@ const assert=require('node:assert/strict');
   while(snapshot['progressx-reminders']!=='[]'&&Date.now()<deadline)await a.page.waitForTimeout(200);
   assert.equal(snapshot['progressx-reminders'],'[]','Device A deletion must reach mock backend');
   await b.page.evaluate(()=>PXStore.setItem('progressx-workout-schedule-v1',JSON.stringify({mon:'REST'})));
-  const limit=Date.now()+25000;
-  while(scheduleWrites===0&&Date.now()<limit)await b.page.waitForTimeout(200);
-  assert.ok(scheduleWrites>0,'Device B unrelated change must reach mock backend before assessing resurrection');
-  const resurrected=typeof snapshot['progressx-reminders']==='string'&&snapshot['progressx-reminders'].includes('daily-qa-deleted');
-  assert.equal(snapshot['progressx-workout-schedule-v1'],'{"mon":"REST"}');
-  console.log(resurrected?'OBSERVED RISK: stale Daily record reintroduced in fake backend; NOT A FIX':'OBSERVED: no Daily resurrection in this specific mock sequence; NOT proof of server conflict safety');
+  await b.page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Sync paused'),null,{timeout:20000});
+  assert.equal(scheduleWrites,0,'Stale B must not upload its unrelated change over A deletion');
+  assert.equal(snapshot['progressx-reminders'],'[]','Remote deletion must stay deleted');
+  const pendingKey='pxx:pending:'+account;
+  const pending=await b.page.evaluate(k=>JSON.parse(localStorage.getItem(k)),pendingKey);
+  assert.equal(pending.payload['progressx-workout-schedule-v1'],'{"mon":"REST"}','B edit remains recoverable');
+  await b.page.reload({waitUntil:'domcontentloaded'});
+  await b.page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Sync paused'),null,{timeout:20000});
+  assert.equal(snapshot['progressx-reminders'],'[]','Stale pending replay after reload must not resurrect deletion');
+  await b.page.click('#pxReviewConflict');
+  await b.page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Conflict review:'),null,{timeout:10000});
+  const downloadPromise=b.page.waitForEvent('download');
+  await b.page.click('#pxExportConflictPair');
+  const download=await downloadPromise;
+  const fs=require('node:fs');
+  const pair=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
+  assert.equal(pair.remote['progressx-reminders'],'[]');
+  assert.equal(pair.local.payload['progressx-workout-schedule-v1'],'{"mon":"REST"}');
+  assert.equal(scheduleWrites,0,'Review and export must remain read-only');
+  console.log('PASS: full root app pauses visible stale-device writes, preserves remote deletion and local draft across reload, reviews and exports both versions; mock backend only, atomic server CAS still OPEN');
   await a.context.close();await b.context.close();
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exitCode=1});

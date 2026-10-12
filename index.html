@@ -4026,7 +4026,7 @@ function workoutSuggestionFor(usable){
   if(!top)return 'Keep logging clean sets so ProgressX can suggest the next target.';
   if(!prev)return '<b>Next session:</b> repeat '+pnum(top.weight)+' kg and try to establish a second clean baseline.';
   const strengthPct=prev.m.bestE1RM>0?((latest.m.bestE1RM-prev.m.bestE1RM)/prev.m.bestE1RM)*100:0;
-  const sameLoadPrev=bestRepsAtLoad(prev.m.sets,top.weight);
+  const sameLoadPrev=bestRepsAtLoad(prev.m,top.weight);
   const currentReps=Number(top.reps)||0;
   if(strengthPct>=2){
     return '<b>Progressing well:</b> keep '+pnum(top.weight)+' kg and aim for '+pnum(currentReps+1,0)+' reps. If form stays clean, a small load increase after that is reasonable.';
@@ -7626,6 +7626,7 @@ async function syncRemindersFromSheet(force=false){
 
 // Cross-device Daily sync: refresh when the app/tab becomes active and while Daily is open.
 function refreshDailyFromCloud(){
+  if(!window.__pxCommercialReady?.())return;
   if(document.visibilityState==='hidden')return;
   ensureDailyCheckpoint(true);
   if(dailyStateDirty||dailyStateSyncInFlight)return;
@@ -7837,6 +7838,7 @@ async function startupWorkoutSync(){
 function scheduleWorkoutHealthCheck(delay=120){
   clearTimeout(workoutLifecycleTimer);
   workoutLifecycleTimer=setTimeout(async()=>{
+    if(!window.__pxCommercialReady?.())return;
     if(document.visibilityState==='hidden')return;
     // Do not spam the server, but always retry pending work immediately.
     if(pendingWorkoutCount())await processWorkoutQueue();
@@ -7846,6 +7848,7 @@ function scheduleWorkoutHealthCheck(delay=120){
 
 let nutritionLastCloudCheck=0;
 async function refreshHomeNutritionFromCloud(){
+  if(!window.__pxCommercialReady?.())return;
   if(document.visibilityState==='hidden'||!navigator.onLine)return;
   if(Date.now()-nutritionLastCloudCheck<5000)return;
   nutritionLastCloudCheck=Date.now();
@@ -9689,6 +9692,8 @@ window.__legacyBoot=init;
    const submitted={...values};
    await cloud('user_app_snapshots?on_conflict=user_id','POST',{user_id:account,payload:submitted,updated_at:new Date().toISOString()});
    snapshotBaseline=snapshotDigest(submitted);
+   // Preserve a reload-safe draft until the table mirror also succeeds.
+   markPending();
    await mirrorWorkoutScheduleToTable({...values});
    savedRevision=writing;syncRetryFailures=0;if(revision===writing){clearPending();tell('✓ Synced to Supabase · '+new Date().toLocaleTimeString())}else tell('◷ New changes saved locally · waiting to sync');
   }catch(e){syncRetryFailures++;tell('◷ Saved locally · sync pending: '+e.message,true)}
@@ -9777,6 +9782,10 @@ window.__legacyBoot=init;
    for(let i=0;i<browserStorage.length;i++){const key=browserStorage.key(i);if(key?.startsWith(prefix)&&!(key.slice(prefix.length) in values))stale.push(key)}
    stale.forEach(key=>browserStorage.removeItem(key));
   }
+  // Hydrate workout memory before ready enables focus/health-check refreshes.
+  // Otherwise a refresh can replace the snapshot while legacy boot is still awaiting archives.
+  const accountWorkouts=loadLocalArray(KEY,[]);
+  data=accountWorkouts;
   savedRevision=pending?revision-1:revision;ready=true;tell(syncConflictHold?'⚠ Local edits preserved; remote data changed. Sync paused for review':pending?'◷ Locally queued edits restored · waiting to sync':'✓ Signed in · Supabase connected');
   const connectionLabel=document.getElementById('pxSettingsConnection');
   if(connectionLabel)connectionLabel.textContent=navigator.onLine?'Connected':'Offline';

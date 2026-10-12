@@ -1,3 +1,15 @@
+## Current Work task state — 2026-10-12
+
+Milestone 2 — Data Safety & Synchronization: **IN PROGRESS; commercial NO-GO**. Root `index.html` recovery fixes and regression suite are being verified in this task. Actual Full UI failure #38270847453 was inspected. PostgreSQL 17 sequential CAS reference #38270129009 is verified SUCCESS (synthetic only). Production CAS is still NOT DEPLOYED; no production database/grants/RLS/migrations changed. Paid security remains deferred.
+
+Additional fix: locked-workspace focus/pageshow refreshes now wait for readiness; deterministic browser test asserts zero private requests/storage writes before login. New PostgreSQL harness tests eight independent sessions per race in the disposable CI service; new SQL runtime result is pending.
+
+Completed source fixes: pending draft baseline follows acknowledged POST even when new edits or schedule mirror failure remain; account workout memory is hydrated before ready/focus refresh; Analytics receives a metrics object rather than sets array. Browser regressions now assert a stale device pauses rather than overwrites, retains its draft across reload, and reviews/exports both versions without writes. Restored-account test forces the boot/refresh race and checks 32 cloud rows + 1 local snapshot row are retained. See the appended Work task entry in DEVELOPMENT-LOG for exact scope and evidence.
+
+**Local verification:** 59/59 Node/Chromium checks PASS, including Full UI registrations, security migration source check and optional-render login regression. Python harness compile and diff whitespace checks PASS. This does not prove production CAS/RLS/restore.
+
+**Next:** Verify the matching GitHub Full UI/Fast/PostgreSQL results and deployed SHA, including the new independent-session CAS race test. Then approved separate staging, verified restore, authenticated owner CAS/negative RLS tests and real two-device acceptance. No request to approve production changes is made before those concrete prerequisites exist. Previous dated sections below are historical evidence, not current signoff.
+
 ## 2026-10-12 — Verified P0 overbroad database grants
 
 Read-only Supabase production metadata inspection: snapshot table RLS enabled; owner predicate `(select auth.uid()) = user_id` is installed for USING and WITH CHECK. However `anon` and `authenticated` each have TRUNCATE, TRIGGER, REFERENCES and CRUD privileges; TRUNCATE is outside normal RLS row protection, making this an authorization hardening blocker. Details and a staged mitigation sequence recorded in `docs/COMMERCIAL-READINESS.md` (ea971c90). No exploitation demonstrated and no grants changed. Existing non-atomic upsert CAS blocker still open. Latest CI not verified. Next: backed-up isolated grant audit and negative direct-client tests, then request explicit authorization for a controlled production grant change; do not equate RLS enabled with commercial security signoff. Production accounts and records untouched; paid-security work remains deferred pending instruction.

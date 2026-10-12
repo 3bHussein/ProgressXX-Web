@@ -7,7 +7,7 @@ assert.ok(match,'Account-scoped production pending helpers missing');
 const storage=new Map();
 const browserStorage={setItem:(k,v)=>storage.set(k,v),getItem:k=>storage.get(k)??null,removeItem:k=>storage.delete(k)};
 function session(account,values){
- const env={account,values,browserStorage,Date,JSON};
+ const env={account,values,browserStorage,snapshotBaseline:'synthetic-base',Date,JSON};
  vm.runInNewContext(match[0]+'\nthis.ops={markPending,readPending,clearPending,pendingKey};',env);
  return env.ops;
 }
