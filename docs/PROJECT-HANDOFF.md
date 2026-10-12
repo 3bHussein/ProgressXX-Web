@@ -1,3 +1,9 @@
+## 2026-10-12 — CAS staging acceptance checklist
+
+Reviewed latest commit aea49ae and production CAS reference. Added docs/CAS-STAGING-ACCEPTANCE.md at 3de41aa5: ten concrete requirements for backups, version checks, ownership isolation, offline drafts, stale deletes, retries and rollback. Documentation only; no app code, Supabase, real user data or privileges modified. GitHub Actions latest result NOT VERIFIED because the Actions run index was unavailable; no test success is claimed for this change. Commercial readiness estimate 55–65% unchanged, P0 real CAS/RLS OPEN and paid staging/security deferral still in effect.
+
+Next step: check recent Full UI and Pages runs, then pursue a verified staging-backed atomic CAS proof when authorized; meanwhile prioritize free production defects and backups.
+
 ## 2026-10-12 — Versioned CAS reference model (synthetic, not deployed)
 
 Added pure reference model `scripts/versioned-cas-reference.cjs` at `6416247c`, regression `tests/versioned-cas-reference-contract.cjs` at `c59780f0`, and Full UI workflow registration `c181ece9`. This verifies intended server semantics in isolation: per-owner version increments, stale snapshot rejection (409), cross-account write denial (403), malformed version rejection (400), and deliberate review that retains a remote deletion. This is not SQL/RPC, not production server CAS, and not Supabase RLS verification. **Tests: new CI NOT VERIFIED; local execution NOT VERIFIED. Deployment: NOT VERIFIED.** Production root `index.html` and live Supabase tables, permissions, migrations and real user data untouched. Existing unconditional snapshot upsert is still a P0 blocker. Rough commercial readiness 55–65% unchanged; paid staging/security work deferred per owner and nonblocking to safe test development.
