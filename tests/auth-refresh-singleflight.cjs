@@ -1,0 +1,23 @@
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const vm=require('node:vm');
+const html=fs.readFileSync('index.html','utf8');
+const match=html.match(/let refreshInFlight=null;\s*async function refreshToken\(\)\{[\s\S]*?\n \}/);
+assert.ok(match,'Serialized refresh helper missing');
+const source=match[0]+'\nthis.callRefresh=refreshToken;';
+let calls=0,auth={user:{id:'test-user'},refresh_token:'old',access_token:'old'};
+const storage={};
+const context={auth,SESSION_KEY:'test-session',sessionStorage:{setItem(k,v){storage[k]=v}},tokenRequest:async()=>{calls++;await new Promise(r=>setTimeout(r,20));return {user:{id:'test-user'},refresh_token:'new',access_token:'new'}},Error,Promise};
+vm.runInNewContext(source,context);
+(async()=>{
+ const [a,b,c]=await Promise.all([context.callRefresh(),context.callRefresh(),context.callRefresh()]);
+ assert.equal(calls,1,'Concurrent refresh should send one request');
+ assert.equal(a.access_token,'new');assert.equal(b.access_token,'new');assert.equal(c.access_token,'new');
+ assert.equal(JSON.parse(storage['test-session']).refresh_token,'new');
+ context.tokenRequest=async()=>{calls++;throw Error('mock refresh failure')};
+ await assert.rejects(context.callRefresh(),/mock refresh failure/);
+ context.tokenRequest=async()=>{calls++;return {user:{id:'other-user'},refresh_token:'bad',access_token:'bad'}};
+ await assert.rejects(context.callRefresh(),/Invalid refreshed account session/);
+ assert.equal(JSON.parse(storage['test-session']).user.id,'test-user','Wrong-account response must not replace session');
+ console.log('PASS: concurrent refresh single flight, retry after failure and identity rejection');
+})().catch(e=>{console.error(e);process.exitCode=1});
