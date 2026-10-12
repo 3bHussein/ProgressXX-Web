@@ -42,7 +42,21 @@ const assert=require('node:assert/strict');
   assert.equal(restoredAccount,originalAccount,'Reload must not change account identity');
   assert.equal(attempts,2,'Reload should not silently re-submit password credentials');
   assert.deepEqual(errors,[],'Unhandled browser errors during session restore');
-  console.log('PASS: rejected mock login, successful retry and same-account reload session restoration');
+  // Expired persisted credentials must not silently unlock the workspace.
+  await page.evaluate(()=>{
+   const key='pxx_commercial_auth_preview_v1';
+   const session=JSON.parse(sessionStorage.getItem(key));
+   session.expires_at=Math.floor(Date.now()/1000)-120;
+   sessionStorage.setItem(key,JSON.stringify(session));
+  });
+  await page.reload({waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>/Session expired/i.test(document.querySelector('#pxLoginMessage')?.textContent||''),null,{timeout:15000});
+  assert.equal(await page.locator('#pxCommercialGate').isVisible(),true,'Expired auth must require manual sign-in');
+  assert.equal(await page.evaluate(()=>window.__pxCommercialReady?.()),false,'Expired token must not unlock workspace');
+  assert.equal(await page.evaluate(()=>sessionStorage.getItem('pxx_commercial_auth_preview_v1')),null,'Expired session credentials must be discarded');
+  assert.equal(attempts,2,'Expired session must not submit password in background');
+  assert.deepEqual(errors,[],'Unhandled errors during expired session rejection');
+  console.log('PASS: rejected mock login, successful retry and same-account reload restoration and expired-token rejection');
   await page.close();
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exitCode=1});
