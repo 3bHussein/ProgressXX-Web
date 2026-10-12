@@ -47,6 +47,10 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Export both versions during a live sync conflict
+
+Updated root `index.html` (`c1fc7fc1`) with `Export both versions` visible only under account-scoped sync hold. On explicit click, reads current pending draft and authorized remote snapshot, then downloads a combined local JSON file for manual review; it does not merge, re-upload, delete or resume anything. Added source contract `tests/live-conflict-pair-export-contract.cjs` (`ab8aa622`) and registered it in Full UI (`86eba497`). Browser click/download, new CI and Pages deploy outcomes are NOT VERIFIED. Server CAS and real cross-device deletion safety remain P0 OPEN; do not call launch ready. No Supabase SQL, RLS, grants or stored user data changed. Next: verify CI/deployment and browser download; implement approved atomic CAS on isolated staging with restorable backup. Paid security remains deferred, but sale release is NO-GO.
+
 ## 2026-10-12 — Read-only conflict review visible in production source
 
 Changed root `index.html` (`31869e05`): when `syncConflictHold` is active a `Review conflict` toolbar control now fetches current authorized snapshot, compares field names/values against preserved local pending draft and reports differing field count and up to 15 names. No upload/merge, overwrites or local draft removal; the existing pending JSON export remains available. Added source regression `tests/live-conflict-review-contract.cjs` (`cd03adf4`) and Full UI registration (`bfc77f00`). Live browser execution, CI and Pages deployment NOT VERIFIED. No Supabase, RLS, schema or personal records touched. This is read-only review only; atomic server CAS, interactive per-field resolution, and real-device proof still OPEN. Commercial readiness estimate unchanged, paid security deferred. Next: run browser and CI test on deployed SHA, then implement safe, consented conflict recovery backed by real CAS.
