@@ -487,3 +487,10 @@ Initial root keyboard/reduced-motion/mobile-zoom regressions VERIFIED at 320/390
 | 2026-10-12 | Browser test: concurrent Supabase token refresh | [8cca2f2](https://github.com/3bHussein/ProgressXX-Web/commit/8cca2f27a289e90cbb1c781b0e9336de23c296e5), [395a8c9](https://github.com/3bHussein/ProgressXX-Web/commit/395a8c9805dbcdef9d16b34f2fe578365a8a1975) | Prior Full UI #38209687913 PASS; fresh CI NOT VERIFIED | No real account | Three simultaneous mocked browser reads; one token rotation; production data unchanged |
 
 Keep this table honest; a green CI run alone is not proof that the product is production-ready.
+
+
+## 2026-10-13 Cairo — Phase 3 scoped offline PWA shell
+
+Fixed `sw.js` root-folder and query-string offline fallback using canonical scope-local public asset keys; v2 cache update excludes API/other paths, waits for cache writes, and retains the working shell after HTTP errors/redirects. No root `index.html`, browser account storage or database changes. Added VM lifecycle/cache regression and actual Chromium offline-shell regression to Full UI CI. Unrelated caches and synthetic draft localStorage are preserved; zero Supabase requests in the offline browser fixture.
+
+Local verification: 62/63 checks passed in the parallel sweep; full UI smoke initially timed out at mock sign-out, then passed on an isolated rerun without code changes. Both new PWA tests PASS. Remote CI/deployment NOT VERIFIED pending this PR. Physical Android install, cross-engine support, offline authenticated data and rollback remain unverified. Database experiments remain paused; commercial launch NOT APPROVED. Next: verify PR/Main UI checks and deployed root/sw bytes, then continue mobile/PWA permission and update checks with mocks.

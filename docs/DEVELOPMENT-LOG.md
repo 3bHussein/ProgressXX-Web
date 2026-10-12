@@ -1316,3 +1316,10 @@ Previous Pages #38224272376 SUCCESS; Full UI #38224271404 still running when che
 **Persistent owner rule:** DATABASE-EXPERIMENTS-PAUSED-2026-10-13. No PostgreSQL/Supabase/staging/backup experiments until a new explicit owner request. Database workflow has no push/PR trigger and default-false manual resume requiring workflow_dispatch + true opt-in. No SQL/pg_dump/production DB experiments performed in this task. Normal app synchronization remains unchanged/enabled; no production rows, grants, RLS, schema, migrations or paid services changed.
 
 **Exact next authorized step:** Phase 3 frontend mobile/PWA/performance/accessibility work using local fixtures and mocked requests. Keep database work paused. Milestone 2 remains paused/incomplete, all unverified live safety gates remain open and commercial launch is NOT APPROVED. Historical 55–65% estimate unchanged. Do not automatically return to historical staging/backup plans or infer that reported free-database issue was caused by prior isolated tests.
+
+
+## 2026-10-13 Cairo — Phase 3 scoped offline PWA shell
+
+Fixed `sw.js` root-folder and query-string offline fallback using canonical scope-local public asset keys; v2 cache update excludes API/other paths, waits for cache writes, and retains the working shell after HTTP errors/redirects. No root `index.html`, browser account storage or database changes. Added VM lifecycle/cache regression and actual Chromium offline-shell regression to Full UI CI. Unrelated caches and synthetic draft localStorage are preserved; zero Supabase requests in the offline browser fixture.
+
+Local verification: 62/63 checks passed in the parallel sweep; full UI smoke initially timed out at mock sign-out, then passed on an isolated rerun without code changes. Both new PWA tests PASS. Remote CI/deployment NOT VERIFIED pending this PR. Physical Android install, cross-engine support, offline authenticated data and rollback remain unverified. Database experiments remain paused; commercial launch NOT APPROVED. Next: verify PR/Main UI checks and deployed root/sw bytes, then continue mobile/PWA permission and update checks with mocks.
