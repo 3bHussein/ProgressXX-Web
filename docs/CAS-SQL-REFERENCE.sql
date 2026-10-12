@@ -1,0 +1,21 @@
+-- REFERENCE ONLY / NOT AN EXECUTABLE PRODUCTION MIGRATION.
+-- Never apply to live Supabase until staging backup, RLS, grants and rollback are approved.
+-- Contract sketch, intentionally not placed under supabase/migrations.
+-- Authenticated callers must never submit owner identity as trusted authority.
+-- Illustrative single-statement atomic version check (no grants/privilege changes here):
+--
+-- UPDATE public.user_app_snapshots
+--    SET payload = :new_payload,
+--        version = version + 1,
+--        updated_at = now()
+--  WHERE user_id = auth.uid()
+--    AND version = :expected_version
+-- RETURNING version;
+--
+-- If no row returned, distinguish missing ownership (403/404)
+-- from stale version (409) without leaking the other account's state.
+-- Creation must also be atomic and owned; legacy versionless rows need
+-- an audited backfill that preserves every existing payload.
+-- Direct REST upsert must be disallowed ONLY AFTER authorized cutover
+-- with verified RLS, rollback and intact old clients.
+-- This reference intentionally has no CREATE / ALTER / DROP / GRANT / REVOKE.
