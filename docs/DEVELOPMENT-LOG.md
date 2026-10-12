@@ -47,6 +47,10 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Daily modal Tab containment
+
+Verified preceding Full UI #38225396383 and Pages #38225396494 SUCCESS. Added production Tab/Shift+Tab focus containment to visible Daily Reminder dialog (`756b820d`) and aligned accessibility test source assertions (`b48fd12c`). Preserves Escape and dismissal focus restoration. Fresh CI NOT VERIFIED. No Supabase/data changes; P0 cross-device conflict and real RLS remain OPEN, commercial estimate 55–65% unchanged, paid security deferred/nonblocking.
+
 ### 2026-10-12 — Daily Reminder focus entry and restoration
 
 - Verified preceding Full UI #38225047580 SUCCESS and Pages #38225048256 SUCCESS.
