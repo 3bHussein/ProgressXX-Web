@@ -47,6 +47,11 @@
 ## Real-device sync QA checklist — 2026-10-12
 ## User-confirmed live Food Library sync (2026-10-12)
 ## Live bidirectional Food sync confirmed by owner (2026-10-12)
+## Daily discrepancy on real devices (2026-10-12)
+
+Owner: Workout and Weight match between devices, Daily does not. Root fix rehydrates in-memory `dailyReminders` after account cloud/archive hydration and before legacy boot (commit `65685b1366e3a59ec5d50d4b2286061a4699e0c5`); stronger mock relogin UI-model assertion (commit `216ca4ca903dda7077b3b8e9b99a7bc22f8deb66`). Await fresh CI and owner retest; exact Daily field/date mismatch not identified. No DB updates and paid security phase deferred.
+
+
 
 Owner confirmed phone-created Food Diary item appeared exactly once with correct fields on desktop. Previously confirmed desktop-created Food Library product appeared on phone. These are limited live bidirectional Food tests. Next read-only compare Workout, Daily, Weight existing records across devices; no production edits or security scope changes.
 
