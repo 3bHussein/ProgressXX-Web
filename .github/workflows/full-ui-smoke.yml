@@ -35,6 +35,7 @@ jobs:
             tests/cross-device-safe-rebase-simulation.cjs \
             tests/sync-delete-resolution-api-contract.cjs \
             tests/offline-delete-replay-contract.cjs \
+            tests/offline-same-record-conflict-contract.cjs \
             tests/snapshot-cas-proposal-safety.cjs \
             tests/snapshot-cas-contract-simulation.cjs \
             tests/daily-conflict-prototype-safety.cjs \
