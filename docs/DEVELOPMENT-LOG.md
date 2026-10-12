@@ -47,6 +47,14 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Cross-device deletion resurrection regression (known P0 risk)
+
+- Prior GitHub Full UI [#38211091071](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38211091071) SUCCESS and Pages [#38211091264](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38211091264) SUCCESS.
+- Created `tests/cross-device-delete-resurrection-regression.cjs` (`72be687a9b377714b006b96e5429291714252a8c`) and added to CI (`008dc9578c9e43f64702bb1054a53a48238153fe`). Synthetic model demonstrates stale whole-account snapshot POST can resurrect a deleted Daily, Workout, Weight or Food entry when a second device saves unrelated settings. This is a **known risk reproduction, NOT a fix**, and assertions currently expect the unsafe behavior so future changes to snapshot semantics demand review.
+- Fresh CI and deployment **NOT VERIFIED**. No production code, Supabase rows/migration or real users touched. Paid-security exception remains deferred/nonblocking for continued development, but sale signoff is still blocked by unresolved data-loss/isolation risks.
+- **Commercial milestone:** cross-device persistence/sync remains **OPEN**; initial rough readiness estimate stays **55–65%**, private beta 4–8 weeks and commercial launch 10–16 weeks conditional, not re-estimated based on a risk test.
+- **Next exact action:** examine safe conflict prevention for full snapshots without applying unapplied CAS migration or affecting user data; propose isolated mock/tests for tombstone or compare-and-swap semantics before production migration.
+
 ### 2026-10-12 — Owner-approved paid-security exception and continued free QA
 
 - **Owner decision:** `SECURITY-DEFERRED-2026-10-12` stays **explicitly deferred as a paid/cost-bearing security work item**, but is **NOT a blocker to continued development, free mock/synthetic tests, UX work, or CI improvements**. Do not allocate paid staging/resources or apply migrations until owner separately authorizes and has budget. **Never treat this exception as passing RLS/security or permission to sell/onboard external customers.** It remains a pre-commercial P0 gate.
