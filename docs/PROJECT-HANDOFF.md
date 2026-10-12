@@ -1,3 +1,7 @@
+## 2026-10-12 — Daily modal focus behavior
+
+Prior Full UI #38225047580 and Pages #38225048256 succeeded. Root `index.html` `1f6fe323` now focuses Daily alarm action on open and restores previous focus on close; test `789a3767` adds assertions. New CI unverified. Production data untouched; P0 sync/security open, readiness unchanged, deferred security nonblocking.
+
 ## 2026-10-12 — Daily Alarm keyboard accessibility
 
 Previous Full UI #38224513191 and Pages #38224513072 passed. Production UI `bda6928` labels reminder overlay as modal dialog and allows Escape to dismiss when visible; new test `ac45bb2`, CI `69b948e`. New CI unverified. No Supabase or user data impact; P0 cross-device safety OPEN; commercial estimate 55–65% unchanged, paid security deferred.
