@@ -47,6 +47,10 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Validate account identity before conflict queue use
+
+Reviewed production-independent conflict review module. Fixed a real input-validation bug: `createReviewQueue()` previously called `.trim()` before checking an account ID, which raised an unintended TypeError for null, undefined or non-string callers. Commit `280d9992` now uses validated `keyFor(accountId)` before normalization. Added null/undefined/number/object/blank-string regression assertions in `tests/conflict-review-queue-contract.cjs` (`412851fd`). Already registered in Fast and Full UI workflows. CI execution NOT VERIFIED; no local test pass claimed. Production `index.html`, database, authentication records and all user data untouched. Live CAS and real RLS remain P0 OPEN; commercial estimate 55–65% unchanged; paid security staging remains deferred. Next: verify Fast conflict CI and Full UI job outcomes; then return to real-device sync correctness and backups.
+
 ## 2026-10-12 — Conflict queue account normalization fix
 
 Fixed `scripts/conflict-review-queue.cjs` (7b7564ec) to consistently canonicalize account IDs for key construction, ownership checking and saved records. Previously an ID with surrounding whitespace generated the same storage key as its trimmed form but mismatched the stored owner ID when loading, leaving that pending review unreadable. Extended `tests/conflict-review-queue-contract.cjs` (b53367e1) to cover shared keys and round-trip recovery across whitespace and canonical forms. Existing Fast and Full UI workflows already include this test; fresh execution and Actions results NOT VERIFIED. This isolated module is not imported by production `index.html`; no Supabase, runtime data or schema changed. Rough commercial readiness 55–65% unchanged, CAS/RLS P0 open and paid security deferred. Next: verify CI and prioritize actual cross-device CAS proof on authorized staging.
