@@ -18,7 +18,8 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Work task progress:** PR #16 MERGED as c1a6d6f; all eight PR checks and matching main Full UI/Fast/PostgreSQL/Pages checks SUCCESS, root index.html byte-exact verified. Milestone 2 still IN PROGRESS because live safety gates remain open.
 - **Known risk:** Real-account reproduction of login `undefined.filter` and Food/Daily restored-data sync needs independent confirmation, even though earlier CI ran green.
 - **Additional verified step:** PR #17/f1004cf: PostgreSQL 17 owner RLS, restricted CAS, legacy-upsert denial and real pg_dump restore into separate synthetic database all PASS. Synthetic SQL identities; live Supabase/backup/device gates still OPEN.
-- **Primary next step:** Test prepared migration on separate staging Supabase project/branch (none currently available); verify postflight grants and two-user RLS, then Food/Daily/Workout/Weight CRUD/sync. Production grants are unchanged.
+- **Owner pause:** DATABASE-EXPERIMENTS-PAUSED-2026-10-13 — no further DB experiments/staging/backup steps until explicit resumption; normal app sync remains enabled. Active phase is frontend/mobile/accessibility QA.
+- **Primary next step (superseded while paused):** Test prepared migration on separate staging Supabase project/branch (none currently available); verify postflight grants and two-user RLS, then Food/Daily/Workout/Weight CRUD/sync. Production grants are unchanged.
 - **Data safety:** Preserve all existing user records; do not wipe or silently replace records.
 - **Deployment URL:** https://3bhussein.github.io/ProgressXX-Web/
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
@@ -1287,3 +1288,17 @@ Previous Pages #38224272376 SUCCESS; Full UI #38224271404 still running when che
 **Boundary / risks:** Identities are synthetic SQL gateway claims; this does NOT verify Supabase JWT signatures, live PostgREST/RLS/grants, production backup restoration or real two-device behavior. The private-schema definer experiment has a NOLOGIN/NOSUPERUSER/NOBYPASSRLS non-table-owner writer, FORCE RLS, empty search_path and revoked PUBLIC execute; it is test-only, not an approved production architecture/migration. Existing invoker staging draft must not be applied verbatim.
 
 **Gate / exact next action:** Free isolated owner/CAS/restore checks are VERIFIED. Live DATA-01, AUTH-01 and SYNC-01/02/03 remain OPEN; Milestone 2 IN PROGRESS, commercial NO-GO and historical 55–65% estimate unchanged. Next obtain a trusted private restorable production backup and an independently authorized Supabase staging environment, then real JWT/direct API and client CAS/old-client cutover tests plus physical computer/mobile CRUD/offline/delete matrix. Production schema/grants/RLS/CAS changes need explicit approval and verified backups. No production accounts/data/tables/grants/RLS/migrations or paid services were changed.
+
+## 2026-10-13 Cairo (2026-10-12 UTC) — Owner paused database experiments; Phase 3 mobile/accessibility started
+
+**Owner instruction:** Stop database experimentation and move to the next phase because of reported free-database concerns. Cause of the reported issue is NOT VERIFIED; the supplied screenshot was unavailable locally. Previous PostgreSQL acceptance ran in disposable GitHub service databases, not production Supabase. Regardless, all further database experiments/backup/staging work is paused until a new explicit owner request. Normal production app sync is not disabled.
+
+**Scope:** root `index.html`, PostgreSQL/Full UI workflow files, `tests/database-experiments-paused.cjs`, `tests/mobile-motion-anatomy-accessibility.cjs` and project tracking/acceptance documents. Implementation commit/PR and remote evidence follow after CI.
+
+**Database pause:** Removed PostgreSQL push/PR triggers. Manual workflow defaults to false and job requires workflow_dispatch plus explicit true owner-resume input; no SQL service starts otherwise. Added source guard regression to Full UI, with no SQL execution.
+
+**Phase 3 improvements:** UI CSS and explicit scroll options respect prefers-reduced-motion; keyboard focus indicators, bilingual named/focusable anatomy image controls, Enter/Space opening, labelled zoom dialog, named zoom buttons, Tab/Shift-Tab containment, Escape/close focus restoration and Android back callback closing zoom first. Anatomy/online-food image decoding is asynchronous while lazy-loading remains intact. No quantified performance gain claimed.
+
+**Verification:** 61 local Node/Chromium/static checks PASS, including root UI widths 320/390/768, reduced-motion vs normal scroll, zoom keyboard/touch layout, focus restoration and Android back callback. The new UI test intercepts external requests and asserts zero Supabase requests. Exact revised pause guard, script syntax and whitespace checks PASS. No PostgreSQL/pg_dump/production DB tests executed. Fresh CI and deployment NOT VERIFIED until recorded in closeout.
+
+**Data / gate:** No schema/grants/RLS/migrations, production data, sync protocol, paid services or user history changed. Only root index.html is the runtime target. Milestone 2 remains PAUSED/INCOMPLETE; pre-sale safety gates remain OPEN and commercial launch NOT APPROVED. Phase 3 is IN PROGRESS; physical Android/cross-browser/PWA/load and wider accessibility still require evidence. Historical 55–65% estimate unchanged. Next: verify UI-only PR checks and root deployment with PostgreSQL absent/skipped, then continue frontend performance/mobile quality without database experiments.

@@ -1,20 +1,17 @@
 name: Isolated PostgreSQL CAS integration
+# Owner paused database experiments on 2026-10-12 UTC (2026-10-13 Cairo).
+# No push/PR trigger. Resume only after a new explicit owner request.
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'tests/postgres-cas-isolated.sql'
-      - 'tests/postgres-cas-concurrency.py'
-      - 'tests/postgres-owner-cas-fixture.sql'
-      - 'tests/postgres-owner-cas-acceptance.py'
-      - 'tests/postgres-owner-cas-guard.py'
-      - 'index.html'
-      - '.github/workflows/postgres-cas-integration.yml'
-  pull_request:
-    branches: [main]
   workflow_dispatch:
+    inputs:
+      resume_database_tests:
+        description: 'Owner explicitly approved resuming disposable database tests'
+        type: boolean
+        required: true
+        default: false
 jobs:
   synthetic-cas:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.resume_database_tests == true }}
     runs-on: ubuntu-latest
     timeout-minutes: 6
     services:
