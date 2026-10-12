@@ -29,16 +29,13 @@ BEGIN
     RAISE EXCEPTION 'Invalid revision or snapshot' USING ERRCODE = '22023';
   END IF;
   -- First-write insert races are resolved by the unique user_id key.
-  INSERT INTO public.user_app_snapshots(user_id,payload,revision,updated_at)
-  VALUES(owner_id,next_payload,1,now())
-  ON CONFLICT (user_id) DO NOTHING;
-  IF FOUND THEN
-    IF expected_revision = 0 THEN
+  IF expected_revision = 0 THEN
+    INSERT INTO public.user_app_snapshots(user_id,payload,revision,updated_at)
+    VALUES(owner_id,next_payload,1,now())
+    ON CONFLICT (user_id) DO NOTHING;
+    IF FOUND THEN
       RETURN QUERY SELECT true,1::bigint,next_payload;
       RETURN;
-    ELSE
-      -- Must not return a success for a client with a missing base version.
-      RAISE EXCEPTION 'Initial revision mismatch' USING ERRCODE = '40001';
     END IF;
   END IF;
   -- Existing row serialized on its owner row.
@@ -56,7 +53,7 @@ BEGIN
 END $$;
 ```
 
-**Critical review finding:** This is deliberately **not production-ready**. The insert-before-revision-check path is unsuitable for an account without an existing snapshot if `expected_revision` is nonzero (the erroneous insert has to be rolled back); the migration requires a revised first-write flow and rigorous transaction tests. The function also needs an explicit execute-grant review and a strategy that disables bypass through legacy direct POST upserts after all clients migrate. Do **not** apply the draft SQL verbatim.
+**Critical review finding:** This is deliberately **not production-ready**. First-write race and permission behavior require verification in actual staging transactions. The function needs explicit execute-grant review and a strategy that disables bypass through legacy direct POST upserts after all clients migrate. Do **not** apply the draft SQL verbatim.
 
 ## Mandatory acceptance before deployment
 
