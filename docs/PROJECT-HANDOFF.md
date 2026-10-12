@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Real pending helper contract test
+
+Previous Full UI #38213339386, Pages #38213339493 passed. New `tests/production-pending-snapshot-contract.cjs` (`6e0027c`) executes real account-scoped pending helper functions from root `index.html` using synthetic storage. CI integration `b83861c` pending verification. Validates pending deletion preservation and isolation, not live network syncing or server idempotency. No production data altered; P0 sync remains OPEN, commercial readiness unchanged. Paid security stage remains deferred without pausing development. Next check CI; test mocked server failure/reload in Chromium.
+
 ## 2026-10-12 — Browser offline reconnect mock
 
 Added `tests/offline-reconnect-browser-contract.cjs` (`9a7e4aa`) and workflow (`97aec49`), testing a synthetic browser in-memory pending delete across offline and reconnect. Prior Pages #38213131525 succeeded; new CI NOT VERIFIED. This does not test real outbox or persistent storage, and production data untouched. Cross-device sync P0 OPEN, commercial estimate 55–65% unchanged. Paid security remains deferred/nonblocking. Next verify Actions and study real app queue.
