@@ -47,6 +47,13 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Full root-app two-account isolation with mocked backend
+
+- Verified prior Full UI [#38222291951](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38222291951) SUCCESS and Pages [#38222292109](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38222292109) SUCCESS.
+- Added `tests/full-app-two-account-isolation-browser.cjs` (`5df87a69`) and Full UI CI registration (`29b5d27e`). Runs production root `index.html` in two isolated Chromium contexts with different fake account IDs and per-account mocked Supabase snapshots; checks each account writes and reloads only its own Daily marker. New CI NOT VERIFIED.
+- Mock route access checks do not establish real Supabase RLS/negative CRUD. No real user data, database or production runtime code changed. P0 authorization and cross-device conflict still OPEN; rough commercial readiness 55–65% unchanged; paid security work stays deferred/nonblocking.
+- Next: review new CI and fix any failure; continue no-cost product and test improvements, never claim launch-ready security without authorized live account tests.
+
 ### 2026-10-12 — Two-account pending isolation mock and CI
 
 - Verified prior Full UI [#38221164555](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38221164555) SUCCESS and Pages [#38221164446](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38221164446) SUCCESS.
