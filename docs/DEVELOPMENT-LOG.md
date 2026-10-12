@@ -47,6 +47,12 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Offline delete replay idempotency mock (fourth batch step)
+
+- Added `tests/offline-delete-replay-contract.cjs` (`2a6599c83c355f177b9485991639ee1fd82c888a`) and wired Full UI (`45db7a286d98f684c5fd13986369ac453bf5224a`). Synthetic account-scoped queue model verifies queued delete, duplicate-event replay idempotency, stale resurrection 409 rejection, and wrong owner 403 across Daily/Workout/Weight/Food.
+- **Contract only**, no actual offline implementation, Supabase operation or RLS. New CI and deployment NOT VERIFIED; no production data changed. P0 sync OPEN, rough readiness 55–65% unchanged. Paid-security exception nonblocking for development.
+- **Next:** inspect full CI and Pages; use failure logs if needed, then plan production-safe opt-in conflict UX without enabling unapplied CAS.
+
 ### 2026-10-12 — Batched sync-conflict contract and browser preview protections
 
 - Verified previous full UI [#38212635321](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38212635321) SUCCESS and Pages [#38212635346](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38212635346) SUCCESS at `6b99cac`.
