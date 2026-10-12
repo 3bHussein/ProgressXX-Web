@@ -112,4 +112,6 @@ To resume: `Resume SECURITY-DEFERRED-2026-10-12` or `ارجع لاختبارات
 
 | 2026-10-12 | Expired session renewal before restoring account | [98d17e2](https://github.com/3bHussein/ProgressXX-Web/commit/98d17e29d555590116a0aa8eb964ac531ab92c11), [191f91d](https://github.com/3bHussein/ProgressXX-Web/commit/191f91d1ad3cd6f2a83dd33f650e19f8c4a3fbac) | Fresh CI NOT VERIFIED | Real account renewal pending | Strict account ID check; renewal failures stay locked and preserve account data |
 
+| 2026-10-12 | Prevent parallel token refresh conflicts | [e0fffa4](https://github.com/3bHussein/ProgressXX-Web/commit/e0fffa42843c3115a45ba677d46115cfbbd7df2f), [d724d93](https://github.com/3bHussein/ProgressXX-Web/commit/d724d930aeb941e7516bf116fc4434fd32305e1e) | CI NOT VERIFIED for update | Real concurrent refresh untested | One in-flight refresh, same-account checks, no database changes |
+
 Keep this table honest; a green CI run alone is not proof that the product is production-ready.
