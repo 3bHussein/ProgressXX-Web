@@ -38,6 +38,7 @@ jobs:
             tests/offline-same-record-conflict-contract.cjs \
             tests/offline-reconnect-browser-contract.cjs \
             tests/production-pending-snapshot-contract.cjs \
+            tests/two-account-pending-isolation-contract.cjs \
             tests/offline-upload-failure-reload-browser.cjs \
             tests/production-flush-failure-retry-contract.cjs \
             tests/production-flush-chromium-contract.cjs \
