@@ -47,6 +47,10 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Fix misleading PostgreSQL CAS assertion
+
+Inspected `tests/postgres-cas-isolated.sql` and found that the invalid-payload test's `WHEN OTHERS THEN NULL` would silently accept unrelated database errors as a test pass. Changed synthetic CAS input rejection to explicit SQLSTATE 22023, and assertion handler now accepts only 22023 (commit `879fa80b`), rethrowing every unrelated error. Workflow remains registered, but PostgreSQL execution and recent GitHub Actions result NOT VERIFIED. Production index.html and Supabase schema, grants, records unchanged; atomic CAS NOT DEPLOYED and commercial gate still NO-GO. Next: obtain workflow pass/fail and then implement authenticated CAS in independently backed-up approved staging; paid staging step remains deferred.
+
 ## 2026-10-12 — Remove CI PostgreSQL client dependency ambiguity
 
 Inspected isolated PostgreSQL CAS workflow and SQL integration scenario. Added explicit `postgresql-client` installation to `.github/workflows/postgres-cas-integration.yml` (commit `543907b8`) before invoking `psql`, so a runner missing PostgreSQL tools cannot fail before reaching the actual disposable database test. The live GitHub Actions run-list endpoint is unavailable to this session; the GitHub commit-run connector reports only PR runs, so **no latest push CI PASS claimed**. Local container has no PostgreSQL binaries or Docker; local SQL execution not performed. Existing synthetic CAS assertions have not been validated against Supabase. No production app, DB, RLS, user data or permissions changed. Next: inspect CI run results; fix any actual SQL failure and implement authenticated server CAS only on approved separately backed-up staging. P0 data safety remains OPEN and paid security remains deferred.
