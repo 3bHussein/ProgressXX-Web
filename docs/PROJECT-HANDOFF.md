@@ -50,6 +50,11 @@
 ## Daily discrepancy on real devices (2026-10-12)
 ## Daily reminder list follow-up (2026-10-12)
 ## Latest smoke test timeout fix — 2026-10-12
+## Concurrent edit safety review (2026-10-12)
+
+Full UI #38188317333 SUCCESS; Pages #38188317315 SUCCESS. User confirmed ordinary Daily add/delete across devices. **Concurrency unresolved:** `flush()` upserts a whole-account snapshot; `__pxRefreshAccountDailyReminders()` protects pending local edits from incoming refresh but cannot block stale outbound upserts. A second-device edit can be overwritten by last write. Do not claim conflict safety. Avoid parallel edits to the same reminder until conditional-write and explicit conflict recovery are tested with synthetic accounts. No production data changes; security review remains deferred.
+
+
 ## Live Daily reminder delete-sync fix (2026-10-12)
 
 Update: Owner confirms Daily sync works across devices. Pages #38187392355 SUCCESS. Full UI #38187392401 failed in an isolated regression test missing a storage-key constant; browser smoke and snapshot sync passed. Fixed test fixture in commit d3ac97721. Recheck CI; no production data changed.
