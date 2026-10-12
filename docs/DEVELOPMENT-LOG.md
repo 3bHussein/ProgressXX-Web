@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Mobile Chromium preview regression added
+
+- Full UI #38189690942 SUCCESS and Pages #38189690828 SUCCESS after prior prototype regex fix.
+- Added `tests/daily-conflict-mobile-browser.cjs` (commit `fa2b946b2fa62eb8201556d6c00a1a4dac807d5e`) to exercise the standalone preview at 320/390/768 px, assert no horizontal overflow or JS errors, and exercise four choices plus manual merge.
+- Wired the browser test into `.github/workflows/full-ui-smoke.yml` (commit `ce7a3b65636fa7ce5b04bd32c85e5af5acab430d`). Fresh CI pending; do not claim this new test passed before confirmation.
+- Preview has no real data access, no CAS deployment, no database changes. Security checks still deferred (`SECURITY-DEFERRED-2026-10-12`).
+
+
 ### 2026-10-12 — Repair conflict prototype CI regex syntax
 
 - Pages #38189538258 SUCCESS. Full UI #38189538324 FAILED after previous checks passed due invalid JavaScript regex flags in `tests/daily-conflict-prototype-safety.cjs`, **not** an identified production app failure.
