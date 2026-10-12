@@ -1,3 +1,7 @@
+## 2026-10-12 — Daily Alarm keyboard accessibility
+
+Previous Full UI #38224513191 and Pages #38224513072 passed. Production UI `bda6928` labels reminder overlay as modal dialog and allows Escape to dismiss when visible; new test `ac45bb2`, CI `69b948e`. New CI unverified. No Supabase or user data impact; P0 cross-device safety OPEN; commercial estimate 55–65% unchanged, paid security deferred.
+
 
 
 ### 2026-10-12 — Daily reminder / mobile anatomy test guard
