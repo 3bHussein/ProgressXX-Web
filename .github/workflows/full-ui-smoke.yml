@@ -40,6 +40,7 @@ jobs:
             tests/production-pending-snapshot-contract.cjs \
             tests/two-account-pending-isolation-contract.cjs \
             tests/production-stale-snapshot-release-gate.cjs \
+            tests/live-sync-release-classifier.cjs \
             tests/snapshot-cas-transition-contract.cjs \
             tests/cas-delete-unrelated-edit-acceptance.cjs \
             tests/cas-concurrency-matrix.cjs \
