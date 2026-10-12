@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Owner Daily recheck acknowledged; repair Food smoke preload timeout
+
+- User responded "تم نكمل" after request to retest Daily reminder list. This confirms they completed a check but does **not explicitly confirm** the lists now match; ask if mismatch persists.
+- Latest Pages [#38186670494](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38186670494) **SUCCESS**. Full UI [#38186670763](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38186670763) **FAILED** at Food Diary preload wait (`smoke-full-ui.cjs:60`, timeout 12 seconds), before evaluating the updated Daily regression.
+- Smoke test now explicitly awaits normalized Food refresh and checks a real account-scoped stored Food Diary record rather than hidden Food Diary DOM text (commit `87f698debd69995b015b36a577bf4a3567ab6f6e`). Fresh CI pending; do not claim green.
+- No production data or database changes. Security testing remains deferred (`SECURITY-DEFERRED-2026-10-12`). Next inspect CI and if it fails, diagnose rather than weakening checks.
+
+
 ### 2026-10-12 — Daily list mismatch: preserve saved empty lists and add regression
 
 - Real phone/desktop feedback: Daily reminder lists missing/different, while Workout Log and Weight match. Prior commit `65685b1` rehydrates account-specific reminder global before boot.
