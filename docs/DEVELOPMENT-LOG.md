@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Draft server-guarded snapshot CAS, not applied
+
+- Full UI #38188634435 SUCCESS and GitHub Pages #38188634220 SUCCESS for prior concurrency-risk reproduction.
+- Created **unapplied** SQL proposal `supabase/proposals/20261012_snapshot_compare_and_swap_NOT_APPLIED.sql`: authenticated caller identity, SECURITY INVOKER, locked existing account row, compare expected snapshot to current before updating, fail closed for absent snapshots/conflicts. This is a review artifact, **NOT** a running feature or deployed function.
+- Added static guard test `tests/snapshot-cas-proposal-safety.cjs`, wired into `.github/workflows/full-ui-smoke.yml`. Fresh CI pending. Atomic concurrent behavior and RLS grants require real staging verification before any production rollout.
+- Existing website still uses old whole-snapshot upsert; avoid concurrent edits to the same Daily reminder. No production database migration/change. Security work stays deferred per `SECURITY-DEFERRED-2026-10-12`.
+
+
 ### 2026-10-12 — Synthetic concurrent Daily conflict reproduction in CI
 
 - Confirmed latest Full UI #38188317333 **SUCCESS**, Pages #38188317315 **SUCCESS** before these new test changes.
