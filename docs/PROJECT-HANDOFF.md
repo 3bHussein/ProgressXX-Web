@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Persistent commercial readiness tracker (owner instruction)
+
+Owner requests the commercial-release time/completion estimate be stored in `docs/DEVELOPMENT-LOG.md` and updated **after each completed milestone**. Added baseline tracker in commit `8b36d95b699adedabdc4e7f76e1d9e32b4380f4c`: subjective 55–65% product-readiness estimate, approximately 4–8 weeks to private beta and 10–16 weeks to first commercial release, all conditional, **not verified completion metrics or deadlines**. Track five gates: account/RLS, persistence and synchronization, QA, operations/billing/legal, and private beta; use evidence-backed OPEN/IN PROGRESS/VERIFIED statuses. Prior Full UI #38210119914 and Pages #38210118315 SUCCESS. Commercial release NOT APPROVED. Do not resume `SECURITY-DEFERRED-2026-10-12` without owner authorization. After EVERY completed milestone update Development Log, this handoff and ROADMAP with actual CI, deployed SHA and effect on data; do not raise percent automatically. Next technical gate: browser concurrency follow-up and P0 data safety.
+
 ## 2026-10-12 — Concurrent token renewal browser QA and commercial blockers
 
 Prior Full UI #38209687913 and Pages #38209688147 passed. Added `tests/auth-refresh-browser-concurrency.cjs` (`8cca2f2`) and Full UI CI wiring (`395a8c9`), verifying three parallel mock cloud requests share a single token rotation in Chromium. New CI pending; no real data changed. Commercial launch is not approved: staging RLS/two users, backup restore, real multi-device conflict CRUD, auth recovery, PWA/browser QA, policies, billing and private beta remain. Security paid checkpoint deferred. Next check CI and improve synthetic identity mismatch test, then request explicit authorization before staged security work.
