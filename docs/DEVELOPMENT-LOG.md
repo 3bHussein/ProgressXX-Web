@@ -47,6 +47,14 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Owner-approved paid-security exception and continued free QA
+
+- **Owner decision:** `SECURITY-DEFERRED-2026-10-12` stays **explicitly deferred as a paid/cost-bearing security work item**, but is **NOT a blocker to continued development, free mock/synthetic tests, UX work, or CI improvements**. Do not allocate paid staging/resources or apply migrations until owner separately authorizes and has budget. **Never treat this exception as passing RLS/security or permission to sell/onboard external customers.** It remains a pre-commercial P0 gate.
+- Baseline Full UI [#38210413129](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38210413129) SUCCESS, Pages [#38210413145](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38210413145) SUCCESS at `a4d2c3d`. Free technical progress: enhanced `tests/auth-refresh-browser-concurrency.cjs` in commit `1851cb327650235e3d994a87cbaae179fa683115` to ensure browser-executed concurrent refreshes reject wrong-user tokens before any private table read or session persistence.
+- New test CI and documentation deployment **NOT VERIFIED** at commit time. No real user data, Supabase schema/grants or production app runtime changed.
+- **Commercial readiness tracker:** remains at initial rough 55–65% estimate / 4–8 weeks conditional private beta / 10–16 weeks conditional commercial release. No percentage increase justified by this single safety regression. Paid security exception may extend beta/launch estimates if unresolved.
+- **Exact next step:** check new GitHub Actions and fix any failures, then continue no-cost cross-device/offline conflict simulations and auth robustness while paid Supabase staging security work waits for explicit owner instruction.
+
 ### 2026-10-12 — Browser concurrent Supabase token renewal mock added
 
 - Verified existing Full UI [#38209687913](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38209687913) SUCCESS and Pages [#38209688147](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38209688147) SUCCESS for main `8b163c6`.
