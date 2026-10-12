@@ -46,6 +46,10 @@ Mock concurrent same-record editing contract `tests/offline-same-record-conflict
 
 `tests/production-pending-snapshot-contract.cjs` (`6e0027c`) executes real production pending-key functions against mock browser storage and separate account IDs. CI `b83861c`. Prior Full UI #38213339386 PASS, fresh test not verified. Does not solve server retry idempotency, offline queue replay or whole-snapshot stale overwrites; P0 sync remains OPEN and commercial readiness remains 55–65% rough estimate. Paid security remains deferred.
 
+## 2026-10-12 — Simulated failed upload retention after reload
+
+Added `tests/offline-upload-failure-reload-browser.cjs` (`8a00903`) and CI (`f0dc07c`) for synthetic localStorage pending retention across reload/503 and clearing after mock ack. Fresh CI not verified. **Not production flush verification**. Sync P0 OPEN, readiness unchanged, paid security exception unchanged.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
