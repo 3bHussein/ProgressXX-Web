@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Failed upload / reload synthetic QA
+
+Previous Full UI #38213728521 and Pages #38213729175 SUCCESS. Browser mock `tests/offline-upload-failure-reload-browser.cjs` (`8a00903`), CI registration `f0dc07c`. Synthetic pending edit survives reload and simulated 503, clears only on simulated successful acknowledgment. New CI NOT VERIFIED. This does not test real production flush transport; sync P0 OPEN, 55–65% rough commercial estimate unchanged. Paid security deferred/nonblocking. Next inspect Actions and test production flush with controlled mock.
+
 ## 2026-10-12 — Real pending helper contract test
 
 Previous Full UI #38213339386, Pages #38213339493 passed. New `tests/production-pending-snapshot-contract.cjs` (`6e0027c`) executes real account-scoped pending helper functions from root `index.html` using synthetic storage. CI integration `b83861c` pending verification. Validates pending deletion preservation and isolation, not live network syncing or server idempotency. No production data altered; P0 sync remains OPEN, commercial readiness unchanged. Paid security stage remains deferred without pausing development. Next check CI; test mocked server failure/reload in Chromium.
