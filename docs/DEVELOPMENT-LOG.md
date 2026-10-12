@@ -22,6 +22,13 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Green Full UI verification; auth smoke timeout fix blocked
+
+- Full UI [#38190178638](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190178638) SUCCESS and Pages [#38190178527](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190178527) SUCCESS for main `c2079a4`. The previous intermittent `Not authenticated` browser error was not reproduced in this run; resolution is NOT VERIFIED.
+- Read-only inspection of `scripts/smoke-full-ui.cjs` identified incorrect initial Playwright `waitForFunction(predicate,{timeout:15000})` argument placement; intended timeout must be third argument, after `null`. Attempted code edit was blocked by the GitHub tool's safety checks. **No application/test source code change completed.**
+- Updated `docs/PROJECT-HANDOFF.md` commit `f8bc46e3b24e73e3a1f9cd7042d9a86ae64a7fab` and this development log. Documentation-only deployment after these changes: **NOT VERIFIED**; no production data, Supabase schema, user browser storage or application runtime changed.
+- Exact next action: apply targeted timeout argument correction in `scripts/smoke-full-ui.cjs` through an approved edit path; rerun Full UI CI, monitor intermittent login errors, retain strict error assertions. CAS unapplied and `SECURITY-DEFERRED-2026-10-12` still on hold.
+
 ### 2026-10-12 — Full UI CI failure isolation and comprehensive test reporting
 
 - Investigation: latest main `8ce81e8` Pages [#38189897567](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38189897567) SUCCESS, Full UI [#38189897407](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38189897407) FAILED in `scripts/smoke-full-ui.cjs:67` with browser error `Not authenticated`. Earlier Full UI [#38189889377](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38189889377) SUCCESS, so intermittent bootstrap race is a possibility, NOT CONFIRMED. Failure occurred before downstream Daily conflict browser test.
