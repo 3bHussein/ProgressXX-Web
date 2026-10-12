@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Browser offline reconnect mock
+
+Added `tests/offline-reconnect-browser-contract.cjs` (`9a7e4aa`) and workflow (`97aec49`), testing a synthetic browser in-memory pending delete across offline and reconnect. Prior Pages #38213131525 succeeded; new CI NOT VERIFIED. This does not test real outbox or persistent storage, and production data untouched. Cross-device sync P0 OPEN, commercial estimate 55–65% unchanged. Paid security remains deferred/nonblocking. Next verify Actions and study real app queue.
+
 ## 2026-10-12 — Offline same-record concurrency and production checklist
 
 Prior Full UI #38212922901 and Pages #38212922692 succeeded. Added mock `tests/offline-same-record-conflict-contract.cjs` (`15cd7fd`) and CI wiring (`0fe61f3`) to model stale same-record edits, approved merge and delayed retry across Daily/Workout/Weight/Food. Production acceptance checklist `docs/SYNC-CONFLICT-PRODUCTION-ACCEPTANCE.md` (`3ab9b84`) documents prerequisites. Fresh CI unverified; production data and schema unchanged. Sync P0 OPEN, estimate unchanged, paid security work deferred without blocking normal development.
