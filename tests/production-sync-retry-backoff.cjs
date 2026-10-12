@@ -12,13 +12,13 @@ const env={ready:true,uploading:false,revision:1,savedRevision:0,account:'mock',
  cloud:async()=>{if(++attempt<=3)throw Error('synthetic 503')},
  mirrorWorkoutScheduleToTable:async()=>{},
  clearPending:()=>{pending=false},tell:()=>{},Date,JSON,Math,Error,Object};
-vm.runInNewContext(schedule[0]+'\n'+flush[0]+'\nthis.go=flush;',env);
+vm.runInNewContext(schedule[0]+'\n'+flush[0]+'\nthis.go=flush;this.getFailures=()=>syncRetryFailures;',env);
 (async()=>{
  for(let i=0;i<3;i++){await env.go();assert.equal(pending,true)}
  assert.deepEqual(delays,[2400,4800,9600]);
  assert.equal(env.savedRevision,0);
  await env.go();
  assert.equal(env.savedRevision,1);assert.equal(pending,false);
- assert.equal(env.syncRetryFailures,0);
+ assert.equal(env.getFailures(),0);
  console.log('PASS: production flush retries increase delay on mock 503 and reset on success; pending survives failure');
 })().catch(e=>{console.error(e);process.exitCode=1});
