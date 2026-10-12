@@ -114,4 +114,6 @@ To resume: `Resume SECURITY-DEFERRED-2026-10-12` or `ارجع لاختبارات
 
 | 2026-10-12 | Prevent parallel token refresh conflicts | [e0fffa4](https://github.com/3bHussein/ProgressXX-Web/commit/e0fffa42843c3115a45ba677d46115cfbbd7df2f), [d724d93](https://github.com/3bHussein/ProgressXX-Web/commit/d724d930aeb941e7516bf116fc4434fd32305e1e) | CI NOT VERIFIED for update | Real concurrent refresh untested | One in-flight refresh, same-account checks, no database changes |
 
+| 2026-10-12 | Browser test: concurrent Supabase token refresh | [8cca2f2](https://github.com/3bHussein/ProgressXX-Web/commit/8cca2f27a289e90cbb1c781b0e9336de23c296e5), [395a8c9](https://github.com/3bHussein/ProgressXX-Web/commit/395a8c9805dbcdef9d16b34f2fe578365a8a1975) | Prior Full UI #38209687913 PASS; fresh CI NOT VERIFIED | No real account | Three simultaneous mocked browser reads; one token rotation; production data unchanged |
+
 Keep this table honest; a green CI run alone is not proof that the product is production-ready.
