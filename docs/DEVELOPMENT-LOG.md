@@ -47,6 +47,13 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Fix mobile anatomy smoke blocked by Daily reminder overlay
+
+- Verified Full UI [#38223565793](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38223565793) FAILED while Pages #38223565495 succeeded. Workflow log pinpointed Playwright `locator.click` timeout on `#pxAnatomyTabCoverage` because the real `#alarmOverlay.show` intercepted pointer input; this run did **not** fail due to an uncaught Not authenticated error.
+- Updated `scripts/smoke-full-ui.cjs` (`e4767f4c823db562b734b3fd916a9c56e29c5ff8`) to dismiss an active Daily reminder through `dismissActiveAlarm()` before clicking anatomy mobile tabs. Preserves real pointer interaction (no force click). **CI not yet verified**.
+- No production `index.html` or Supabase changes; sync/security P0 gates remain OPEN, rough commercial readiness 55–65% unchanged and paid security phase deferred without blocking other work.
+- Next: inspect latest CI; if failing, diagnose exact log. Keep mobile and reminder UX covered without hiding legitimate overlay functionality.
+
 ### 2026-10-12 — Intermittent pre-login unauthenticated write error: obtain stack
 
 - Reviewed Full UI [#38223040123](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38223040123): FAILED at `scripts/smoke-full-ui.cjs` with page error `Not authenticated`, while Pages [#38223039968](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38223039968) succeeded. Other auth retry tests can pass, indicating potentially timing-dependent startup write.
