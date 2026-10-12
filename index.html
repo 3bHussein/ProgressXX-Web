@@ -7605,70 +7605,23 @@ async function syncDailyStateToSheet(){
 }
 
 async function syncRemindersFromSheet(force=false){
-  if(dailyPullInFlight)return;
+  // Daily reminders use the signed-in Supabase snapshot, never the retired Apps Script.
+  if(dailyPullInFlight||!navigator.onLine)return;
+  if(!window.__pxCommercialReady?.())return;
   if((dailyStateDirty||dailyStateSyncInFlight)&&!force)return;
   dailyPullInFlight=true;
-  if(!$('appScriptUrl')?.value.trim()){
-    dailyPullInFlight=false;
-    setReminderSheetState('Apps Script URL is missing.',false);
-    return;
-  }
   try{
-    setReminderSheetState('Loading reminders from Google Sheet…');
-    const date=localDateKey();
-    PXStore.setItem(DAILY_LAST_DATE_KEY,date);
-    const r=await apiCall('reminders_get',{date});
-    if(!r.ok)throw new Error(r.error||'Could not load reminders');
-
-    // First use after upgrading: keep existing local reminders and seed the new Sheet tabs.
-    if(!Array.isArray(r.reminders)||r.reminders.length===0){
-      PXStore.setItem(DAILY_REMINDERS_KEY,JSON.stringify(dailyReminders));
-      await syncReminderConfigToSheet();
-      await syncDailyStateToSheet();
-      renderDaily();
-      setReminderSheetState('Existing reminders copied to Google Sheet',true);
-      return;
+    const result=await window.__pxRefreshAccountDailyReminders?.();
+    if(result==='updated'||result==='unchanged'){
+      dailyLastPullAt=Date.now();
+      setReminderSheetState('Daily reminders synced with Supabase',true);
+    }else if(result==='pending'){
+      setReminderSheetState('Daily changes are waiting for cloud sync');
     }
-
-    dailyReminders=r.reminders.map(x=>({
-      id:String(x.id||''),
-      name:String(x.name||''),
-      amount:String(x.amount||''),
-      time:String(x.time||''),
-      enabled:normalizeReminderEnabled(x.enabled)
-    }));
-    PXStore.setItem(DAILY_REMINDERS_KEY,JSON.stringify(dailyReminders));
-
-    const all=dailyDoneMap();
-    const remoteDoneRaw=r.done&&typeof r.done==='object'?r.done:{};
-    const cleanDone={};
-    for(const [id,value] of Object.entries(remoteDoneRaw)){
-      cleanDone[id]=normalizeDailyDoneValue(value);
-    }
-    all[date]=cleanDone;
-    PXStore.setItem(DAILY_DONE_KEY,JSON.stringify(all));
-
-    if(r.water){
-      PXStore.setItem(DAILY_WATER_KEY,JSON.stringify({
-        date,
-        current:Number(r.water.current)||0,
-        target:Number(r.water.target)||3
-      }));
-    }
-
-    renderDaily();
-    setReminderSheetState(`Loaded ${dailyReminders.length} reminders from Google Sheet`,true);
-    dailyLastPullAt=Date.now();
-    markSyncSuccess('daily');
   }catch(e){
-    // Keep local data if remote reminder sync fails.
-    setReminderSheetState('Using local reminder data • '+e.message,false);
-    renderDaily();
-  }finally{
-    dailyPullInFlight=false;
-  }
+    setReminderSheetState('Daily cloud refresh: '+e.message,false);
+  }finally{dailyPullInFlight=false}
 }
-
 
 
 // Cross-device Daily sync: refresh when the app/tab becomes active and while Daily is open.
@@ -9368,6 +9321,28 @@ window.__legacyBoot=init;
   get length(){return Object.keys(values).length}
  };
  window.__pxActiveStore=nodeStorage;
+ // Pull the authoritative reminder list (including deletions and saved empty lists).
+ // Never overwrite this device's pending edits or write a stale copy back to cloud.
+ window.__pxRefreshAccountDailyReminders=async()=>{
+  if(!ready||!account||!navigator.onLine)return 'unavailable';
+  if(uploading||revision!==savedRevision||readPending(account))return 'pending';
+  const before=revision;
+  const rows=await cloud('user_app_snapshots?select=payload&user_id=eq.'+encodeURIComponent(account)+'&limit=1');
+  if(uploading||revision!==before||revision!==savedRevision||readPending(account))return 'pending';
+  if(!Array.isArray(rows))throw Error('Invalid Supabase snapshot response');
+  const key='progressx-reminders';
+  const remote=rows[0]?.payload?.[key];
+  if(typeof remote!=='string')return 'unavailable';
+  let parsed;
+  try{parsed=JSON.parse(remote)}catch{throw Error('Invalid cloud reminder list')}
+  if(!Array.isArray(parsed))throw Error('Invalid cloud reminder list');
+  if(values[key]===remote)return 'unchanged';
+  browserStorage.setItem(storagePrefix(account)+key,remote);
+  values[key]=remote;
+  dailyReminders=loadDailyReminders();
+  renderDaily();
+  return 'updated';
+ };
  window.__pxLoadProducts=async()=>{
   if(!ready||!account)throw Error('Sign in to load products');
   const rows=await cloud('food_products?select=id,source_id,barcode,name,serving_qty,serving_unit,calories,protein_g,carbs_g,fat_g&order=created_at.desc&limit=2000');
