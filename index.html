@@ -2174,7 +2174,7 @@ textarea{resize:vertical}
     <div class="actions">
       <button id="pwaInstallBtn" class="btn primary" onclick="installProgressX()" disabled>Install app</button>
     </div>
-    <div id="pwaInstallInfo" class="callout" style="margin-top:10px">Install availability depends on your browser and device.</div>
+    <div id="pwaInstallInfo" role="status" aria-live="polite" class="callout" style="margin-top:10px">Install availability depends on your browser and device.</div>
   </div>
 
   <div class="panel">
@@ -2536,6 +2536,7 @@ function remoteWorkoutRows(rows){
 
 function prepareProgressXXPrivateSource(){/* intentionally disabled for commercial accounts */}
 let deferredInstallPrompt=null;
+let pwaInstallBusy=false,pwaInstallCompleted=false,pwaInstallMessage='';
 function isAndroidNativeApp(){
   return !!window.ProgressXAndroid || location.hostname==='appassets.androidplatform.net';
 }
@@ -2543,44 +2544,66 @@ function updatePwaInstallUI(){
   const btn=$('pwaInstallBtn'),status=$('pwaInstallStatus'),info=$('pwaInstallInfo');
   if(!btn||!status||!info)return;
   const standalone=window.matchMedia?.('(display-mode: standalone)')?.matches||window.navigator.standalone===true;
-  btn.disabled=false;
+  btn.disabled=pwaInstallBusy;
+  btn.setAttribute('aria-busy',String(pwaInstallBusy));
   if(isAndroidNativeApp()){
     status.textContent='Android App';
     btn.textContent='Already installed';
     info.textContent='You are already using the native Android app. PWA installation is only for the web version.';
     return;
   }
-  if(standalone){
+  if(standalone||pwaInstallCompleted){
     status.textContent='Installed';
     btn.textContent='Installed';
     info.textContent='ProgressX is already installed on this device.';
     return;
   }
+  if(pwaInstallBusy){
+    btn.textContent='Installing…';
+    status.textContent='Waiting';
+    info.textContent='Complete or dismiss the browser installation prompt.';
+    return;
+  }
   btn.textContent=deferredInstallPrompt?'Install app':'Install help';
   status.textContent=deferredInstallPrompt?'Ready':'Web';
-  if(location.protocol!=='https:'&&location.hostname!=='localhost'){
+  if(location.protocol!=='https:'&&!['localhost','127.0.0.1','[::1]'].includes(location.hostname)){
     info.textContent='PWA installation requires HTTPS (or localhost). Open ProgressX from its hosted HTTPS web address.';
   }else if(deferredInstallPrompt){
     info.textContent='ProgressX is ready to install.';
   }else{
     info.textContent='The browser has not offered an install prompt yet. Tap Install help for browser-specific steps.';
   }
+  if(pwaInstallMessage)info.textContent=pwaInstallMessage;
 }
 async function installProgressX(){
+  if(pwaInstallBusy)return;
   if(isAndroidNativeApp()){
     alert('This is already the native Android app. PWA installation is only for the web version.');
     return;
   }
   const standalone=window.matchMedia?.('(display-mode: standalone)')?.matches||window.navigator.standalone===true;
-  if(standalone){alert('ProgressX is already installed on this device.');return}
+  if(standalone||pwaInstallCompleted){alert('ProgressX is already installed on this device.');return}
   if(deferredInstallPrompt){
-    deferredInstallPrompt.prompt();
-    try{await deferredInstallPrompt.userChoice}catch{}
+    const prompt=deferredInstallPrompt;
     deferredInstallPrompt=null;
+    pwaInstallBusy=true;
+    pwaInstallMessage='';
     updatePwaInstallUI();
+    try{
+      await prompt.prompt();
+      const choice=await prompt.userChoice;
+      if(!pwaInstallCompleted)pwaInstallMessage=choice?.outcome==='accepted'
+        ? 'Installation accepted. Your browser will complete installation.'
+        : 'Installation dismissed. You can keep using ProgressX in this browser or open Install help.';
+    }catch{
+      if(!pwaInstallCompleted)pwaInstallMessage='The install prompt could not open. You can keep using ProgressX or open Install help.';
+    }finally{
+      pwaInstallBusy=false;
+      updatePwaInstallUI();
+    }
     return;
   }
-  const secure=location.protocol==='https:'||location.hostname==='localhost';
+  const secure=location.protocol==='https:'||['localhost','127.0.0.1','[::1]'].includes(location.hostname);
   const ua=navigator.userAgent||'';
   let msg=secure
     ? 'Your browser has not exposed the automatic install prompt yet.\n\n'
@@ -2595,9 +2618,12 @@ function setupPwa(){
   window.addEventListener('beforeinstallprompt',e=>{
     e.preventDefault();
     deferredInstallPrompt=e;
+    pwaInstallMessage='';
     updatePwaInstallUI();
   });
   window.addEventListener('appinstalled',()=>{
+    pwaInstallCompleted=true;
+    pwaInstallMessage='';
     deferredInstallPrompt=null;
     updatePwaInstallUI();
   });
