@@ -1,3 +1,7 @@
+## 2026-10-12 — Daily Reminder keyboard focus
+
+Production focus handling `1f6fe323` and regression assertions `789a3767`; current CI unverified. P0 sync/security gates unchanged, readiness estimate 55–65%; paid security remains deferred.
+
 
 ## 2026-10-12 — Anatomy UI smoke overlay repair
 
