@@ -1,3 +1,11 @@
+## 2026-10-12 — Five-gate commercial sync classifier (verified locally)
+
+Added `tests/sync-commercial-release-gate.cjs` (4f97468b) and wired into Fast conflict CI (a92f938f) and Full UI CI (9eed707c). The standalone pure Node test explicitly rejects sale-readiness unless all five independent checks are satisfied: no unconditional snapshot upsert, verified server CAS, verified two-account RLS, verified two-device data lifecycle, and verified backup restore. The classifier is not a runtime production gate or security certification; it prevents confusion between passing mock checks and actual launch acceptance.
+
+**Actual local Node execution:** PASS (all test assertions), using the exact test source. **Fresh GitHub Actions / Pages:** NOT VERIFIED; run index inaccessible, no green CI claimed. **Data impact:** No `index.html`, DB, migrations, schema, grants or live user data changes. Production concurrency remains unsafe and P0 OPEN. Commercial readiness estimated 55–65% unchanged; paid security/staging exception remains deferred without blocking free engineering.
+
+**Exact next action:** Obtain actual Fast and Full UI CI results, fix red checks; prioritize verified real backup/restore and safe approved atomic server CAS before any paid beta.
+
 ## 2026-10-12 — Fast CI trigger coverage fix
 
 Reviewed `.github/workflows/fast-conflict-contracts.yml` and found its path filters omitted `index.html`, `scripts/conflict-review-queue.cjs`, and snapshot-specific test files. Updated the workflow in commit `26f14ced` so production sync edits and these test changes trigger the fast conflict suite. Existing Full UI workflow stays intact. No application code, database, credentials, schema or actual user data changed. New CI run status NOT VERIFIED: Actions listings were inaccessible at the time of review. Commercial readiness estimate remains 55–65% and real CAS/RLS P0 gates remain open; paid security staging remains deferred. Next: inspect new Fast and Full UI runs, fix any failures, and only then consider a separately verified production sync improvement.
