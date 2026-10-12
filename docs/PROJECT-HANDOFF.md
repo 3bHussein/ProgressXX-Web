@@ -1,3 +1,5 @@
+**Latest pending batch:** Phase 3 scoped offline PWA shell; two local regressions PASS, remote CI/deployment pending. Database experiments remain paused.
+
 **Active phase — 2026-10-13 Cairo:** Phase 3: mobile, frontend responsiveness and accessibility. Owner explicitly paused database experiments (DATABASE-EXPERIMENTS-PAUSED-2026-10-13). Do not run PostgreSQL/Supabase experiments, staging or backup steps until a new explicit request. PostgreSQL CI is manual-only with default-false resume gate; ordinary UI changes must not start it. Existing app data/sync behavior remains enabled.
 
 **Current batch VERIFIED:** [PR #18](https://github.com/3bHussein/ProgressXX-Web/pull/18) merged as e772ab3. Reduced-motion scroll/UI styles, anatomy keyboard/labelled zoom/focus trap/restore and Android back callback, lazy asynchronous image decoding. 61 local checks and all seven PR UI/client-mock checks PASS. Main Full UI #38309482027, Fast #38309482002, Deploy #38309481961 and Pages #38309481986 SUCCESS; root index.html byte-exact verified (SHA-256 dea490dc4038b1a6bd0d12f5d027333c29844c26f0c243bd1eeebfb03a11fb9f). No PostgreSQL workflow ran, no SQL/Supabase experiments, no production data/schema/grant/RLS/migration changes. Real Android/other engines/performance benchmarks remain unverified. Milestone 2 paused/incomplete; commercial gates stay open.
@@ -756,3 +758,10 @@ Do **not** publish Supabase service role keys, Apps Script credentials, user ema
 ## Suggested first instruction in future chat
 
 "Continue ProgressX at 3bHussein/ProgressXX-Web. Read README.md, ROADMAP.md, docs/DEVELOPMENT-LOG.md, docs/PROJECT-HANDOFF.md and FULL-LEGACY-CUTOVER.md. Inspect latest GitHub Actions and deployed root site; verify login undefined.filter fix, then audit Food/Daily/Workout/Weight persistence and Supabase RLS. Preserve all existing data. Add regression tests and update the docs after each verified task."
+
+
+## 2026-10-13 Cairo — Phase 3 scoped offline PWA shell
+
+Fixed `sw.js` root-folder and query-string offline fallback using canonical scope-local public asset keys; v2 cache update excludes API/other paths, waits for cache writes, and retains the working shell after HTTP errors/redirects. No root `index.html`, browser account storage or database changes. Added VM lifecycle/cache regression and actual Chromium offline-shell regression to Full UI CI. Unrelated caches and synthetic draft localStorage are preserved; zero Supabase requests in the offline browser fixture.
+
+Local verification: 62/63 checks passed in the parallel sweep; full UI smoke initially timed out at mock sign-out, then passed on an isolated rerun without code changes. Both new PWA tests PASS. Remote CI/deployment NOT VERIFIED pending this PR. Physical Android install, cross-engine support, offline authenticated data and rollback remain unverified. Database experiments remain paused; commercial launch NOT APPROVED. Next: verify PR/Main UI checks and deployed root/sw bytes, then continue mobile/PWA permission and update checks with mocks.
