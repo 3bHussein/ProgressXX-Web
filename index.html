@@ -9692,7 +9692,7 @@ window.__legacyBoot=init;
    for(let i=0;i<browserStorage.length;i++){const key=browserStorage.key(i);if(key?.startsWith(prefix)&&!(key.slice(prefix.length) in values))stale.push(key)}
    stale.forEach(key=>browserStorage.removeItem(key));
   }
-  savedRevision=revision;ready=true;tell('✓ Signed in · Supabase connected');
+  savedRevision=pending?revision-1:revision;ready=true;tell(pending?'◷ Locally queued edits restored · waiting to sync':'✓ Signed in · Supabase connected');
   const connectionLabel=document.getElementById('pxSettingsConnection');
   if(connectionLabel)connectionLabel.textContent=navigator.onLine?'Connected':'Offline';
   // Restore queued Food rows into the in-memory UI before the login boot/render.
