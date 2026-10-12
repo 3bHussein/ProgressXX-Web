@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Read-only deletion conflict preview across four data domains
+
+Prior Full UI #38212177834, Pages #38212178030 SUCCESS. Added `prototypes/sync-delete-conflict-preview.html` (`5d16187`), 320/390/768 Chromium regression `tests/sync-delete-conflict-preview-browser.cjs` (`66181f4`), CI wiring `78d2912`. Shows keep deletion / restoration preview / defer for Food, Daily, Workout, Weight with no storage or network writes. New CI NOT VERIFIED. Do NOT call this production sync fix; production CAS still unapplied, P0 sync OPEN, commercial estimate unchanged. Next review CI and non-writing conflict contract tests.
+
 ## 2026-10-12 — Safe deletion preservation simulation, no production switch
 
 Prior Full UI #38211635242 and Pages #38211635745 green. New `tests/cross-device-safe-rebase-simulation.cjs` (`744f064`) models versioned CAS refusal of stale snapshot, preserving delete for Daily/Workout/Weight/Food after approved disjoint-key rebase; CI wiring `543aed3`. New CI NOT VERIFIED. Production writes and Supabase unchanged; commercial progress still 55–65% rough, sync gate OPEN. Continue mock work without paid staging; next check CI and investigate opt-in safe conflict preview.
