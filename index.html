@@ -7982,6 +7982,12 @@ function dismissActiveAlarm(){
   closeAlarmPopup();
   activeAlarmReminder=null;
 }
+document.addEventListener('keydown',event=>{
+  if(event.key==='Escape'&&document.getElementById('alarmOverlay')?.classList.contains('show')){
+    event.preventDefault();
+    dismissActiveAlarm();
+  }
+});
 function snoozeActiveAlarm(minutes=10){
   if(!activeAlarmReminder)return;
   const until=Date.now()+Number(minutes)*60000;
@@ -9258,7 +9264,7 @@ v2Rows('v2RecoveryInfo',[['Completed entries',data.filter(x=>x.status==='Complet
 // discarded real edits and prevented historical records from loading.
 window.__legacyBoot=init;
 </script><div id="dailyNotice" class="reminderNotice"></div>
-<div id="alarmOverlay" class="alarmOverlay">
+<div id="alarmOverlay" class="alarmOverlay" role="dialog" aria-modal="true" aria-label="Daily reminder">
   <div class="alarmBox">
     <div id="alarmIcon" class="alarmIcon alarmPulse">🔔</div>
     <div class="tiny muted">PROGRESSX DAILY REMINDER</div>
