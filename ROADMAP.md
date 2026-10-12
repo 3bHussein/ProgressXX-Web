@@ -110,6 +110,10 @@ Added `tests/two-account-pending-isolation-contract.cjs` (`e3ee0e5`) to CI (`bdc
 
 Two Chromium contexts with distinct synthetic account IDs and fake per-account REST snapshots, `tests/full-app-two-account-isolation-browser.cjs` (`5df87a69`); CI `29b5d27e`. New run unverified; production RLS and cross-device CAS still OPEN. Readiness 55–65% unchanged; paid security checkpoint deferred.
 
+## 2026-10-12 — Auth startup race awaiting trace
+
+CI #38223040123 failed at startup smoke due to unhandled `Not authenticated`; `scripts/smoke-full-ui.cjs` now emits full browser stack (`c8bfa2d`) for targeted repair. No production change, test run pending. Sync/security P0 remain open, readiness unchanged.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
