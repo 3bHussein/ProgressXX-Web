@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Concurrent token renewal browser QA and commercial blockers
+
+Prior Full UI #38209687913 and Pages #38209688147 passed. Added `tests/auth-refresh-browser-concurrency.cjs` (`8cca2f2`) and Full UI CI wiring (`395a8c9`), verifying three parallel mock cloud requests share a single token rotation in Chromium. New CI pending; no real data changed. Commercial launch is not approved: staging RLS/two users, backup restore, real multi-device conflict CRUD, auth recovery, PWA/browser QA, policies, billing and private beta remain. Security paid checkpoint deferred. Next check CI and improve synthetic identity mismatch test, then request explicit authorization before staged security work.
+
 ## 2026-10-12 — Concurrent refresh single-flight guard
 
 Previously Full UI #38209521762 and Pages #38209522098 succeeded. Root `index.html` now shares a single in-flight refresh Promise across concurrent callers (`e0fffa4`), rejects wrong-account responses; synthetic contract test `tests/auth-refresh-singleflight.cjs` (`d724d93`) is in Full UI CI (`964bb9a`). Fresh CI/deploy NOT VERIFIED. No Supabase or personal record changes. Next inspect Actions, then browser-level concurrency mock. Security deferred.
