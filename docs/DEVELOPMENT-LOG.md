@@ -47,6 +47,13 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Full signed-in app mock Supabase 503, reload and recovery
+
+- Verified previous Full UI [#38215939686](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38215939686) SUCCESS and Pages [#38215940016](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38215940016) SUCCESS.
+- Added `tests/full-app-sync-503-reload-browser.cjs` (`b4f06de3aad6207844eda67a7956332785b50fa0`), running production root `index.html` inside Chromium with mocked Supabase auth and REST routes. Test asserts failed snapshot POST 503 preserves account-scoped pending edits, browser reload reactivates the same synthetic session, manual sync retries and fake server receives pending Daily data, and pending clears after successful acknowledgement. CI wiring `e6ebae2b96b8a651318d803f4d3aba4b6e49c67f`.
+- New Full UI run/Pages deployment **NOT VERIFIED** at documentation commit. Mocked backend only; no live Supabase, real user data, account isolation security or production CAS deployment. Commercial data sync P0 still OPEN, rough 55–65% readiness estimate unchanged. Paid security stage remains deferred and nonblocking for normal development.
+- **Exact next step:** inspect fresh CI result and diagnose any failures; add mock multi-context retry/no-resurrection regression and real-device checklist, without production data or schema changes.
+
 ### 2026-10-12 — Chromium regression: snapshot succeeds, workout mirror fails
 
 - Verified preceding Full UI [#38215604331](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38215604331) SUCCESS and Pages [#38215604219](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38215604219) SUCCESS.
