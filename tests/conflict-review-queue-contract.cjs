@@ -17,6 +17,7 @@ assert.equal(reload.load(),null);assert.equal(B.load(),null);
 const blocked={getItem:k=>null,setItem(){throw Error('storage quota')}};
 assert.throws(()=>createReviewQueue({accountId:'C',storage:blocked}).capture({draft,remote}),/storage quota/);
 assert.throws(()=>createReviewQueue({accountId:'',storage}),/Account ID/);
+for(const id of [undefined,null,42,{},'   '])assert.throws(()=>createReviewQueue({accountId:id,storage}),/Account ID required/);
 const spaced=createReviewQueue({accountId:' A ',storage});
 assert.equal(spaced.key,A.key);
 spaced.capture({draft:{daily:{a:1}},remote:{},revision:3});
