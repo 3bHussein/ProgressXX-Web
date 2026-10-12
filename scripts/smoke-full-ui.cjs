@@ -56,7 +56,7 @@ const {chromium}=require('playwright');
  await page.fill('#pxEmail','qa@example.test');
  await page.fill('#pxPassword','demo-password');
  await page.click('#pxSignin');
- await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,{timeout:15000});
+ await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:15000});
  // Explicitly await normalized Food hydration; a hidden tab's DOM may not render immediately.
  await page.evaluate(()=>window.__pxRefreshNutrition(true));
  await page.waitForFunction(()=>{
