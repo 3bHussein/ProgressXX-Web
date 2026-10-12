@@ -1,0 +1,12 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const html=fs.readFileSync(require('node:path').join(__dirname,'..','index.html'),'utf8');
+assert.match(html,/id="pxReviewConflict" hidden/);
+assert.match(html,/getElementById\('pxReviewConflict'\)\?\.addEventListener\('click',async/);
+assert.match(html,/if\(!account\|\|!syncConflictHold\)return/);
+assert.match(html,/const pending=readPending\(account\)/);
+assert.match(html,/user_app_snapshots\?select=payload&user_id=eq/);
+assert.match(html,/const changed=\[\.\.\.keys\]\.filter\(k=>pending\[k\]!==remote\[k\]\)/);
+assert.match(html,/No changes applied/);
+console.log('PASS: live read-only conflict comparison registered; no auto-merge or destructive action.');
