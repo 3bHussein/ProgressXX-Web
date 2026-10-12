@@ -3,7 +3,10 @@ const fs=require('node:fs');
 const {chromium}=require('playwright');
 const source=fs.readFileSync('index.html','utf8');
 assert.match(source,/<div id="alarmOverlay"[^>]*role="dialog"[^>]*aria-modal="true"[^>]*aria-label="Daily reminder"/);
-assert.match(source,/event\.key==='Escape'&&document\.getElementById\('alarmOverlay'\)\?\.classList\.contains\('show'\)/);
+assert.match(source,/event\.key==='Escape'&&dialog\?\.classList\.contains\('show'\)/);
+assert.match(source,/event\.key==='Tab'&&dialog\?\.classList\.contains\('show'\)/);
+assert.match(source,/alarmPreviousFocus=document\.activeElement/);
+assert.match(source,/alarmPreviousFocus\?\.isConnected/);
 (async()=>{
  const browser=await chromium.launch({headless:true});
  try{
