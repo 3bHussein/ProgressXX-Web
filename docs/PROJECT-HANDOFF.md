@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Refresh cached expired auth during boot
+
+Prior Full UI #38209115469 and Pages #38209115679 SUCCESS. Root `index.html` updated in `98d17e2` to refresh expired/near-expiry session before account activation, strictly reject account ID change, and keep login locked if refresh fails. `tests/auth-retry-browser.cjs` extended in `191f91d` to verify mock renewal success/failure. Fresh CI NOT VERIFIED. No production DB or user record modification. Next check Actions and test concurrent refresh behavior; security audit deferral and unapplied CAS remain.
+
 ## 2026-10-12 — Expired cached session guard
 
 Main CI #38204834720 and Pages #38204834143 SUCCESS before edit. Production root `index.html` now denies automatic restoration of missing/expired cached `expires_at` (`254b2c7`), removes only cached session token and displays sign-in prompt; all account data and pending edits remain untouched. Browser regression `tests/auth-retry-browser.cjs` (`39c64cc`) simulates expired session after valid reload. Fresh CI NOT VERIFIED. Next inspect Actions, then test renewal flow. Security checkpoint deferred; CAS not deployed.
