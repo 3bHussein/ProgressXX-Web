@@ -25,7 +25,9 @@ const assert=require('node:assert/strict');
    assert.deepEqual(writes,[],'No mutation request permitted');
    assert.deepEqual(errors,[],'No JS errors permitted');
    await page.reload();
+   assert.equal(await page.locator('#domain').inputValue(),'Daily','Preview should reset to Daily after reload');
    assert.match(await page.locator('#status').innerText(),/No action taken/);
+   assert.deepEqual(await page.evaluate(()=>[localStorage.length,sessionStorage.length]),[0,0],'Reload must not recover saved decisions');
    await page.close();
   }
   console.log('PASS: isolated delete conflict UI mobile widths, four data types, three choices, no writes/storage/errors');
