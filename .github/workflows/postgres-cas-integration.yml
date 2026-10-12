@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'tests/postgres-cas-isolated.sql'
+      - 'index.html'
       - '.github/workflows/postgres-cas-integration.yml'
   pull_request:
     branches: [main]
