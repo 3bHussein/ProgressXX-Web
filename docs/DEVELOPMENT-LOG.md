@@ -47,6 +47,10 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Additional PostgreSQL CAS invalid-payload regression
+
+At latest head, commit-associated workflow query returned zero runs (this API filters PR runs; not proof no push runs exist). Public Actions listing also unavailable. Added negative test to synthetic disposable PostgreSQL CAS integration (`0056ff5c`): malformed array payload must be rejected and must leave original revision/data unchanged. Test is registered in existing isolated PostgreSQL workflow, but fresh SQL runtime result remains NOT VERIFIED because local PostgreSQL binaries are absent and latest Actions results inaccessible. No changes to production index.html, Supabase schema, grants, RLS, accounts or records. **P0 CAS remains not deployed / commercial NO-GO.** Next: verify the workflow via GitHub Actions page, fix any runtime errors and then use disposable isolated environment to test authenticated owner-specific RPC before any live migration.
+
 ## 2026-10-12 — Strengthen disposable SQL CAS regression
 
 Inspected `tests/postgres-cas-isolated.sql` and isolated PostgreSQL workflow. Added explicit no-row-created assertion for first-write attempted with invalid nonzero expected revision (`a7d4d81e`). Updated isolated workflow to trigger for changes in production `index.html` as well as SQL test source (`b94c2511`). GitHub Actions run index is inaccessible; remote CI execution and live Supabase CAS remain NOT VERIFIED. No SQL executed on production, no app user records changed. P0 CAS still OPEN. Next: verify integration workflow execution and fix any SQL/PostgreSQL errors, then test true atomic RPC and RLS in isolated environment. Paid staging/security remains deferred as owner requested, commercial sale NO-GO.
