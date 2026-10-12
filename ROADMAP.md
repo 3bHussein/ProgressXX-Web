@@ -54,6 +54,10 @@ Added `tests/offline-upload-failure-reload-browser.cjs` (`8a00903`) and CI (`f0d
 
 New `tests/production-flush-failure-retry-contract.cjs` (`29d3d59`), CI `1b568c8`, executes production `flush()` under mocked 503 then success. Previous Full UI #38214335824 PASS, fresh CI NOT VERIFIED. It does not prove deployed cross-device CAS or offline idempotency. Sync P0 OPEN; commercial readiness 55–65% estimate unchanged.
 
+## 2026-10-12 — Flush retry coverage extended
+
+Expanded `tests/production-flush-failure-retry-contract.cjs` (`4218067`) for workout mirror failure and edits during upload; previous CI #38214690902 PASS, new run NOT VERIFIED. Synthetic only, no production release claim. Data sync P0 OPEN; commercial estimate unchanged.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
