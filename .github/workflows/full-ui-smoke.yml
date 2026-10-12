@@ -42,6 +42,7 @@ jobs:
             tests/production-flush-failure-retry-contract.cjs \
             tests/production-flush-chromium-contract.cjs \
             tests/full-app-sync-503-reload-browser.cjs \
+            tests/full-app-two-device-daily-resurrection.cjs \
             tests/snapshot-cas-proposal-safety.cjs \
             tests/snapshot-cas-contract-simulation.cjs \
             tests/daily-conflict-prototype-safety.cjs \
