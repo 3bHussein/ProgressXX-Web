@@ -86,6 +86,10 @@ Production `index.html` (`6b52ba0`) reduces failed sync retry frequency with cap
 
 Production root status UI updated in `5c94267`: show local save, pending remote sync and success only after last revision confirmed, including mid-flight edits. CI mock compatibility repaired. Prior CI failure due to mock scope issues; new run not verified. P0 cross-device sync OPEN, 55–65% readiness unchanged. Paid security deferred.
 
+## 2026-10-12 — Browser sync-status QA and login error follow-up
+
+Full UI #38217998624 failed due to intermittent `Not authenticated` in login retry. Added browser assertions on local/pending/synced states (`93966b94`) and captured exception stack in auth retry test (`7570ba36`). New CI pending; resolve auth race next. Cross-device data safety remains P0 OPEN; readiness unchanged.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
