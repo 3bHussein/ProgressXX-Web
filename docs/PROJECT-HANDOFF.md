@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Offline delete idempotency contract
+
+Added synthetic `tests/offline-delete-replay-contract.cjs` (`2a6599c`) and CI (`45db7a2`) to verify same event cannot replay twice, stale deletes are rejected, and wrong-user writes denied in an isolated model. Actual offline queue/prod backend remains unchanged. CI NOT VERIFIED; commercial percentage unchanged. Next inspect Actions, continue safe sync.
+
 ## 2026-10-12 — Batched deletion conflict contract QA
 
 Last confirmed Full UI #38212635321 and Pages #38212635346 SUCCESS. In one batch added mock conflict REST contract `tests/sync-delete-resolution-api-contract.cjs` (`69d783e`), strict no-persistence UI reload assertions (`1de6ddc`), and CI registration (`b1aef87`). Synthetic 409 stale and 403 wrong-user behavior is specification only; NOT production API or RLS proof. New CI unverified, no real data changed. Cross-device sync P0 OPEN; commercial readiness rough 55–65% unchanged. Paid-security work remains deferred/nonblocking for development. Next inspect Actions, then mock offline delete replay.
