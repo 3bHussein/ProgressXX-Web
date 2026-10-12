@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Production flush mock-failure test
+
+Prior Full UI #38214335824 and Pages #38214335377 passed. Added `tests/production-flush-failure-retry-contract.cjs` (`29d3d59`) with actual production `flush()` extracted into a controlled mock: HTTP 503 retains pending/revision, successful cloud POST + mirror clears. CI `1b568c8`; fresh CI NOT VERIFIED. No user data changed. Sync P0 OPEN and commercial estimate unchanged. Paid security remains nonblocking/deferred. Next verify Actions, test mirror failure and edits made during upload.
+
 ## 2026-10-12 — Failed upload / reload synthetic QA
 
 Previous Full UI #38213728521 and Pages #38213729175 SUCCESS. Browser mock `tests/offline-upload-failure-reload-browser.cjs` (`8a00903`), CI registration `f0dc07c`. Synthetic pending edit survives reload and simulated 503, clears only on simulated successful acknowledgment. New CI NOT VERIFIED. This does not test real production flush transport; sync P0 OPEN, 55–65% rough commercial estimate unchanged. Paid security deferred/nonblocking. Next inspect Actions and test production flush with controlled mock.
