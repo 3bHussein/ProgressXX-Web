@@ -47,6 +47,13 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Full-app two-browser stale Daily resurrection regression
+
+- Verified prior Full UI [#38216252905](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38216252905) and Pages [#38216251867](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38216251867) SUCCESS.
+- Added `tests/full-app-two-device-daily-resurrection.cjs` (`de851d5018bc8657d7ef763b9b05f755ba94e9af`) with two isolated Chromium browser contexts representing devices A and B using the actual root web app, entirely fake auth and Supabase REST. A deletes a Daily record; stale B writes an unrelated Workout Schedule change. Contract expects to reproduce the known unsafe whole-snapshot last-writer-wins resurrection (the test is evidence of a bug, **not** a fix). CI registration: `e9a2f3555951fd3e1d281da6d678abd243167cce`.
+- New CI and Pages run NOT VERIFIED at this writing. No actual database, real account records, schema or production runtime changed. P0 data sync BLOCKED by unresolved cross-device delete resurrection, rough commercial readiness **55–65%** unchanged. Deferred paid security authorization remains unchanged, other free development continues.
+- **Next:** check latest CI; refine failing mock if needed. Consider an opt-in, browser-only visible conflict warning/lock that avoids silent overwrites while planning server CAS, but do not misrepresent as atomic protection.
+
 ### 2026-10-12 — Full signed-in app mock Supabase 503, reload and recovery
 
 - Verified previous Full UI [#38215939686](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38215939686) SUCCESS and Pages [#38215940016](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38215940016) SUCCESS.
