@@ -49,6 +49,11 @@
 ## Live bidirectional Food sync confirmed by owner (2026-10-12)
 ## Daily discrepancy on real devices (2026-10-12)
 ## Daily reminder list follow-up (2026-10-12)
+## Latest smoke test timeout fix — 2026-10-12
+
+User said "تم نكمل" after Daily check, but did not explicitly state both reminder lists matched. Pages #38186670494 success; Full UI #38186670763 failed on initial hidden Food Diary DOM wait. Changed smoke to explicitly hydrate Food and inspect account-scoped Food row, commit `87f698debd69995b015b36a577bf4a3567ab6f6e`, CI pending. Do not assert Daily real-device issue resolved without confirmation. No production DB edits; security deferred.
+
+
 
 Real-device Daily reminder lists still differ. Root fixes: account global rehydration `65685b1`; preserve intentionally empty saved list `fdedf5537`. New regression `27b488d` checks missing, populated, and empty lists plus post-login boot. Prior CI #38186516050 failed earlier at Food Diary preload timeout, not on Daily check; Pages #38186515911 succeeded. Await fresh CI and user's Daily retest. No production DB changes; security deferred.
 
