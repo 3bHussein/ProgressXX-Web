@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Login retry regression investigation and sync status QA
+
+Previous Full UI #38217998624 failed: auth retry test saw uncaught `Not authenticated` during login; Pages succeeded. Enhanced full-app Chromium mock status assertions (`93966b94`) and auth-error stack logging (`7570ba36`). Fresh CI unverified. No production/data changes this step. Sync conflict P0 and authentication race remain open, commercial readiness 55–65% unchanged, security paid checkpoint deferred.
+
 ## 2026-10-12 — Sync status UI and CI harness repairs
 
 Previous Full UI #38217432254 failed due to outdated mocks missing `syncRetryFailures` and `timer`; Pages #38217432714 passed. Updated production `index.html` (`5c94267`) to distinguish saved locally, pending remote sync, and fully synced only when no edit arrived mid-upload. Repaired extracted-function tests and full app status test (`419b24b`, `91929d1`, `6a8d6a0`, `9ad9a6d`, `65db42b`, `30bd9a9`). Fresh CI NOT VERIFIED. No database modifications. P0 sync OPEN; readiness 55–65% unchanged; paid security deferred/nonblocking.
