@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Safe deletion preservation simulation, no production switch
+
+Prior Full UI #38211635242 and Pages #38211635745 green. New `tests/cross-device-safe-rebase-simulation.cjs` (`744f064`) models versioned CAS refusal of stale snapshot, preserving delete for Daily/Workout/Weight/Food after approved disjoint-key rebase; CI wiring `543aed3`. New CI NOT VERIFIED. Production writes and Supabase unchanged; commercial progress still 55–65% rough, sync gate OPEN. Continue mock work without paid staging; next check CI and investigate opt-in safe conflict preview.
+
 ## 2026-10-12 — Cross-device delete resurrection diagnosed, not fixed
 
 Prior Full UI #38211091071 and Pages #38211091264 successful. Added synthetic `tests/cross-device-delete-resurrection-regression.cjs` (`72be687`) and workflow (`008dc95`) to demonstrate known last-writer-wins stale snapshot may restore deleted Daily, Workout, Weight and Food entries. CI on new code not yet verified. Do NOT present this expected-risk test as a fix. No user data or database changes. Commercial readiness and estimates unchanged; continue non-paid work while paid security deferred. Next mock safe resolution strategy, preserve history.
