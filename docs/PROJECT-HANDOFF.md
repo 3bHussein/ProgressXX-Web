@@ -1,4 +1,9 @@
 
+
+### 2026-10-12 — Daily reminder / mobile anatomy test guard
+
+Previous Pages #38224272376 SUCCESS; Full UI #38224271404 still running when checked, with earlier #38224263039 SUCCESS. Tightened mobile Anatomy smoke test (`0f4382d`) to explicitly assert the Daily alarm overlay has disappeared after the normal dismiss action before performing actual mobile pointer clicks. No production code, data, Supabase schema or RLS changes. New CI unverified; commercial readiness 55–65% rough baseline unchanged, synchronization and security release gates remain OPEN; paid security work still deferred/nonblocking. Next: inspect latest CI and investigate any test failure.
+
 ## 2026-10-12 — Anatomy UI smoke overlay repair
 
 Full UI #38223565793 failed because the Daily reminder overlay intercepted the Anatomy Coverage tab click. Updated smoke test `e4767f4` dismisses the alarm using the normal app action before anatomy pointer checks. Fresh CI unverified. Production code/data unchanged; P0 sync/security still open, readiness 55–65% unchanged, paid security stage deferred.
