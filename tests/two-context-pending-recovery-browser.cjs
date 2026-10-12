@@ -37,6 +37,9 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
   await a.page.waitForFunction(()=>window.__pxCommercialReady?.()===true,null,{timeout:20000});
   await a.page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Synced to Supabase'),null,{timeout:25000});
   assert.ok(JSON.stringify(snapshot).includes(marker),'Restored pending edit should automatically upload');
+  const pendingKey='pxx:pending:'+uid;
+  assert.equal(await a.page.evaluate(key=>localStorage.getItem(key),pendingKey),null,'A must clear pending only after successful remote confirmation');
+  assert.equal(await b.page.evaluate(()=>String(PXStore.getItem('progressx-reminders')||'').includes('cross-context-queued-edit')),false,'B must not silently read A local storage before hydration');
   await b.page.reload({waitUntil:'domcontentloaded'});
   await b.page.waitForFunction(()=>window.__pxCommercialReady?.()===true,null,{timeout:20000});
   assert.equal(await b.page.evaluate(()=>String(PXStore.getItem('progressx-reminders')||'').includes('cross-context-queued-edit')),true);
