@@ -1,14 +1,10 @@
 ## Current Work task state — 2026-10-12
 
-Milestone 2 — Data Safety & Synchronization: **IN PROGRESS; commercial NO-GO**. Root `index.html` recovery fixes and regression suite are being verified in this task. Actual Full UI failure #38270847453 was inspected. Implementation commit 3f24165 in PR #16 has seven green PR workflows; Full UI #38273401866 identified status-wording and pre-existing alarm fixture follow-ups, now fixed with focused browser passes. PostgreSQL 17 sequential CAS reference #38270129009 is verified SUCCESS (synthetic only). Production CAS is still NOT DEPLOYED; no production database/grants/RLS/migrations changed. Paid security remains deferred.
+Milestone 2 — Data Safety & Synchronization: **IN PROGRESS / partially verified; commercial NO-GO**. [PR #16](https://github.com/3bHussein/ProgressXX-Web/pull/16) merged as [c1a6d6f](https://github.com/3bHussein/ProgressXX-Web/commit/c1a6d6f421bfdeb52e6790f84df5d9dc28de4a5e). 59/59 local Node/Chromium checks PASS; all eight PR workflows PASS. Main Full UI [#38274340006](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38274340006), Fast #38274340125, PostgreSQL #38274339969, Deploy Full App #38274339939 and Pages #38274338554 SUCCESS on matching runtime SHA. Root index.html retrieved over HTTP matches tested source byte-for-byte (SHA-256 beb238837feef781adb5dd40c8fea4aa75d5b3217b379c1c5178270ff727b4a5).
 
-Additional fix: locked-workspace focus/pageshow refreshes now wait for readiness; deterministic browser test asserts zero private requests/storage writes before login. New PostgreSQL harness tests eight independent sessions per race in the disposable CI service; PostgreSQL 17 race run #38273401672 is VERIFIED SUCCESS (one winner per eight sessions), synthetic only.
+Completed: reload-safe acknowledged pending baseline, newer-edit/mirror-failure retention, workout memory hydration before startup refresh, restored-account Analytics argument, locked-workspace callback guards, persistent paused-conflict status, browser stale-deletion hold/reload and review/export, preflight-aware CI fixtures, independent-session PostgreSQL 17 create/update CAS races with one winner out of eight writers. These use synthetic data and mocked browser APIs; PostgreSQL reference is not production Supabase CAS/auth/RLS proof. No production tables/grants/RLS/migrations, real accounts or paid features changed.
 
-Completed source fixes: pending draft baseline follows acknowledged POST even when new edits or schedule mirror failure remain; account workout memory is hydrated before ready/focus refresh; Analytics receives a metrics object rather than sets array. Browser regressions now assert a stale device pauses rather than overwrites, retains its draft across reload, and reviews/exports both versions without writes. Restored-account test forces the boot/refresh race and checks 32 cloud rows + 1 local snapshot row are retained. See the appended Work task entry in DEVELOPMENT-LOG for exact scope and evidence.
-
-**Local verification:** 59/59 Node/Chromium checks PASS, including Full UI registrations, security migration source check and optional-render login regression. Python harness compile and diff whitespace checks PASS. This does not prove production CAS/RLS/restore.
-
-**Next:** Verify follow-up PR #16 GitHub Full UI/Fast/PostgreSQL results and deployed SHA, including the new independent-session CAS race test. Then approved separate staging, verified restore, authenticated owner CAS/negative RLS tests and real two-device acceptance. No request to approve production changes is made before those concrete prerequisites exist. Previous dated sections below are historical evidence, not current signoff.
+**Exact next gate:** Verified restorable backup and separately authorized safe staging; authenticated owner-specific CAS and cross-account/grants/old-client negative tests; real two-device CRUD/offline/concurrent/deletion acceptance for all domains. Production CAS/grants rollout requires explicit approval and verified backups. Do not merge old draft PR #10 wholesale. DATA-01, AUTH-01, SYNC-01/02/03 remain OPEN; commercial launch NOT APPROVED and historical subjective 55–65% estimate unchanged. This closeout is documentation-only; older dated sections below are historical, not current signoff.
 
 ## 2026-10-12 — Verified P0 overbroad database grants
 
@@ -370,7 +366,7 @@ To resume: `Resume SECURITY-DEFERRED-2026-10-12` or `ارجع لاختبارات
 
 ## Phase 0 — Baseline / protect current data (P0)
 
-- [ ] Capture current live deployed commit and green required Actions; confirm `index.html` is production target.
+- [x] Capture runtime c1a6d6f, matching main Full UI/Fast/PostgreSQL/Pages SUCCESS and byte-exact root index.html deployment — see Work task closeout evidence.
 - [ ] Inventory Supabase schema/RLS/storage, Google Apps Script/Sheets integrations, local storage keys, sync paths and ownership model.
 - [ ] Inventory all data types: Workout Log, exercises/renames, active session, Workout Schedule, weight, Food Library, Today's Food, Daily, saved meals, historical nutrition, settings and anatomy associations.
 - [ ] Export sanitized schema and establish tested recovery/backup before migration; never export real personal records to public GitHub.
@@ -380,7 +376,7 @@ To resume: `Resume SECURITY-DEFERRED-2026-10-12` or `ارجع لاختبارات
 
 ## Phase 1 — Authentication and isolation (P0)
 
-- [ ] Re-test `undefined.filter` login exception using restored-account fixture and genuine production account, without exposing data.
+- [ ] Re-test `undefined.filter` login exception on a genuine production account without exposing data. Synthetic restored-account fixture is now VERIFIED PASS (forced startup refresh, 32 table rows + 1 snapshot row, no errors); real account remains unverified.
 - [ ] Signup, email confirmation, login, logout, expired session, password reset, refresh, offline auth and account deletion.
 - [ ] Two independent accounts: account B cannot list/read/create/update/delete records of account A, even through direct API calls.
 - [ ] Audit/enable Supabase RLS and ownership policies for every table, RPC, view, storage bucket and operation; negative security tests.
@@ -393,7 +389,7 @@ To resume: `Resume SECURITY-DEFERRED-2026-10-12` or `ارجع لاختبارات
 
 **Milestone 2 status: IN PROGRESS.** [PR #16](https://github.com/3bHussein/ProgressXX-Web/pull/16) repairs root recovery/hydration and CI. Live acceptance items below remain open.
 - [x] Disposable PostgreSQL 17 sequential and independent-session CAS race assertions — [#38273401672](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38273401672) SUCCESS; synthetic reference, not deployed RPC.
-- [x] Local synthetic recovery regressions for in-flight edits, mirror failure, stale deletion hold/reload and both-version export; 59 checks PASS on implementation source. Follow-up CI result pending.
+- [x] Local synthetic recovery regressions for in-flight edits, mirror failure, stale deletion hold/reload and both-version export; 59 checks PASS on implementation source. All eight PR checks and matching main runtime checks SUCCESS; root deployment verified.
 
 - [ ] For **Food**, **Food Library**, **Daily**, **Saved Meals**: add/edit/delete -> reload -> logout/login -> second device -> confirm server source-of-truth.
 - [ ] For **Workout**, exercise name changes, templates, sessions and **Workout Schedule**: repeat complete lifecycle.
