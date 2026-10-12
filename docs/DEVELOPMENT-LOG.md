@@ -47,6 +47,13 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Two-account pending isolation mock and CI
+
+- Verified prior Full UI [#38221164555](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38221164555) SUCCESS and Pages [#38221164446](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38221164446) SUCCESS.
+- Added `tests/two-account-pending-isolation-contract.cjs` (`e3ee0e5`) executing production account-scoped pending key helpers against synthetic account A/B localStorage, asserting account B clear does not delete account A pending records, and a **mocked** 403 owner check. CI registration `bdcbe74`.
+- New CI/deployment NOT VERIFIED at checkpoint. Mock authorization does **not** certify real Supabase RLS, server CAS or two-account negative CRUD. No app runtime or real user database changes. P0 security/sync remain OPEN. Rough commercial readiness 55–65% unchanged; deferred paid security remains nonblocking for ordinary development.
+- Next: inspect latest Actions and fix any failures; only claim actual multi-account isolation after authorized staging RLS tests.
+
 ### 2026-10-12 — Two-context sync passing; stricter local pending cleanup checks
 
 - Verified Full UI [#38220196004](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38220196004) SUCCESS and Pages [#38220195871](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38220195871) SUCCESS on `f82b6cca`.
