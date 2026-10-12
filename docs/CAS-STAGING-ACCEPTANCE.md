@@ -16,3 +16,7 @@ This document is a design checklist only. It does not authorize modifications to
 10. Do not enable the design until two-account tests, device tests and an independently verified restore have passed.
 
 Current status: DESIGN ONLY. Production still uses whole-snapshot upsert; its P0 risk remains open. The paid staging/security checkpoint stays deferred until the owner explicitly resumes it.
+
+## 2026-10-12 — Executable isolated owner/restore suite
+
+[Disposable PostgreSQL acceptance](ISOLATED-OWNER-CAS-RESTORE.md) now has an executable fixture/harness covering owner RLS, restricted RPC, legacy-write denial, concurrent CAS and real pg_dump restore. Runtime CI result pending; local connection-guard tests PASS. This is a separate synthetic identity experiment, not deployment of the earlier draft or verification of production JWT/API/backup/device safety. Live gates stay OPEN.

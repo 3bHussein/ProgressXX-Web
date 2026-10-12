@@ -5,6 +5,9 @@ on:
     paths:
       - 'tests/postgres-cas-isolated.sql'
       - 'tests/postgres-cas-concurrency.py'
+      - 'tests/postgres-owner-cas-fixture.sql'
+      - 'tests/postgres-owner-cas-acceptance.py'
+      - 'tests/postgres-owner-cas-guard.py'
       - 'index.html'
       - '.github/workflows/postgres-cas-integration.yml'
   pull_request:
@@ -29,6 +32,8 @@ jobs:
           --health-retries 10
     steps:
       - uses: actions/checkout@v4
+      - name: Verify isolated runner refuses production targets
+        run: python3 tests/postgres-owner-cas-guard.py
       - name: Install PostgreSQL client
         run: |
           sudo apt-get update -qq
@@ -46,3 +51,11 @@ jobs:
           PGDATABASE: synthetic_cas
           PGPASSWORD: test-only
         run: python3 tests/postgres-cas-concurrency.py
+      - name: Verify owner CAS, RLS, legacy-write lockout and database restore
+        env:
+          PG_DUMP_CONTAINER: ${{ job.services.postgres.id }}
+          PGHOST: localhost
+          PGUSER: postgres
+          PGDATABASE: synthetic_cas
+          PGPASSWORD: test-only
+        run: python3 tests/postgres-owner-cas-acceptance.py
