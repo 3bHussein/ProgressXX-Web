@@ -1,3 +1,7 @@
+## 2026-10-12 — Fast CI trigger coverage fix
+
+Reviewed `.github/workflows/fast-conflict-contracts.yml` and found its path filters omitted `index.html`, `scripts/conflict-review-queue.cjs`, and snapshot-specific test files. Updated the workflow in commit `26f14ced` so production sync edits and these test changes trigger the fast conflict suite. Existing Full UI workflow stays intact. No application code, database, credentials, schema or actual user data changed. New CI run status NOT VERIFIED: Actions listings were inaccessible at the time of review. Commercial readiness estimate remains 55–65% and real CAS/RLS P0 gates remain open; paid security staging remains deferred. Next: inspect new Fast and Full UI runs, fix any failures, and only then consider a separately verified production sync improvement.
+
 ## 2026-10-12 — Fast conflict CI
 
 Added `.github/workflows/fast-conflict-contracts.yml` in commit `091b3642`. This Node-only workflow covers eight existing conflict contracts. It supplements rather than replaces the Full UI checks. New CI result NOT VERIFIED. No production application code, database records or permissions changed. Live CAS and RLS remain open; readiness estimate remains 55–65%. Paid staging stays deferred. Next: verify Actions results and address any failures.
