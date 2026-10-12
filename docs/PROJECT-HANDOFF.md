@@ -54,6 +54,11 @@
 ## Synthetic Daily concurrency regression — 2026-10-12
 ## Draft snapshot conflict guard, unapplied (2026-10-12)
 ## CAS conflict contract simulation — 2026-10-12
+## Daily conflict recovery UX design — 2026-10-12
+
+Latest Full UI #38189120475 and Pages #38189120489 SUCCESS. Added design-only `docs/DAILY-CONFLICT-RECOVERY-SPEC.md` (`9b936127`) describing conflict notice, durable pending changes, side-by-side resolution actions, never automatic deletion/overwrite. CAS still NOT DEPLOYED and client UI not implemented; requires owner approval and authenticated staging verification. No production DB changes; security deferred.
+
+
 
 Prior Full UI #38188790240 and Pages #38188790364 SUCCESS. Added `tests/snapshot-cas-contract-simulation.cjs` with two simulated device edits: first accepted, stale second rejected without losing locally queued data, explicit conflict resolution accepted after latest baseline. CI wired (`5f814a1`, `b3c7941`). Contract simulation only; SQL not applied, frontend unchanged, real atomic/RLS behavior unverified. Keep security defer and do not edit production data.
 
