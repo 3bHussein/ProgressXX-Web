@@ -26,6 +26,10 @@ Owner requested a permanent commercial milestone tracker in [Development Log](do
 
 New isolated `prototypes/sync-delete-conflict-preview.html` (`5d16187`), Chromium no-write/mobile regression `tests/sync-delete-conflict-preview-browser.cjs` (`66181f4`), CI integration `78d2912`. This covers four data domains and three preview choices, but **does not resolve or block live stale writes**. New CI NOT VERIFIED, sync P0 OPEN and rough 55–65% estimate unchanged. Continue development without paid security work.
 
+## 2026-10-12 — Three no-cost deletion-conflict QA improvements
+
+Mock API contract `tests/sync-delete-resolution-api-contract.cjs` (`69d783e`) specifies stale write 409, wrong owner 403, and deliberate current-version restoration for Daily/Workout/Weight/Food; browser preview reload assertion `1de6ddc` ensures no persisted choices; CI wiring `b1aef87`. New CI not verified. **Do not confuse synthetic 403 with Supabase RLS certification or mock 409 with deployed CAS**. P0 sync stays OPEN, commercial percent unchanged, paid security exception unchanged.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
