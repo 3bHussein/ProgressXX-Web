@@ -47,6 +47,16 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Batched sync-conflict contract and browser preview protections
+
+- Verified previous full UI [#38212635321](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38212635321) SUCCESS and Pages [#38212635346](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38212635346) SUCCESS at `6b99cac`.
+- **Part 1 (mock API contract):** added `tests/sync-delete-resolution-api-contract.cjs` (`69d783efa818c8261a6ecb83b748b59b0c8a12b9`), synthetic tests across Daily/Workout/Weight/Food for rejecting stale deletion/restoration with 409, wrong-owner request with 403, and successful explicit restore on current revision. NO real API endpoint, DB policy or CAS installed.
+- **Part 2 (UI reset):** enhanced `tests/sync-delete-conflict-preview-browser.cjs` (`1de6ddc38a945bddce10c8438770b09289c9ea13`) so mock choices, selected data domain and storage do not persist after reload.
+- **Part 3 (CI enforcement):** wired new mock contract into Full UI workflow (`b1aef870aecb9d3231511927da534517cdf64494`). Fresh CI and Pages deployment NOT VERIFIED at log time.
+- **Commercial readiness:** sync P0 is **OPEN**, production whole-snapshot writes remain last-writer-wins; 55–65% rough estimate unchanged, conditional 4–8 week private beta / 10–16 week commercial horizon unchanged. Synthetic 403 is NOT evidence of real Supabase RLS. Paid-security checkpoint stays deferred without stopping normal development.
+- Data impact: none. No production `index.html`, Supabase rows/schema/grants, personal records or charged resources modified.
+- **Exact next step:** inspect new GitHub Actions, fix test regressions if any; then implement more no-cost simulated offline queue/delete replay integrity tests.
+
 ### 2026-10-12 — Isolated cross-device deletion conflict review UX
 
 - Verified prior Full UI [#38212177834](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38212177834) SUCCESS and Pages [#38212178030](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38212178030) SUCCESS.
