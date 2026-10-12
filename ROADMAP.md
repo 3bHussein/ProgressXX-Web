@@ -1,3 +1,7 @@
+## 2026-10-12 — Local release-gate check
+
+The current `tests/sync-commercial-release-gate.cjs` was reproduced and executed under local Node: PASS for fail-closed policy assertions. This does not establish production readiness or verify any remote GitHub Actions run. Remote CI status remains NOT VERIFIED because the Actions endpoint could not be reached. No runtime or Supabase data changes. Commercial estimate unchanged (55–65%); live CAS/RLS P0 OPEN and paid staging deferred. Next: obtain current CI results and implement only an authorized, independently tested server CAS rollout.
+
 ## 2026-10-12 — Fail-closed commercial gate correction
 
 Updated `tests/sync-commercial-release-gate.cjs` in commit `6abde928`: a release gate now requires explicitly verified boolean evidence for every prerequisite, including an explicit `false` for unconditional snapshot upserts. Missing fields and string values like `"true"` or `"false"` no longer count as proof. Added assertions for missing/invalid fields. This is a policy unit test, NOT evidence that production meets the conditions. GitHub Actions and local test execution for this commit: NOT VERIFIED (GitHub run index unavailable; container outbound GitHub network unavailable). No production `index.html`, Supabase schema, user data, migrations, auth grants or settings were changed. P0 CAS/RLS, two-device verification and restore drill remain OPEN. Commercial readiness rough estimate 55–65% unchanged; deferred paid security work remains nonblocking for ordinary development.
