@@ -47,6 +47,14 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Synthetic browser failed-upload and reload retention
+
+- Prior Full UI [#38213728521](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38213728521) SUCCESS and Pages [#38213729175](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38213729175) SUCCESS.
+- Added `tests/offline-upload-failure-reload-browser.cjs`, commits `899924a` and `8a00903`, to exercise synthetic localStorage pending deletion across browser reload, retain it after simulated HTTP 503, and clear it only after simulated successful acknowledgement. Added CI workflow registration in `f0dc07c`.
+- **Limitation:** test uses a standalone preview page and manual mock upload outcome, not real app upload code or Supabase; real server retry/idempotency and device sync remain unverified. Fresh CI and deployment NOT VERIFIED at writing.
+- No production app, database, real records or user storage changed. P0 sync remains OPEN; commercial readiness baseline 55–65% rough estimate unchanged; paid security work stays deferred/nonblocking for normal development.
+- **Next:** inspect latest CI and fix failures; improve test to use production flush/pending helpers under mocked network conditions.
+
 ### 2026-10-12 — Validate production account-scoped pending snapshot helpers
 
 - Previous latest Full UI [#38213339386](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38213339386) SUCCESS and Pages [#38213339493](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38213339493) SUCCESS.
