@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Full-app two-device Daily resurrection reproduction
+
+Previous Full UI #38216252905 and Pages #38216251867 SUCCESS. Added `tests/full-app-two-device-daily-resurrection.cjs` (`de851d5`) with two isolated Chromium app sessions, fake Supabase, A deletes Daily and B posts stale Workout Schedule update; expects known whole-snapshot delete resurrection. CI `e9a2f35`; fresh run unverified. This is a failing-safety contract documenting known production architecture risk, not a fix. No live data/schema changed; sync P0 OPEN, commercial 55–65% unchanged, paid security work deferred without blocking other work.
+
 ## 2026-10-12 — Full app browser mock 503 and reload recovery
 
 Previous Full UI #38215939686 and Pages #38215940016 SUCCESS. Added `tests/full-app-sync-503-reload-browser.cjs` (`b4f06de`) and CI (`e6ebae2`). Uses full root app with fake Supabase auth/REST to exercise failed write, pending reload, and successful manual retry. Fresh CI NOT VERIFIED. Does not certify real multi-device conflict or Supabase security; P0 sync OPEN, commercial estimate unchanged. Paid-security checkpoint deferred/nonblocking. Next review Actions and fix regression if any.
