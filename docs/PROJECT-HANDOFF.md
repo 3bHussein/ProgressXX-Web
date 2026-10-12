@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Mock session reload restoration
+
+Last confirmed Full UI #38190835357 SUCCESS and Pages #38190835042 SUCCESS. Expanded `tests/auth-retry-browser.cjs` (`eeb7747`) to assert same account session survives browser reload without replaying password sign-in or producing JS errors. New CI NOT VERIFIED. No app or database changes. Next inspect Actions, then add expired-session recovery coverage. Deferred security scope stays on hold.
+
 ## 2026-10-12 — Browser rejected-login then retry regression
 
 Created synthetic auth retry browser test `tests/auth-retry-browser.cjs` (`04f96b9`) and added it to Full UI CI (`a6e6dad`). Test rejects first login and checks gate/no writes, then accepts retry and checks activated app; no production code or user data touched. CI NOT VERIFIED. Next inspect Actions and diagnose any failures; real-account auth still not certified; security deferred.
