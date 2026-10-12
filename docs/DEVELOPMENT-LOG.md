@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Full UI CI failure isolation and comprehensive test reporting
+
+- Investigation: latest main `8ce81e8` Pages [#38189897567](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38189897567) SUCCESS, Full UI [#38189897407](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38189897407) FAILED in `scripts/smoke-full-ui.cjs:67` with browser error `Not authenticated`. Earlier Full UI [#38189889377](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38189889377) SUCCESS, so intermittent bootstrap race is a possibility, NOT CONFIRMED. Failure occurred before downstream Daily conflict browser test.
+- Updated `.github/workflows/full-ui-smoke.yml` commit `060d41b5a1f0b51ca5dd5b65153fe5addedaa0e2` to execute *all* test scripts, group their output, report each failure and fail the overall job if any fail. No failures suppressed, no test assertions weakened.
+- Tests: previous failure confirmed from full job logs; new workflow CI **NOT VERIFIED** at commit time. Deployment of this CI-only update **NOT VERIFIED**. No production `index.html`, database, migrations, account data, or client storage modified.
+- Known risks: intermittent mock auth `Not authenticated` remains unresolved; concurrency-safe Daily CAS unapplied; `SECURITY-DEFERRED-2026-10-12` remains on hold.
+- **Exact next step:** inspect new Full UI run and all grouped failures; if auth failure repeats instrument auth bootstrap timing under isolated mock; do not silence page errors. Confirm isolated mobile Daily prototype browser test outcome before proceeding.
+
 ### 2026-10-12 — Mobile Chromium preview regression added
 
 - Full UI #38189690942 SUCCESS and Pages #38189690828 SUCCESS after prior prototype regex fix.
