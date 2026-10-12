@@ -46,6 +46,7 @@ jobs:
             tests/snapshot-conflict-guard-contract.cjs \
             tests/snapshot-conflict-guard-reload-contract.cjs \
             tests/conflict-review-queue-contract.cjs \
+            tests/conflict-boundary-contract.cjs \
             tests/conflict-review-prototype-browser.cjs \
             tests/full-app-two-account-isolation-browser.cjs \
             tests/offline-upload-failure-reload-browser.cjs \
