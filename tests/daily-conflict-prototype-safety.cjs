@@ -1,0 +1,10 @@
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const html=fs.readFileSync('prototypes/daily-conflict-recovery.html','utf8');
+for(const choice of ['cloud','device','manual','later'])assert.match(html,new RegExp('data-choice="'+choice+'"'),'Missing conflict resolution option '+choice);
+assert.match(html,/role="status"/);
+assert.match(html,/aria-live="polite"/);
+assert.match(html,/@media\(max-width:620px\)/);
+assert.match(html,/PROTOTYPE ONLY/);
+assert.match(html,/No changes saved/);
+assert.doesNotMatch(html,/<script[^>]*src=|fetch\(|supabase|localStorage\.|sessionStorage\./i,'Standalone prototype must have no external calls or storage mutation');
+console.log('PASS: Daily conflict prototype exposes four accessible, preview-only actions and does not access live data');
