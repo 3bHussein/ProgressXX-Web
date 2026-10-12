@@ -47,6 +47,10 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — CAS transition conflict review contract
+
+Verified Full UI #38228038672 SUCCESS and Pages #38228038825 SUCCESS. Added `tests/snapshot-cas-transition-contract.cjs` (`1447586b`) and mandatory CI registration (`c74b59ec`). Pure synthetic server version/CAS simulation asserts stale write returns 409, local pending changes remain intact, no blind overwrite, reviewer-approved rebase preserves remote Daily deletion and new workout. **This is a specification/test only**: production uses unconditional snapshot upsert and has no real 409 UI or CAS backend yet. New CI unverified. Supabase real schema/data untouched; readiness 55–65% unchanged; cross-device P0 and real RLS gates OPEN, paid security work deferred/nonblocking.
+
 ## 2026-10-12 — Explicit stale snapshot production release gate
 
 Verified Full UI #38227539007 SUCCESS and Pages #38227539343 SUCCESS. Added `tests/production-stale-snapshot-release-gate.cjs` (`7d6a291`) and workflow registration (`b19d546`): reads the **actual production flush** to assert that it still uses unconditional `user_app_snapshots?on_conflict=user_id` upsert, demonstrates data erased by a stale second-device write in synthetic backend, and demonstrates hypothetical CAS rejecting stale writes with HTTP 409. This test is a transparent **known-risk release gate, not a conflict fix**; no real CAS/RLS or database changes. Fresh CI unverified. Commercial readiness ~55–65% unchanged; paid security exception deferred/nonblocking for regular feature work. Next: only mark resolved after authorized server-side CAS migration plus end-to-end simultaneous device conflict tests.
