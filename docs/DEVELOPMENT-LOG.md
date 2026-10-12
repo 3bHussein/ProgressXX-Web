@@ -22,6 +22,13 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Verify green deployment and harden Daily preview no-write invariants
+
+- Verified Full UI [#38190518693](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190518693) SUCCESS and Pages [#38190518674](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190518674) SUCCESS for `7ccd98d`; Full App [#38190483562](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190483562) SUCCESS for `9e05d56`.
+- Changed `tests/daily-conflict-mobile-browser.cjs` in [`34abfd21`](https://github.com/3bHussein/ProgressXX-Web/commit/34abfd21f0faf145bc6ec3ff6bc8fd2c826bc5ca): verify no HTTP write requests, no localStorage/sessionStorage mutations, and restored preview-only status after reload across 320/390/768 widths and all resolution controls. Keeps original visual/interaction assertions.
+- Fresh Full UI CI for new test: **NOT VERIFIED** at commit time. No production app code, migrations, Supabase permissions, real account data, or client storage changed. Prototype still cannot resolve real conflicts; production snapshot remains last-writer-wins; `SECURITY-DEFERRED-2026-10-12` remains on hold.
+- **Exact next step:** inspect new Actions for this test and diagnose any failing assertion; then add mock auth failure/retry regression without touching live account data.
+
 ### 2026-10-12 — Correct Playwright auth gate timeout option
 
 - Updated `scripts/smoke-full-ui.cjs` in commit [`9e05d56`](https://github.com/3bHussein/ProgressXX-Web/commit/9e05d56ff3ffcf1e9ae8cbc9d66598da0e17b7af): corrected the first auth-gate `page.waitForFunction` call to pass `null` for its argument and `{timeout:15000}` as the third, options argument. No assertions removed, no fake login pass, no app runtime change.
