@@ -292,10 +292,12 @@ const {chromium}=require('playwright');
    throw Error('Daily history entry lost after account logout/login: '+JSON.stringify(dailyRoundtrip));
  const dailyCheck=await page.evaluate(()=>({
    reminders:JSON.parse(PXStore.getItem(DAILY_REMINDERS_KEY)||'[]'),
+   renderedReminders:dailyReminders.map(x=>x.id),
    done:dailyDoneMap(),
    water:getWaterState()
  }));
  if(!dailyCheck.reminders.some(x=>x.id==='qa-daily-roundtrip'&&x.name==='QA reminder')||
+    !dailyCheck.renderedReminders.includes('qa-daily-roundtrip')||
     dailyCheck.done['qa-daily-roundtrip']!==true||
     dailyCheck.water.current!==1.25||dailyCheck.water.target!==2.75)
    throw Error('Daily reminders or water lost after account relogin: '+JSON.stringify(dailyCheck));
