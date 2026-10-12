@@ -11,9 +11,9 @@ assert.ok(match,'Production flush helper not found');
   await page.goto('http://127.0.0.1:8765/prototypes/sync-delete-conflict-preview.html');
   const outcome=await page.evaluate(async source=>{
    const events=[];
-   const env={ready:true,uploading:false,revision:1,savedRevision:0,account:'qa-user',
+   const env={syncConflictHold:false,snapshotBaseline:'[]',snapshotDigest:p=>JSON.stringify(Object.entries(p).sort(([a],[b])=>a.localeCompare(b))),markPending:()=>{},ready:true,uploading:false,revision:1,savedRevision:0,account:'qa-user',
     values:{'progressx-reminders':'[]'},navigator:{onLine:true},Date,JSON,Error,Object,
-    cloud:async()=>{events.push('post');if(events.filter(x=>x==='post').length===1)throw Error('503')},
+    cloud:async(path,method='GET')=>{if(method==='GET')return [{payload:{}}];events.push('post');if(events.filter(x=>x==='post').length===1)throw Error('503');return []},
     mirrorWorkoutScheduleToTable:async()=>events.push('mirror'),
     clearPending:()=>events.push('clear'),
     tell:m=>events.push(String(m)),scheduleCloudSync:()=>events.push('schedule')};
@@ -25,14 +25,14 @@ assert.ok(match,'Production flush helper not found');
    // A newer edit made before the original POST returns must remain unacknowledged.
    let unlock;const wait=new Promise(resolve=>unlock=resolve);
    const concurrent={...env,revision:1,savedRevision:0,uploading:false,
-    values:{sample:'old'},cloud:async()=>wait,clearPending:()=>events.push('unexpected-clear'),
+    snapshotBaseline:'[]',values:{sample:'old'},cloud:async(path,method='GET')=>method==='GET'?[{payload:{}}]:wait,clearPending:()=>events.push('unexpected-clear'),
     mirrorWorkoutScheduleToTable:async()=>{},tell:()=>{},scheduleCloudSync:()=>{}};
    const inFlight=new Function('env','with(env){let syncRetryFailures=0;'+source+';return flush}')(concurrent);
    const running=inFlight();concurrent.revision=2;concurrent.values.sample='new';unlock();await running;
    // Snapshot succeeds, but workout schedule mirror fails: no acknowledgment allowed.
    const mirrorEvents=[];
    const mirrorEnv={...env,revision:1,savedRevision:0,uploading:false,
-    cloud:async()=>mirrorEvents.push('snapshot-post'),
+    snapshotBaseline:'[]',cloud:async(path,method='GET')=>method==='GET'?[{payload:{}}]:mirrorEvents.push('snapshot-post'),
     mirrorWorkoutScheduleToTable:async()=>{mirrorEvents.push('mirror-attempt');throw Error('mock mirror 503')},
     clearPending:()=>mirrorEvents.push('incorrect-clear'),
     tell:m=>mirrorEvents.push(String(m)),scheduleCloudSync:()=>mirrorEvents.push('retry-scheduled')};

@@ -6,7 +6,10 @@ const start=html.indexOf(' async function flush(){');
 assert.ok(start>=0,'Production sync flush must exist');
 const segment=html.slice(start,html.indexOf(' window.__pxRestoreLegacySettings',start));
 assert.ok(segment.includes("user_app_snapshots?on_conflict=user_id"),'Production sync route changed: re-audit before release');
-const unconditional=/await cloud\('user_app_snapshots\?on_conflict=user_id','POST',\{user_id:account,payload:\{\.\.\.values\},updated_at:new Date\(\)\.toISOString\(\)\}\)/.test(segment);
+// Preflight still leaves a read/write race: a captured payload is not server CAS.
+const unconditional=segment.includes("payload:submitted") &&
+ !/expected_revision|rpc\//.test(segment) &&
+ segment.includes('const submitted={...values}');
 if(unconditional){
  console.log('RELEASE BLOCKED (EXPECTED): production still uses unconditional account snapshot upsert.');
  console.log('PASS: pre-release safety classifier correctly recognizes open P0 concurrency risk.');

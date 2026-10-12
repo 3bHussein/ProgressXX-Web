@@ -3,14 +3,14 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  try{
   const page=await browser.newPage({viewport:{width:390,height:844}});
-  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  const errors=[];page.on('pageerror',e=>errors.push(e.stack||e.message));
   await page.route('**/auth/v1/**',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify({access_token:'mock-token',refresh_token:'mock-refresh',expires_at:Math.floor(Date.now()/1000)+3600,user:{id:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',email:'alarm@example.test'}})}));
   await page.route('**/rest/v1/**',r=>r.fulfill({status:200,contentType:'application/json',body:r.request().method()==='GET'?'[]':'[{}]'}));
   await page.route('https://unpkg.com/**',r=>r.abort());
   await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});
   await page.fill('#pxEmail','alarm@example.test');await page.fill('#pxPassword','mock-only');await page.click('#pxSignin');
-  await page.waitForFunction(()=>window.__pxCommercialReady?.()===true,null,{timeout:20000});
-  await page.evaluate(()=>{const button=document.createElement('button');button.id='qaPreviousFocus';button.textContent='Stable focus origin for test';document.body.append(button);button.focus();if(document.activeElement!==button)throw Error('Prior focus setup failed');showAlarmPopup({id:'__test__',name:'Keyboard QA',time:'10:00',amount:'Only mock'});stopAlarmSound()});
+  await page.waitForFunction(()=>window.__pxCommercialReady?.()===true && document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:20000});
+  await page.evaluate(()=>{if(document.getElementById('alarmOverlay')?.classList.contains('show'))dismissActiveAlarm();const button=document.createElement('button');button.id='qaPreviousFocus';button.textContent='Stable focus origin for test';document.body.append(button);button.focus();if(document.activeElement!==button)throw Error('Prior focus setup failed');showAlarmPopup({id:'__test__',name:'Keyboard QA',time:'10:00',amount:'Only mock'});stopAlarmSound()});
   assert.equal(await page.locator('#alarmOverlay').getAttribute('role'),'dialog');
   assert.equal(await page.locator('#alarmOverlay').getAttribute('aria-modal'),'true');
   assert.equal(await page.evaluate(()=>document.activeElement.textContent.trim()),'✓ Done');

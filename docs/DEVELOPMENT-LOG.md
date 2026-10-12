@@ -15,6 +15,7 @@ This is the **append-only** chronological log of completed work, investigations,
 ## Latest handoff snapshot
 
 - **Stage:** Pre-release hardening; not certified for sale/public paid launch.
+- **Work task progress:** PR #16; disposable PostgreSQL concurrent CAS run #38273401672 verified SUCCESS. Recovery/hydration/auth-callback fixes tested locally; fresh follow-up Full UI and deployment pending.
 - **Known risk:** Real-account reproduction of login `undefined.filter` and Food/Daily restored-data sync needs independent confirmation, even though earlier CI ran green.
 - **Primary next step:** Test prepared migration on separate staging Supabase project/branch (none currently available); verify postflight grants and two-user RLS, then Food/Daily/Workout/Weight CRUD/sync. Production grants are unchanged.
 - **Data safety:** Preserve all existing user records; do not wipe or silently replace records.
@@ -1209,3 +1210,39 @@ Previous Pages #38224272376 SUCCESS; Full UI #38224271404 still running when che
 - **Observed deploy:** [Deploy ProgressXX Full App #38154374610](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38154374610) — success.
 - **Caution:** Fixtures and CI cannot prove every real account is fixed. Recheck latest runs each new session.
 - **Next step:** Test real restored account + distinct user data isolation and compare with current production state.
+
+## 2026-10-12 — Work task: CI investigation and production recovery fixes
+
+**Scope / files:** root `index.html`, Full UI/Fast workflow registrations, extracted pending/flush fixtures, two-context recovery, stale-device deletion/export browser regression and restored-account login regression. This entry accompanies the tested implementation commit; remote commit/PR and CI evidence will be appended after GitHub execution.
+
+**Investigation:** Actual Actions API is accessible in this Work environment. Full UI [#38270847453](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38270847453) FAILED on `3b34921`: missing preflight state in extracted-function tests, outdated unconditional-write classifier, stale-device test expectations, and browser timeouts. Existing PostgreSQL 17 integration [#38270129009](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38270129009) SUCCESS; job logs confirm reference creation, assertions and ROLLBACK. This proves the disposable reference, not authenticated Supabase CAS.
+
+**Fixes:** Rebase the durable pending draft after a successful snapshot POST before the schedule mirror, preserving newer edits and mirror-failure retries without falsely treating the acknowledged snapshot as a foreign conflict on reload. Hydrate account workout memory before `ready=true` allows asynchronous health refresh to erase snapshot-only history during account boot. Correct `bestRepsAtLoad(prev.m, top.weight)` argument to remove the restored-account Analytics `undefined.filter` exception. Updated mocks distinguish preflight GET from POST and initialize actual production digest state. The release classifier still reports unsafe non-atomic whole-snapshot upsert; no gate has been relaxed.
+
+**Regression evidence:** Focused Node and Chromium tests PASS for pending retention, increasing retry delay, mirror failure, in-flight new edits, two-context recovery, stale Daily deletion hold across reload, read-only conflict review and actual JSON download of both versions. Restored-account browser fixture deliberately starts workout refresh during delayed archive hydration and retains 32 table rows plus 1 snapshot-only row without browser errors. Full suite and remote results are recorded in the following verification entry once available.
+
+**Deployment / data impact:** NOT VERIFIED until matching Pages SHA is confirmed. No production Supabase query/mutation, table/grant/RLS/migration changes, account writes, paid services, or real exports. Only synthetic mocked browser data used. Existing user history remains preserved. Production target stays root `index.html`.
+
+**Risks / next step:** Milestone 2 IN PROGRESS, commercial NO-GO. Client preflight is still non-atomic. Run matching Full UI/Fast/PostgreSQL and deployment checks; test concurrent PostgreSQL sessions; then separately backed-up staging with owner-specific authenticated CAS, negative RLS/grants tests and real two-device/restore acceptance before requesting a production change. Historical subjective 55–65% estimate unchanged.
+
+## 2026-10-12 — Work task: locked workspace race and concurrent SQL verification
+
+**Scope:** root Daily/workout/nutrition refresh callbacks, `tests/locked-workspace-refresh-browser.cjs`, Full UI registration, and `tests/postgres-cas-concurrency.py` with PostgreSQL workflow registration. These changes accompany the Work task implementation commit; matching commit/PR/CI links follow after remote execution.
+
+**Finding / fix:** Broader local Full UI execution exposed intermittent `Not authenticated` from second-device startup. Focus/pageshow Daily refresh could call authenticated storage while the login gate was still locked. Background Daily/workout/nutrition callbacks now return unless commercial account initialization is ready. A deterministic Chromium test dispatches focus/pageshow/online plus direct refresh callbacks before login, verifies no browser exceptions, no REST calls and no account/pending storage writes. The eight-feature second-context hydration regression now passes locally with stack-level diagnostics.
+
+**SQL verification expansion:** New local-only Python harness invokes the existing SQL reference through eight independent `psql` sessions for concurrent first writes and same-revision updates. It requires PGHOST localhost/127.0.0.1 and PGDATABASE synthetic_cas, creates a separate synthetic schema, fails rather than dropping any pre-existing schema, and cleans up only its own created schema. Exactly one winner and seven rejected stale writers are required, plus deleted-list preservation. Python compile PASS; execution waits for PostgreSQL CI service (no local server installed). Existing sequential PostgreSQL 17 run #38270129009 is verified PASS; new races must not be claimed passed before their CI result.
+
+**Impact / risks:** No production database, grants, RLS, migrations, paid features, real accounts or personal exports touched. No deployment claim yet. Milestone 2 remains IN PROGRESS; real server CAS/auth/RLS, verified restoration and real devices remain release blockers. Next: verify all matching PR workflows, merge tested code if green, inspect root Pages deployment and append exact evidence. Commercial launch remains NO-GO.
+
+**Local Work task verification (2026-10-12):** 59/59 Node/Chromium checks PASS on the current source, covering all Full UI registered tests plus security migration source safety and login optional-render isolation. `git diff --check` and Python concurrency-harness compilation PASS. PostgreSQL concurrency runtime and fresh remote CI/deployment remain NOT VERIFIED until recorded below. No live-account or production SQL tests were performed.
+
+## 2026-10-12 — Work task PR #16: verified concurrent PostgreSQL CAS and CI follow-up
+
+**Commit / PR:** [3f24165](https://github.com/3bHussein/ProgressXX-Web/commit/3f241652c573e8f2b4c6daa8bb5569ce2e336d8a), [PR #16](https://github.com/3bHussein/ProgressXX-Web/pull/16). PostgreSQL 17 [#38273401672](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38273401672) SUCCESS; both sequential rollback assertions and eight independent-session first-write/update races are verified from job logs. Each race has exactly one winner, seven conflicts, and stale deleted-list replay rejection. Synthetic SQL reference only, not Supabase authenticated RPC/RLS.
+
+**CI results on implementation commit:** Fast conflict [#38273401690](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38273401690), cross-device snapshot #38273401813, workout Chromium #38273401683, workout table #38273401641, weight #38273401608, schedule #38273401605 all SUCCESS. Full UI [#38273401866](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38273401866) FAILED despite 59/59 local checks: automatic Daily alarm already open invalidated the keyboard test's focus origin, and account normalization status overwrote paused-conflict wording after reload.
+
+**Follow-up source / tests:** `index.html` `tell()` now keeps explicit `Sync paused for conflict review` in every status while a conflict hold exists. Browser stale-device regression also asserts a new local edit cannot hide the hold. Alarm keyboard fixture waits for full gate-hidden initialization and dismisses an existing automatic alarm before opening its test dialog; real focus restoration assertions remain unchanged. Focused Chromium tests PASS. Fresh remote Full UI/deployment pending verification; do not claim merged/deployed yet.
+
+**Impact / next:** Production Supabase data/tables/grants/RLS/migrations unchanged; paid features untouched. Milestone 2 IN PROGRESS and commercial NO-GO. Verify follow-up PR workflows, merge only after all checks green, inspect matching root Pages deployment, then record evidence. Approved staging/verified backup/authenticated isolation and real-device acceptance remain required before production CAS.
