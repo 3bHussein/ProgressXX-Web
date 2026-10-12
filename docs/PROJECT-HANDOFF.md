@@ -53,6 +53,11 @@
 ## Concurrent edit safety review (2026-10-12)
 ## Synthetic Daily concurrency regression — 2026-10-12
 ## Draft snapshot conflict guard, unapplied (2026-10-12)
+## CAS conflict contract simulation — 2026-10-12
+
+Prior Full UI #38188790240 and Pages #38188790364 SUCCESS. Added `tests/snapshot-cas-contract-simulation.cjs` with two simulated device edits: first accepted, stale second rejected without losing locally queued data, explicit conflict resolution accepted after latest baseline. CI wired (`5f814a1`, `b3c7941`). Contract simulation only; SQL not applied, frontend unchanged, real atomic/RLS behavior unverified. Keep security defer and do not edit production data.
+
+
 
 Prior full CI #38188634435 and Pages #38188634220 SUCCESS. Added **NOT APPLIED** server CAS SQL proposal at `supabase/proposals/20261012_snapshot_compare_and_swap_NOT_APPLIED.sql`; owner-scoped row lock and expected-payload check, rejects missing row, not deployed. Added static guard test `tests/snapshot-cas-proposal-safety.cjs` to full smoke. Production client STILL uses whole-snapshot upsert; no concurrent-edit safety claim. Staging/RLS review deferred, no production database edits.
 
