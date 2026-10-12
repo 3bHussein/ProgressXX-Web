@@ -47,6 +47,13 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Two-context sync passing; stricter local pending cleanup checks
+
+- Verified Full UI [#38220196004](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38220196004) SUCCESS and Pages [#38220195871](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38220195871) SUCCESS on `f82b6cca`.
+- Strengthened `tests/two-context-pending-recovery-browser.cjs` (`6ff3fd878ccddfb6a7428de803e525be230451c9`) with two stricter checks: account-scoped pending storage on browser A is cleared following actual fake server acknowledgment; browser B never inherits A's local state prior to its own remote hydration/reload. Existing mock 503, recovery and B refresh tests retained.
+- New CI NOT VERIFIED; no production code, Supabase schema or user data changed. Sync conflict P0 remains OPEN and no atomic CAS or RLS changes authorized. Commercial readiness subjective 55–65% unchanged. Paid security exception remains deferred/nonblocking.
+- Next: confirm new CI; move from isolated sequential recovery towards explicit server-side CAS prerequisites before any genuine conflict protection claim.
+
 ### 2026-10-12 — Two isolated browser sessions: pending recovery after reload
 
 - Verified prior Full UI [#38219664190](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38219664190) SUCCESS and Pages [#38219663464](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38219663464) SUCCESS.
