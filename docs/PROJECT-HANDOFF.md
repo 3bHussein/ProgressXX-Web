@@ -1,3 +1,7 @@
+## 2026-10-12 — Fast conflict CI
+
+Added `.github/workflows/fast-conflict-contracts.yml` in commit `091b3642`. This Node-only workflow covers eight existing conflict contracts. It supplements rather than replaces the Full UI checks. New CI result NOT VERIFIED. No production application code, database records or permissions changed. Live CAS and RLS remain open; readiness estimate remains 55–65%. Paid staging stays deferred. Next: verify Actions results and address any failures.
+
 ## 2026-10-12 — CAS staging acceptance checklist
 
 Reviewed latest commit aea49ae and production CAS reference. Added docs/CAS-STAGING-ACCEPTANCE.md at 3de41aa5: ten concrete requirements for backups, version checks, ownership isolation, offline drafts, stale deletes, retries and rollback. Documentation only; no app code, Supabase, real user data or privileges modified. GitHub Actions latest result NOT VERIFIED because the Actions run index was unavailable; no test success is claimed for this change. Commercial readiness estimate 55–65% unchanged, P0 real CAS/RLS OPEN and paid staging/security deferral still in effect.
