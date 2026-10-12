@@ -47,6 +47,15 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Validate production account-scoped pending snapshot helpers
+
+- Previous latest Full UI [#38213339386](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38213339386) SUCCESS and Pages [#38213339493](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38213339493) SUCCESS.
+- Added `tests/production-pending-snapshot-contract.cjs` (`6e0027cae4871ad844b9dc60139dd84157eb3147`) to extract and execute real `pendingKey/markPending/readPending/clearPending` helpers from production `index.html` inside an isolated Node mock, verify account-scoped preservation of a queued deletion across simulated reload, prevent clearing another account's pending state, and clear only after acknowledgment. No personal data is accessed.
+- Added to mandatory Full UI CI (`b83861c6097c668346a9e27ad44730505e75e26d`). Fresh CI/Pages deployment **NOT VERIFIED** at checkpoint.
+- **Limits:** proves local helper semantics only. Does not test actual network-offline browser reload, durable server acknowledgments, idempotent writes, safe cross-device CAS, or Supabase RLS. Current production `user_app_snapshots` whole-snapshot POST still has last-writer-wins risk.
+- **Commercial tracker:** sync P0 stays OPEN; rough 55–65% readiness / conditional 4–8 weeks private beta / 10–16 weeks sale unchanged. Paid security remains deferred and nonblocking for continued development. Data impact: none.
+- **Next exact step:** inspect new CI, fix any failures, then use fully mocked browser route errors to validate retention of real pending edits after failed upload and reload.
+
 ### 2026-10-12 — Offline reconnect browser mock contract
 
 - Verified earlier Pages [#38213131525](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38213131525) SUCCESS; Full UI #38213131256 was still running at check. Previous Full UI #38213128534 SUCCESS.
