@@ -47,6 +47,13 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Daily Reminder dialog accessibility and keyboard dismissal
+
+- Verified Full UI [#38224513191](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38224513191) SUCCESS and Pages [#38224513072](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38224513072) SUCCESS on preceding `850851ac`.
+- Updated production root `index.html` (`bda6928`) with `role=dialog`, `aria-modal=true`, descriptive accessible name and Escape-key dismissal limited to visible Daily alarm. Normal Done/Snooze/Dismiss actions preserved. Added `tests/daily-alarm-dismiss-accessibility.cjs` (`ac45bb2`) and Full UI workflow registration (`69b948e`).
+- **Fresh CI and Pages NOT VERIFIED at writing.** No real records, Supabase schema or RLS changed. Commercial readiness rough 55–65% unchanged; P0 cross-device CAS/auth checks remain OPEN. Paid security deferred/nonblocking.
+- Next: verify Actions and fix regressions; review reminder focus handling and mobile accessibility only with proven tests.
+
 
 ### 2026-10-12 — Daily reminder / mobile anatomy test guard
 
