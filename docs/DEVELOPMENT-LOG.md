@@ -47,6 +47,12 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Pending conflict draft reload regression
+
+Added tests/snapshot-conflict-guard-reload-contract.cjs (749e5cbd) and registered it in Full UI workflow (8cc5c296). Simulated persistent draft after HTTP 409, reload, storage failure, and isolated keys. New CI and deployment: NOT VERIFIED. Earlier Full UI 38234329379 and Pages 38234329041 succeeded before this change. No production app changes, no live data or database modifications. Production concurrency risk remains open. Paid security stage remains deferred; commercial estimate 55–65% unchanged.
+
+Next step: verify fresh Actions runs and fix any test failure; keep integration disabled until safe server CAS rollout is approved.
+
 ## 2026-10-12 — Isolated client 409/412 draft guard (NOT production-wired)
 
 Created opt-in `scripts/snapshot-conflict-guard.cjs` (`e7db6a94`) and `tests/snapshot-conflict-guard-contract.cjs` (`89e29795`), registered mandatory Full UI test (`f010b9f8`). The helper intercepts hypothetical HTTP 409/412 responses, saves a cloned local draft, requests explicit review and never blindly retries. Test source asserts 409/412 draft preservation, isolation from mutations, exactly one review callback, 503 passthrough and missing pending-store rejection. **New CI: NOT VERIFIED; local execution NOT VERIFIED.** Attempts to fetch current Actions via public API failed in this environment; prior Full UI #38234329379 and Pages #38234329041 were verified successful in previous session, not proof for new commits. Production `index.html` and Supabase untouched; no data/schema/RLS/grants/migration impact, no live deployment behavior change. P0 concurrency and RLS remain OPEN. Commercial readiness 55–65% rough baseline unchanged; owner-paid-security deferral remains nonblocking for free work.
