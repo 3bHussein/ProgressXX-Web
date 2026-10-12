@@ -14,7 +14,7 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
   assert.equal(pending.id,'delete-1','Pending operation must survive reload');
   const denied={status:503};
   assert.equal(denied.status,503);
-  assert.equal(await page.evaluate(key=>localStorage.hasOwnProperty(key),key),true,'Failed upload must not clear pending'); 
+  assert.equal(await page.evaluate(key=>localStorage.getItem(key)!==null,key),true,'Failed upload must not clear pending'); 
   const sync=await page.evaluate(key=>{
    const payload=JSON.parse(localStorage.getItem(key)); 
    if(payload.expected!==1)return {status:409};
