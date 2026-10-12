@@ -47,6 +47,14 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Daily Reminder focus entry and restoration
+
+- Verified preceding Full UI #38225047580 SUCCESS and Pages #38225048256 SUCCESS.
+- Production `index.html` commit `1f6fe323`: store previously focused element on first modal opening, focus first Daily action after dialog appears, restore previous focus if still connected when dismissed/completed/snoozed; avoid using a removed DOM target. Existing Escape and dialog semantics remain.
+- Accessibility contract `tests/daily-alarm-dismiss-accessibility.cjs` extended in `789a3767` with source assertions for save/restore focus. Fresh CI NOT VERIFIED yet; no live Supabase, real records or schema changed.
+- Commercial readiness baseline 55–65% unchanged; P0 real cross-device CAS/RLS OPEN and paid security deferred/nonblocking.
+- Next: confirm CI and strengthen keyboard Tab trapping or mobile screen reader regression where supported.
+
 ### 2026-10-12 — Daily Reminder dialog accessibility and keyboard dismissal
 
 - Verified Full UI [#38224513191](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38224513191) SUCCESS and Pages [#38224513072](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38224513072) SUCCESS on preceding `850851ac`.
