@@ -63,3 +63,41 @@ delete reminderStore['progressx-reminders'];
 assert.equal(reminderLoadCtx.loadDailyReminders()[0].id,'default','Defaults should appear only with missing account list');
 assert.match(s,/dailyReminders=loadDailyReminders\(\);\s*await window\.__legacyBoot\(\)/,'Rehydrate in-memory reminders after account login before rendering');
 console.log('PASS: account Daily reminder list loads saved and intentionally empty values before UI boot');
+
+const refreshStart=s.indexOf(' window.__pxRefreshAccountDailyReminders=async()=>{');
+const refreshEnd=s.indexOf(' window.__pxLoadProducts=async()=>{',refreshStart);
+assert.ok(refreshStart>0&&refreshEnd>refreshStart,'Supabase Daily reminder refresh missing');
+const syncStart=s.indexOf('async function syncRemindersFromSheet(force=false){');
+const syncEnd=s.indexOf('// Cross-device Daily sync:',syncStart);
+assert.ok(syncStart>0&&syncEnd>syncStart,'Daily refresh entrypoint missing');
+assert.doesNotMatch(s.slice(syncStart,syncEnd),/appScriptUrl|reminders_get|Google Sheet|Apps Script URL is missing/,'Daily must not use retired Apps Script');
+(async()=>{
+ let rows=[{payload:{'progressx-reminders':JSON.stringify([{id:'qa-one',name:'QA one'}])}}];
+ let calls=0,renders=0,dirty=false;
+ const cache={};
+ const state={window:{},ready:true,account:'qa-account',navigator:{onLine:true},uploading:false,revision:0,savedRevision:0,
+  JSON,Array,Object,String,Error,encodeURIComponent,readPending:()=>dirty,
+  cloud:async()=>{calls++;return rows},
+  browserStorage:{setItem:(k,v)=>{cache[k]=v}},storagePrefix:()=> 'user:',
+  values:{},dailyReminders:[],loadDailyReminders:()=>JSON.parse(state.values['progressx-reminders']||'[]'),renderDaily:()=>{renders++}
+ };
+ vm.createContext(state);
+ vm.runInContext(s.slice(refreshStart,refreshEnd),state);
+ assert.equal(await state.window.__pxRefreshAccountDailyReminders(),'updated');
+ assert.equal(state.dailyReminders[0].id,'qa-one');
+ assert.equal(await state.window.__pxRefreshAccountDailyReminders(),'unchanged');
+ rows=[{payload:{'progressx-reminders':'[]'}}];
+ assert.equal(await state.window.__pxRefreshAccountDailyReminders(),'updated','Cloud deletion must clear former reminders');
+ assert.equal(state.dailyReminders.length,0,'Removed reminders must not resurrect');
+ assert.equal(cache['user:progressx-reminders'],'[]');
+ rows=[{payload:{'progressx-reminders':JSON.stringify([{id:'remote-stale'}])}}];
+ dirty=true;
+ assert.equal(await state.window.__pxRefreshAccountDailyReminders(),'pending','Queued local change must not be overwritten');
+ assert.equal(state.dailyReminders.length,0,'Pending local change must stay untouched');
+ dirty=false;
+ state.revision=1;
+ assert.equal(await state.window.__pxRefreshAccountDailyReminders(),'pending','Unsynced local revision must not be overwritten');
+ assert.equal(state.dailyReminders.length,0);
+ assert.ok(calls>=3&&renders===2);
+ console.log('PASS: Supabase Daily list refresh applies deletions and protects unsynced edits');
+})().catch(e=>{console.error(e);process.exitCode=1});
