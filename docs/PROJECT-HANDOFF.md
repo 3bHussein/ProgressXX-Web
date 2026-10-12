@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Expired cached session guard
+
+Main CI #38204834720 and Pages #38204834143 SUCCESS before edit. Production root `index.html` now denies automatic restoration of missing/expired cached `expires_at` (`254b2c7`), removes only cached session token and displays sign-in prompt; all account data and pending edits remain untouched. Browser regression `tests/auth-retry-browser.cjs` (`39c64cc`) simulates expired session after valid reload. Fresh CI NOT VERIFIED. Next inspect Actions, then test renewal flow. Security checkpoint deferred; CAS not deployed.
+
 ## 2026-10-12 — Mock session reload restoration
 
 Last confirmed Full UI #38190835357 SUCCESS and Pages #38190835042 SUCCESS. Expanded `tests/auth-retry-browser.cjs` (`eeb7747`) to assert same account session survives browser reload without replaying password sign-in or producing JS errors. New CI NOT VERIFIED. No app or database changes. Next inspect Actions, then add expired-session recovery coverage. Deferred security scope stays on hold.
