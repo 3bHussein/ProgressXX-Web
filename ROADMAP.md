@@ -78,6 +78,10 @@ Expanded `tests/production-flush-failure-retry-contract.cjs` (`4218067`) for wor
 
 Full UI #38216603946 failure was from hard-coded resurrection expectation; mock result was false. Test `d9360d8` now confirms B's unrelated write reached mocked server and reports actual outcome. Production risk still open, not considered fixed; CI rerun pending, commercial readiness estimate unchanged.
 
+## 2026-10-12 — Production cloud retry backoff
+
+Production `index.html` (`6b52ba0`) reduces failed sync retry frequency with capped exponential backoff; synthetic regression `tests/production-sync-retry-backoff.cjs` (`fc0f28c`), CI `9054f72`. Fresh CI pending; cross-device conflict risk remains OPEN, estimate 55–65% unchanged, paid security stage deferred.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
