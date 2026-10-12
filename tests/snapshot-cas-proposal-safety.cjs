@@ -1,0 +1,13 @@
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const s=fs.readFileSync('supabase/proposals/20261012_snapshot_compare_and_swap_NOT_APPLIED.sql','utf8');
+assert.match(s,/PROPOSAL ONLY[^\n]*DO NOT APPLY/);
+assert.match(s,/security invoker/i);
+assert.match(s,/auth\.uid\(\)/);
+assert.match(s,/for update/i);
+assert.match(s,/is distinct from expected_payload/i);
+assert.match(s,/return query select false,true,present_payload/i);
+assert.match(s,/raise exception 'Missing snapshot/i);
+assert.match(s,/revoke all on function .* from public, anon/i);
+assert.match(s,/grant execute .* to authenticated/i);
+assert.doesNotMatch(s,/security definer/i);
+console.log('PASS: proposal-only atomic snapshot conflict guard contains owner check, row lock and fail-closed conditions; database NOT migrated');
