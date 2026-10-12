@@ -90,6 +90,10 @@ Production root status UI updated in `5c94267`: show local save, pending remote 
 
 Full UI #38217998624 failed due to intermittent `Not authenticated` in login retry. Added browser assertions on local/pending/synced states (`93966b94`) and captured exception stack in auth retry test (`7570ba36`). New CI pending; resolve auth race next. Cross-device data safety remains P0 OPEN; readiness unchanged.
 
+## 2026-10-12 — Automatic pending-sync recovery after reload
+
+Production activation fix `ca6bc5e`: restored pending revision remains unacknowledged, permitting automatic flush after reload. Full-app Chromium mock `26b2457` now fails if manual `Sync now` is needed. New CI pending; this is not an atomic multi-device conflict fix. Commercial readiness 55–65% unchanged, security cost exception deferred.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
