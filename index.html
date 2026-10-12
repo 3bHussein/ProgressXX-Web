@@ -8186,7 +8186,8 @@ function ensureDailyCheckpoint(syncNewDay=true){
 function loadDailyReminders(){
   try{
     const x=JSON.parse(PXStore.getItem(DAILY_REMINDERS_KEY));
-    return Array.isArray(x)&&x.length?x:clone(DEFAULT_DAILY_REMINDERS);
+    // An empty saved list is intentional; never repopulate it with defaults on another device.
+    return Array.isArray(x)?x:clone(DEFAULT_DAILY_REMINDERS);
   }catch{return clone(DEFAULT_DAILY_REMINDERS)}
 }
 function saveDailyReminders(){
