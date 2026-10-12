@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Reject expired cached session on reload, preserve account data
+
+- Prior main Full UI [#38204834720](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38204834720) SUCCESS and Pages [#38204834143](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38204834143) SUCCESS.
+- Updated production root `index.html` commit `254b2c72511bd6af1d63db0e6a2c2412b21cea92`: before auto-resuming a session from sessionStorage, check `expires_at` is a finite future Unix timestamp. If expired/invalid, remove **only** the cached auth session, show 'Session expired' login prompt, do not call `activate` and do not clear any account data/pending writes.
+- Extended `tests/auth-retry-browser.cjs` commit `39c64ccc1118dce295c7ec89707b0d30f8f8c282`: create synthetic expired session, reload, ensure gate remains visible, app not ready, cached credentials removed and no silent password retry or JS errors. Existing valid session recovery assertions retained.
+- New CI and Pages deployment **NOT VERIFIED** when committed. No Supabase schema, permissions or data migration; no account records changed. Scope is expired cached-session handling, not refresh-token rotation or real-device OAuth/session certification. Keep `SECURITY-DEFERRED-2026-10-12` on hold.
+- **Exact next step:** inspect new Full UI and Pages results; fix any failures without weakening checks; then examine explicit session renewal flow and two-device data safety in mock contexts.
+
 ### 2026-10-12 — Mock account session restoration after reload
 
 - Verified [Full UI #38190835357](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190835357) SUCCESS and [Pages #38190835042](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190835042) SUCCESS after the previous mock rejected-login/retry test.
