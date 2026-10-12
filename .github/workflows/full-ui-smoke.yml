@@ -22,16 +22,28 @@ jobs:
         run: |
           python3 -m http.server 8765 > /tmp/full-ui-server.log 2>&1 &
           sleep 2
-          node scripts/smoke-full-ui.cjs
-          node tests/account-pages-snapshot-sync.cjs
-          node tests/daily-history-supabase-hydration.cjs
-          node tests/daily-concurrent-conflict-regression.cjs
-          node tests/snapshot-cas-proposal-safety.cjs
-          node tests/snapshot-cas-contract-simulation.cjs
-          node tests/daily-conflict-prototype-safety.cjs
-          node tests/daily-conflict-mobile-browser.cjs
-          node tests/weight-table-bridge.cjs
-          node tests/workout-supabase-table.cjs
-          node tests/workout-schedule-table-mirror.cjs
-          node tests/workout-sync-noop-regression.cjs
-          node tests/mobile-settings-insights-regression.cjs
+          failed=0
+          for test_file in \
+            scripts/smoke-full-ui.cjs \
+            tests/account-pages-snapshot-sync.cjs \
+            tests/daily-history-supabase-hydration.cjs \
+            tests/daily-concurrent-conflict-regression.cjs \
+            tests/snapshot-cas-proposal-safety.cjs \
+            tests/snapshot-cas-contract-simulation.cjs \
+            tests/daily-conflict-prototype-safety.cjs \
+            tests/daily-conflict-mobile-browser.cjs \
+            tests/weight-table-bridge.cjs \
+            tests/workout-supabase-table.cjs \
+            tests/workout-schedule-table-mirror.cjs \
+            tests/workout-sync-noop-regression.cjs \
+            tests/mobile-settings-insights-regression.cjs; do
+            echo "::group::Run ${test_file}"
+            if node "$test_file"; then
+              echo "PASS: ${test_file}"
+            else
+              echo "::error file=${test_file}::FAIL: ${test_file}"
+              failed=1
+            fi
+            echo "::endgroup::"
+          done
+          exit "$failed"
