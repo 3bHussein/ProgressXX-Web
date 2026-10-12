@@ -47,6 +47,10 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Synthetic offline backup restore rehearsal
+
+Created `tests/backup-offline-restore-rehearsal.cjs` (146bb920) to exercise a fake JSON backup through the read-only integrity verifier and a fresh in-memory round-trip, verify source immutability, deterministic SHA-256 and malformed-JSON rejection. Registered the test in Full UI smoke workflow (4cd25a82). This is only an offline synthetic rehearsal; it does not restore a real backup or certify account-data recoverability. Test execution and latest remote CI/Pages NOT VERIFIED. No production root index.html, Supabase project, real user data, grants or migrations touched. DATA-01, SYNC-01/02/03 and AUTH-01 remain OPEN; readiness estimate 55–65% unchanged, paid security staging deferred. Next: verify CI; perform backed-up disposable-account restore and two-device CRUD/deletion-resurrection acceptance on approved test environment.
+
 ## 2026-10-12 — Data safety: offline backup integrity inspector
 
 Added read-only `scripts/backup-integrity.cjs` (`d38490f7`), synthetic regression `tests/backup-integrity-contract.cjs` (`9ed36cc6`), and mandatory Full UI workflow registration (`8dd67163`). The inspector validates JSON object input, produces a SHA-256 for exact bytes and reports top-level array counts without exporting or restoring account data. This is an integrity/inspection primitive, NOT verified recoverability, schema completeness or live cross-device CAS. New GitHub Actions and local Node execution NOT VERIFIED. No production `index.html`, Supabase, real user records or grants changed. Commercial gates DATA-01, SYNC-01/02/03 and AUTH-01 remain OPEN. Subjective readiness 55–65% unchanged; paid security staging deferred. **Next:** validate live backup format safely, perform isolated restore on disposable fixtures and verify two-device delete/modify handling under authorized CAS staging before commercial signoff.
