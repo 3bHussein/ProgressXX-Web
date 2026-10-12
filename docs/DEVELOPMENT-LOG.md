@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Synthetic concurrent Daily conflict reproduction in CI
+
+- Confirmed latest Full UI #38188317333 **SUCCESS**, Pages #38188317315 **SUCCESS** before these new test changes.
+- Added `tests/daily-concurrent-conflict-regression.cjs` in commit `c96d0c30717c9143484c42a26a20186bd32cf68b` and wired it into full UI workflow, commit `84f7b77d6e6a89b8624ff66394fb97d10c90c050`.
+- Synthetic replay demonstrates whole-snapshot last-writer-wins may lose desktop changes when phone submits an older copy; regression defines common-baseline conflict check. **This test documents the vulnerability; it does NOT add protection.**
+- Before changing live snapshot writes, implement atomic server-enforced compare-and-swap / versioned updates and test conflict recovery without losing locally queued edits. No production code or database edits today. Security paid stage remains deferred (`SECURITY-DEFERRED-2026-10-12`).
+
+
 ### 2026-10-12 — Full CI green; concurrent Daily edit conflict risk reviewed
 
 - Full UI [#38188317333](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38188317333) **SUCCESS**, Pages [#38188317315](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38188317315) **SUCCESS**. Owner previously confirmed ordinary cross-device Daily creation/deletion works.
