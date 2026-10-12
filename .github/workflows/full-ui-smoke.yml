@@ -45,6 +45,7 @@ jobs:
             tests/backup-integrity-contract.cjs \
             tests/backup-offline-restore-rehearsal.cjs \
             tests/live-snapshot-preflight-contract.cjs \
+            tests/live-conflict-draft-export-contract.cjs \
             tests/versioned-cas-reference-contract.cjs \
             tests/snapshot-cas-transition-contract.cjs \
             tests/cas-delete-unrelated-edit-acceptance.cjs \
