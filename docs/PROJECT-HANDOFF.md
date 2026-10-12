@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — CI verification and auth smoke timeout follow-up
+
+Full UI #38190178638 SUCCESS and Pages #38190178527 SUCCESS on `c2079a4`. The prior sporadic `Not authenticated` failure has not been reproduced in this completed run; do not mark it definitively fixed. Read-only review of `scripts/smoke-full-ui.cjs` found the initial `page.waitForFunction` passes `{timeout:15000}` as its second argument rather than its third Playwright options argument; targeted correction was attempted but the GitHub write action was blocked, so no test-source change was applied. Next: correct this exact call to `waitForFunction(predicate, null, {timeout:15000})`, then run CI and check for auth bootstrap errors; preserve all strict pageerror assertions and account data. Security deferral remains.
+
 ## Latest CI diagnostic continuation — 2026-10-12
 
 Main `8ce81e8`: Pages #38189897567 SUCCESS, Full UI #38189897407 FAILED at `scripts/smoke-full-ui.cjs:67` due to browser `Not authenticated` before the Daily mobile conflict test ran. Previous Full UI #38189889377 SUCCESS. CI workflow now runs all scripts despite individual script failures, aggregates failures and still exits nonzero: commit `060d41b5a1f0b51ca5dd5b65153fe5addedaa0e2`. **New CI pending / NOT VERIFIED.** Next inspect new run for reproducibility and review auth bootstrap timing; do not hide errors. No application runtime, Supabase, or user record edits. Security checkpoint deferred; CAS remains preview/proposal only.
