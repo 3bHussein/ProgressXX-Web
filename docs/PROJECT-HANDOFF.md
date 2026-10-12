@@ -1,3 +1,9 @@
+## 2026-10-12 — Production sync safety classifier
+
+Inspected actual root `index.html` production `flush()`: it still calls unconditional `user_app_snapshots?on_conflict=user_id` POST with entire `values` snapshot. Added `tests/live-sync-release-classifier.cjs` (99f940ad) and Full UI workflow registration (0a7a68b1). This test classifies the known destructive cross-device last-writer-wins risk; when unsafe behavior is present the test succeeds AS A CLASSIFIER and prints RELEASE BLOCKED, not a fix or authorization to sell. If the implementation changes it fails until a fresh audit. Local Node and fresh CI/Pages NOT VERIFIED. No production `index.html`, database, migrations or user records modified. Commercial readiness estimate 55–65% unchanged; P0 synchronization remains OPEN. Deferred paid security remains nonblocking for development but blocks commercial certification.
+
+Exact next step: verify newest Full UI run; create a versioned CAS implementation plan and offline review workflow for a separately approved staging release, then test real per-account multi-device behavior before production enablement.
+
 ## 2026-10-12 — Isolated conflict boundary regression
 
 Added test-only helper `scripts/conflict-boundary.cjs` (c7551eb7) and contract `tests/conflict-boundary-contract.cjs` (fcc6d31d), registered in Full UI workflow (58e0d4bc). The standalone asynchronous handler retains a pending draft upon hypothetical HTTP 409/412, prevents replacing a prior pending review, enforces account-specific persistence and refuses missing latest server revision. Not imported into root production `index.html`. No production database or actual user data changes. New CI and Pages: NOT VERIFIED; no local test execution claimed. Prior confirmed CI from earlier handoff is not proof for this batch. Commercial readiness estimate 55–65% unchanged; live atomic server CAS and two-account security remain P0 OPEN, paid security checkpoint deferred as instructed.
