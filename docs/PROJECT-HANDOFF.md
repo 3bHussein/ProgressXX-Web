@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Full app browser mock 503 and reload recovery
+
+Previous Full UI #38215939686 and Pages #38215940016 SUCCESS. Added `tests/full-app-sync-503-reload-browser.cjs` (`b4f06de`) and CI (`e6ebae2`). Uses full root app with fake Supabase auth/REST to exercise failed write, pending reload, and successful manual retry. Fresh CI NOT VERIFIED. Does not certify real multi-device conflict or Supabase security; P0 sync OPEN, commercial estimate unchanged. Paid-security checkpoint deferred/nonblocking. Next review Actions and fix regression if any.
+
 ## 2026-10-12 — Chromium snapshot/mirror partial failure regression
 
 Last Full UI #38215604331 and Pages #38215604219 SUCCESS. Extended Chromium production `flush()` mock test `4a51dc4` to assert snapshot upload success + workout mirror failure retains pending edits and unacknowledged revision; new CI NOT VERIFIED. No production/data modifications. Cross-device sync P0 OPEN; readiness 55–65% baseline unchanged. Paid security exception continues. Next inspect Actions and then full app browser-route integration.
