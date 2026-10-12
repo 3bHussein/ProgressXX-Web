@@ -29,11 +29,22 @@ assert.ok(match,'Production flush helper not found');
     mirrorWorkoutScheduleToTable:async()=>{},tell:()=>{},scheduleCloudSync:()=>{}};
    const inFlight=new Function('env','with(env){'+source+';return flush}')(concurrent);
    const running=inFlight();concurrent.revision=2;concurrent.values.sample='new';unlock();await running;
-   return {failed,restored,latest:{saved:concurrent.savedRevision,revision:concurrent.revision,cleared:events.includes('unexpected-clear')}};
+   // Snapshot succeeds, but workout schedule mirror fails: no acknowledgment allowed.
+   const mirrorEvents=[];
+   const mirrorEnv={...env,revision:1,savedRevision:0,uploading:false,
+    cloud:async()=>mirrorEvents.push('snapshot-post'),
+    mirrorWorkoutScheduleToTable:async()=>{mirrorEvents.push('mirror-attempt');throw Error('mock mirror 503')},
+    clearPending:()=>mirrorEvents.push('incorrect-clear'),
+    tell:m=>mirrorEvents.push(String(m)),scheduleCloudSync:()=>mirrorEvents.push('retry-scheduled')};
+   const mirrorFlush=new Function('env','with(env){'+source+';return flush}')(mirrorEnv);
+   await mirrorFlush();
+   const mirrorFailure={saved:mirrorEnv.savedRevision,cleared:mirrorEvents.includes('incorrect-clear'),posted:mirrorEvents.includes('snapshot-post'),reported:mirrorEvents.some(x=>x.includes('mock mirror 503'))};
+   return {failed,restored,latest:{saved:concurrent.savedRevision,revision:concurrent.revision,cleared:events.includes('unexpected-clear')},mirrorFailure};
   },match[0]);
   assert.deepEqual(outcome.failed,{saved:0,cleared:false,reported:true});
   assert.deepEqual(outcome.restored,{saved:1,clears:1});
   assert.deepEqual(outcome.latest,{saved:1,revision:2,cleared:false});
+  assert.deepEqual(outcome.mirrorFailure,{saved:0,cleared:false,posted:true,reported:true});
   console.log('PASS: Chromium executes actual flush with mocked failed POST, recovery and concurrent edit retention');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exitCode=1});
