@@ -98,6 +98,10 @@ Production activation fix `ca6bc5e`: restored pending revision remains unacknowl
 
 Test `tests/two-context-pending-recovery-browser.cjs` (`59f83c15`) now runs in CI (`8fc113c2`), simulating 503 on A, automatic pending replay after A reload, and B remote hydration after B reload. New CI unverified; cross-device stale-write conflict P0 still open, readiness 55–65% unchanged, paid-security exception unchanged.
 
+## 2026-10-12 — Pending cleanup and storage isolation browser QA
+
+Two-session mocked recovery previous CI green; added pending-clear and browser-local isolation assertions (`6ff3fd8`). New CI pending, no production changes; P0 sync conflict remains OPEN, commercial progress estimate unchanged and paid-security checkpoint deferred.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
