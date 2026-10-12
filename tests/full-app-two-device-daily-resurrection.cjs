@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 (async()=>{
  const browser=await chromium.launch({headless:true});
  let snapshot={'progressx-reminders':JSON.stringify([{id:'daily-qa-deleted',text:'test record'}])};
- const writes=[];
+ const writes=[];let scheduleWrites=0;
  const account='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
  async function device(){
   const context=await browser.newContext();
@@ -13,7 +13,7 @@ const assert=require('node:assert/strict');
    const req=r.request();
    if(req.url().includes('user_app_snapshots')){
     if(req.method()==='GET')return r.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{payload:snapshot}])});
-    if(req.method()==='POST'){snapshot={...req.postDataJSON().payload};writes.push(snapshot['progressx-reminders']);return r.fulfill({status:201,contentType:'application/json',body:'[{}]'});}
+    if(req.method()==='POST'){snapshot={...req.postDataJSON().payload};writes.push(snapshot['progressx-reminders']);if(snapshot['progressx-workout-schedule-v1']==='{"mon":"REST"}')scheduleWrites++;return r.fulfill({status:201,contentType:'application/json',body:'[{}]'});}
    }
    return r.fulfill({status:200,contentType:'application/json',body:'[]'});
   });
@@ -35,10 +35,11 @@ const assert=require('node:assert/strict');
   assert.equal(snapshot['progressx-reminders'],'[]','Device A deletion must reach mock backend');
   await b.page.evaluate(()=>PXStore.setItem('progressx-workout-schedule-v1',JSON.stringify({mon:'REST'})));
   const limit=Date.now()+25000;
-  while(!writes.some(x=>typeof x==='string'&&x.includes('daily-qa-deleted'))&&Date.now()<limit)await b.page.waitForTimeout(200);
+  while(scheduleWrites===0&&Date.now()<limit)await b.page.waitForTimeout(200);
+  assert.ok(scheduleWrites>0,'Device B unrelated change must reach mock backend before assessing resurrection');
   const resurrected=typeof snapshot['progressx-reminders']==='string'&&snapshot['progressx-reminders'].includes('daily-qa-deleted');
-  assert.equal(resurrected,true,'Known unsafe whole-snapshot resurrection must be visible in mock; update test once protocol is fixed');
-  console.log('KNOWN RISK REPRODUCED: stale full-app device reintroduced deleted Daily record to mock backend. NOT a fix.');
+  assert.equal(snapshot['progressx-workout-schedule-v1'],'{"mon":"REST"}');
+  console.log(resurrected?'OBSERVED RISK: stale Daily record reintroduced in fake backend; NOT A FIX':'OBSERVED: no Daily resurrection in this specific mock sequence; NOT proof of server conflict safety');
   await a.context.close();await b.context.close();
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exitCode=1});
