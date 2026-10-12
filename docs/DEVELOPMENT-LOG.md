@@ -47,6 +47,14 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+### 2026-10-12 — Chromium-executed production flush with synthetic transport
+
+- Verified preceding Full UI [#38215286386](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38215286386) and Pages [#38215285902](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38215285902) both SUCCESS.
+- Added `tests/production-flush-chromium-contract.cjs` (`83b530c96f03678ebbe243259f5634a03f591577`) executing the actual extracted `flush()` body inside Chromium with isolated synthetic dependencies. Verifies failed mock POST preserves pending revision, successful retry acknowledges once, and newer edit made during an in-flight POST stays unacknowledged.
+- Added test to mandatory Full UI CI (`f21cbfd9d0480840d2d3ad7bf19b1b641da0a153`). New CI and deployment NOT VERIFIED as logged. Does not touch real account, production database, snapshot protocol or user data.
+- Commercial readiness remains rough 55–65%, sync P0 OPEN. Paid-security checkpoint continues deferred but not blocking development. Mock transport cannot establish production cross-device integrity, offline durability or authorization.
+- **Next:** inspect fresh CI and correct test issues, then add Chromium mock mirror-failure after snapshot acknowledgment, and progress toward browser-route mocks of complete signed-in app.
+
 ### 2026-10-12 — Production flush mirror-failure and in-flight edit regression
 
 - Verified previous Full UI [#38214690902](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38214690902) SUCCESS and Pages [#38214690390](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38214690390) SUCCESS.
