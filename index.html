@@ -7945,6 +7945,7 @@ function stopAlarmSound(){
   releaseProgressXAlarmFocus();
 }
 
+let alarmPreviousFocus=null;
 function showAlarmPopup(reminder){
   activeAlarmReminder=reminder||null;
   if(!reminder)return;
@@ -7952,11 +7953,15 @@ function showAlarmPopup(reminder){
   $('alarmTitle').textContent=reminder.name||'Daily reminder';
   $('alarmAmount').textContent=reminder.amount||'';
   $('alarmTime').textContent=`Scheduled for ${reminder.time||'today'}`;
+  if(!o.classList.contains('show'))alarmPreviousFocus=document.activeElement;
   o.classList.add('show');
+  o.querySelector('.alarmActions button, button')?.focus();
   startAlarmSound();
 }
 function closeAlarmPopup(){
   $('alarmOverlay')?.classList.remove('show');
+  if(alarmPreviousFocus?.isConnected)alarmPreviousFocus.focus();
+  alarmPreviousFocus=null;
   stopAlarmSound();
 }
 function completeActiveAlarm(){
