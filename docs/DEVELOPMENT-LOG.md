@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Correct Playwright auth gate timeout option
+
+- Updated `scripts/smoke-full-ui.cjs` in commit [`9e05d56`](https://github.com/3bHussein/ProgressXX-Web/commit/9e05d56ff3ffcf1e9ae8cbc9d66598da0e17b7af): corrected the first auth-gate `page.waitForFunction` call to pass `null` for its argument and `{timeout:15000}` as the third, options argument. No assertions removed, no fake login pass, no app runtime change.
+- Prior baseline Full UI [#38190178638](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190178638) and Pages [#38190178527](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190178527) SUCCESS. New CI outcome after test edit: **NOT VERIFIED** at commit time.
+- Files: test source and tracking documents. Data migration impact: none; no Supabase, production `index.html`, storage, real account or personal user records touched.
+- Risk: intermittent browser `Not authenticated` still needs repeat verification; concurrent Daily snapshot conflicts remain unprotected in production; `SECURITY-DEFERRED-2026-10-12` remains deferred.
+- **Exact next step:** inspect Full UI run for `9e05d56` and latest docs commit. If failures occur, inspect job logs and diagnose without relaxing assertions; then continue non-destructive mock login robustness testing.
+
 ### 2026-10-12 — Green Full UI verification; auth smoke timeout fix blocked
 
 - Full UI [#38190178638](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190178638) SUCCESS and Pages [#38190178527](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190178527) SUCCESS for main `c2079a4`. The previous intermittent `Not authenticated` browser error was not reproduced in this run; resolution is NOT VERIFIED.
