@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Trace intermittent Not authenticated during Full UI
+
+Full UI #38223040123 failed at startup smoke with browser pageerror `Not authenticated`; Pages #38223039968 passed. Added full browser stack reporting to smoke test `c8bfa2d` to locate exact unauthorized startup call before any production change. New CI unverified. P0 auth race and multi-device sync open; estimate 55–65% unchanged; paid security deferred.
+
 ## 2026-10-12 — Full-app two-account synthetic isolation
 
 Previous Full UI #38222291951 and Pages #38222292109 succeeded. New browser test `tests/full-app-two-account-isolation-browser.cjs` (`5df87a69`) plus workflow `29b5d27e`, fake account A/B login, independent snapshot writes and reload. Fresh CI NOT VERIFIED; fake auth does not validate real RLS. Production untouched; P0 security/sync open, estimate 55–65% unchanged; paid security deferred/nonblocking.
