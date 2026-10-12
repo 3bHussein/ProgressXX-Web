@@ -59,3 +59,9 @@
 For each completed item record commit SHA, exact test/device/account fixture, UTC timestamp, GitHub Actions URL/result, backup restore evidence, production deployment SHA and rollback path. Do not put customer exports, credentials, health records or personal workout logs in this public repository.
 
 Commercial readiness percentage **55–65%** is the historical subjective estimate, not a measured pass rate; do not increment it just because this document exists.
+
+## 2026-10-12 — Confirmed production root synchronization finding
+
+Source review of root `index.html` (blob `a9c580fbbda53863d25fd14d7dd9238ab58cf68c`) confirms `async function flush()` still performs an unconditional POST to `user_app_snapshots?on_conflict=user_id`, sending `{user_id:account,payload:{...values},updated_at:new Date().toISOString()}`. This replaces the full snapshot without an atomic server-side expected-revision predicate. Successful browser/unit tests cannot rule out a stale device restoring a deleted Food/Daily entry or erasing an unrelated device's update. **SYNC-01 P0 is CONFIRMED OPEN, NOT RESOLVED.**
+
+**Required safe fix:** verified restorable backup; isolated staging; owner-account RLS validation; server-side atomic revision compare-and-swap function that rejects stale revisions and returns authoritative snapshot; client changes retaining local drafts and offering explicit conflict review; two-device deletion/edit regression; old-client version compatibility; only then controlled production cutover with rollback. A client-side read-before-write check is NOT sufficient because two devices can pass the check simultaneously. No production DB or runtime mutation authorized/performed in this review.
