@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Cross-device delete resurrection diagnosed, not fixed
+
+Prior Full UI #38211091071 and Pages #38211091264 successful. Added synthetic `tests/cross-device-delete-resurrection-regression.cjs` (`72be687`) and workflow (`008dc95`) to demonstrate known last-writer-wins stale snapshot may restore deleted Daily, Workout, Weight and Food entries. CI on new code not yet verified. Do NOT present this expected-risk test as a fix. No user data or database changes. Commercial readiness and estimates unchanged; continue non-paid work while paid security deferred. Next mock safe resolution strategy, preserve history.
+
 ## 2026-10-12 — Paid security exception is non-blocking for development
 
 Owner explicitly says do not pause or delay other ProgressX work for paid staging/security costs. Keep `SECURITY-DEFERRED-2026-10-12` deferred (no paid resources, migrations, or unauthorized security testing), but continue free mock QA, sync tests, product improvements and documentation without waiting for budget. P0 security must STILL pass before actual commercial sale or external-user onboarding. Existing 55–65% and timeline estimates unchanged. Full UI #38210413129 and Pages #38210413145 succeeded; browser auth wrong-account regression added at `1851cb3`, fresh CI unverified. Next check new CI and continue free sync/conflict work.
