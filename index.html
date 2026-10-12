@@ -9319,7 +9319,7 @@ window.__legacyBoot=init;
   </div>
 </div>
 
-<div id="pxCommercialGate"><div class="pxAuthBox"><h2>⚡ ProgressXX</h2><p>Full original experience · Private Supabase account</p><form id="pxLogin"><input id="pxEmail" type="email" autocomplete="username" required placeholder="Email"><input id="pxPassword" type="password" autocomplete="current-password" required placeholder="Password"><div class="pxAuthActions"><button id="pxSignin" type="submit">Sign in</button><button type="button" class="pxSoft" id="pxSignup">Create account</button></div></form><p id="pxLoginMessage" role="status">Sign in to load your private fitness workspace.</p></div></div><div id="pxSyncPill" hidden role="status">Cloud ready</div><div id="pxAccountTools" hidden><button type="button" id="pxSyncNow">↻ Sync now</button><button type="button" id="pxLogout">Sign out</button></div>
+<div id="pxCommercialGate"><div class="pxAuthBox"><h2>⚡ ProgressXX</h2><p>Full original experience · Private Supabase account</p><form id="pxLogin"><input id="pxEmail" type="email" autocomplete="username" required placeholder="Email"><input id="pxPassword" type="password" autocomplete="current-password" required placeholder="Password"><div class="pxAuthActions"><button id="pxSignin" type="submit">Sign in</button><button type="button" class="pxSoft" id="pxSignup">Create account</button></div></form><p id="pxLoginMessage" role="status">Sign in to load your private fitness workspace.</p></div></div><div id="pxSyncPill" hidden role="status">Cloud ready</div><div id="pxAccountTools" hidden><button type="button" id="pxSyncNow">↻ Sync now</button><button type="button" id="pxExportPending" hidden>↓ Save pending edits</button><button type="button" id="pxLogout">Sign out</button></div>
 <script id="pxCommercialBridge">
 (()=>{
  'use strict';
@@ -9516,7 +9516,22 @@ window.__legacyBoot=init;
   if(!response.ok){let error;try{error=await response.json()}catch{}throw Error(error?.message||'Sync error '+response.status)}
   return response.status===204?null:response.json();
  }
- function tell(message,problem=false){pill.textContent=message;pill.style.color=problem?'#fecaca':'#d8faf1';pill.hidden=false;pill.title='Supabase account snapshot · '+(account||'not signed in')}
+ function tell(message,problem=false){pill.textContent=message;pill.style.color=problem?'#fecaca':'#d8faf1';pill.hidden=false;pill.title='Supabase account snapshot · '+(account||'not signed in');const exportButton=document.getElementById('pxExportPending');if(exportButton)exportButton.hidden=!syncConflictHold}
+ document.getElementById('pxExportPending')?.addEventListener('click',()=>{
+  if(!account||!syncConflictHold)return;
+  const raw=browserStorage.getItem(pendingKey(account));
+  if(!raw){tell('⚠ No pending edits found for export',true);return;}
+  try{
+   const record=JSON.parse(raw);
+   if(!record||!record.payload||typeof record.payload!=='object'||Array.isArray(record.payload))throw Error('Invalid pending draft');
+   const file=new Blob([JSON.stringify({format:'progressx-pending-draft-v1',exportedAt:new Date().toISOString(),record},null,2)],{type:'application/json'});
+   const url=URL.createObjectURL(file),link=document.createElement('a');
+   link.href=url;link.download='progressx-pending-draft-'+new Date().toISOString().slice(0,10)+'.json';
+   document.body.appendChild(link);link.click();link.remove();
+   setTimeout(()=>URL.revokeObjectURL(url),1000);
+   tell('✓ Pending edits exported locally. Sync remains paused until conflict is reviewed.',true);
+  }catch(e){tell('⚠ Cannot export pending edits: '+e.message,true)}
+ });
  const WORKOUT_SOURCE_PREFIX='pxlog:';
  const workoutSourceId=id=>WORKOUT_SOURCE_PREFIX+String(id||'');
  const workoutIdFromSource=id=>String(id||'').startsWith(WORKOUT_SOURCE_PREFIX)?String(id).slice(WORKOUT_SOURCE_PREFIX.length):String(id);
