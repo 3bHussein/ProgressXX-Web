@@ -10,7 +10,7 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
   await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});
   await page.fill('#pxEmail','alarm@example.test');await page.fill('#pxPassword','mock-only');await page.click('#pxSignin');
   await page.waitForFunction(()=>window.__pxCommercialReady?.()===true,null,{timeout:20000});
-  await page.evaluate(()=>{document.getElementById('pxSyncNow').focus();showAlarmPopup({id:'__test__',name:'Keyboard QA',time:'10:00',amount:'Only mock'});stopAlarmSound()});
+  await page.evaluate(()=>{const button=document.getElementById('pxSyncNow');if(button.hidden||button.closest('[hidden]'))throw Error('Prior focus button is hidden');button.focus();if(document.activeElement!==button)throw Error('Prior focus setup failed');showAlarmPopup({id:'__test__',name:'Keyboard QA',time:'10:00',amount:'Only mock'});stopAlarmSound()});
   assert.equal(await page.locator('#alarmOverlay').getAttribute('role'),'dialog');
   assert.equal(await page.locator('#alarmOverlay').getAttribute('aria-modal'),'true');
   assert.equal(await page.evaluate(()=>document.activeElement.textContent.trim()),'✓ Done');
