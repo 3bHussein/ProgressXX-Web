@@ -22,6 +22,14 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Mock account session restoration after reload
+
+- Verified [Full UI #38190835357](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190835357) SUCCESS and [Pages #38190835042](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190835042) SUCCESS after the previous mock rejected-login/retry test.
+- Extended `tests/auth-retry-browser.cjs`, commit [`eeb7747`](https://github.com/3bHussein/ProgressXX-Web/commit/eeb774740e5d1641a66df79dc6d961a04af93621), to reload the same mocked browser session after retry login; assert authenticated gate closes, app is ready, mock account ID stays identical, password-token request not repeated, and there are no uncaught browser errors. No test assertions removed.
+- Fresh Full UI CI and Pages deployment **NOT VERIFIED** at commit time. Test is synthetic and cannot replace real-session expiry/refresh or two-user isolation testing.
+- Data migration impact: none; production `index.html`, Supabase grants, existing Food/Daily/Workout/Weight records and browser user data untouched. CAS unapplied, `SECURITY-DEFERRED-2026-10-12` unchanged.
+- **Exact next step:** check latest Actions for this new test, diagnose any failures without relaxing checks; then add isolated expired-session/recovery QA and document real-device gaps.
+
 ### 2026-10-12 — Browser mock authentication rejection and successful retry
 
 - Previous Full UI [#38190701909](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190701909) SUCCESS; latest Pages [#38190722189](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190722189) SUCCESS. Remaining newer CI run pending at inspection.
