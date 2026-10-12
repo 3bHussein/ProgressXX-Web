@@ -98,4 +98,6 @@ To resume: `Resume SECURITY-DEFERRED-2026-10-12` or `ارجع لاختبارات
 
 | 2026-10-12 | Full UI failure triage and non-short-circuit CI reporting | [060d41b](https://github.com/3bHussein/ProgressXX-Web/commit/060d41b5a1f0b51ca5dd5b65153fe5addedaa0e2) | [#38189897407](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38189897407) failed at mock auth; updated workflow result NOT VERIFIED | Not required for CI-only change | Aggregates all test failures without weakening checks; auth intermittent error unresolved, no data changes |
 
+| 2026-10-12 | Fix Chromium mock auth wait options | [9e05d56](https://github.com/3bHussein/ProgressXX-Web/commit/9e05d56ff3ffcf1e9ae8cbc9d66598da0e17b7af) | New Full UI run NOT VERIFIED; prior [#38190178638](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38190178638) passed | Not required: test-only change | Correct 15s auth wait; no production data or runtime change; intermittent auth still under observation |
+
 Keep this table honest; a green CI run alone is not proof that the product is production-ready.
