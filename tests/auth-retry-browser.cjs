@@ -5,7 +5,7 @@ const assert=require('node:assert/strict');
  try{
   const page=await browser.newPage({viewport:{width:390,height:844}});
   const errors=[];let attempts=0;let writes=0;let refreshAttempts=0;let failRefresh=false;
-  page.on('pageerror',error=>errors.push(error.message));
+  page.on('pageerror',error=>errors.push(error.stack||error.message));
   await page.route('**/auth/v1/**',async route=>{
    if(route.request().url().includes('token?grant_type=refresh_token')){
     refreshAttempts++;
