@@ -22,6 +22,15 @@ This is the **append-only** chronological log of completed work, investigations,
 - **Repository:** https://github.com/3bHussein/ProgressXX-Web
 
 ## Entries (newest first)
+### 2026-10-12 — Daily list mismatch: preserve saved empty lists and add regression
+
+- Real phone/desktop feedback: Daily reminder lists missing/different, while Workout Log and Weight match. Prior commit `65685b1` rehydrates account-specific reminder global before boot.
+- Fixed `loadDailyReminders()` to treat an explicitly saved empty `[]` as user-controlled data, not repopulate default reminders, in root `index.html` commit `fdedf5537e790e84f9bbe01acc9022164bf86f40`.
+- Added regression verifying empty, populated, and missing lists plus post-auth in-memory reload in `tests/daily-history-supabase-hydration.cjs` commit `27b488d90739cd7fd8ee8999cbb59f0a562a9b41`.
+- Previous Full UI #38186516050 FAILED before Daily assertion while waiting for Food Diary preload (timeout, smoke-full-ui.cjs:60); Pages #38186515911 SUCCESS. Fresh CI pending. Do not claim user's Daily mismatch solved until a phone/desktop retest.
+- No user records or Supabase production database changed; security testing remains deferred (`SECURITY-DEFERRED-2026-10-12`).
+
+
 ### 2026-10-12 — Real-device Daily mismatch, account reminder rehydration fix
 
 - User verified Workout Log and Weight Check-ins match across phone/desktop, but Daily is **different or missing**; field/date unknown.
