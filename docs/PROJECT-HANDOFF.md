@@ -1,8 +1,8 @@
 **Active phase — 2026-10-13 Cairo:** Phase 3: mobile, frontend responsiveness and accessibility. Owner explicitly paused database experiments (DATABASE-EXPERIMENTS-PAUSED-2026-10-13). Do not run PostgreSQL/Supabase experiments, staging or backup steps until a new explicit request. PostgreSQL CI is manual-only with default-false resume gate; ordinary UI changes must not start it. Existing app data/sync behavior remains enabled.
 
-**Current batch:** reduced-motion scroll/UI styles, anatomy keyboard/labelled zoom/focus trap/restore and Android back callback, lazy asynchronous image decoding. 61 local Node/Chromium/static checks PASS using mocks; new UI test asserts no Supabase requests. CI/deployment pending. Root index.html only. Milestone 2 is paused/incomplete; commercial safety gates are not waived.
+**Current batch VERIFIED:** [PR #18](https://github.com/3bHussein/ProgressXX-Web/pull/18) merged as e772ab3. Reduced-motion scroll/UI styles, anatomy keyboard/labelled zoom/focus trap/restore and Android back callback, lazy asynchronous image decoding. 61 local checks and all seven PR UI/client-mock checks PASS. Main Full UI #38309482027, Fast #38309482002, Deploy #38309481961 and Pages #38309481986 SUCCESS; root index.html byte-exact verified (SHA-256 dea490dc4038b1a6bd0d12f5d027333c29844c26f0c243bd1eeebfb03a11fb9f). No PostgreSQL workflow ran, no SQL/Supabase experiments, no production data/schema/grant/RLS/migration changes. Real Android/other engines/performance benchmarks remain unverified. Milestone 2 paused/incomplete; commercial gates stay open.
 
-**Next authorized work:** Verify UI-only CI/deployment and continue frontend/mobile/PWA/accessibility/performance checks using local fixtures and mocked requests. Real Android, other browser engines and measured performance remain unverified. Do not resume old database plans automatically.
+**Next authorized work:** Continue frontend/mobile/PWA/accessibility/performance checks using local fixtures and mocked requests. Real Android, other browser engines and measured performance remain unverified. Do not resume old database plans automatically.
 
 ## Current Work task state — 2026-10-12
 
