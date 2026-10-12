@@ -102,6 +102,10 @@ Test `tests/two-context-pending-recovery-browser.cjs` (`59f83c15`) now runs in C
 
 Two-session mocked recovery previous CI green; added pending-clear and browser-local isolation assertions (`6ff3fd8`). New CI pending, no production changes; P0 sync conflict remains OPEN, commercial progress estimate unchanged and paid-security checkpoint deferred.
 
+## 2026-10-12 — Two-account local pending isolation mock
+
+Added `tests/two-account-pending-isolation-contract.cjs` (`e3ee0e5`) to CI (`bdcbe74`); fake 403 is not production RLS authorization. Previous CI #38221164555 green, new run unverified. No DB changes. Security and cross-device sync P0 remain OPEN; commercial estimate unchanged.
+
 ## Owner exception: paid security spending must not stall development (2026-10-12)
 
 **Development may continue without budget approval:** free synthetic/mock security and sync tests, app correctness, CI, mobile QA, documentation and commercial prep. **Paid Supabase staging/privilege-migration testing remains deferred** until owner explicitly resumes it; no paid resources or permission modifications. This exception is NOT security certification and does NOT remove the P0 requirement before enrolling outside users or accepting paying customers. Update the Development Log after each completed part, including evidence and readiness-tracker effects. Percentage and timelines currently unchanged.
