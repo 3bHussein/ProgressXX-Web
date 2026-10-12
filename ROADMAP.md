@@ -1,3 +1,8 @@
+
+## 2026-10-12 — Anatomy UI smoke overlay repair
+
+Full UI #38223565793 failed because the Daily reminder overlay intercepted the Anatomy Coverage tab click. Updated smoke test `e4767f4` dismisses the alarm using the normal app action before anatomy pointer checks. Fresh CI unverified. Production code/data unchanged; P0 sync/security still open, readiness 55–65% unchanged, paid security stage deferred.
+
 # ProgressX Product Roadmap
 
 **Baseline:** 2026-10-11 · **Owner repo:** 3bHussein/ProgressXX-Web · **Target:** https://3bhussein.github.io/ProgressXX-Web/
