@@ -52,6 +52,11 @@
 ## Latest smoke test timeout fix — 2026-10-12
 ## Concurrent edit safety review (2026-10-12)
 ## Synthetic Daily concurrency regression — 2026-10-12
+## Draft snapshot conflict guard, unapplied (2026-10-12)
+
+Prior full CI #38188634435 and Pages #38188634220 SUCCESS. Added **NOT APPLIED** server CAS SQL proposal at `supabase/proposals/20261012_snapshot_compare_and_swap_NOT_APPLIED.sql`; owner-scoped row lock and expected-payload check, rejects missing row, not deployed. Added static guard test `tests/snapshot-cas-proposal-safety.cjs` to full smoke. Production client STILL uses whole-snapshot upsert; no concurrent-edit safety claim. Staging/RLS review deferred, no production database edits.
+
+
 
 Full UI #38188317333 and Pages #38188317315 previously succeeded. New synthetic test `tests/daily-concurrent-conflict-regression.cjs` reproduces lost writes from two device copies and defines a three-way conflict predicate; wired in full UI workflow, commits `c96d0c3` + `84f7b77d`. **Not yet protected in production:** safe resolution requires server-side atomic version checking, not only client preflight. No production data/schema edits; security paid work remains deferred.
 
