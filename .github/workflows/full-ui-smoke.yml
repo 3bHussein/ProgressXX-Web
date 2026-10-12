@@ -43,6 +43,7 @@ jobs:
             tests/snapshot-cas-transition-contract.cjs \
             tests/cas-delete-unrelated-edit-acceptance.cjs \
             tests/cas-concurrency-matrix.cjs \
+            tests/snapshot-conflict-guard-contract.cjs \
             tests/conflict-review-prototype-browser.cjs \
             tests/full-app-two-account-isolation-browser.cjs \
             tests/offline-upload-failure-reload-browser.cjs \
