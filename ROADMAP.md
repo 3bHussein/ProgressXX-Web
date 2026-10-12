@@ -106,4 +106,6 @@ To resume: `Resume SECURITY-DEFERRED-2026-10-12` or `ارجع لاختبارات
 
 | 2026-10-12 | Mock sign-in rejected then successful retry | [04f96b9](https://github.com/3bHussein/ProgressXX-Web/commit/04f96b99585bbf4590ca94621fc7cf9d75cbcaf9), [a6e6dad](https://github.com/3bHussein/ProgressXX-Web/commit/a6e6dad73ac322c19013471b536be44a051e7725) | Fresh CI NOT VERIFIED | No real-account test | Synthetic auth gate, retry, no DB writes and no JS errors; real auth remains pending |
 
+| 2026-10-12 | Mock login session restore after reload | [eeb7747](https://github.com/3bHussein/ProgressXX-Web/commit/eeb774740e5d1641a66df79dc6d961a04af93621) | Prior Full UI #38190835357 SUCCESS; new CI NOT VERIFIED | Synthetic only | Assert same-account restore without duplicate password request; real session expiration unverified |
+
 Keep this table honest; a green CI run alone is not proof that the product is production-ready.
