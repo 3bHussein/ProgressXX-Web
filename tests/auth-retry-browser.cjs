@@ -33,7 +33,16 @@ const assert=require('node:assert/strict');
   assert.equal(attempts,2,'Expected exactly failed then successful mock sign-in');
   assert.equal(await page.evaluate(()=>window.__pxCommercialReady?.()),true,'Retry did not activate workspace');
   assert.deepEqual(errors,[],'Unhandled browser errors on auth retry');
-  console.log('PASS: rejected mock login keeps gate closed to app and retry activates account');
+  // A reload in this browser context must restore the same synthetic account.
+  const originalAccount=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('pxx_commercial_auth_preview_v1')||'null')?.user?.id);
+  assert.equal(originalAccount,'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','Expected account session before reload');
+  await page.reload({waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true&&window.__pxCommercialReady?.()===true,null,{timeout:20000});
+  const restoredAccount=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('pxx_commercial_auth_preview_v1')||'null')?.user?.id);
+  assert.equal(restoredAccount,originalAccount,'Reload must not change account identity');
+  assert.equal(attempts,2,'Reload should not silently re-submit password credentials');
+  assert.deepEqual(errors,[],'Unhandled browser errors during session restore');
+  console.log('PASS: rejected mock login, successful retry and same-account reload session restoration');
   await page.close();
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exitCode=1});
