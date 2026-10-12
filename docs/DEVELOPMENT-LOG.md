@@ -47,6 +47,10 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-12 — Correct Daily keyboard test focus origin
+
+Full UI #38227092177 FAILED because the test selected hidden `#pxSyncNow` as previous focus; Pages #38227091994 SUCCESS. Updated `tests/full-app-daily-alarm-keyboard-browser.cjs` (`174eaa9d`) to select an actually visible, enabled button outside the Daily overlay and verify initial focus before modal opens and focus returns on Escape. No production or Supabase changes. Fresh CI not yet verified. Real multi-device overwrite P0 remains OPEN; commercial estimate 55–65% unchanged; deferred paid security remains nonblocking.
+
 ## 2026-10-12 — Full-app Daily focus return CI diagnosis
 
 Full UI #38226647401 FAILED: full-app Daily browser test expected focus to return to `#pxSyncNow` after Escape but saw element with empty id; Pages #38226647235 SUCCESS. Updated browser test `d20b934c` to assert the expected previous control is actually focusable/focused before opening modal; this distinguishes invalid test setup from actual focus restore issue. Fresh CI unverified. No production or Supabase data changes; P0 conflict/RLS open and commercial readiness 55–65% unchanged, security spending deferred/nonblocking.
