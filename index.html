@@ -9327,6 +9327,8 @@ window.__legacyBoot=init;
  const gate=document.getElementById('pxCommercialGate'),status=document.getElementById('pxLoginMessage'),pill=document.getElementById('pxSyncPill');
  const browserStorage=window.localStorage;
  let auth=null,account=null,values={},revision=0,savedRevision=0,timer=null,uploading=false,ready=false;
+ let snapshotBaseline=null,syncConflictHold=false;
+ const snapshotDigest=payload=>JSON.stringify(Object.entries(payload||{}).sort(([a],[b])=>a.localeCompare(b)));
  const storagePrefix=id=>'pxx:full:'+id+':';
  const pendingKey=id=>'pxx:pending:'+id;
  function markPending(){if(account)browserStorage.setItem(pendingKey(account),JSON.stringify({payload:{...values},at:Date.now()}))}
@@ -9623,17 +9625,26 @@ window.__legacyBoot=init;
   }
  }
  let syncRetryFailures=0;
- function scheduleCloudSync(){if(!ready)return;clearTimeout(timer);timer=setTimeout(()=>{void flush()},syncRetryFailures?Math.min(30000,1200*Math.pow(2,Math.min(syncRetryFailures,5))):1200)}
+ function scheduleCloudSync(){if(!ready||syncConflictHold)return;clearTimeout(timer);timer=setTimeout(()=>{void flush()},syncRetryFailures?Math.min(30000,1200*Math.pow(2,Math.min(syncRetryFailures,5))):1200)}
  async function flush(){
-  if(!ready||uploading||!navigator.onLine||revision===savedRevision)return;
+  if(!ready||uploading||syncConflictHold||!navigator.onLine||revision===savedRevision)return;
   uploading=true;const writing=revision;tell('↻ Syncing to Supabase…');
   try{
-   // Single-account snapshot; originals remain byte-exact strings (including raw performance).
-   await cloud('user_app_snapshots?on_conflict=user_id','POST',{user_id:account,payload:{...values},updated_at:new Date().toISOString()});
+   // Safety preflight is NOT atomic CAS; it only catches already-visible remote changes.
+   const current=await cloud('user_app_snapshots?select=payload&user_id=eq.'+encodeURIComponent(account)+'&limit=1');
+   if(!Array.isArray(current))throw Error('Cannot verify latest cloud snapshot');
+   if(snapshotBaseline!==snapshotDigest(current[0]?.payload||{})){
+    syncConflictHold=true;markPending();
+    tell('⚠ Sync paused: another device changed your data. Local changes are preserved; review before syncing.',true);
+    return;
+   }
+   const submitted={...values};
+   await cloud('user_app_snapshots?on_conflict=user_id','POST',{user_id:account,payload:submitted,updated_at:new Date().toISOString()});
+   snapshotBaseline=snapshotDigest(submitted);
    await mirrorWorkoutScheduleToTable({...values});
    savedRevision=writing;syncRetryFailures=0;if(revision===writing){clearPending();tell('✓ Synced to Supabase · '+new Date().toLocaleTimeString())}else tell('◷ New changes saved locally · waiting to sync');
   }catch(e){syncRetryFailures++;tell('◷ Saved locally · sync pending: '+e.message,true)}
-  finally{uploading=false;if(revision!==savedRevision)scheduleCloudSync()}
+  finally{uploading=false;if(!syncConflictHold&&revision!==savedRevision)scheduleCloudSync()}
  }
  window.__pxRestoreLegacySettings=async()=>{
   if(!ready||!account)throw Error('Sign in to restore legacy settings');
@@ -9695,7 +9706,9 @@ window.__legacyBoot=init;
   sessionStorage.setItem(SESSION_KEY,JSON.stringify(auth));account=auth.user.id;
   // Do not read unscoped legacy storage. Only load from the signed-in account.
   const rows=await cloud('user_app_snapshots?select=payload&user_id=eq.'+encodeURIComponent(account)+'&limit=1');
+  if(!Array.isArray(rows))throw Error('Invalid account snapshot response');
   const cloudValues=rows[0]?.payload||{};
+  snapshotBaseline=snapshotDigest(cloudValues);syncConflictHold=false;
   const pending=readPending(account);
   // Only locally queued edits can override server data; normal cached rows cannot.
   // This prevents an old cache from unexpectedly replacing another device's cloud state.
