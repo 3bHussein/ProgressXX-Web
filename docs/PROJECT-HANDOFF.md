@@ -2,6 +2,10 @@
 
 **Updated:** 2026-10-11. **Read alongside:** [README](../README.md), [ROADMAP](../ROADMAP.md), and **[DEVELOPMENT-LOG](DEVELOPMENT-LOG.md) — chronological source of truth for completed tasks**.
 
+## 2026-10-12 — Chromium production flush contract
+
+Preceding Full UI #38215286386 and Pages #38215285902 green. New `tests/production-flush-chromium-contract.cjs` (`83b530c`) runs production flush function in Chromium against mock dependencies; checks failed POST, successful retry and edits during upload. CI wired (`f21cbfd`), new run NOT VERIFIED. No production or user data changes. P0 sync OPEN, estimate 55–65% unchanged; paid security work deferred/nonblocking. Next inspect Actions and add mirror failure to Chromium QA.
+
 ## 2026-10-12 — Production flush mirror failure and concurrent edit tests
 
 Prior Full UI #38214690902 and Pages #38214690390 success. Expanded `tests/production-flush-failure-retry-contract.cjs` (`4218067`) with mock mirror failure leaving unsynced revision and edit-during-upload not clearing newer pending data; old HTTP 503 regression retained. New CI NOT VERIFIED. No production/data changes. Sync P0 OPEN; 55–65% subjective estimate unchanged. Security paid checkpoint deferred/nonblocking. Next inspect Actions and test browser mock.
