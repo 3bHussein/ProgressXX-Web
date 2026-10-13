@@ -2763,11 +2763,13 @@ function startNextWeek(){
   PXStore.setItem('progressx-manual-active-week-v20',String(next));
   rebuild();
 }
-function safeProgressXXRender(name,fn){
+function safeProgressXXRender(name,fn,fallback){
  try{return fn()}
  catch(error){
   console.error('[ProgressXX] Optional UI panel failed: '+name,error);
-  (window.__pxBootRenderWarnings ||= []).push(name);
+  const warnings=(window.__pxBootRenderWarnings ||= []);
+  if(!warnings.includes(name))warnings.push(name);
+  if(fallback){try{fallback()}catch{}}
   return null;
  }
 }
@@ -9431,19 +9433,27 @@ function renderV2Week(){const w=$('v2Week')?.value;if(!w)return;const x=Progress
 function renderIntelligence(){
 if(!window.ProgressXXV2){v2Rows('v2RecoveryInfo',[['Module','Analytics core unavailable']]);return}
 const ex=$('v2Exercise'),ws=$('v2Week');if(!ex||!ws)return;
+const panel=(name,id,fn)=>safeProgressXXRender(name,fn,()=>[].concat(id).forEach(target=>{const node=$(target);if(node)node.textContent='Panel unavailable. Use Refresh insights to retry.'}));
 const prevEx=ex.value,prevWeek=ws.value;
 const names=[...new Set(data.map(x=>String(x.exercise||'').trim()).filter(Boolean))].sort();
 const weeks=[...new Set(data.map(x=>Number(x.week)).filter(x=>Number.isFinite(x)&&x>0))].sort((a,b)=>b-a);
 ex.innerHTML=names.map(n=>'<option value="'+esc(n)+'">'+esc(n)+'</option>').join('');
 ws.innerHTML=weeks.map(w=>'<option value="'+w+'">Week '+w+'</option>').join('');
 if(names.includes(prevEx))ex.value=prevEx;if(weeks.some(w=>String(w)===prevWeek))ws.value=prevWeek;
-renderV2Checkin();renderV2MuscleOverrides();renderV2RecoveryMap();if(names.length)renderV2Exercise();else v2Rows('v2ExerciseInfo',[['Status','No exercises logged']]);
-if(weeks.length)renderV2Week();else v2Rows('v2WeekInfo',[['Status','No training weeks']]);
+panel('Readiness','v2ReadinessInfo',renderV2Checkin);
+panel('Muscle mapping','v2MappingStatus',renderV2MuscleOverrides);
+panel('Recovery map',['v2MuscleCards','v2MuscleMap'],renderV2RecoveryMap);
+panel('Exercise insights','v2ExerciseInfo',()=>{if(names.length)renderV2Exercise();else v2Rows('v2ExerciseInfo',[['Status','No exercises logged']])});
+panel('Weekly insights','v2WeekInfo',()=>{if(weeks.length)renderV2Week();else v2Rows('v2WeekInfo',[['Status','No training weeks']])});
+panel('Nutrition insights','v2NutritionInfo',()=>{
 const totals=ProgressXXV2.nutrition(foodLog);
 v2Rows('v2NutritionInfo',[['Logged meals',foodLog.length],['Calories',pnum(totals.calories)+' kcal'],['Protein',pnum(totals.protein)+' g'],['Carbs',pnum(totals.carbs)+' g'],['Fat',pnum(totals.fat)+' g']]);
+});
+panel('Body insights','v2BodyInfo',()=>{
 const body=ProgressXXV2.measurements(bodyMeasurements());
 v2Rows('v2BodyInfo',[['Measurements',body.length],['First',body[0]?.date||'—'],['Latest',body[body.length-1]?.date||'—']]);
-v2Rows('v2RecoveryInfo',[['Completed entries',data.filter(x=>x.status==='Completed').length],['Recovery','Needs muscle mapping and readiness check-in'],['Planner','Existing schedule and templates remain available']]);
+});
+panel('Recovery summary','v2RecoveryInfo',()=>v2Rows('v2RecoveryInfo',[['Completed entries',data.filter(x=>x.status==='Completed').length],['Recovery','Needs muscle mapping and readiness check-in'],['Planner','Existing schedule and templates remain available']]));
 }
 
 
