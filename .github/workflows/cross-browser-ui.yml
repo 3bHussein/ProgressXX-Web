@@ -3,6 +3,19 @@ on:
   push:
     branches: [main]
     paths:
+      - tests/release-ci-workflow-contract.cjs
+      - 'tests/login-imported-archive-regression.cjs'
+      - 'tests/login-optional-render-recovery.cjs'
+      - 'scripts/smoke-full-ui.cjs'
+      - '.github/workflows/deploy-pages.yml'
+      - 'icon-512.svg'
+      - 'icon-192.svg'
+      - 'sw.js'
+      - 'manifest.webmanifest'
+      - 'commercial-v1.html'
+      - 'full-app.html'
+      - 'tests/release-ci-gate.cjs'
+      - 'scripts/release-ci-gate.cjs'
       - index.html
       - tests/workout-log-keyboard-browser.cjs
       - tests/workout-log-incremental-browser.cjs
@@ -15,6 +28,9 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - scripts/release-ci-gate.cjs
+      - tests/release-ci-gate.cjs
+      - .github/workflows/deploy-pages.yml
       - index.html
       - tests/workout-log-keyboard-browser.cjs
       - tests/workout-log-incremental-browser.cjs
