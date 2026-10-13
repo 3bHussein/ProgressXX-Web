@@ -1405,7 +1405,7 @@ textarea{resize:vertical}
 <section id="log" class="section">
   <div class="panel">
     <div class="panelHead">
-      <div><h3>Workout log</h3><div class="tiny muted" id="resultCount"></div></div>
+      <div><h3>Workout log</h3><div class="tiny muted" id="resultCount" role="status" aria-live="polite" aria-atomic="true"></div></div>
       <div class="actions">
         <button class="btn primary" onclick="openWorkoutSession()">▶ Start workout</button>
         <button class="btn soft" onclick="toggleWorkoutTemplates()">Templates</button>
@@ -1428,11 +1428,11 @@ textarea{resize:vertical}
     <div class="logSearchBar">
       <div class="logSearchInputWrap">
         <span class="logSearchIcon">⌕</span>
-        <input class="search" id="search" placeholder="Search exercise, day, W20, date, status, notes…">
+        <input class="search" id="search" aria-label="Search workout log" placeholder="Search exercise, day, W20, date, status, notes…">
       </div>
-      <select id="weekFilter"><option value="">All weeks</option></select>
-      <select id="statusFilter"><option value="">All status</option><option>Completed</option><option>Skipped</option><option>Uncertain</option><option>No data</option></select>
-      <select id="logSort">
+      <select id="weekFilter" aria-label="Filter workouts by week"><option value="">All weeks</option></select>
+      <select id="statusFilter" aria-label="Filter workouts by status"><option value="">All status</option><option>Completed</option><option>Skipped</option><option>Uncertain</option><option>No data</option></select>
+      <select id="logSort" aria-label="Sort workout log">
         <option value="newest">Newest first</option>
         <option value="oldest">Oldest first</option>
         <option value="exercise">Exercise A–Z</option>
@@ -3193,7 +3193,7 @@ function compactWorkoutCard(x){
     </div>
     <div class="compactLogRight">
       <span class="pill ${statusClass(x.status)}">${esc(x.status||'No data')}</span>
-      <button class="btn soft" style="padding:6px 9px" onclick="event.stopPropagation();openEditor(decodeURIComponent('${id}'))">Edit</button>
+      <button class="btn soft" style="padding:6px 9px" aria-label="${esc('Edit '+(x.exercise||'Unnamed exercise')+', week '+(x.week??'unknown'))}" onclick="event.stopPropagation();openEditor(decodeURIComponent('${id}'))">Edit</button>
     </div>
   </div>`;
 }
@@ -3216,13 +3216,25 @@ function renderLog(reset=false){
   logRenderedNodes=cards.length?Array.from(list.children):[];
   const pager=$('logPager');
   if(pager){
-    if(total>shown.length)pager.innerHTML='<span class="tiny muted">'+shown.length+' of '+total+'</span><button class="btn soft" onclick="loadMoreLogs()">Load 24 more</button>';
+    if(total>shown.length){
+      if(!pager.querySelector('#logLoadMore'))pager.innerHTML='<span class="tiny muted"></span><button id="logLoadMore" class="btn soft" aria-controls="logList" onclick="loadMoreLogs()">Load 24 more</button>';
+      pager.querySelector('span').textContent=shown.length+' of '+total;
+    }
     else if(total>24)pager.innerHTML='<span class="tiny muted">All '+total+' matches loaded</span>';
     else pager.innerHTML='';
   }
   if($('workoutTemplatesPanel')?.classList.contains('open'))renderWorkoutTemplates();
 }
-function loadMoreLogs(){logVisibleCount+=24;renderLog(false)}
+function loadMoreLogs(){
+  const button=$('logLoadMore'),wasFocused=button&&document.activeElement===button;
+  const previousCount=$('logList').querySelectorAll('.compactLogRow').length;
+  logVisibleCount+=24;renderLog(false);
+  // The last page removes its control; move keyboard focus to the new batch.
+  if(wasFocused&&!button.isConnected){
+    const rows=$('logList').querySelectorAll('.compactLogRow');
+    rows[Math.min(previousCount,rows.length-1)]?.querySelector('button')?.focus();
+  }
+}
 function setLogQuickFilter(type){
   if(type==='current'){$('weekFilter').value=String(activeWeek());$('statusFilter').value='';$('search').value=''}
   else if(type==='notes'){$('weekFilter').value='';$('statusFilter').value='';$('search').value='notes:'; }

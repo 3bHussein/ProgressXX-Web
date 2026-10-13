@@ -1,0 +1,14 @@
+const assert=require('node:assert/strict'),{browserType,engine}=require('./helpers/browser-engine.cjs');
+(async()=>{const b=await browserType.launch({headless:true});let backend=0;try{const p=await b.newPage({viewport:{width:390,height:844}});
+await p.route('**/*',r=>{const u=new URL(r.request().url());if(u.hostname==='127.0.0.1')return r.continue();if(u.hostname.endsWith('supabase.co'))backend++;return r.abort()});
+await p.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});await p.locator('#pxEmail').waitFor({state:'visible'});
+await p.evaluate(()=>{$('pxCommercialGate').hidden=true;document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id==='log'));bindLogFilters();data=Array.from({length:60},(_,i)=>({id:'keyboard-'+i,week:1,day:'Push',exercise:'Bench '+i,status:'Completed'}));window.qaOriginal=JSON.stringify(data);renderLog(true)});
+for(const [role,name] of [['textbox','Search workout log'],['combobox','Filter workouts by week'],['combobox','Filter workouts by status'],['combobox','Sort workout log']])assert.equal(await p.getByRole(role,{name,exact:true}).count(),1);
+assert.equal(await p.locator('#resultCount').getAttribute('role'),'status');
+await p.locator('#logLoadMore').focus();await p.keyboard.press('Enter');assert.equal(await p.locator('#logList .compactLogRow').count(),48);assert.equal(await p.locator('#logLoadMore').evaluate(e=>e===document.activeElement),true);
+await p.keyboard.press('Space');assert.equal(await p.locator('#logList .compactLogRow').count(),60);assert.equal(await p.locator('#logLoadMore').count(),0);
+assert.equal(await p.locator('#logList .compactLogRow').nth(48).locator('button').evaluate(e=>e===document.activeElement),true);
+assert.equal(await p.locator('#logList .compactLogRow').nth(48).locator('button').getAttribute('aria-label'),'Edit Bench 48, week 1');
+await p.getByRole('textbox',{name:'Search workout log',exact:true}).fill('Bench 59');await p.waitForFunction(()=>$('resultCount').textContent==='1 match • showing 1');assert.equal(await p.locator('#logList .compactLogRow').count(),1);
+assert.equal(await p.evaluate(()=>JSON.stringify(data)===qaOriginal),true);assert.equal(backend,0);console.log('PASS ['+engine+']: named search/filters/edit controls, live result status, Enter/Space pagination focus through final batch, immutable fixture and zero backend calls');
+}finally{await b.close()}})().catch(e=>{console.error(e);process.exitCode=1});
