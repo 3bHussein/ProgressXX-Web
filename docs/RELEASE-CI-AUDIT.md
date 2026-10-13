@@ -1,6 +1,6 @@
 # Release CI audit — 2026-10-13 Cairo
 
-**Current implementation:** dedicated same-commit gate VERIFIED in PR/main and actual deploy logs; separate Pages/settings enforcement remains open. The original audit table below describes its stated source snapshot.
+**Current implementation:** dedicated same-commit gate VERIFIED in PR/main and actual deploy logs; owner-authorized Source GitHub Actions saved; fresh post-cutover deployment pending, branch protection still open. The original audit table below describes its stated source snapshot.
 
 Scope: source-only inspection at `89c66761cd1f8514f11d78c4691fe55bd31e9339`, plus observed Actions/deployment evidence. No repository settings, database, accounts or runtime changes.
 
@@ -37,3 +37,10 @@ Read-only authenticated Pages metadata from the job: `{"build_type":"legacy","so
 Database experiments remain paused; no PostgreSQL workflow, SQL/Supabase/staging/backups, stored data/sync/production schema/grants/RLS/migration changes or paid services. Phase 3 IN PROGRESS; Milestone 2 paused/incomplete; commercial launch NOT APPROVED. Final closeout is documentation-only and references tested source above.
 
 Separate same-SHA Pages #38432795789 completed its independent Jekyll build (job 115419046746) and deploy (115419232946). Authenticated metadata confirms legacy source main /; this is an active alternative route, not merely an assumed settings gap. A proposed settings cutover is: Settings → Pages → Build and deployment → Source → GitHub Actions. Retain the recorded legacy main / setting for reversal. The dedicated replacement above is tested and deployed before requesting settings access. No hosting configuration changed during this Work task.
+
+
+## 2026-10-13 Cairo — Owner-authorized Pages source cutover saved
+
+Owner approved changing Pages to GitHub Actions and completed sign-in. In Settings → Pages, changed Source from Deploy from a branch (main /) to GitHub Actions. UI confirmed "GitHub Pages source saved" and selected Source GitHub Actions. Screenshot: docs/images/pages-actions-source-2026-10-13.jpg. No new workflow template, unpublish, domain/HTTPS/visibility/branch-protection changes or paid feature. This removes the configured legacy branch publishing source; existing tested dedicated workflow from PR #27 remains. Fresh post-cutover workflow deployment verification pending.
+
+Existing production root and worker return HTTP 200 and remain byte-exact: root SHA-256 cac731cccbe83f78fa10514df9ee93a58d435e0ea55faa9bb75a1ed37438262f, worker 323f5022828b49efc6b39105e1c53e92716f73e74a9da738aec0dd1d56db4515. Stored data/synchronization untouched, database experiments paused, no SQL/Supabase/staging/backups/production schema/grants/RLS/migrations or purchases. Phase 3 continues; Milestone 2 incomplete; commercial launch NOT APPROVED. Next: run only Full UI/Fast/Cross-browser main validations and dedicated deploy at the new documentation SHA; verify source workflow in authenticated deploy logs and no new legacy Jekyll run.
