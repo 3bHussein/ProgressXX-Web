@@ -261,10 +261,19 @@ html[data-theme="light"]{--bg:#f4f7fb;--bg2:#eaf0f8;--card:rgba(255,255,255,.9);
 #nutrition .nutritionOrderDiary{order:1}
 #nutrition .nutritionOrderQuick{order:2}
 #nutrition .nutritionOrderToday{order:3}
-#nutrition .nutritionOrderMeals{order:4}
-#nutrition .nutritionOrderPlanner{order:5}
-#nutrition .nutritionOrderHistory{order:6}
-#nutrition .nutritionOrderLibrary{order:7}
+#nutrition .nutritionOrderMeals{order:5}
+#nutrition .nutritionOrderPlanner{order:6}
+#nutrition .nutritionOrderHistory{order:7}
+#nutrition .nutritionOrderLibrary{order:4}
+#nutrition details>summary{display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 0;cursor:pointer;font-weight:850;list-style:none}
+#nutrition details>summary::-webkit-details-marker{display:none}
+#nutrition details>summary::after{content:'+';margin-inline-start:auto;color:var(--muted);font-size:22px}
+#nutrition details[open]>summary::after{content:'−'}
+#nutrition details>summary:focus-visible{outline:2px solid var(--blue);outline-offset:4px;border-radius:8px}
+#nutrition details[open]>summary{margin-bottom:12px;border-bottom:1px solid var(--line)}
+#nutrition .nutritionExtras{background:var(--card2)}
+#nutrition .foodQuickGrid select{width:100%;min-width:0}
+
 
 #daily .dailyShell{display:flex;flex-direction:column}
 #daily .dailyShell>.panelHead{order:1}
@@ -1733,7 +1742,7 @@ textarea{resize:vertical}
       <div class="macroCard"><b id="nFat">0 / 70g</b><span>Fat</span><div class="macroTrack"><div id="nFatBar" class="macroFill"></div></div></div>
     </div>
 
-    <div id="proteinSuggestionBox" class="proteinSuggestionBox" style="display:none">
+    <details id="proteinSuggestionBox" class="proteinSuggestionBox" style="display:none"><summary>Protein suggestions</summary>
       <div class="proteinSuggestionHead">
         <div>
           <b>🥩 Protein Remaining Smart Suggestion</b>
@@ -1742,39 +1751,7 @@ textarea{resize:vertical}
         <span class="pill">From your Food Library</span>
       </div>
       <div id="proteinSuggestionList" class="proteinSuggestionList"></div>
-    </div>
-  </div>
-
-  <div class="panel nutritionOrderHistory">
-    <div class="panelHead">
-      <div>
-        <h3>📈 Nutrition History</h3>
-        <div class="tiny muted">See your recent calorie and protein consistency.</div>
-      </div>
-      <select id="nutritionAnalyticsRange" onchange="renderNutritionAnalytics()" style="width:auto;min-width:110px">
-        <option value="7">Last 7 days</option>
-        <option value="30">Last 30 days</option>
-      </select>
-    </div>
-    <div class="nutritionAdherenceWrap">
-      <div id="nutritionAdherenceRing" class="nutritionAdherenceRing">
-        <div class="nutritionAdherenceCenter"><b id="nutritionAdherenceScore">0%</b><span>Adherence</span></div>
-      </div>
-      <div class="nutritionAdherenceMeta">
-        <div><b id="nutritionAdherenceLabel">—</b><span>Overall</span></div>
-        <div><b id="nutritionProteinRate">—</b><span>Protein</span></div>
-        <div><b id="nutritionCaloriesRate">—</b><span>Calories</span></div>
-      </div>
-    </div>
-    <div class="nutritionAnalyticsStats">
-      <div class="nutritionAnalyticsStat"><b id="naAvgCalories">—</b><span>Avg calories</span></div>
-      <div class="nutritionAnalyticsStat"><b id="naAvgProtein">—</b><span>Avg protein</span></div>
-      <div class="nutritionAnalyticsStat"><b id="naProteinHit">—</b><span>Protein target days</span></div>
-      <div class="nutritionAnalyticsStat"><b id="naCalorieHit">—</b><span>Calories near target</span></div>
-    </div>
-    <div id="nutritionAnalyticsSummary" class="callout" style="margin-top:10px">Log food to build your trend.</div>
-    <div id="nutritionWeeklyCoach" class="nutritionCoachBox">Weekly coaching insights will appear here.</div>
-    <div id="nutritionTrend" class="nutritionTrend"></div>
+    </details>
   </div>
 
   <div class="panel nutritionOrderQuick">
@@ -1801,70 +1778,14 @@ textarea{resize:vertical}
       <button class="btn primary" onclick="addFoodToDiary()">＋ Add</button>
     </div>
     <div id="foodQuickPreview" class="callout" style="margin-top:10px">Select a saved food to preview calories and macros.</div>
-    <div id="favoriteFoodsWrap" style="margin-top:11px;display:none">
+    <details id="favoriteFoodsWrap" style="margin-top:11px;display:none"><summary>Favorite foods</summary>
       <div class="tiny muted" style="font-weight:850">⭐ Favorites</div>
       <div id="favoriteFoods" class="favoriteFoods"></div>
-    </div>
-    <div id="recentFoodsWrap" style="margin-top:11px">
+    </details>
+    <details id="recentFoodsWrap" style="margin-top:11px"><summary>Recent foods</summary>
       <div class="tiny muted" style="font-weight:850">⚡ Recent foods</div>
       <div id="recentFoods" class="recentFoods"></div>
-    </div>
-  </div>
-
-  <div class="panel nutritionOrderMeals">
-    <div class="panelHead">
-      <div>
-        <h3>🍽 Saved Meals</h3>
-        <div class="tiny muted">Save a full meal from the selected day, then add it again with one tap.</div>
-      </div>
-      <button class="btn primary" onclick="openSaveMealTemplate()">＋ Save meal</button>
-    </div>
-
-    <div id="mealTemplateForm" class="dailyForm">
-      <div class="dailyFormGrid">
-        <div class="wide"><label class="tiny muted">Template name</label><input id="mealTemplateName" placeholder="Example: Post Workout"></div>
-        <div><label class="tiny muted">Meal to save</label><select id="mealTemplateSource"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option></select></div>
-        <div><label class="tiny muted">Meal time</label><input id="mealTemplateTime" type="time"></div>
-      </div>
-      <div class="dailyFormActions">
-        <button class="btn primary" onclick="saveMealTemplate()">Save template</button>
-        <button class="btn soft" onclick="toggleMealTemplateForm(false)">Cancel</button>
-      </div>
-    </div>
-
-    <div id="mealTemplateGrid" class="mealTemplateGrid"></div>
-  </div>
-
-  <div class="panel nutritionOrderPlanner">
-    <div class="panelHead">
-      <div>
-        <h3>🗓 Meal Planner</h3>
-        <div class="tiny muted">Plan saved meals for a date without adding them to the Food Diary yet.</div>
-      </div>
-      <span id="mealPlannerCount" class="pill">0 planned</span>
-    </div>
-
-    <div class="mealPlannerControls">
-      <div>
-        <label class="tiny muted">Plan date</label>
-        <input id="mealPlannerDate" type="date">
-      </div>
-      <div>
-        <label class="tiny muted">Saved meal</label>
-        <select id="mealPlannerTemplate"></select>
-      </div>
-      <button class="btn primary" onclick="addMealToPlan()">＋ Add to plan</button>
-    </div>
-
-    <div class="mealPlannerStats">
-      <div class="mealPlannerStat"><b id="mealPlanCalories">0</b><span>Calories</span></div>
-      <div class="mealPlannerStat"><b id="mealPlanProtein">0g</b><span>Protein</span></div>
-      <div class="mealPlannerStat"><b id="mealPlanCarbs">0g</b><span>Carbs</span></div>
-      <div class="mealPlannerStat"><b id="mealPlanFat">0g</b><span>Fat</span></div>
-    </div>
-
-    <div id="mealPlannerTargetSummary" class="callout" style="margin-top:10px">Plan meals to preview your day against nutrition targets.</div>
-    <div id="mealPlannerList" class="mealPlannerList"></div>
+    </details>
   </div>
 
   <div class="panel nutritionOrderToday">
@@ -1918,7 +1839,7 @@ textarea{resize:vertical}
       </div>
     </div>
 
-    <div class="panel" style="box-shadow:none;margin-bottom:12px">
+    <details class="panel" style="box-shadow:none;margin-bottom:12px"><summary>Search food online</summary>
       <div class="panelHead">
         <div>
           <h3>Search food online</h3>
@@ -1931,12 +1852,100 @@ textarea{resize:vertical}
       </div>
       <div id="onlineFoodSearchState" class="onlineSearchInfo">Common foods are checked first; packaged products are searched online after you press Search.</div>
       <div id="onlineFoodResults" class="onlineFoodResults"></div>
-    </div>
+    </details>
 
     <label class="tiny muted">Your saved Food Library</label>
     <input id="foodSearch" class="nutritionSearch" placeholder="Search your saved foods…">
     <div id="foodLibrary" class="foodLibraryGrid"></div>
   </div>
+
+  <details class="panel nutritionExtras nutritionOrderMeals"><summary>Saved Meals</summary>
+    <div class="panelHead">
+      <div>
+        <h3>🍽 Saved Meals</h3>
+        <div class="tiny muted">Save a full meal from the selected day, then add it again with one tap.</div>
+      </div>
+      <button class="btn primary" onclick="openSaveMealTemplate()">＋ Save meal</button>
+    </div>
+
+    <div id="mealTemplateForm" class="dailyForm">
+      <div class="dailyFormGrid">
+        <div class="wide"><label class="tiny muted">Template name</label><input id="mealTemplateName" placeholder="Example: Post Workout"></div>
+        <div><label class="tiny muted">Meal to save</label><select id="mealTemplateSource"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option></select></div>
+        <div><label class="tiny muted">Meal time</label><input id="mealTemplateTime" type="time"></div>
+      </div>
+      <div class="dailyFormActions">
+        <button class="btn primary" onclick="saveMealTemplate()">Save template</button>
+        <button class="btn soft" onclick="toggleMealTemplateForm(false)">Cancel</button>
+      </div>
+    </div>
+
+    <div id="mealTemplateGrid" class="mealTemplateGrid"></div>
+  </details>
+
+  <details class="panel nutritionExtras nutritionOrderPlanner"><summary>Meal Planner</summary>
+    <div class="panelHead">
+      <div>
+        <h3>🗓 Meal Planner</h3>
+        <div class="tiny muted">Plan saved meals for a date without adding them to the Food Diary yet.</div>
+      </div>
+      <span id="mealPlannerCount" class="pill">0 planned</span>
+    </div>
+
+    <div class="mealPlannerControls">
+      <div>
+        <label class="tiny muted">Plan date</label>
+        <input id="mealPlannerDate" type="date">
+      </div>
+      <div>
+        <label class="tiny muted">Saved meal</label>
+        <select id="mealPlannerTemplate"></select>
+      </div>
+      <button class="btn primary" onclick="addMealToPlan()">＋ Add to plan</button>
+    </div>
+
+    <div class="mealPlannerStats">
+      <div class="mealPlannerStat"><b id="mealPlanCalories">0</b><span>Calories</span></div>
+      <div class="mealPlannerStat"><b id="mealPlanProtein">0g</b><span>Protein</span></div>
+      <div class="mealPlannerStat"><b id="mealPlanCarbs">0g</b><span>Carbs</span></div>
+      <div class="mealPlannerStat"><b id="mealPlanFat">0g</b><span>Fat</span></div>
+    </div>
+
+    <div id="mealPlannerTargetSummary" class="callout" style="margin-top:10px">Plan meals to preview your day against nutrition targets.</div>
+    <div id="mealPlannerList" class="mealPlannerList"></div>
+  </details>
+
+  <details class="panel nutritionExtras nutritionOrderHistory"><summary>Nutrition History</summary>
+    <div class="panelHead">
+      <div>
+        <h3>📈 Nutrition History</h3>
+        <div class="tiny muted">See your recent calorie and protein consistency.</div>
+      </div>
+      <select id="nutritionAnalyticsRange" onchange="renderNutritionAnalytics()" style="width:auto;min-width:110px">
+        <option value="7">Last 7 days</option>
+        <option value="30">Last 30 days</option>
+      </select>
+    </div>
+    <div class="nutritionAdherenceWrap">
+      <div id="nutritionAdherenceRing" class="nutritionAdherenceRing">
+        <div class="nutritionAdherenceCenter"><b id="nutritionAdherenceScore">0%</b><span>Adherence</span></div>
+      </div>
+      <div class="nutritionAdherenceMeta">
+        <div><b id="nutritionAdherenceLabel">—</b><span>Overall</span></div>
+        <div><b id="nutritionProteinRate">—</b><span>Protein</span></div>
+        <div><b id="nutritionCaloriesRate">—</b><span>Calories</span></div>
+      </div>
+    </div>
+    <div class="nutritionAnalyticsStats">
+      <div class="nutritionAnalyticsStat"><b id="naAvgCalories">—</b><span>Avg calories</span></div>
+      <div class="nutritionAnalyticsStat"><b id="naAvgProtein">—</b><span>Avg protein</span></div>
+      <div class="nutritionAnalyticsStat"><b id="naProteinHit">—</b><span>Protein target days</span></div>
+      <div class="nutritionAnalyticsStat"><b id="naCalorieHit">—</b><span>Calories near target</span></div>
+    </div>
+    <div id="nutritionAnalyticsSummary" class="callout" style="margin-top:10px">Log food to build your trend.</div>
+    <div id="nutritionWeeklyCoach" class="nutritionCoachBox">Weekly coaching insights will appear here.</div>
+    <div id="nutritionTrend" class="nutritionTrend"></div>
+  </details>
 </section>
 
 <section id="daily" class="section">
@@ -6652,7 +6661,8 @@ function renderFoodLibrary(){
 function buildFoodQuickSelect(){
   const sel=$('foodQuickProduct');if(!sel)return;
   const old=sel.value;
-  const sorted=[...foodProducts].sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+  const foodNameOrder=new Intl.Collator(undefined,{sensitivity:'base',numeric:true});
+  const sorted=[...foodProducts].sort((a,b)=>foodNameOrder.compare(String(a.name),String(b.name)));
   sel.innerHTML='<option value="">Choose food…</option>'+sorted.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');
   if(sorted.some(p=>String(p.id)===String(old)))sel.value=old;
 }
