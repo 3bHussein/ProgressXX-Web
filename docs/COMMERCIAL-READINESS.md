@@ -1,3 +1,5 @@
+**Frontend 2.1.0 candidate:** Food portion recovery, training-day management, Settings categories and Arabic/English/RTL implemented. Final local suite82/82 PASS; remote acceptance/deployment pending. See [acceptance](FRONTEND-2.1-ACCEPTANCE.md). Milestone2 stays paused/incomplete; Phase3/4 incomplete; commercial NO-GO.
+
 # ProgressX Commercial Readiness — Release Control
 
 **Started:** 2026-10-12

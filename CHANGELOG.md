@@ -2,6 +2,14 @@
 
 Production: root `index.html`. Version labels identify frontend releases; they do not approve commercial launch or change data formats. Exact commits and CI/deployment evidence are recorded in `docs/DEVELOPMENT-LOG.md`.
 
+## 2.1.0 — 2026-10-14 — frontend candidate
+
+- Preserve Food portion metadata across confirmed refreshes; show explicit calorie units and whole-entry quantities when a physical portion is unknown.
+- Manage training-day names and future exercise plans without deleting saved history.
+- Readable Settings categories with device-level Arabic/English selection, RTL layout and protected user/protocol values across eight pages.
+- Add regression coverage for Food refresh/editing, training-plan recovery, language persistence and category keyboard access.
+- No production database migration or commercial launch approval.
+
 ## 2.0.1 — 2026-10-14 — frontend release candidate
 
 - Main navigation now identifies its current page for assistive technology; keyboard selection retains button focus.
