@@ -1,3 +1,5 @@
+**Current frontend batch:** barcode keyboard/camera cleanup and Arabic anatomy RTL; local regression PASS, remote verification pending. Database pause remains in force.
+
 **Latest frontend batch:** PR #20 / `5bfd73d` deployed, root/worker byte-exact; 65/65 local and seven PR UI/mock checks PASS. Main follow-up a4529f9 Full UI/Pages SUCCESS with unchanged runtime; Fast/Deploy merge-trigger gap remains recorded. Database pause remains in force.
 
 **Active phase — 2026-10-13 Cairo:** Phase 3: mobile, frontend responsiveness and accessibility. Owner explicitly paused database experiments (DATABASE-EXPERIMENTS-PAUSED-2026-10-13). Do not run PostgreSQL/Supabase experiments, staging or backup steps until a new explicit request. PostgreSQL CI is manual-only with default-false resume gate; ordinary UI changes must not start it. Existing app data/sync behavior remains enabled.
@@ -427,7 +429,8 @@ Initial root keyboard/reduced-motion/mobile-zoom regressions VERIFIED at 320/390
 - [ ] Validate real-device PWA install/update, live deployment rollback, authenticated offline data and actual browser/OS permission denial.
 - [ ] Review GitHub Actions required check configuration so failing tests prevent production publish; do not assume current checks cover all scenarios.
 - [ ] Error boundaries/recovery: a broken optional widget must not break login or core sync.
-- [ ] Accessibility: keyboard, contrast, labels, Arabic RTL and reduced-motion support where relevant.
+- [x] Local barcode keyboard/focus/44px controls/camera-close cleanup and scoped Arabic anatomy RTL/empty-result regressions; remote verification pending.
+- [ ] Remaining accessibility: full keyboard coverage, contrast, labels, screen readers and broader Arabic RTL acceptance.
 
 **Exit:** documented green release matrix with no open P0/P1 defect.
 
@@ -526,3 +529,10 @@ Live HTTP root/worker byte-exact verified against tested source: root SHA-256 `6
 ## 2026-10-13 Cairo — Main follow-up UI verification
 
 Documentation follow-up `a4529f9ce44269c78e56ba188f105f2a354f7c3f` triggered main [Full UI 38320055927](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38320055927) and [Pages 38320055270](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38320055270), both **SUCCESS**. `git diff 5bfd73d a4529f9 -- index.html sw.js` is empty: the root/worker runtime is exactly the already deployed and byte-verified PR #20 code. No PostgreSQL run; database pause preserved. Main UI verification for this runtime is now available on the follow-up commit; Fast/Deploy on the merge SHA remain unobserved, and their trigger cause is still undetermined. This final evidence update changes documentation only. Physical-device and commercial release gates remain open. Next authorized work: frontend keyboard/Arabic RTL/mobile controls with mocked requests, and review CI trigger/deployment gating; do not resume database experiments.
+
+
+## 2026-10-13 Cairo — Mobile barcode keyboard and Arabic anatomy
+
+Production root `index.html`: labelled barcode dialog/close button/manual input/live status, initial input focus, Tab/Shift+Tab containment, Escape and immediate focus return, Enter manual lookup, 44px mobile controls and LTR numeric input. Scanner generation and serialized cleanup now ignore old decode callbacks, stop/clear a camera whose startup completes after close, prevent duplicate opening, and delay reopening until prior cleanup completes. Existing lookup/data/synchronization behavior unchanged. Anatomy detail/list direction and language update before empty-result return; list uses logical alignment/padding/RTL selection accent and English scientific subtitle stays LTR.
+
+Added `tests/mobile-barcode-keyboard-rtl-browser.cjs` to Full UI: widths 320/390/768, keyboard/focus/control bounds, pending-start close/reopen, Android back callback and Arabic/English empty-result transitions; zero Supabase requests with mock camera and UI-only fixtures. Limits/checklist: `docs/MOBILE-ACCESSIBILITY-ACCEPTANCE.md`. New regression PASS. Parallel sweep: **64/66 PASS**; existing full UI mock sign-out and two-device conflict-review waits timed out, then **both passed isolated reruns without code changes**. Initial new harness accidentally awaited its pending start promise; corrected before final verification. No clean 66/66 parallel run is claimed. Remote CI/PR/deployment pending. No database experiments, real accounts, SQL/schema/grants/RLS/migrations, paid services or user-data changes. Milestone 2 remains paused/incomplete and commercial launch NOT APPROVED. Next: verify PR UI/mock checks, deployed root bytes and main/follow-up CI, then continue frontend accessibility/browser acceptance without database experiments.

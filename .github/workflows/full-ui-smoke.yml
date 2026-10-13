@@ -30,6 +30,7 @@ jobs:
             tests/login-imported-archive-regression.cjs \
             tests/locked-workspace-refresh-browser.cjs \
             tests/mobile-motion-anatomy-accessibility.cjs \
+            tests/mobile-barcode-keyboard-rtl-browser.cjs \
             tests/pwa-shell-cache-contract.cjs \
             tests/pwa-offline-shell-browser.cjs \
             tests/pwa-install-permission-recovery-browser.cjs \
