@@ -1,5 +1,5 @@
-const assert=require('node:assert/strict');const {chromium}=require('playwright');
-(async()=>{const browser=await chromium.launch({headless:true});try{
+const assert=require('node:assert/strict');const {browserType,engine}=require('./helpers/browser-engine.cjs');
+(async()=>{const browser=await browserType.launch({headless:true});try{
  for(const width of [320,390,768]){
   const page=await browser.newPage({viewport:{width,height:844}}),errors=[],backend=[];
   page.on('pageerror',e=>errors.push(e.message));
@@ -46,5 +46,5 @@ const assert=require('node:assert/strict');const {chromium}=require('playwright'
   assert.deepEqual(rtl.emptyEnglish,{dir:'ltr',lang:'en',text:'No matching muscles'});assert.deepEqual(rtl.emptyArabic,{dir:'rtl',lang:'ar',text:'لا توجد نتائج مطابقة'});
   assert.deepEqual(errors,[]);assert.deepEqual(backend,[]);await page.close();
  }
- console.log('PASS: root barcode keyboard/focus/Enter/44px controls at 320/390/768, pending camera close cleanup/stale callback guard, Android back, Arabic RTL and empty-language transitions; zero Supabase requests');
+ console.log('PASS ['+engine+']: root barcode keyboard/focus/Enter/44px controls at 320/390/768, pending camera close cleanup/stale callback guard, Android back, Arabic RTL and empty-language transitions; zero Supabase requests');
 }finally{await browser.close()}})().catch(e=>{console.error(e);process.exitCode=1});

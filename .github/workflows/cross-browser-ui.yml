@@ -1,0 +1,59 @@
+name: Cross-browser frontend accessibility
+on:
+  push:
+    branches: [main]
+    paths:
+      - index.html
+      - tests/helpers/browser-engine.cjs
+      - tests/mobile-motion-anatomy-accessibility.cjs
+      - tests/mobile-barcode-keyboard-rtl-browser.cjs
+      - tests/pwa-install-permission-recovery-browser.cjs
+      - .github/workflows/cross-browser-ui.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - index.html
+      - tests/helpers/browser-engine.cjs
+      - tests/mobile-motion-anatomy-accessibility.cjs
+      - tests/mobile-barcode-keyboard-rtl-browser.cjs
+      - tests/pwa-install-permission-recovery-browser.cjs
+      - .github/workflows/cross-browser-ui.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: cross-browser-ui-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [firefox, webkit]
+    env:
+      PX_BROWSER: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify database experiments remain paused
+        run: node tests/database-experiments-paused.cjs
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Root UI with local fixtures and no account login
+        shell: bash
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/cross-browser-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          for attempt in {1..30}; do
+            if curl -fsS http://127.0.0.1:8765/index.html -o /dev/null; then break; fi
+            sleep 0.2
+          done
+          curl -fsS http://127.0.0.1:8765/index.html -o /dev/null
+          node tests/mobile-motion-anatomy-accessibility.cjs
+          node tests/mobile-barcode-keyboard-rtl-browser.cjs
+          node tests/pwa-install-permission-recovery-browser.cjs

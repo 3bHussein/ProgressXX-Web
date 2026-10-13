@@ -1,5 +1,5 @@
-const assert=require('node:assert/strict');const {chromium}=require('playwright');
-(async()=>{const browser=await chromium.launch({headless:true});try{
+const assert=require('node:assert/strict');const {browserType,engine}=require('./helpers/browser-engine.cjs');
+(async()=>{const browser=await browserType.launch({headless:true});try{
  const page=await browser.newPage({viewport:{width:390,height:844}}),errors=[],backend=[];
  page.on('pageerror',e=>errors.push(e.message));
  await page.route('**/*',r=>{const u=new URL(r.request().url());if(u.hostname==='127.0.0.1')return r.continue();if(u.hostname.endsWith('supabase.co'))backend.push(u.href);return r.abort()});
@@ -44,5 +44,5 @@ const assert=require('node:assert/strict');const {chromium}=require('playwright'
  assert.match(permissions.denied.text,/blocked/);assert.equal(permissions.denied.disabled,true);assert.match(permissions.denied.notice,/still work/);
  assert.match(permissions.rejected,/remain active/);assert.match(permissions.unsupported.text,/unavailable/);assert.match(permissions.unsupported.notice,/already active/);
  assert.match(permissions.camera.text,/Manual barcode search still works/);assert.equal(permissions.camera.manualDisabled,false);assert.equal(permissions.cleared,1);assert.equal(permissions.modalOpen,false);
- assert.deepEqual(errors,[]);assert.deepEqual(backend,[]);console.log('PASS: real root install single prompt/dismiss/error/accepted/installed, notification denied/unsupported/error, camera denied manual fallback; zero Supabase calls');
+ assert.deepEqual(errors,[]);assert.deepEqual(backend,[]);console.log('PASS ['+engine+']: real root install single prompt/dismiss/error/accepted/installed, notification denied/unsupported/error, camera denied manual fallback; zero Supabase calls');
 }finally{await browser.close()}})().catch(e=>{console.error(e);process.exitCode=1});
