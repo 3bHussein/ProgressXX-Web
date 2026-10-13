@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - index.html
+      - tests/barcode-lazy-library-browser.cjs
       - tests/helpers/browser-engine.cjs
       - tests/mobile-motion-anatomy-accessibility.cjs
       - tests/mobile-barcode-keyboard-rtl-browser.cjs
@@ -13,6 +14,7 @@ on:
     branches: [main]
     paths:
       - index.html
+      - tests/barcode-lazy-library-browser.cjs
       - tests/helpers/browser-engine.cjs
       - tests/mobile-motion-anatomy-accessibility.cjs
       - tests/mobile-barcode-keyboard-rtl-browser.cjs
@@ -57,3 +59,4 @@ jobs:
           node tests/mobile-motion-anatomy-accessibility.cjs
           node tests/mobile-barcode-keyboard-rtl-browser.cjs
           node tests/pwa-install-permission-recovery-browser.cjs
+          node tests/barcode-lazy-library-browser.cjs

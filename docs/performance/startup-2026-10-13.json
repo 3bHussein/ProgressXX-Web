@@ -1,0 +1,92 @@
+{
+  "date": "2026-10-13",
+  "target": "root index.html",
+  "scenario": "390x844, cold contexts, mocked CDN delay 1500ms, no account login",
+  "metric": "performance.now() after DOMContentLoaded and visible login email field",
+  "trialsPerVersion": 5,
+  "beforeSourceSha256": "d63fff23bd3a9c62830a7f001ef0bf8abc5ae164a36cb4d66c3a26e252b1573a",
+  "afterSourceSha256": "bb4894f63f1a0533f7b44ce3746a505aedebc026e4f97cd011abbdbb40b78951",
+  "before": {
+    "scenario": "390x844, cold contexts, mocked CDN delay 1500ms, no account login",
+    "rows": [
+      {
+        "readyMs": 1767.2999999998137,
+        "domInteractiveMs": 1712.3999999999069,
+        "domContentLoadedMs": 1712.5,
+        "library": 1,
+        "backend": 0
+      },
+      {
+        "readyMs": 1666.5,
+        "domInteractiveMs": 1623.2000000001863,
+        "domContentLoadedMs": 1623.3000000002794,
+        "library": 1,
+        "backend": 0
+      },
+      {
+        "readyMs": 1622.5,
+        "domInteractiveMs": 1585.5,
+        "domContentLoadedMs": 1585.6000000000931,
+        "library": 1,
+        "backend": 0
+      },
+      {
+        "readyMs": 1692.5999999996275,
+        "domInteractiveMs": 1643.2999999998137,
+        "domContentLoadedMs": 1643.2999999998137,
+        "library": 1,
+        "backend": 0
+      },
+      {
+        "readyMs": 1619.3000000002794,
+        "domInteractiveMs": 1586.1000000000931,
+        "domContentLoadedMs": 1586.2000000001863,
+        "library": 1,
+        "backend": 0
+      }
+    ],
+    "medianReadyMs": 1666.5
+  },
+  "after": {
+    "scenario": "390x844, cold contexts, mocked CDN delay 1500ms, no account login",
+    "rows": [
+      {
+        "readyMs": 173.6999999997206,
+        "domInteractiveMs": 131.59999999962747,
+        "domContentLoadedMs": 131.6999999997206,
+        "library": 0,
+        "backend": 0
+      },
+      {
+        "readyMs": 139.89999999990687,
+        "domInteractiveMs": 102.60000000009313,
+        "domContentLoadedMs": 102.89999999990687,
+        "library": 0,
+        "backend": 0
+      },
+      {
+        "readyMs": 132.89999999990687,
+        "domInteractiveMs": 92,
+        "domContentLoadedMs": 92,
+        "library": 0,
+        "backend": 0
+      },
+      {
+        "readyMs": 222,
+        "domInteractiveMs": 187,
+        "domContentLoadedMs": 187,
+        "library": 0,
+        "backend": 0
+      },
+      {
+        "readyMs": 130.39999999990687,
+        "domInteractiveMs": 90.8000000002794,
+        "domContentLoadedMs": 90.8000000002794,
+        "library": 0,
+        "backend": 0
+      }
+    ],
+    "medianReadyMs": 139.89999999990687
+  },
+  "scope": "Controlled local synthetic CDN delay; not field/Core Web Vitals/real-device performance"
+}

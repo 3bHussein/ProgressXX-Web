@@ -869,7 +869,7 @@ textarea{resize:vertical}
 }
 </style>
 
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<!-- Camera decoder loads on demand when the barcode dialog opens. -->
 
 <style id="progressx-v36-barcode">
 .barcodeActions{display:flex;gap:8px;flex-wrap:wrap}
@@ -5393,6 +5393,31 @@ let barcodeScannerRunning=false;
 let barcodeLookupBusy=false;
 let barcodeScannerGeneration=0,barcodeScannerStart=null,barcodeScannerCleanup=Promise.resolve(),barcodePreviousFocus=null;
 
+let barcodeLibraryPromise=null;
+function loadBarcodeLibrary(){
+  if(window.Html5Qrcode)return Promise.resolve(true);
+  if(barcodeLibraryPromise)return barcodeLibraryPromise;
+  const promise=new Promise(resolve=>{
+    const script=document.createElement('script');
+    script.id='pxBarcodeLibrary';script.async=true;
+    script.src='https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
+    let finished=false;
+    const finish=loaded=>{
+      if(finished)return;finished=true;
+      clearTimeout(timer);script.onload=script.onerror=null;
+      if(!loaded)script.remove();
+      resolve(loaded);
+    };
+    const timer=setTimeout(()=>finish(false),10000);
+    script.onload=()=>finish(!!window.Html5Qrcode);
+    script.onerror=()=>finish(false);
+    document.head.appendChild(script);
+  });
+  barcodeLibraryPromise=promise;
+  void promise.then(loaded=>{if(!loaded&&barcodeLibraryPromise===promise)barcodeLibraryPromise=null});
+  return promise;
+}
+
 function barcodeStatus(text,good=null){
   const el=$('barcodeScannerStatus');if(!el)return;
   el.innerHTML=text;
@@ -5419,10 +5444,14 @@ async function openBarcodeScanner(){
   await barcodeScannerCleanup;
   if(generation!==barcodeScannerGeneration)return;
 
-  if(!window.Html5Qrcode){
+  if(!window.Html5Qrcode)barcodeStatus('Loading camera scanner…');
+  const loaded=await loadBarcodeLibrary();
+  if(generation!==barcodeScannerGeneration)return;
+  if(!loaded){
     barcodeStatus('Camera scanner library could not load. You can still enter the barcode manually below.',false);
     return;
   }
+  barcodeStatus('Starting camera…');
 
   try{
     const scanner=new Html5Qrcode('barcodeReader');
