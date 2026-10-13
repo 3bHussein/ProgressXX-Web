@@ -455,7 +455,8 @@ Initial root keyboard/reduced-motion/mobile-zoom regressions VERIFIED at 320/390
 - [x] Owner-authorized Pages Source GitHub Actions saved and fresh same-SHA gated deployment VERIFIED; no legacy Jekyll workflow ran at the post-cutover SHA.
 - [ ] Audit branch protection/rulesets and future publishing workflows; these are not certified by the source cutover.
 - [x] Optional barcode decoder no longer blocks login startup; shared lazy load/error/timeout/manual fallback tests PASS locally (PR #23/#24 and standard main matrix verified).
-- [ ] Remaining optional-widget recovery and core-flow error boundaries.
+- [x] Independent optional Insights panel recovery and generic retry fallback (local regression PASS; remote verification pending).
+- [ ] Remaining optional-widget recovery and full core-flow/asynchronous error boundaries.
 - [x] Controlled startup and 5,000-record Workout Log benchmarks; PR #23/#25 deployed, synthetic evidence only.
 - [x] Workout Log incremental rendering and keyboard pagination/named controls — PR #25/#26, 69/69 latest local checks and matching runtime main CI/deployment verified.
 - [ ] Real-device/field performance and LCP/CLS/interaction measurements; controlled local benchmarks do not close this item.
@@ -713,3 +714,10 @@ Root Diagnostics now projects only allowlisted event types and ISO timestamps, e
 Dedicated deploy job115524273777 recorded Pages `build_type=workflow`, waited for and accepted same-SHA validators Full UI38463464809, Fast38463464881, Cross-browser38463465074 before publishing. No PostgreSQL or legacy Jekyll run at this merge SHA. Actual public root and worker HTTP200 responses match tested source byte-for-byte: root `75b49223ddfc633e58dabaad4288740e107ec8228e872fe2216f86f5e9223e1e`, worker `323f5022828b49efc6b39105e1c53e92716f73e74a9da738aec0dd1d56db4515`.
 
 [Operations runbook](docs/OPERATIONS-RUNBOOK.md) documents incident triage, private evidence, local report limits and a new-commit frontend rollback through release gates. Prepared and reviewed, not a live rollback rehearsal. No remote monitoring service enabled or assigned support/incident owner invented. Read-only branch audit remains partial: rulesets API [], classic protection403; enforcement not certified. Phase 3 IN PROGRESS; Phase 4 PREPARATION / IN PROGRESS, incomplete. Milestone 2 remains paused/incomplete; commercial launch NOT APPROVED. No SQL/Supabase/staging/backup experiments, production schema/grants/RLS/migrations, fitness-record/synchronization changes or paid services. Final evidence update is documentation-only; runtime proof belongs to the tested merge above.
+
+
+## 2026-10-13 Cairo — Independent Insights panel recovery
+
+Root Insights previously stopped remaining panels when an optional renderer threw. Each panel now has an independent guarded update; failed output is replaced with a generic Refresh insights message, both map outputs are cleared of stale content, and warning names are deduplicated. Existing core data/synchronization behavior unchanged. New mock-only browser regression verifies two simultaneous panel failures, later output, retry recovery, retained selections, immutable synthetic data and zero backend calls. Registered in Full UI and Firefox/WebKit matrix. Local parallel sweep **73/74 PASS**, existing mock sign-out timeout, then isolated full UI smoke PASS. Final targeted Insights and login recovery regressions also PASS after fallback text layout polish. No clean 74/74 parallel pass is claimed. Remote CI/deployment pending, no pass claimed.
+
+See [Insights acceptance](docs/INSIGHTS-RECOVERY-ACCEPTANCE.md). Database experiments remain paused; no SQL/Supabase/staging/backups, production schema/grants/RLS/migrations, fitness-data changes or purchases. Phase 3 IN PROGRESS; Phase 4 preparation incomplete; Milestone 2 paused/incomplete, commercial launch NOT APPROVED.

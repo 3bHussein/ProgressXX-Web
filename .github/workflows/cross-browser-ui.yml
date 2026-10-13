@@ -3,6 +3,7 @@ on:
   push:
     branches: [main]
     paths:
+      - tests/insights-panel-recovery-browser.cjs
       - tests/diagnostics-redaction-browser.cjs
       - tests/food-priority-collapse-browser.cjs
       - tests/release-ci-workflow-contract.cjs
@@ -30,6 +31,7 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - tests/insights-panel-recovery-browser.cjs
       - tests/diagnostics-redaction-browser.cjs
       - tests/food-priority-collapse-browser.cjs
       - scripts/release-ci-gate.cjs
@@ -87,4 +89,5 @@ jobs:
           node tests/workout-log-incremental-browser.cjs
           node tests/workout-log-keyboard-browser.cjs
           node tests/food-priority-collapse-browser.cjs
+          node tests/insights-panel-recovery-browser.cjs
           node tests/diagnostics-redaction-browser.cjs
