@@ -1,0 +1,103 @@
+{
+  "beforeSourceSha": "9b56fc107a4d868e30e5dd68c3a0d358e0e686b1",
+  "beforeRootSha256": "bb4894f63f1a0533f7b44ce3746a505aedebc026e4f97cd011abbdbb40b78951",
+  "afterRootSha256": "c7e79037e27fe2b07d2fccc2212f94399bd8e1584db0c268664b6cf146765591",
+  "before": {
+    "scenario": "390x844 Chromium; 5000 synthetic records; 30 load-more calls; 12 input events in one task; external requests blocked; no login",
+    "rows": [
+      {
+        "initialMs": 6.7999999999883585,
+        "load30Ms": 258.6000000000349,
+        "burstMs": 54,
+        "burstRenders": 12,
+        "matches": 1,
+        "visible": 1
+      },
+      {
+        "initialMs": 7,
+        "load30Ms": 263.79999999998836,
+        "burstMs": 48.90000000002328,
+        "burstRenders": 12,
+        "matches": 1,
+        "visible": 1
+      },
+      {
+        "initialMs": 6.7000000000116415,
+        "load30Ms": 247.40000000002328,
+        "burstMs": 46.59999999997672,
+        "burstRenders": 12,
+        "matches": 1,
+        "visible": 1
+      },
+      {
+        "initialMs": 6.600000000034925,
+        "load30Ms": 249.89999999996508,
+        "burstMs": 47.600000000034925,
+        "burstRenders": 12,
+        "matches": 1,
+        "visible": 1
+      },
+      {
+        "initialMs": 6.599999999976717,
+        "load30Ms": 251.79999999998836,
+        "burstMs": 50.5,
+        "burstRenders": 12,
+        "matches": 1,
+        "visible": 1
+      }
+    ],
+    "medianInitialMs": 6.7000000000116415,
+    "medianLoad30Ms": 251.79999999998836,
+    "medianBurstMs": 48.90000000002328,
+    "backendRequests": 0
+  },
+  "after": {
+    "scenario": "390x844 Chromium; 5000 synthetic records; 30 load-more calls; 12 input events in one task; external requests blocked; no login",
+    "rows": [
+      {
+        "initialMs": 7.099999999976717,
+        "load30Ms": 61.90000000002328,
+        "burstMs": 15.299999999988358,
+        "burstRenders": 1,
+        "matches": 1,
+        "visible": 1
+      },
+      {
+        "initialMs": 6.599999999976717,
+        "load30Ms": 67.90000000002328,
+        "burstMs": 13,
+        "burstRenders": 1,
+        "matches": 1,
+        "visible": 1
+      },
+      {
+        "initialMs": 6.2999999999883585,
+        "load30Ms": 59.399999999965075,
+        "burstMs": 12.100000000034925,
+        "burstRenders": 1,
+        "matches": 1,
+        "visible": 1
+      },
+      {
+        "initialMs": 9,
+        "load30Ms": 59.5,
+        "burstMs": 14.099999999976717,
+        "burstRenders": 1,
+        "matches": 1,
+        "visible": 1
+      },
+      {
+        "initialMs": 7,
+        "load30Ms": 51.800000000046566,
+        "burstMs": 10.899999999965075,
+        "burstRenders": 1,
+        "matches": 1,
+        "visible": 1
+      }
+    ],
+    "medianInitialMs": 7,
+    "medianLoad30Ms": 59.5,
+    "medianBurstMs": 13,
+    "backendRequests": 0
+  }
+}

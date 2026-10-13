@@ -19,3 +19,8 @@ This is a selected frontend matrix. Full authenticated E2E flows, cross-engine o
 
 
 PR #23 adds the lazy-decoder fixture; PR #24 fixes a corrupt legacy PNG in the anatomy fixture, waits for valid decode and separately asserts real image-error fallback. Corrected main [38364333014](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38364333014) Firefox/WebKit and Chromium Full UI [38364332969](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38364332969) SUCCESS: four selected fixtures per engine (12 CI fixture runs). Local full suite 67/67 passed before the test-only repair; both new/changed fixtures were independently verified locally in all three engines. The earlier 9/9 count refers to the initial three-fixture matrix.
+
+
+## Workout Log matrix extension — validation pending
+
+The 5,000-record incremental/search regression is now the fifth selected fixture in each Firefox/WebKit CI job, with default Chromium in Full UI. Checks data immutability, DOM/focus retention and fresh results after edits/deletion/replacement. No database experiments. New remote engine results pending; prior four-fixture evidence remains historical.

@@ -31,6 +31,7 @@ jobs:
             tests/locked-workspace-refresh-browser.cjs \
             tests/mobile-motion-anatomy-accessibility.cjs \
             tests/mobile-barcode-keyboard-rtl-browser.cjs \
+            tests/workout-log-incremental-browser.cjs \
             tests/barcode-lazy-library-browser.cjs \
             tests/pwa-shell-cache-contract.cjs \
             tests/pwa-offline-shell-browser.cjs \
