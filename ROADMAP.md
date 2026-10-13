@@ -463,7 +463,7 @@ Initial root keyboard/reduced-motion/mobile-zoom regressions VERIFIED at 320/390
 - [x] Local barcode keyboard/focus/44px controls/camera-close cleanup and scoped Arabic anatomy RTL/empty-result regressions; PR #21 and matching main CI/deployment verified.
 - [x] Owner-requested Food priority layout/collapsible extras and quick-add alphabetical ordering — PR #29 / a84f3f5, 72/72 local, all PR/main CI and deployment verified.
 - [x] Selected Insights/anatomy field names, bilingual filters, pressed states and muscle-list focus/scroll retention — PR #32 / c564881, 75/75 local PASS, all PR/main checks SUCCESS and deployed bytes exact.
-- [x] Main navigation accessible name/current-page semantics and keyboard-focus retention (78/78 final local PASS; remote CI pending).
+- [x] Main navigation accessible name/current-page semantics and keyboard-focus retention — PR #33 / 6615fe6, selected engines/main CI verified and root deployed.
 - [ ] Remaining accessibility: full keyboard coverage, contrast, labels, screen readers and broader Arabic RTL acceptance.
 
 **Exit:** documented green release matrix with no open P0/P1 defect.
@@ -475,7 +475,7 @@ Initial root keyboard/reduced-motion/mobile-zoom regressions VERIFIED at 320/390
 - [ ] Database backup cadence, retention, recovery-point and recovery-time targets; restore drill.
 - [ ] Performance baselines, rate limits, quotas and cost forecast (Supabase, Apps Script, food APIs).
 - [ ] Privacy policy, terms, data export/deletion, contact/support and third-party data/image license review.
-- [x] Frontend numbering/changelog and release/rollback policy prepared; 2.0.1 candidate, 78/78 local PASS; remote CI/deployment evidence pending.
+- [x] Frontend numbering/changelog and release/rollback policy — PR #33 / 6615fe6, 2.0.1 deployed, 78/78 local, all PR/main checks SUCCESS; actual bytes exact.
 - [ ] Staged rollout, live frontend rollback rehearsal and assigned production/release incident owners.
 - [ ] New-user onboarding on an empty account without old owner's data.
 
@@ -501,7 +501,7 @@ Initial root keyboard/reduced-motion/mobile-zoom regressions VERIFIED at 320/390
 2. **Frontend measurement:** local synthetic LCP/CLS and interaction baselines; preserve root production target and avoid account initialization/backend requests.
 3. **Accessibility/layout:** remaining labels, keyboard navigation, contrast and scoped mobile/RTL checks with local fixtures.
 4. **Source-only inventory:** map storage keys/domains/sync paths without querying Supabase or creating real accounts; distinguish source intent from live ownership proof.
-5. **Operations acceptance:** validate diagnostic redaction in standard CI, assign incident/support owners and plan frontend rollback rehearsal; runbook prepared, no database backup/restore authorized.
+5. **Operations acceptance:** version/changelog, local diagnostic redaction and runbook now verified/prepared; assign incident/support/release owners and plan frontend rollback/staged rollout. No database backup/restore authorized.
 
 Real-account auth/RLS, cross-device synchronization, staging and database backup/restore remain deferred until explicit owner resumption. Paid services remain prohibited. Historical task lists below do not override this order.
 
@@ -773,3 +773,14 @@ Strengthened the full UI mock fixture to hold only the final snapshot containing
 ## 2026-10-14 Cairo — Frontend2.0.1 candidate local verification complete
 
 Final parallel UI/static suite **78/78 PASS** on version/navigation and deterministic mock-logout source, including confirmations accepted1 and existing synthetic record roundtrip assertions. New native-dialog negative/disposal/callback-failure tests, release/changelog/badge consistency negatives and all-eight-route keyboard/current-page checks PASS. Initial historical77/77 and later pre-fix sign-out timeout remain recorded above; final result belongs to corrected harness. No future-flake immunity is claimed. Remote PR/main/deployment pending; root2.0.1 is a frontend candidate, not commercial GO.
+
+
+## 2026-10-14 Cairo — Frontend 2.0.1 navigation/release tracking and mock CI fix VERIFIED
+
+[PR #33](https://github.com/3bHussein/ProgressXX-Web/pull/33), source `26c761a15261a8f78f47289220101161275bd2fe`, merge `6615fe6381984c08c5ebcd77d4a2e22eb0f8beaf`. All eight PR workflows SUCCESS. Matching main: [Fast conflict safety contracts #38472369045](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38472369045) SUCCESS, [Cross-browser frontend accessibility #38472368994](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38472368994) SUCCESS, [Deploy ProgressXX Full App #38472369015](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38472369015) SUCCESS, [Full ProgressXX migration smoke #38472368995](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38472368995) SUCCESS. Final local parallel suite **78/78 PASS**. New navigation/native-dialog regressions PASS in Chromium/Full UI and standard Firefox/WebKit PR/main; selected frontend matrix now twelve fixtures per engine. PR jobs115553304299/115553304973/115553304282 and main115554433094/115554432614/115554432975 explicitly record the new fixtures and release identity2.0.1.
+
+Corrected full UI fixture logs exactly one expected pending-sync confirmation in local final suite, PR Full UI, main Full UI and dedicated deployment. It deliberately holds a mocked snapshot in flight and preserves all synthetic Food/Daily/Weight/Workout/Schedule/Goal relogin assertions. Native-dialog tests reject unrelated dialogs/pre-accept errors and verify disposal. Production logout/pending-data safeguards unchanged. The historical timing failures above remain evidence; no claim that every future CI flake is eliminated.
+
+Dedicated deploy job115554433672 records Pages `build_type=workflow`, accepts same-SHA Full UI38472368995, Fast38472369045 and Cross-browser38472368994 before publishing, and passes the deterministic logout smoke with confirmations accepted1. No PostgreSQL or legacy Jekyll run at merge SHA. Actual root/worker HTTP200 bytes match tested source: root `ee0aae188fc55554dff8af6e3971f55df2ad36f8bf18b7a9e915b9b2ab086746`, worker `323f5022828b49efc6b39105e1c53e92716f73e74a9da738aec0dd1d56db4515`.
+
+Completed selected Phase 3 navigation semantics and fixture reliability, plus Phase 4 frontend version/changelog/release policy tracking. Root APP_VERSION/initial badges/Diagnostics/backup app metadata are2.0.1, backup format3/storage/sync contracts unchanged. See [release policy](docs/RELEASE-POLICY.md), [navigation acceptance](docs/NAVIGATION-ACCESSIBILITY.md), [mock logout acceptance](docs/MOCK-LOGOUT-CI-ACCEPTANCE.md), and [changelog](CHANGELOG.md). Version increments remain reviewer responsibility; live rollback/staged rollout, owners/support, actual devices/screen readers, legal and P0 acceptance remain open. Phase 3 IN PROGRESS; Phase 4 PREPARATION / IN PROGRESS; Milestone 2 paused/incomplete; commercial launch NOT APPROVED. No live Supabase/SQL/account/staging/backup experiments, production schema/grants/RLS/migrations, stored fitness-data/sync changes or paid services. Final evidence commit is documentation-only; runtime proof belongs to tested merge above.
