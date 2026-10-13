@@ -16,4 +16,4 @@ For a later owner-device check, use the production root and preserve storage. Op
 These checks do not prove cross-device synchronization or authorize commercial launch. Firefox/WebKit, actual Android back handling, screen readers and real camera decoding remain open.
 
 
-Selected frontend fixtures now pass locally in Chromium, Firefox and WebKit (9/9 total across three scripts); remote CI pending. See [cross-browser acceptance](CROSS-BROWSER-ACCEPTANCE.md). This does not close real-device, screen-reader or full authenticated engine acceptance.
+Selected frontend fixtures pass locally in Chromium, Firefox and WebKit (9/9 total across three scripts); PR #22 and matching main standard-runner matrix/Full UI CI also SUCCESS. See [cross-browser acceptance](CROSS-BROWSER-ACCEPTANCE.md). This does not close real-device, screen-reader or full authenticated engine acceptance.
