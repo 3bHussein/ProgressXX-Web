@@ -2,7 +2,7 @@
 
 Production: root `index.html`. Version labels identify frontend releases; they do not approve commercial launch or change data formats. Exact commits and CI/deployment evidence are recorded in `docs/DEVELOPMENT-LOG.md`.
 
-## 2.1.0 — 2026-10-14 — frontend candidate
+## 2.1.0 — 2026-10-14 — verified frontend release
 
 - Preserve Food portion metadata across confirmed refreshes; show explicit calorie units and whole-entry quantities when a physical portion is unknown.
 - Manage training-day names and future exercise plans without deleting saved history.

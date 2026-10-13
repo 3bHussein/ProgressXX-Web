@@ -1,4 +1,4 @@
-**Frontend 2.1.0 candidate:** Food portion recovery, training-day management, Settings categories and Arabic/English/RTL implemented. Final local suite82/82 PASS; remote acceptance/deployment pending. See [acceptance](FRONTEND-2.1-ACCEPTANCE.md). Milestone2 stays paused/incomplete; Phase3/4 incomplete; commercial NO-GO.
+**Frontend 2.1.0 VERIFIED:** [PR #34](https://github.com/3bHussein/ProgressXX-Web/pull/34) / `cfc9192`: Food portion/calorie recovery, training-day management and readable bilingual Settings. Final82/82 local, all eight PR/four main workflows SUCCESS; Chromium/Firefox/WebKit new fixtures verified, root/worker deployed byte-exact. Milestone2 stays paused/incomplete; Phase3/4 incomplete; commercial NO-GO. See [acceptance](FRONTEND-2.1-ACCEPTANCE.md).
 
 **Current frontend 2.0.1 batch VERIFIED:** [PR #33](https://github.com/3bHussein/ProgressXX-Web/pull/33) / `6615fe6`: accessible current-page navigation, release/changelog policy and deterministic mock logout confirmation. 78/78 local, all eight PR/four main checks SUCCESS; deployed root/worker exact. Development Log updated. Phase 3/4 still incomplete; database pause persists.
 

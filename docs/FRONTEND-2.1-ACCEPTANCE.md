@@ -18,3 +18,7 @@ New fixtures: `food-portions-after-refresh-browser.cjs`, `training-day-manager-b
 Local/remote final results and exact commit/deployment proof are recorded in `DEVELOPMENT-LOG.md`. Real-device rendering, screen-reader review, actual-account synchronization and two-device conflicts remain separate acceptance gates. No claim of exhaustive translation, bug-free RTL or completed Milestone3.
 
 Database experiments remain paused by owner. Milestone2 PAUSED / INCOMPLETE; Phase3 IN PROGRESS; Phase4 PREPARATION / IN PROGRESS; commercial launch NOT APPROVED. No production tables/grants/RLS/migrations, paid services or account/database experiments are authorized by this work.
+
+## Verified release evidence
+
+[PR #34](https://github.com/3bHussein/ProgressXX-Web/pull/34), tested source `185c761f557a239b6305e37bd5247eec68350b30`, merge `cfc91921ed8be99cf9af0fcbfc22bd659c0adf93`. Final local82/82 PASS; all eight PR/four main workflows SUCCESS. New browser fixtures pass in Chromium/Firefox/WebKit on PR and main. Live root/worker HTTP200 bytes match tested source. Full evidence and limitations remain in Development Log; database pause and commercial NO-GO unchanged.
