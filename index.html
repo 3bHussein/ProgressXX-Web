@@ -9299,11 +9299,28 @@ function pxInspectStorage(){
  el.textContent='LocalStorage: '+(total/1024).toFixed(1)+' KiB across '+keys+' keys. '+Object.entries(groups).map(([k,v])=>k+' '+(v/1024).toFixed(1)+' KiB').join(' • ')+'. IndexedDB and browser cache not included. No data changed.';
  }catch{el.textContent='Local storage inspection unavailable.'}
 }
-function pxLogDiagnostic(type){try{const list=pxSafeRead(PX_DIAG_KEY,[]);list.push({at:new Date().toISOString(),type:String(type).slice(0,50)});PXStore.setItem(PX_DIAG_KEY,JSON.stringify(list.slice(-50)))}catch{}}
-function pxDiagnosticReport(){
- const list=pxSafeRead(PX_DIAG_KEY,[]),queued=typeof pendingWorkoutCount==='function'?pendingWorkoutCount():null;
- return JSON.stringify({app:'ProgressXX',version:APP_VERSION,at:new Date().toISOString(),online:navigator.onLine,workoutRecords:data.length,pendingWorkoutSync:queued,localStorageAvailable:(()=>{try{return !!localStorage}catch{return false}})(),events:list},null,2);
+function pxDiagnosticType(type){return ['runtime_error','unhandled_rejection','error','other'].includes(type)?type:'other'}
+function pxLogDiagnostic(type){
+ try{
+  const stored=pxSafeRead(PX_DIAG_KEY,[]),list=Array.isArray(stored)?stored.slice(-49):[];
+  list.push({at:new Date().toISOString(),type:pxDiagnosticType(type)});
+  PXStore.setItem(PX_DIAG_KEY,JSON.stringify(list));
+ }catch{}
 }
+function pxSanitizedDiagnosticEvents(){
+ const stored=pxSafeRead(PX_DIAG_KEY,[]);
+ if(!Array.isArray(stored))return [];
+ return stored.slice(-50).map(event=>{
+  const at=typeof event?.at==='string'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(event.at)&&Number.isFinite(Date.parse(event.at))?event.at:null;
+  return {at,type:pxDiagnosticType(event?.type)};
+ });
+}
+function pxDiagnosticReport(){
+ const queued=typeof pendingWorkoutCount==='function'?pendingWorkoutCount():null;
+ return JSON.stringify({app:'ProgressXX',version:APP_VERSION,at:new Date().toISOString(),online:navigator.onLine,workoutRecords:data.length,pendingWorkoutSync:queued,localStorageAvailable:(()=>{try{return !!localStorage}catch{return false}})(),events:pxSanitizedDiagnosticEvents()},null,2);
+}
+window.addEventListener('error',()=>pxLogDiagnostic('runtime_error'));
+window.addEventListener('unhandledrejection',()=>pxLogDiagnostic('unhandled_rejection'));
 function pxRenderDiagnostics(){const el=$('pxDiagnosticsInfo');if(el)el.textContent=pxDiagnosticReport()}
 function pxCopyDiagnostics(){
  const report=pxDiagnosticReport();
