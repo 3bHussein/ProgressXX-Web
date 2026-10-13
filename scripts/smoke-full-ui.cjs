@@ -1,9 +1,13 @@
 const {chromium}=require('playwright');
+const {createLogoutDialogHandler}=require('../tests/helpers/logout-dialog.cjs');
 (async()=>{
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  const page=await browser.newPage({viewport:{width:390,height:844}});
  const errors=[];
  let savedCloudPayload={},cloudWrites=0,legacyGoogleCalls=0,productWrites=[],foodEntryWrites=[];
+ let holdLogoutSnapshot=false,releaseLogoutSnapshot,notifyLogoutSnapshot,ackLogoutSnapshot;
+ const logoutSnapshotStarted=new Promise(resolve=>notifyLogoutSnapshot=resolve);
+ const logoutSnapshotFulfilled=new Promise(resolve=>ackLogoutSnapshot=resolve);
  page.on('request',req=>{if(/script\.google\.com|docs\.google\.com/.test(req.url()))legacyGoogleCalls++});
  page.on('pageerror',error=>errors.push(error.stack||error.message));
  await page.route('**/auth/v1/**',async route=>{
@@ -48,7 +52,18 @@ const {chromium}=require('playwright');
    await route.fulfill({status:201,contentType:'application/json',body:JSON.stringify([{id:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',...row}])});
    return;
   }
-  if(isPost&&req.url().includes('/user_app_snapshots')){const body=req.postDataJSON();if(body?.payload&&typeof body.payload==='object'){savedCloudPayload=body.payload;cloudWrites++}}
+  if(isPost&&req.url().includes('/user_app_snapshots')){
+   const body=req.postDataJSON();
+   if(holdLogoutSnapshot&&JSON.stringify(body?.payload||{}).includes('qa-workout-relogin')){
+    holdLogoutSnapshot=false;
+    const release=new Promise(resolve=>releaseLogoutSnapshot=resolve);notifyLogoutSnapshot();
+    await release;
+    savedCloudPayload=body.payload;cloudWrites++;
+    try{await route.fulfill({status:200,contentType:'application/json',body:'[{}]'})}finally{ackLogoutSnapshot()}
+    return;
+   }
+   if(body?.payload&&typeof body.payload==='object'){savedCloudPayload=body.payload;cloudWrites++}
+  }
   await route.fulfill({status:200,contentType:'application/json',body:req.method()==='GET'?JSON.stringify(Object.keys(savedCloudPayload||{}).length?[{payload:savedCloudPayload}]:[]):'[{}]'});
  });
  await page.route('https://unpkg.com/**',route=>route.abort());
@@ -253,6 +268,8 @@ const {chromium}=require('playwright');
      id:'qa-weight-relogin',date:'2026-10-09',weight:78.4,note:'QA roundtrip',createdAt:'2026-10-09T08:00:00.000Z',_pending:false
    }]);
  });
+ // Hold this final synthetic snapshot to deterministically exercise the pending-sync confirm.
+ holdLogoutSnapshot=true;
  // Synthetic Workout Log record must persist through the account snapshot.
  await page.evaluate(()=>{
    data=data.filter(x=>x.id!=='qa-workout-relogin');
@@ -261,8 +278,19 @@ const {chromium}=require('playwright');
  });
  // Account logout/login regression: retain account-scoped Workout Schedule and Weight Goal.
  // Use mock Supabase credentials and data only; do not touch production accounts.
- await page.locator('#pxLogout').click();
- await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===false,null,{timeout:15000});
+ // Pending-sync confirmation is expected in this mock roundtrip; choose sign out explicitly.
+ // Never silently accept an unrelated alert/confirmation. Existing record assertions remain below.
+ let logoutStartTimeout;
+ await Promise.race([logoutSnapshotStarted,new Promise((_,reject)=>{logoutStartTimeout=setTimeout(()=>reject(Error('Mock pending snapshot did not start')),10000)})]).finally(()=>clearTimeout(logoutStartTimeout));
+ const logoutDialogs=createLogoutDialogHandler(page,{beforeAccept:async()=>{releaseLogoutSnapshot();await logoutSnapshotFulfilled}});
+ try{
+   await page.locator('#pxLogout').click();
+   await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===false,null,{timeout:15000});
+   logoutDialogs.assertValid();
+ }catch(error){logoutDialogs.assertValid();throw error}
+ finally{releaseLogoutSnapshot?.();logoutDialogs.dispose()}
+ if(logoutDialogs.confirmations!==1)throw Error('Expected one deterministic pending-sync confirmation');
+ console.log('Mock logout pending-sync confirmations accepted: '+logoutDialogs.confirmations);
  await page.fill('#pxEmail','qa@example.test');
  await page.fill('#pxPassword','demo-password');
  await page.click('#pxSignin');

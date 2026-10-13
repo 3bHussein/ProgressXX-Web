@@ -1,0 +1,3 @@
+const EXPECTED_LOGOUT_CONFIRM='Cloud sync is still pending. Sign out anyway? Local changes will remain on this device.';
+function createLogoutDialogHandler(page,{beforeAccept=()=>{}}={}){let confirmations=0,unexpected=0;const listener=async dialog=>{try{if(dialog.type()==='confirm'&&dialog.message()===EXPECTED_LOGOUT_CONFIRM){confirmations++;await beforeAccept();await dialog.accept()}else{unexpected++;await dialog.dismiss()}}catch{unexpected++;try{await dialog.dismiss()}catch{}}};page.on('dialog',listener);return {get confirmations(){return confirmations},assertValid(){if(unexpected)throw Error('Unexpected dialog during mock logout')},dispose(){page.removeListener('dialog',listener)}}}
+module.exports={EXPECTED_LOGOUT_CONFIRM,createLogoutDialogHandler};
