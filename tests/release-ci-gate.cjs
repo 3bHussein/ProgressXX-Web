@@ -1,0 +1,23 @@
+const assert=require('node:assert/strict'),{requiredWorkflows,assess,waitForValidation}=require('../scripts/release-ci-gate.cjs');
+const sha='a'.repeat(40),repository='3bHussein/ProgressXX-Web';
+const run=(overrides={})=>({id:1,head_sha:sha,head_branch:'main',event:'push',head_repository:{full_name:repository},status:'completed',conclusion:'success',...overrides});
+const all=r=>Object.fromEntries(requiredWorkflows.map(w=>[w,[r]]));
+const state=runsByWorkflow=>assess({sha,repository,runsByWorkflow}).state;
+(async()=>{
+ assert.equal(state(all(run())),'passed');
+ assert.equal(state(all(run({event:'workflow_dispatch'}))),'passed','Trusted same-SHA main manual validation supports manual deploy');
+ for(const conclusion of ['failure','cancelled','timed_out','skipped','neutral','action_required',null])assert.equal(state(all(run({conclusion}))),'blocked');
+ for(const change of [{head_sha:'b'.repeat(40)},{head_branch:'feature'},{event:'pull_request'},{head_repository:{full_name:'other/repo'}}])assert.equal(state(all(run(change))),'pending');
+ assert.equal(state(all(run({status:'in_progress',conclusion:null}))),'pending');
+ assert.equal(state(Object.fromEntries(requiredWorkflows.map(w=>[w,[]]))),'pending');
+ const mixed=all(run());mixed[requiredWorkflows[1]]=[run(),run({id:2,conclusion:'failure'})];assert.equal(state(mixed),'blocked','Newest failure overrides old success');
+ mixed[requiredWorkflows[1]]=[run(),run({id:2,status:'queued',conclusion:null})];assert.equal(state(mixed),'pending');
+ assert.throws(()=>state(all(run({id:undefined}))),/Malformed/);assert.throws(()=>state(all(run({status:'unknown'}))),/Malformed/);
+ assert.throws(()=>assess({sha:'bad',repository,runsByWorkflow:{}}),/identity/);assert.throws(()=>state({}),/response/);
+ let clock=0,round=0;
+ await waitForValidation({sha,repository,timeoutMs:100,pollMs:10,now:()=>clock,sleep:async ms=>{clock+=ms;round++},listRuns:async()=>round?[run()]:[]});assert.equal(round,1);
+ clock=0;await assert.rejects(waitForValidation({sha,repository,timeoutMs:20,pollMs:10,now:()=>clock,sleep:async ms=>clock+=ms,listRuns:async()=>[]}),/timeout/);assert.equal(clock,20);
+ await assert.rejects(waitForValidation({sha,repository,listRuns:async()=>[run({conclusion:'failure'})],sleep:async()=>assert.fail('Must fail without waiting')}),/blocked/);
+ await assert.rejects(waitForValidation({sha,repository,listRuns:async()=>{throw Error('API unavailable')}}),/API unavailable/);
+ console.log('PASS: release gate accepts only latest successful same-SHA main push/manual runs; failure/cancel/stale/foreign/missing/malformed/API errors fail closed; bounded delayed success/timeout');
+})().catch(e=>{console.error(e);process.exitCode=1});

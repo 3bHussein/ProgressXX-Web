@@ -26,6 +26,8 @@ jobs:
           sleep 2
           failed=0
           for test_file in \
+            tests/release-ci-workflow-contract.cjs \
+            tests/release-ci-gate.cjs \
             scripts/smoke-full-ui.cjs \
             tests/login-imported-archive-regression.cjs \
             tests/locked-workspace-refresh-browser.cjs \

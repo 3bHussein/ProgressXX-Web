@@ -3,6 +3,19 @@ on:
   push:
     branches: [main]
     paths:
+      - tests/release-ci-workflow-contract.cjs
+      - 'tests/login-imported-archive-regression.cjs'
+      - 'tests/login-optional-render-recovery.cjs'
+      - 'scripts/smoke-full-ui.cjs'
+      - '.github/workflows/deploy-pages.yml'
+      - 'icon-512.svg'
+      - 'icon-192.svg'
+      - 'sw.js'
+      - 'manifest.webmanifest'
+      - 'commercial-v1.html'
+      - 'full-app.html'
+      - 'tests/release-ci-gate.cjs'
+      - 'scripts/release-ci-gate.cjs'
       - 'scripts/conflict-*.cjs'
       - 'scripts/versioned-cas-reference.cjs'
       - 'scripts/snapshot-conflict-guard.cjs'
@@ -29,6 +42,8 @@ jobs:
       - name: Verify isolated contracts and production risk classifier
         run: |
           set -eu
+          node tests/release-ci-workflow-contract.cjs
+          node tests/release-ci-gate.cjs
           node tests/cas-concurrency-matrix.cjs
           node tests/cas-delete-unrelated-edit-acceptance.cjs
           node tests/snapshot-conflict-guard-contract.cjs
