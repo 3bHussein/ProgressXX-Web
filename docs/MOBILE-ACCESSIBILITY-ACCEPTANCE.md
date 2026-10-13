@@ -17,3 +17,8 @@ These checks do not prove cross-device synchronization or authorize commercial l
 
 
 Selected frontend fixtures pass locally in Chromium, Firefox and WebKit (9/9 total across three scripts); PR #22 and matching main standard-runner matrix/Full UI CI also SUCCESS. See [cross-browser acceptance](CROSS-BROWSER-ACCEPTANCE.md). This does not close real-device, screen-reader or full authenticated engine acceptance.
+
+
+## 2026-10-13 Cairo — Workout Log keyboard and screen-reader controls
+
+Root-only frontend fix: load-more keeps its DOM button and keyboard focus between batches. On the final batch, the removed control transfers focus to the first newly added Edit button. Search/week/status/sort have accessible names, Edit identifies its exercise/week and result count is a polite atomic status. Stored data, sorting/search and synchronization unchanged. New UI-only browser regression uses Enter/Space to paginate 60 synthetic workouts, checks final focus, named controls, search and immutable input; zero backend calls. Registered in Full UI and Firefox/WebKit matrix. Local 69/69 Full UI/static checks PASS, including new Chromium regression; remote CI/deployment pending. Database experiments remain paused; Milestone 2 incomplete, Phase 3 IN PROGRESS, commercial launch NOT APPROVED. No SQL/production schema/grants/RLS/migrations, staging/backups or paid services.

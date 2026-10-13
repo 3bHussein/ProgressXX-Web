@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - index.html
+      - tests/workout-log-keyboard-browser.cjs
       - tests/workout-log-incremental-browser.cjs
       - tests/barcode-lazy-library-browser.cjs
       - tests/helpers/browser-engine.cjs
@@ -15,6 +16,7 @@ on:
     branches: [main]
     paths:
       - index.html
+      - tests/workout-log-keyboard-browser.cjs
       - tests/workout-log-incremental-browser.cjs
       - tests/barcode-lazy-library-browser.cjs
       - tests/helpers/browser-engine.cjs
@@ -63,3 +65,4 @@ jobs:
           node tests/pwa-install-permission-recovery-browser.cjs
           node tests/barcode-lazy-library-browser.cjs
           node tests/workout-log-incremental-browser.cjs
+          node tests/workout-log-keyboard-browser.cjs
