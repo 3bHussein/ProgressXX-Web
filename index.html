@@ -2696,7 +2696,7 @@ if($('foodQuickProduct'))$('foodQuickProduct').addEventListener('change',()=>{
   $('foodQuickAmount').dataset.changed='';
   if($('foodQuickTime')&&!$('foodQuickTime').dataset.changed)$('foodQuickTime').value=currentTimeHHMM();
   updateFoodQuickPreview()
-});if($('foodQuickAmount'))$('foodQuickAmount').addEventListener('input',()=>{$('foodQuickAmount').dataset.changed='1';updateFoodQuickPreview()});['search','weekFilter','statusFilter','logSort'].forEach(id=>{const el=$(id);if(el)el.addEventListener('input',()=>renderLog(true))});$('exerciseSelect').addEventListener('change',renderExercise);$('progressDaySelect').addEventListener('change',()=>{buildProgressFilters();renderExercise()});$('importFile').addEventListener('change',importJSON);if($('restoreFullBackupFile'))$('restoreFullBackupFile').addEventListener('change',restoreFullBackup);$('fDay').addEventListener('change',()=>{buildExerciseOptions($('fDay').value);if(editingId===null){$('fExercise').value='';$('fPerformance').value='';$('lastPerfHint').textContent=''}});$('fExercise').addEventListener('change',prefillLastPerformance);$('fExercise').addEventListener('input',()=>{const name=$('fExercise').value.trim();if(exercisesForDay($('fDay').value).some(x=>x.toLowerCase()===name.toLowerCase()))prefillLastPerformance()});}
+});if($('foodQuickAmount'))$('foodQuickAmount').addEventListener('input',()=>{$('foodQuickAmount').dataset.changed='1';updateFoodQuickPreview()});bindLogFilters();$('exerciseSelect').addEventListener('change',renderExercise);$('progressDaySelect').addEventListener('change',()=>{buildProgressFilters();renderExercise()});$('importFile').addEventListener('change',importJSON);if($('restoreFullBackupFile'))$('restoreFullBackupFile').addEventListener('change',restoreFullBackup);$('fDay').addEventListener('change',()=>{buildExerciseOptions($('fDay').value);if(editingId===null){$('fExercise').value='';$('fPerformance').value='';$('lastPerfHint').textContent=''}});$('fExercise').addEventListener('change',prefillLastPerformance);$('fExercise').addEventListener('input',()=>{const name=$('fExercise').value.trim();if(exercisesForDay($('fDay').value).some(x=>x.toLowerCase()===name.toLowerCase()))prefillLastPerformance()});}
 function pxScrollBehavior(){return window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?'auto':'smooth'}
 function go(p){currentPage=p;document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===p));document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===p));const activeNav=document.querySelector('.navbtn.active');if(activeNav&&window.innerWidth<=820){setTimeout(()=>activeNav.scrollIntoView({behavior:pxScrollBehavior(),block:'nearest',inline:'center'}),0)}if(p==='intelligence'){renderIntelligence()}if(p==='analytics'){renderAnalytics();if($('progressPhotoDate')&&!$('progressPhotoDate').value)$('progressPhotoDate').value=localDateKey();syncWeightCheckinsFromSheet(true);}if(p==='daily'){renderDaily();syncRemindersFromSheet()}if(p==='nutrition'){renderNutrition();syncNutritionFromSheet(null,true)}if(p==='home'){renderNutritionHome();syncNutritionFromSheet(localDateKey(),true)}if(p==='settings'){renderSyncCenter();renderWorkoutSchedule();renderDataHealth(false);renderAutoBackupList();previewDataRepairs();updatePwaInstallUI();}scrollTo(0,0)}
 function handleAndroidBack(){
@@ -3137,6 +3137,15 @@ function renderHome(){
 function weeklyCounts(){const m={};data.forEach(x=>{if(x.week)m[x.week]=(m[x.week]||0)+1});return Object.entries(m).map(([w,n])=>({w:+w,n})).sort((a,b)=>a.w-b.w)}
 function renderWeekChart(id){const a=weeklyCounts().slice(-20), max=Math.max(1,...a.map(x=>x.n));$(id).innerHTML=a.map(x=>`<div class="bar" style="height:${Math.max(8,x.n/max*100)}%" data-tip="W${x.w}: ${x.n}"></div>`).join('')||'<div class="empty">No weekly data</div>'}
 let logVisibleCount=24;
+let logRenderFrame=0;
+let logRenderedCards=[],logRenderedNodes=[];
+function bindLogFilters(){
+  ['search','weekFilter','statusFilter','logSort'].forEach(id=>{const el=$(id);if(el)el.addEventListener('input',scheduleLogRender)});
+}
+function scheduleLogRender(){
+  if(logRenderFrame)return;
+  logRenderFrame=requestAnimationFrame(()=>{logRenderFrame=0;renderLog(true)});
+}
 function logSearchText(x){
   return [
     x.exercise,x.day,'w'+(x.week??''),x.week,x.date,x.status,x.performance,x.notes,workoutDisplayTime(x)
@@ -3189,11 +3198,22 @@ function compactWorkoutCard(x){
   </div>`;
 }
 function renderLog(reset=false){
+  if(logRenderFrame){cancelAnimationFrame(logRenderFrame);logRenderFrame=0}
   if(reset)logVisibleCount=24;
   const f=filtered(),shown=f.slice(0,logVisibleCount);
   const total=f.length;
   $('resultCount').textContent=total?(total+' match'+(total===1?'':'es')+' • showing '+shown.length):'0 matches';
-  $('logList').innerHTML=shown.map(compactWorkoutCard).join('')||'<div class="empty"><b>Nothing matches.</b><br><span class="tiny muted">Try fewer words or clear one of the filters.</span></div>';
+  const list=$('logList'),cards=shown.map(compactWorkoutCard);
+  // Reuse the unchanged prefix when loading more. Compare rendered content,
+  // not record IDs: edits, reorders and restored snapshots must stay visible.
+  const canAppend=logRenderedCards.length>0&&cards.length>=logRenderedCards.length
+    &&list.children.length===logRenderedNodes.length
+    &&logRenderedCards.every((card,i)=>card===cards[i]&&list.children[i]===logRenderedNodes[i]);
+  if(canAppend){
+    if(cards.length>logRenderedCards.length)list.insertAdjacentHTML('beforeend',cards.slice(logRenderedCards.length).join(''));
+  }else list.innerHTML=cards.join('')||'<div class="empty"><b>Nothing matches.</b><br><span class="tiny muted">Try fewer words or clear one of the filters.</span></div>';
+  logRenderedCards=cards;
+  logRenderedNodes=cards.length?Array.from(list.children):[];
   const pager=$('logPager');
   if(pager){
     if(total>shown.length)pager.innerHTML='<span class="tiny muted">'+shown.length+' of '+total+'</span><button class="btn soft" onclick="loadMoreLogs()">Load 24 more</button>';
