@@ -26,6 +26,10 @@ jobs:
           sleep 2
           failed=0
           for test_file in \
+            tests/ui-language-catalogue.cjs \
+            tests/settings-language-pages-browser.cjs \
+            tests/training-day-manager-browser.cjs \
+            tests/food-portions-after-refresh-browser.cjs \
             tests/logout-dialog-policy-browser.cjs \
             tests/release-version-changelog.cjs \
             tests/navigation-current-page-browser.cjs \

@@ -1570,3 +1570,18 @@ Corrected full UI fixture logs exactly one expected pending-sync confirmation in
 Dedicated deploy job115554433672 records Pages `build_type=workflow`, accepts same-SHA Full UI38472368995, Fast38472369045 and Cross-browser38472368994 before publishing, and passes the deterministic logout smoke with confirmations accepted1. No PostgreSQL or legacy Jekyll run at merge SHA. Actual root/worker HTTP200 bytes match tested source: root `ee0aae188fc55554dff8af6e3971f55df2ad36f8bf18b7a9e915b9b2ab086746`, worker `323f5022828b49efc6b39105e1c53e92716f73e74a9da738aec0dd1d56db4515`.
 
 Completed selected Phase 3 navigation semantics and fixture reliability, plus Phase 4 frontend version/changelog/release policy tracking. Root APP_VERSION/initial badges/Diagnostics/backup app metadata are2.0.1, backup format3/storage/sync contracts unchanged. See [release policy](RELEASE-POLICY.md), [navigation acceptance](NAVIGATION-ACCESSIBILITY.md), [mock logout acceptance](MOCK-LOGOUT-CI-ACCEPTANCE.md), and [changelog](../CHANGELOG.md). Version increments remain reviewer responsibility; live rollback/staged rollout, owners/support, actual devices/screen readers, legal and P0 acceptance remain open. Phase 3 IN PROGRESS; Phase 4 PREPARATION / IN PROGRESS; Milestone 2 paused/incomplete; commercial launch NOT APPROVED. No live Supabase/SQL/account/staging/backup experiments, production schema/grants/RLS/migrations, stored fitness-data/sync changes or paid services. Final evidence commit is documentation-only; runtime proof belongs to tested merge above.
+
+
+## 2026-10-14 Cairo — Frontend2.1 Food/Settings/language/training-plan candidate
+
+Implemented owner-requested Food calorie/portion repair, marketplace-inspired readable Settings categories, device-level Arabic/English/RTL across eight routes and editable training-day names/future exercise plans. Food regression first reproduced confirmed-refresh metadata loss (150g became undefined), then passed after retaining confirmed local metadata. Actual API adapter source confirms client IDs remain stable despite server UUIDs. Server-only records use one whole entry, never invented gram quantities.
+
+Day fixture verifies ID/history/notes retention, schedule/session rename, queued upserts, duplicate guard, recoverable one-time storage-failure rollback, future-plan add/remove preserving historical/current-session exercises and quoted exercise controls. Language fixture exposed Log horizontal overflow at768px in RTL; responsive filter columns corrected, then targeted all-eight-route320/390/768/1280 checks PASS. Catalogue782 entries/static coverage PASS; language/protocol/input values remain distinct. English scientific terms/brands/unknown external errors may remain; no exhaustive RTL or native screen-reader claim. All tests use synthetic fixtures and blocked external requests; database pause honored. Full suite/remote/deployment pending.
+
+
+## 2026-10-14 Cairo — Frontend2.1 final local suite verified
+
+Final parallel root/static/browser suite **82/82 PASS**, including all four new regressions and deterministic full UI logout with existing relogin data assertions. No database calls/experiments; CI pause/static migration guards pass. Remote PR/main/browser/deployment evidence pending. Phase3 remains IN PROGRESS, Phase4 PREPARATION / IN PROGRESS; Milestone2 paused/incomplete and commercial NO-GO.
+
+
+Final visual review of all eight mobile routes and desktop Arabic Settings identified cramped Food/Daily header actions despite no root overflow. Mobile headers now wrap below their descriptions so buttons remain readable. Final repeat verification follows this additional CSS fix. Screenshots use synthetic empty fixtures, not real user data.

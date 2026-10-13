@@ -3,6 +3,12 @@ on:
   push:
     branches: [main]
     paths:
+      - docs/UI-LANGUAGE-CATALOGUE.json
+      - scripts/update-ui-catalogue.cjs
+      - tests/ui-language-catalogue.cjs
+      - tests/settings-language-pages-browser.cjs
+      - tests/training-day-manager-browser.cjs
+      - tests/food-portions-after-refresh-browser.cjs
       - tests/helpers/logout-dialog.cjs
       - tests/logout-dialog-policy-browser.cjs
       - tests/navigation-current-page-browser.cjs
@@ -35,6 +41,12 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - docs/UI-LANGUAGE-CATALOGUE.json
+      - scripts/update-ui-catalogue.cjs
+      - tests/ui-language-catalogue.cjs
+      - tests/settings-language-pages-browser.cjs
+      - tests/training-day-manager-browser.cjs
+      - tests/food-portions-after-refresh-browser.cjs
       - tests/helpers/logout-dialog.cjs
       - tests/logout-dialog-policy-browser.cjs
       - tests/navigation-current-page-browser.cjs
@@ -97,6 +109,9 @@ jobs:
           node tests/workout-log-incremental-browser.cjs
           node tests/workout-log-keyboard-browser.cjs
           node tests/food-priority-collapse-browser.cjs
+          node tests/settings-language-pages-browser.cjs
+          node tests/training-day-manager-browser.cjs
+          node tests/food-portions-after-refresh-browser.cjs
           node tests/logout-dialog-policy-browser.cjs
           node tests/navigation-current-page-browser.cjs
           node tests/insights-anatomy-controls-browser.cjs
