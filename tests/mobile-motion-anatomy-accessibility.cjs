@@ -1,7 +1,7 @@
-const {chromium}=require('playwright');
+const {browserType,engine}=require('./helpers/browser-engine.cjs');
 const assert=require('node:assert/strict');
 (async()=>{
- const browser=await chromium.launch({headless:true});
+ const browser=await browserType.launch({headless:true});
  try{
   for(const width of [320,390,768]){
    const page=await browser.newPage({viewport:{width,height:800},reducedMotion:'reduce'});
@@ -56,6 +56,6 @@ const assert=require('node:assert/strict');
    assert.deepEqual(errors,[]);assert.deepEqual(privateRequests,[],'UI test must not contact Supabase');
    await page.close();
   }
-  console.log('PASS: root UI at 320/390/768, reduced-motion scroll, lazy async images, Enter/Space zoom, labelled modal, focus trap/restore and 44px controls; no Supabase requests');
+  console.log('PASS ['+engine+']: root UI at 320/390/768, reduced-motion scroll, lazy async images, Enter/Space zoom, labelled modal, focus trap/restore and 44px controls; no Supabase requests');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exitCode=1});

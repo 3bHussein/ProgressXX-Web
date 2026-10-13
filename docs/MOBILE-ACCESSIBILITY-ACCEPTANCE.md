@@ -14,3 +14,6 @@ Regression: `tests/mobile-barcode-keyboard-rtl-browser.cjs`, registered in Full 
 For a later owner-device check, use the production root and preserve storage. Open the scanner and close it while permission is pending, confirm the camera indicator stops after startup completes, reopen once, use manual entry after denying permission, and test Arabic anatomy search with and without results. Do not publish personal workout/food data in test reports.
 
 These checks do not prove cross-device synchronization or authorize commercial launch. Firefox/WebKit, actual Android back handling, screen readers and real camera decoding remain open.
+
+
+Selected frontend fixtures now pass locally in Chromium, Firefox and WebKit (9/9 total across three scripts); remote CI pending. See [cross-browser acceptance](CROSS-BROWSER-ACCEPTANCE.md). This does not close real-device, screen-reader or full authenticated engine acceptance.
