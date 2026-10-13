@@ -1,3 +1,5 @@
+**Current operations batch:** 73/73 local PASS; strict Diagnostics redaction and generic local error capture, [runbook](OPERATIONS-RUNBOOK.md) prepared. PR/main/deployment pending. Phase 3 and Phase 4 remain incomplete.
+
 **Current Food batch VERIFIED:** [PR #29](https://github.com/3bHussein/ProgressXX-Web/pull/29) / `a84f3f5`: owner-requested first four sections, collapsed extras and alphabetical quick add. 72/72 local, all eight PR and matching main checks SUCCESS; deployed root exact. Database pause persists.
 
 ## Current milestone map — 2026-10-13 Cairo
@@ -8,7 +10,7 @@
 | 1 — Authentication/isolation | PARTIAL | Synthetic regressions verified; real-account lifecycle/isolation open |
 | 2 — Data safety/synchronization | PAUSED / INCOMPLETE | Owner database pause; live CAS/security and real two-device acceptance open |
 | 3 — Cross-platform quality/CI | ACTIVE / IN PROGRESS | Frontend/PWA/selected engines/benchmarks verified; branch protection audit, full accessibility and actual devices open |
-| 4 — Operations/legal | NOT COMPLETE | Monitoring, recovery/rollback, policies and support acceptance open |
+| 4 — Operations/legal | PREPARATION / IN PROGRESS | Local redacted diagnostics and runbook prepared; remote alerts, assigned support/incident owners, live rollback and policies open |
 | 5 — Private beta | NOT STARTED | P0/P1 closure and consented independent testers required |
 | 6 — Commercial launch | NOT APPROVED | Safety acceptance and explicit launch decision required |
 
@@ -955,3 +957,10 @@ Local full UI/static sweep **72/72 PASS**. New UI-only regression at 320/390/768
 [PR #29](https://github.com/3bHussein/ProgressXX-Web/pull/29), source `93624afdd957773f6d088439f191ac2a4e313493`, merge `a84f3f5eb747151eee43e63afbd29910a941996b`. All eight PR workflows SUCCESS. Matching main: [Fast conflict safety contracts #38461223801](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38461223801) SUCCESS, [Cross-browser frontend accessibility #38461223725](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38461223725) SUCCESS, [Deploy ProgressXX Full App #38461223745](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38461223745) SUCCESS, [Full ProgressXX migration smoke #38461223808](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38461223808) SUCCESS. Food regression PASS on Chromium (local/Full UI), Firefox and WebKit (standard PR/main CI), each at 320/390/768/1280; selected frontend matrix now includes seven fixtures per engine. Local full UI/static **72/72 PASS**. No PostgreSQL or legacy Jekyll run at this merge SHA. Actual root and worker HTTP responses match tested bytes: root `1621448aa202e37ee8f9d81cd57dd50cc2c494ae2f75596144dab9199343cccc`, worker `323f5022828b49efc6b39105e1c53e92716f73e74a9da738aec0dd1d56db4515`.
 
 Only Food/nutrition layout changed: Nutrition diary, Quick add food, Today's food, Food library are first in actual DOM and visual order. Secondary Saved Meals/Meal Planner/History, protein/favorites/recent/online-search sections start collapsed with native keyboard controls and 44px summaries; expanded state survives render. Quick-add list uses case-insensitive natural alphabetical order without mutating library/diary or losing selection. All Food IDs retained and other section markup unchanged. Existing app synchronization continues. No database/SQL/Supabase/staging/backups experiments, schema/grants/RLS/migration changes or paid services. Database pause persists; Phase 3 IN PROGRESS, Milestone 2 incomplete, commercial launch NOT APPROVED. Physical devices/assistive technology/live sync remain separate acceptance. Final evidence commit is documentation-only; runtime proof is on merge above.
+
+
+## 2026-10-13 Cairo — Safe operations preparation and diagnostic redaction
+
+Root Diagnostics now projects only allowlisted event types and ISO timestamps, excludes arbitrary legacy/imported fields and bounds reports to 50 events. Generic runtime error/unhandled rejection categories are captured locally without exception content or automatic remote uploads. Malformed storage falls back safely; report reads are nonmutating and diagnostic clearing preserves unrelated fitness records. New mock-only browser regression added to Full UI and Firefox/WebKit matrix. Local full sweep **73/73 PASS**. Remote PR/main/deployment pending; no remote pass claimed.
+
+[Operations runbook](OPERATIONS-RUNBOOK.md) prepares triage, private evidence preservation and new-commit frontend rollback through same-SHA release gates. No live rollback rehearsal, assigned incident/support owner or remote monitoring is claimed. Read-only rulesets API returned []; classic main protection read returned 403 Resource not accessible by integration, so protection remains unverified. No settings changed. Phase 3 IN PROGRESS; Phase 4 preparation started, incomplete. Database experiments remain paused; no SQL/Supabase/staging/backup experiments, production schema/grants/RLS/migrations, fitness-record/sync changes or paid services. Milestone 2 incomplete; commercial launch NOT APPROVED.
