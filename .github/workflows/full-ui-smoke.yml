@@ -26,6 +26,9 @@ jobs:
           sleep 2
           failed=0
           for test_file in \
+            tests/logout-dialog-policy-browser.cjs \
+            tests/release-version-changelog.cjs \
+            tests/navigation-current-page-browser.cjs \
             tests/insights-anatomy-controls-browser.cjs \
             tests/insights-panel-recovery-browser.cjs \
             tests/diagnostics-redaction-browser.cjs \

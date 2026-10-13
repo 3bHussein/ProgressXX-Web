@@ -14,7 +14,7 @@
 | 1 — Authentication/isolation | PARTIAL | Synthetic regressions verified; real-account lifecycle/isolation open |
 | 2 — Data safety/synchronization | PAUSED / INCOMPLETE | Owner database pause; live CAS/security and real two-device acceptance open |
 | 3 — Cross-platform quality/CI | ACTIVE / IN PROGRESS | Frontend/PWA/selected engines/benchmarks verified; branch protection audit, full accessibility and actual devices open |
-| 4 — Operations/legal | PREPARATION / IN PROGRESS | Local redacted diagnostics and runbook prepared; remote alerts, assigned support/incident owners, live rollback and policies open |
+| 4 — Operations/legal | PREPARATION / IN PROGRESS | Local diagnostics, runbook and version/changelog policy prepared; remote alerts, assigned owners, staged rollout/live rollback and legal policies open |
 | 5 — Private beta | NOT STARTED | P0/P1 closure and consented independent testers required |
 | 6 — Commercial launch | NOT APPROVED | Safety acceptance and explicit launch decision required |
 
@@ -1009,3 +1009,27 @@ Root-only frontend fixes: six fields gain accessible names; anatomy search/regio
 Dedicated deploy job115542726457 records Pages `build_type=workflow` and accepts same-SHA Full UI38468949520, Fast38468949494 and Cross-browser38468949518 before publishing. No PostgreSQL or legacy Jekyll run at merge SHA. Actual public root/worker HTTP200 bytes match tested source: root `97d23e4d825c30180c1038d602db2393515a405badd7ea6bc8cabf4965733a45`, worker `323f5022828b49efc6b39105e1c53e92716f73e74a9da738aec0dd1d56db4515`.
 
 [Acceptance and limits](INSIGHTS-ANATOMY-ACCESSIBILITY.md): six named fields, anatomy bilingual filters, muscle/coverage pressed states, selected-button focus plus scroll retention and external filter focus verified. Real screen readers, physical devices, contrast and full-app accessibility/translation remain open. Phase 3 IN PROGRESS; Phase 4 preparation incomplete; Milestone 2 paused/incomplete and commercial launch NOT APPROVED. No SQL/Supabase/staging/backups, production schema/grants/RLS/migrations, stored fitness-data/sync changes or paid services. Final closeout is documentation-only; runtime proof belongs to the tested merge above.
+
+
+## 2026-10-14 Cairo — Navigation accessibility and release tracking preparation
+
+Root main navigation gains an accessible name and one current-page marker, updated on all eight existing routes while retaining button focus. APP_VERSION moves from historical2.0.0 to frontend candidate2.0.1; Diagnostics/full-backup app metadata use this constant, storage keys and backup format3 unchanged. Added CHANGELOG and frontend release policy covering numbering, same-SHA validation, exact deployed-byte evidence and newly versioned frontend rollback commits. CI contract rejects missing/invalid version, newest-changelog mismatch and duplicate numbered entries; historical increments remain reviewer responsibility.
+
+New UI-only navigation regression at320/390/768/1280 verifies initial/current route, one active section, Enter/Space focus retention, diagnostic version and immutable synthetic arrays with page renderer/sync hooks mocked and zero backend calls. Initial Chromium navigation and version-policy positive/negative tests PASS; final local suite/remote CI/deployment pending. This does not certify full page hooks, staged rollout, assigned support/release owners, live rollback or commercial approval. Database experiments remain paused; no SQL/Supabase/staging/backups, production schema/grants/RLS/migrations, stored fitness-data/sync changes or paid services. Phase 3 IN PROGRESS; Phase 4 preparation incomplete; Milestone 2 paused/incomplete; commercial launch NOT APPROVED.
+
+
+## 2026-10-14 Cairo — Mock logout harness diagnosis and explicit dialog policy
+
+Earlier local sweep77/77 PASS; after aligning initial version badges, final navigation/version checks PASS, but old full UI sign-out wait timed out again. Root sign-out correctly asks for confirmation if snapshot revision is still pending; the harness had no dialog listener, so the expected confirmation could be auto-dismissed and logout canceled. This explains a timing-sensitive harness route; production logout/pending-data safeguards remain unchanged.
+
+Added a scoped mock-logout handler accepting only the exact expected pending-sync confirm. Unrelated dialogs are dismissed and fail validation, listener removed after logout. Existing Food/Daily/Weight/Workout/Schedule relogin record assertions remain. New native-browser dialog regression checks expected acceptance, unrelated confirm/alert rejection, disposal and reproduction of prior default-dismiss behavior on a blank page with zero network/account/database activity. Registered in Full UI and selected engines. Final78-check sweep and standard CI pending; no final pass claimed yet. Official Playwright dialog reference: https://playwright.dev/docs/dialogs. Supabase skill reviewed for the mock auth context; owner database pause overrides live-query guidance. No Supabase API convention, production auth or DB configuration changed.
+
+
+## 2026-10-14 Cairo — Deterministic pending-confirm mock roundtrip VERIFIED locally
+
+Strengthened the full UI mock fixture to hold only the final snapshot containing qa-workout-relogin in flight. Clicking production logout while that mocked upload is pending must show exactly one expected confirmation; the scoped handler releases/acknowledges the mock response before accepting. Actual targeted run PASS, logged confirmations accepted1, and all existing synthetic relogin record assertions PASS. Native-dialog policy fixture PASS. Production logout logic, server/API contracts and fitness data are untouched. Final parallel suite and remote CI still pending; no live Supabase request or account experiment.
+
+
+## 2026-10-14 Cairo — Frontend2.0.1 candidate local verification complete
+
+Final parallel UI/static suite **78/78 PASS** on version/navigation and deterministic mock-logout source, including confirmations accepted1 and existing synthetic record roundtrip assertions. New native-dialog negative/disposal/callback-failure tests, release/changelog/badge consistency negatives and all-eight-route keyboard/current-page checks PASS. Initial historical77/77 and later pre-fix sign-out timeout remain recorded above; final result belongs to corrected harness. No future-flake immunity is claimed. Remote PR/main/deployment pending; root2.0.1 is a frontend candidate, not commercial GO.
