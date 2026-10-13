@@ -1,3 +1,17 @@
+## Current milestone map — 2026-10-13 Cairo
+
+| Milestone/Phase | Status | Remaining boundary |
+| --- | --- | --- |
+| 0 — Baseline/data protection | PARTIAL | Runtime baseline verified; full inventory and real restorable backup open |
+| 1 — Authentication/isolation | PARTIAL | Synthetic regressions verified; real-account lifecycle/isolation open |
+| 2 — Data safety/synchronization | PAUSED / INCOMPLETE | Owner database pause; live CAS/security and real two-device acceptance open |
+| 3 — Cross-platform quality/CI | ACTIVE / IN PROGRESS | Frontend/PWA/selected engines/benchmarks verified; publish enforcement, full accessibility and actual devices open |
+| 4 — Operations/legal | NOT COMPLETE | Monitoring, recovery/rollback, policies and support acceptance open |
+| 5 — Private beta | NOT STARTED | P0/P1 closure and consented independent testers required |
+| 6 — Commercial launch | NOT APPROVED | Safety acceptance and explicit launch decision required |
+
+We are doing safe Phase 3 work in parallel with paused earlier gates. Starting Phase 3 does not mean Milestone 2 passed. No percentage or completion date is inferred from the number of tests.
+
 **Current frontend batch VERIFIED:** [PR #26](https://github.com/3bHussein/ProgressXX-Web/pull/26) / `7c57ab0`: Workout Log keyboard pagination focus and named controls/live results. 69/69 local, all eight PR and matching main Full UI/Fast/Cross-browser/Deploy/Pages SUCCESS; deployed root/worker exact. Database experiments paused; Phase 3 continues, commercial NO-GO.
 
 **Previous batch VERIFIED:** [PR #25](https://github.com/3bHussein/ProgressXX-Web/pull/25) / `e7d8c7a`: Workout Log incremental DOM/focus retention and same-frame filter coalescing; 68/68 local, all eight PR and matching main UI/Fast/Cross-browser/Deploy/Pages SUCCESS, live root/worker byte-exact. Synthetic 30-load-more median 251.8→59.5ms. Database experiments remain paused; commercial NO-GO; Phase 3 continues.
@@ -882,3 +896,10 @@ Root-only frontend fix: load-more keeps its DOM button and keyboard focus betwee
 [PR #26](https://github.com/3bHussein/ProgressXX-Web/pull/26), source `161cae0e32b8957bf889afa2ad032646c7644849`, merge `7c57ab023bf4e92e050995240874ba9b342c7471`. All eight PR workflows SUCCESS. Main matching checks: [Fast conflict safety contracts #38426016008](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38426016008) SUCCESS, [Cross-browser frontend accessibility #38426016016](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38426016016) SUCCESS, [Deploy ProgressXX Full App #38426015973](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38426015973) SUCCESS, [Full ProgressXX migration smoke #38426015907](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38426015907) SUCCESS, [pages build and deployment #38426013812](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38426013812) SUCCESS. Local Full UI/static sweep **69/69 PASS**. New keyboard regression PASS in Chromium (local/Full UI), Firefox and WebKit (standard PR/main matrix); selected matrix now runs six frontend fixtures per engine. Accessible names/live status are browser assertions, not physical-device or assistive-technology acceptance.
 
 Load-more retains keyboard focus between batches; final batch transfers focus to its first new Edit button. Search/week/status/sort and contextual Edit names plus polite result status verified. Production root/worker HTTP bytes exactly match tested source: root SHA-256 `cac731cccbe83f78fa10514df9ee93a58d435e0ea55faa9bb75a1ed37438262f`, worker `323f5022828b49efc6b39105e1c53e92716f73e74a9da738aec0dd1d56db4515`. No PostgreSQL workflow, SQL/Supabase/staging/backup experiments, production schema/grants/RLS/migrations, stored-data/sync changes or paid services. Database pause persists; Phase 3 IN PROGRESS, Milestone 2 paused/incomplete, commercial launch NOT APPROVED. Next: remaining frontend layout/accessibility or local LCP/CLS checks; real device/screen-reader acceptance remains open. This closeout is documentation-only; runtime CI proof belongs to the merge above.
+
+
+## 2026-10-13 Cairo — Milestone map and release CI audit
+
+Current work is Phase/Milestone 3 IN PROGRESS; Milestone 2 PAUSED/INCOMPLETE, not closed. Added canonical 0–6 status map to roadmap/handoff and reconciled living task order with the owner database pause. Updated current Phase 3 checklist with verified PR #25/#26 performance/keyboard evidence; no full phase exit or percentage claimed.
+
+Completed source/observed-run release inspection in docs/RELEASE-CI-AUDIT.md: dedicated deployment currently gates only three browser regressions, not the full UI/selected-engine workflows. A separate Pages route is observed; settings/branch protection are not verified. Audit task complete, enforcement remains OPEN. Existing working hosting/settings left untouched. Latest runtime PR #26/main 7c57ab0 Full UI/Fast/Cross-browser/Deploy/Pages SUCCESS; live root byte-exact. No new runtime behavior, database requests/SQL/staging/backups, stored-data/sync changes or paid services; commercial launch NOT APPROVED. Next safe work is complete same-SHA publish enforcement and frontend fixture measurements; database plans remain deferred. Documentation-only changes verified for internal status/pause consistency; no new application-test pass claimed.

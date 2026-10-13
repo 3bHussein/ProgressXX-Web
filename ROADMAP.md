@@ -1,3 +1,17 @@
+## Current milestone map — 2026-10-13 Cairo
+
+| Milestone/Phase | Status | Remaining boundary |
+| --- | --- | --- |
+| 0 — Baseline/data protection | PARTIAL | Runtime baseline verified; full inventory and real restorable backup open |
+| 1 — Authentication/isolation | PARTIAL | Synthetic regressions verified; real-account lifecycle/isolation open |
+| 2 — Data safety/synchronization | PAUSED / INCOMPLETE | Owner database pause; live CAS/security and real two-device acceptance open |
+| 3 — Cross-platform quality/CI | ACTIVE / IN PROGRESS | Frontend/PWA/selected engines/benchmarks verified; publish enforcement, full accessibility and actual devices open |
+| 4 — Operations/legal | NOT COMPLETE | Monitoring, recovery/rollback, policies and support acceptance open |
+| 5 — Private beta | NOT STARTED | P0/P1 closure and consented independent testers required |
+| 6 — Commercial launch | NOT APPROVED | Safety acceptance and explicit launch decision required |
+
+We are doing safe Phase 3 work in parallel with paused earlier gates. Starting Phase 3 does not mean Milestone 2 passed. No percentage or completion date is inferred from the number of tests.
+
 **Current frontend batch VERIFIED:** [PR #26](https://github.com/3bHussein/ProgressXX-Web/pull/26) / `7c57ab0`: Workout Log keyboard pagination focus and named controls/live results. 69/69 local, all eight PR and matching main Full UI/Fast/Cross-browser/Deploy/Pages SUCCESS; deployed root/worker exact. Database experiments paused; Phase 3 continues, commercial NO-GO.
 
 **Previous frontend batch VERIFIED:** [PR #25](https://github.com/3bHussein/ProgressXX-Web/pull/25) / `e7d8c7a`: large Workout Log rendering/search, 68/68 local and PR/main checks SUCCESS, deployment byte-exact. Synthetic five-trial 30-load-more median 251.8→59.5ms; physical-device/field performance remains open. Database pause persists; Phase 3 IN PROGRESS, Milestone 2 paused/incomplete.
@@ -407,7 +421,7 @@ To resume: `Resume SECURITY-DEFERRED-2026-10-12` or `ارجع لاختبارات
 
 ## Phase 2 — Persistence & sync correctness (P0)
 
-**Milestone 2 status: IN PROGRESS.**
+**Milestone 2 status: PAUSED / INCOMPLETE — owner stopped database experiments on 2026-10-13. Synthetic evidence below remains valid; do not resume live or isolated database work automatically.**
 - [x] Isolated owner RLS/CAS, anonymous/cross-owner negatives, direct-upsert/TRUNCATE denial and actual pg_dump restore — PR #17, main PostgreSQL #38301837684 SUCCESS. Only simulated identities and synthetic data; live acceptance remains open.
  [PR #16](https://github.com/3bHussein/ProgressXX-Web/pull/16) repairs root recovery/hydration and CI. Live acceptance items below remain open.
 - [x] Disposable PostgreSQL 17 sequential and independent-session CAS race assertions — [#38273401672](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38273401672) SUCCESS; synthetic reference, not deployed RPC.
@@ -436,10 +450,13 @@ Initial root keyboard/reduced-motion/mobile-zoom regressions VERIFIED at 320/390
 - [x] Public PWA root/query offline shell, scoped cache update/error retention and API exclusion (PR #19; Chromium/local and CI verified).
 - [x] Local mocked install/permission recovery and actual Chromium fresh-launch worker update/failed precache with synthetic draft retention (PR #20: 65/65 local, seven PR checks and main Pages SUCCESS; main follow-up Full UI/Pages also SUCCESS; merge-trigger gap recorded).
 - [ ] Validate real-device PWA install/update, live deployment rollback, authenticated offline data and actual browser/OS permission denial.
-- [ ] Review GitHub Actions required check configuration so failing tests prevent production publish; do not assume current checks cover all scenarios.
+- [x] Inspect repository deployment workflow and observed Actions routes — [CI audit](docs/RELEASE-CI-AUDIT.md): dedicated publisher checks only three browser regressions; complete-suite/engine gate is not established, separate Pages route observed. Settings not verified.
+- [ ] Enforce complete same-SHA validation before publishing and verify alternate Pages/branch protection configuration; failure/cancellation/missing-run acceptance remains open.
 - [x] Optional barcode decoder no longer blocks login startup; shared lazy load/error/timeout/manual fallback tests PASS locally (PR #23/#24 and standard main matrix verified).
 - [ ] Remaining optional-widget recovery and core-flow error boundaries.
-- [ ] Real-device/field performance and LCP/CLS/interaction measurements; controlled startup baseline documented.
+- [x] Controlled startup and 5,000-record Workout Log benchmarks; PR #23/#25 deployed, synthetic evidence only.
+- [x] Workout Log incremental rendering and keyboard pagination/named controls — PR #25/#26, 69/69 latest local checks and matching runtime main CI/deployment verified.
+- [ ] Real-device/field performance and LCP/CLS/interaction measurements; controlled local benchmarks do not close this item.
 - [x] Local barcode keyboard/focus/44px controls/camera-close cleanup and scoped Arabic anatomy RTL/empty-result regressions; PR #21 and matching main CI/deployment verified.
 - [ ] Remaining accessibility: full keyboard coverage, contrast, labels, screen readers and broader Arabic RTL acceptance.
 
@@ -470,13 +487,15 @@ Initial root keyboard/reduced-motion/mobile-zoom regressions VERIFIED at 320/390
 - [ ] Branding, custom domain, customer support, refund/cancellation flow, tax/legal compliance as applicable.
 - [ ] Smart onboarding, coach suggestions, nutrition quality improvements and growth analytics with consent.
 
-## Immediate next 5 tasks
+## Immediate next 5 tasks — database pause respected
 
-1. **Auth bug verification:** investigate recent reported `undefined.filter` exception against deployed code and fresh/restored accounts; document result.
-2. **Source-of-truth table audit:** Food, Daily, Food Library, Workout, Schedule, Weight, Saved Meals -> table, owner ID, CRUD, sync behavior.
-3. **RLS two-account audit:** prove users cannot read/write one another's records.
-4. **Sync replay tests:** offline -> edit/delete -> online -> second device -> reload, record conflicts/deduplication.
-5. **CI audit:** inspect required checks on production branch and add gates for missing scenarios.
+1. **Publish enforcement:** require full UI/contracts and selected engines for the artifact SHA; inspect separate Pages route/settings before claiming every failing test blocks publication.
+2. **Frontend measurement:** local synthetic LCP/CLS and interaction baselines; preserve root production target and avoid account initialization/backend requests.
+3. **Accessibility/layout:** remaining labels, keyboard navigation, contrast and scoped mobile/RTL checks with local fixtures.
+4. **Source-only inventory:** map storage keys/domains/sync paths without querying Supabase or creating real accounts; distinguish source intent from live ownership proof.
+5. **Operations preparation:** draft redacted diagnostics and rollback documentation without executing database backup/restore or changing production configuration.
+
+Real-account auth/RLS, cross-device synchronization, staging and database backup/restore remain deferred until explicit owner resumption. Paid services remain prohibited. Historical task lists below do not override this order.
 
 ## Evidence template (update after each task)
 
@@ -617,3 +636,10 @@ Root-only frontend fix: load-more keeps its DOM button and keyboard focus betwee
 [PR #26](https://github.com/3bHussein/ProgressXX-Web/pull/26), source `161cae0e32b8957bf889afa2ad032646c7644849`, merge `7c57ab023bf4e92e050995240874ba9b342c7471`. All eight PR workflows SUCCESS. Main matching checks: [Fast conflict safety contracts #38426016008](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38426016008) SUCCESS, [Cross-browser frontend accessibility #38426016016](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38426016016) SUCCESS, [Deploy ProgressXX Full App #38426015973](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38426015973) SUCCESS, [Full ProgressXX migration smoke #38426015907](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38426015907) SUCCESS, [pages build and deployment #38426013812](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38426013812) SUCCESS. Local Full UI/static sweep **69/69 PASS**. New keyboard regression PASS in Chromium (local/Full UI), Firefox and WebKit (standard PR/main matrix); selected matrix now runs six frontend fixtures per engine. Accessible names/live status are browser assertions, not physical-device or assistive-technology acceptance.
 
 Load-more retains keyboard focus between batches; final batch transfers focus to its first new Edit button. Search/week/status/sort and contextual Edit names plus polite result status verified. Production root/worker HTTP bytes exactly match tested source: root SHA-256 `cac731cccbe83f78fa10514df9ee93a58d435e0ea55faa9bb75a1ed37438262f`, worker `323f5022828b49efc6b39105e1c53e92716f73e74a9da738aec0dd1d56db4515`. No PostgreSQL workflow, SQL/Supabase/staging/backup experiments, production schema/grants/RLS/migrations, stored-data/sync changes or paid services. Database pause persists; Phase 3 IN PROGRESS, Milestone 2 paused/incomplete, commercial launch NOT APPROVED. Next: remaining frontend layout/accessibility or local LCP/CLS checks; real device/screen-reader acceptance remains open. This closeout is documentation-only; runtime CI proof belongs to the merge above.
+
+
+## 2026-10-13 Cairo — Milestone map and release CI audit
+
+Current work is Phase/Milestone 3 IN PROGRESS; Milestone 2 PAUSED/INCOMPLETE, not closed. Added canonical 0–6 status map to roadmap/handoff and reconciled living task order with the owner database pause. Updated current Phase 3 checklist with verified PR #25/#26 performance/keyboard evidence; no full phase exit or percentage claimed.
+
+Completed source/observed-run release inspection in docs/RELEASE-CI-AUDIT.md: dedicated deployment currently gates only three browser regressions, not the full UI/selected-engine workflows. A separate Pages route is observed; settings/branch protection are not verified. Audit task complete, enforcement remains OPEN. Existing working hosting/settings left untouched. Latest runtime PR #26/main 7c57ab0 Full UI/Fast/Cross-browser/Deploy/Pages SUCCESS; live root byte-exact. No new runtime behavior, database requests/SQL/staging/backups, stored-data/sync changes or paid services; commercial launch NOT APPROVED. Next safe work is complete same-SHA publish enforcement and frontend fixture measurements; database plans remain deferred. Documentation-only changes verified for internal status/pause consistency; no new application-test pass claimed.
