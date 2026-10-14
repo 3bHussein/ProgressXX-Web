@@ -1637,3 +1637,8 @@ Created isolated branch `test/workout-sync-race-acceptance` for reproducible acc
 ### 2026-10-14 — First executable P0 stale-pull regression added (PR #38)
 
 Commit [`ba951f2`](https://github.com/3bHussein/ProgressXX-Web/commit/ba951f23160da36e7263ac3cd31484c0bb400879) extends `tests/training-day-manager-browser.cjs` with an isolated mocked cloud list containing a stale old day name and two distinct historical IDs with the same exercise/week. It asserts the queued renamed local row wins over the stale remote row, both IDs survive and the queue remains pending. No production backend calls are intended. **Pending CI results**; this covers part of fixtures B/E only, not delayed out-of-order requests, offline delete/reconnect, or profile write races. No P0 gate closed.
+
+
+### 2026-10-14 — PR #38 isolated workout delete tombstone regression
+
+PR head `df492fb` passed three triggered checks: [Full UI 38524619703](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38524619703), [Cross-browser 38524619718](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38524619718) and [Fast Conflict 38524619662](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38524619662). Commit [`1cde283`](https://github.com/3bHussein/ProgressXX-Web/commit/1cde283fcde6a722243190dbaa343e5358636a7f) adds another synthetic browser regression: a queued workout delete tombstone must suppress the stale remote row while preserving an unrelated row and retaining the pending delete. **Await CI for this new commit.** This verifies cloud-refresh overlay only; actual offline network reconnection, server delete confirmation, simultaneous devices and cross-type Food/Daily/Weight/Saved Meals delete resurrection remain untested. P0 Persistence OPEN.
