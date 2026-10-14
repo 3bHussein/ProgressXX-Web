@@ -1632,3 +1632,8 @@ After successful main deploy of `b963ab7`, reviewed `syncFromSheet()`, `processW
 ### 2026-10-14 — P0 sync acceptance test design (isolated branch)
 
 Created isolated branch `test/workout-sync-race-acceptance` for reproducible acceptance tests before any production code changes. Required deterministic fixtures: **A** remote workout list response #1 delayed behind response #2 must not overwrite newer local data; **B** pending rename upsert must survive remote stale day-name refresh and reload; **C** offline queued deletion must remain hidden during cloud refresh and must not reappear after reconnection; **D** cloud profile edit during an in-flight save must trigger a subsequent write of the latest revision; **E** distinct historical entries with identical exercise/week must retain separate IDs. Tests must run without live Supabase, destructive operations or paid infrastructure. Acceptance needs executable tests and then real two-device verification; this entry alone does not close a P0 gate.
+
+
+### 2026-10-14 — First executable P0 stale-pull regression added (PR #38)
+
+Commit [`ba951f2`](https://github.com/3bHussein/ProgressXX-Web/commit/ba951f23160da36e7263ac3cd31484c0bb400879) extends `tests/training-day-manager-browser.cjs` with an isolated mocked cloud list containing a stale old day name and two distinct historical IDs with the same exercise/week. It asserts the queued renamed local row wins over the stale remote row, both IDs survive and the queue remains pending. No production backend calls are intended. **Pending CI results**; this covers part of fixtures B/E only, not delayed out-of-order requests, offline delete/reconnect, or profile write races. No P0 gate closed.
