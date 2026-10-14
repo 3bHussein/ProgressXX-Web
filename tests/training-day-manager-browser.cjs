@@ -32,4 +32,19 @@ await p.evaluate(async()=>{
 assert.equal(await p.evaluate(()=>data.find(x=>x.id==='sync-a')?.day),'Renamed day');
 assert.deepEqual(await p.evaluate(()=>data.map(x=>x.id).sort()),['sync-a','sync-b']);
 assert.equal(await p.evaluate(()=>workoutQueue().length),1);
+// Offline delete tombstones must hide remote rows on refresh without removing unrelated history.
+await p.evaluate(async()=>{
+  data=[{id:'delete-a',day:'A',exercise:'Squat',week:2},
+        {id:'keep-b',day:'B',exercise:'Row',week:2}];
+  PXStore.setItem(KEY,JSON.stringify(data));
+  saveWorkoutQueue([{op:'delete',localId:'delete-a',key:'delete-a',payload:{id:'delete-a'},queuedAt:Date.now()}]);
+  const originalApi=apiCall;
+  apiCall=async action=>action==='list'?{ok:true,rows:[
+    {id:'delete-a',day:'A',exercise:'Squat',week:2},
+    {id:'keep-b',day:'B',exercise:'Row',week:2}
+  ]}:originalApi(action);
+  try{await syncFromSheet(true,{processQueue:false})}finally{apiCall=originalApi}
+});
+assert.deepEqual(await p.evaluate(()=>data.map(x=>x.id)),['keep-b']);
+assert.equal(await p.evaluate(()=>workoutQueue()[0]?.op),'delete');
 assert.deepEqual(errors,[]);assert.equal(backend,0);console.log('PASS ['+engine+']: rename IDs/history/templates/schedule/session and queued upserts, duplicate guard, storage-failure rollback, future-plan add/remove without history/session deletion, quoted exercise template controls, empty-day persistence; zero backend calls');}finally{await b.close()}})().catch(e=>{console.error(e);process.exitCode=1});
