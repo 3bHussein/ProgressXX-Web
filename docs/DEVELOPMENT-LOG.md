@@ -1662,3 +1662,23 @@ Synthetic concurrent refresh test on [`7fc55d8`](https://github.com/3bHussein/Pr
 ### 2026-10-14 — PR #39 race fix merged following eight passing checks
 
 [PR #39](https://github.com/3bHussein/ProgressXX-Web/pull/39) merged as [`41c3436`](https://github.com/3bHussein/ProgressXX-Web/commit/41c3436e5755cdae1282b5767983e1fb03997c8a) after all **8/8** branch checks succeeded on `b8ae012`: [Full UI](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38572707483), [Cross-browser](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38572707539), [Workout Chromium](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38572707477), [Workout Supabase Table Safety](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38572707697), [Cross-device snapshot](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38572708050), [Fast Conflict](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38572707436), [Workout Schedule](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38572707475), and [Weight Bridge](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38572707501). Fix ignores delayed stale cloud list responses when a newer workout refresh has started. At first check, post-merge main checks and Pages deployment were **not yet confirmed**; isolated PostgreSQL CAS integration also not confirmed. Synthetic regression does not prove live two-device behavior. P0 Persistence OPEN, P0 Security DEFERRED, commercial launch NOT APPROVED.
+
+
+## 2026-10-14 — Milestone 3 started at owner's direction (Mobile, Performance & QA)
+
+**Owner decision:** proceed to Milestone 3 now without waiting for final security testing. Final security tests are **SKIPPED FOR CURRENT DEVELOPMENT PHASE / DEFERRED, NOT PASSED**. Existing `SECURITY-DEFERRED-2026-10-12` and `DATABASE-EXPERIMENTS-PAUSED-2026-10-13` restrictions remain effective. Do not change production Supabase, schema, RLS, grants, accounts or real records; do not certify commercial readiness. Milestone 2 P0 persistence and actual two-device sync acceptance remain OPEN and must be tracked in parallel, not silently marked complete.
+
+### Milestone 3 execution plan and acceptance criteria
+
+1. **Mobile UI & accessibility (P1):** regression tests at 320px, 390px, 768px, desktop; safe-area and fixed bottom-nav collision; keyboard focus/scroll for anatomy and modal controls; Arabic RTL; no horizontal overflow; verify on real Android/mobile device before acceptance.
+2. **Cross-browser QA (P1):** Chromium, Firefox and WebKit smoke for navigation, workout session, Food, Daily, Weight, Settings and accessibility; failures triaged before merge.
+3. **Performance (P1):** establish repeatable synthetic baselines for initial load, interaction responsiveness and long workout history; avoid claiming device or network performance from CI alone.
+4. **PWA/offline behavior (P1):** check installability, service worker/cache update behavior, stale asset recovery, local pending edits and reconnect without deleting user data.
+5. **Release discipline:** feature branch -> automated checks -> reviewed PR -> merge -> main checks -> Pages deploy -> device verification. Record measured evidence and remaining limitations here.
+
+**Status:** M3 IN PROGRESS (planning/branch opened; feature acceptance NOT YET VERIFIED). M2 P0 Persistence OPEN. Security DEFERRED (not passed). Commercial release NOT APPROVED.
+
+
+### 2026-10-14 — Owner-approved M1/M3 fast-track scope
+
+Owner requests closing Milestones 1 and 3 as quickly as responsibly possible, targeting **1–3 working days combined**, contingent on checks. **M1 close criteria:** no outstanding critical core-feature UI regression in existing smoke suite; explicit note that unresolved live data-sync issues remain in M2. **M3 minimum close criteria:** existing Chromium/Firefox/WebKit and Full UI CI green; mobile 320/390/768 navigation, fixed-nav overlap, focus/keyboard and Arabic RTL basic acceptance covered by tests or explicitly recorded as unverified; basic PWA shell/offline and large-list usability assessed; no blocking P0/P1 frontend defects. Cosmetic polish, expanded performance profiling and device-specific optional enhancements move to post-M3 backlog, not silently marked tested. Do not merge this PR while Full UI check is pending or failing. No production DB or permissions changes. Security deferred, not passed. Milestone 2 and commercial approval remain open.
