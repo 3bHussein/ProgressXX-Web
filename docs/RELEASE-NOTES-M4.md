@@ -14,7 +14,7 @@ Status: **PREPARATION ONLY — NOT APPROVED FOR COMMERCIAL RELEASE**.
 
 - PR #41 Full UI: https://github.com/3bHussein/ProgressXX-Web/actions/runs/38601525526 — SUCCESS.
 - PR #41 Fast Conflict: https://github.com/3bHussein/ProgressXX-Web/actions/runs/38601525507 — SUCCESS.
-- Post-merge main Full UI: https://github.com/3bHussein/ProgressXX-Web/actions/runs/38601928324 — IN PROGRESS when last checked; do not claim PASS.
+- Post-merge main Full UI: https://github.com/3bHussein/ProgressXX-Web/actions/runs/38601928324 — SUCCESS (verified 2026-10-14).
 - Prior Pages deployment: https://github.com/3bHussein/ProgressXX-Web/actions/runs/38574410043 — SUCCESS on earlier runtime commit, not proof of a new release deploy.
 
 ## Known exclusions and blockers
@@ -33,10 +33,10 @@ Only promote after matching commit CI, deploy evidence, safe non-destructive smo
 - [x] Release notes and non-destructive frontend rollback procedure drafted.
 - [x] M1/M3 fast-track acceptance recorded with documented exclusions.
 - [x] Branch CI Fast Conflict #38602068002 successful.
-- [ ] Branch Full UI #38602067868 must finish successfully on matching head SHA before merging PR #42.
-- [ ] Post-merge main Full UI must finish successfully on merge SHA.
+- [x] Branch Full UI #38602067868 succeeded on PR #42 head SHA.
+- [x] Post-merge main Full UI #38602723292 succeeded on `187f4e80`; subsequent docs-only main #38603560140 succeeded on `5ea5bfa5`.
 - [ ] Pages live URL and deployment SHA must be verified for the intended runtime version; prior Pages success is historical only.
-- [ ] Perform read-only public-site navigation/asset smoke without real user data changes.
-- [ ] Finalize operator sign-off for **M4 preparation only**; keep M2 and deferred security gates clearly OPEN before commercial launch.
+- [x] Owner reported public-site homepage and section navigation functioning on 2026-10-14; this is owner-reported UI smoke, **not** independent asset/deployment-SHA verification.
+- [x] Owner accepted functional navigation; M4 **preparation scope closed with live deployment SHA verification excluded/open**. M2 and deferred security gates remain OPEN before commercial launch.
 
 **Handoff to M5:** M4 preparation completion, if achieved, does not authorize M5 or production launch. M2 production data safety and deferred security are still separate approval gates.

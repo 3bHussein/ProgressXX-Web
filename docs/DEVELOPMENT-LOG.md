@@ -1744,3 +1744,11 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - Public Pages URL `https://3bhussein.github.io/ProgressXX-Web/` could not be fetched from the available inspection environment (network/tool limitation); **LIVE DEPLOYMENT SMOKE UNVERIFIED**, not failed. No new production changes or deployment triggered.
 - Owner acceptance request: open live URL in private/incognito browser; verify homepage loads, navigation/Workout/Food/Daily/Settings visible and functional without mutating real data; report console/network failures and unexpected old cache if present. Record the result before claiming live acceptance.
 - **M4 preparation deliverables** (release notes, rollback procedure, documented CI) complete; **M4 live verification gate remains OPEN**. M2 P0 sync/data safety OPEN, security DEFERRED/NOT PASSED, commercial launch NOT APPROVED.
+
+
+### 2026-10-14 — M4 preparation closeout, owner-confirmed navigation
+
+- Owner confirmed public GitHub Pages homepage and section navigation functioned after recent changes (user report, not independent network verification).
+- `main` Full UI [#38603560140](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38603560140) **SUCCESS** at docs-only SHA `5ea5bfa5`; preceding post-merge Full UI [#38602723292](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38602723292) **SUCCESS** at `187f4e80`.
+- **M4 PREPARATION CLOSED (fast-track scope)** based on release notes, rollback procedure, CI and owner-reported navigation. Independent Pages deployment SHA and comprehensive asset/performance smoke remain **UNVERIFIED** and excluded from this closure.
+- **M2 P0 OPEN**: production two-device CRUD, offline deletes, anti-resurrection and authenticated atomic CAS/restore. **Security DEFERRED / NOT PASSED**; **commercial release NOT APPROVED**. No production DB/RLS/grant mutations.
