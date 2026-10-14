@@ -47,4 +47,27 @@ await p.evaluate(async()=>{
 });
 assert.deepEqual(await p.evaluate(()=>data.map(x=>x.id)),['keep-b']);
 assert.equal(await p.evaluate(()=>workoutQueue()[0]?.op),'delete');
+// Concurrent cloud reads: older delayed response must not roll back a newer refresh.
+await p.evaluate(async()=>{
+  data=[{id:'race-a',day:'Before',exercise:'Row',week:3}];
+  PXStore.setItem(KEY,JSON.stringify(data));saveWorkoutQueue([]);
+  const originalApi=apiCall;
+  let releaseOld;
+  const oldWait=new Promise(resolve=>{releaseOld=resolve});
+  let reads=0;
+  apiCall=async action=>{
+    if(action!=='list')return originalApi(action);
+    reads++;
+    if(reads===1){await oldWait;return {ok:true,rows:[{id:'race-a',day:'Old remote',exercise:'Row',week:3}]}}
+    return {ok:true,rows:[{id:'race-a',day:'New remote',exercise:'Row',week:3}]};
+  };
+  try{
+    const oldPull=syncFromSheet(true,{processQueue:false});
+    const newPull=syncFromSheet(true,{processQueue:false});
+    await newPull;
+    releaseOld();await oldPull;
+  }finally{releaseOld();apiCall=originalApi}
+});
+assert.equal(await p.evaluate(()=>data.find(x=>x.id==='race-a')?.day),'New remote',
+  'Delayed older cloud read must not overwrite newer cloud read');
 assert.deepEqual(errors,[]);assert.equal(backend,0);console.log('PASS ['+engine+']: rename IDs/history/templates/schedule/session and queued upserts, duplicate guard, storage-failure rollback, future-plan add/remove without history/session deletion, quoted exercise template controls, empty-day persistence; zero backend calls');}finally{await b.close()}})().catch(e=>{console.error(e);process.exitCode=1});
