@@ -1726,3 +1726,12 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - [ ] Owner approval for any future live changes or commercial go-live.
 
 **M4 goal:** documentation, traceability, repeatable tests, rollback readiness, deployment QA. **Not authorized:** production Supabase schema/grants/RLS/records, paid services, real-account destructive testing or bypassing release safety claims. Database experiments remain paused. Commercial launch NOT APPROVED.
+
+
+### M4 release operator runbook — non-destructive preflight and rollback
+
+**Before a release:** record `main` SHA and PR SHA; require green matching Full UI and applicable cross-browser/fast-conflict checks; verify Pages deploy action is successful for the actual runtime SHA (a docs-only CI pass does not prove redeployment). Use a clean private/incognito session to smoke Home, navigation, Workout, Food, Daily, Weight, Settings and mobile bottom bar; do not edit real account data during preflight. Confirm browser console/network errors and PWA stale-cache behavior without clearing stored user records. Save a copy of the previously known-good deployed runtime SHA and its GitHub Actions evidence.
+
+**Rollback on a frontend regression:** stop promotion, identify the last verified good commit, create a dedicated revert PR for the offending *frontend* commit(s), run required checks, merge after review and verify Pages deploy/HTTP assets. Do **not** use `git reset --hard`/force-push main, delete localStorage/IndexedDB, reset service worker storage indiscriminately, revert schema or run production SQL as part of frontend rollback. If data loss or cross-device divergence is suspected, freeze risky writes and escalate to the M2 data-safety track; do not claim a frontend rollback restores user data.
+
+**Current evidence:** [Fast Conflict PR #41 #38601370769](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38601370769) SUCCESS. [Full UI PR #41 #38601370779](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38601370779) IN PROGRESS at this observation; merge blocked until successful completion. Existing live M2 persistence/security release blockers remain unchanged. This runbook is a procedural draft, not an executed rollback drill.
