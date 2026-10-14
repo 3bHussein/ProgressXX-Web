@@ -27,3 +27,16 @@ Status: **PREPARATION ONLY — NOT APPROVED FOR COMMERCIAL RELEASE**.
 ## Operator instructions
 
 Only promote after matching commit CI, deploy evidence, safe non-destructive smoke and documented approval. For a frontend regression, revert the frontend commit by reviewed PR and verify deploy; never force-push main or erase client storage. Frontend rollback does not restore lost data.
+
+## M4 completion / handoff criteria
+
+- [x] Release notes and non-destructive frontend rollback procedure drafted.
+- [x] M1/M3 fast-track acceptance recorded with documented exclusions.
+- [x] Branch CI Fast Conflict #38602068002 successful.
+- [ ] Branch Full UI #38602067868 must finish successfully on matching head SHA before merging PR #42.
+- [ ] Post-merge main Full UI must finish successfully on merge SHA.
+- [ ] Pages live URL and deployment SHA must be verified for the intended runtime version; prior Pages success is historical only.
+- [ ] Perform read-only public-site navigation/asset smoke without real user data changes.
+- [ ] Finalize operator sign-off for **M4 preparation only**; keep M2 and deferred security gates clearly OPEN before commercial launch.
+
+**Handoff to M5:** M4 preparation completion, if achieved, does not authorize M5 or production launch. M2 production data safety and deferred security are still separate approval gates.
