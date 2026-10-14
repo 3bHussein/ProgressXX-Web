@@ -1735,3 +1735,12 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 **Rollback on a frontend regression:** stop promotion, identify the last verified good commit, create a dedicated revert PR for the offending *frontend* commit(s), run required checks, merge after review and verify Pages deploy/HTTP assets. Do **not** use `git reset --hard`/force-push main, delete localStorage/IndexedDB, reset service worker storage indiscriminately, revert schema or run production SQL as part of frontend rollback. If data loss or cross-device divergence is suspected, freeze risky writes and escalate to the M2 data-safety track; do not claim a frontend rollback restores user data.
 
 **Current evidence:** [Fast Conflict PR #41 #38601370769](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38601370769) SUCCESS. [Full UI PR #41 #38601370779](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38601370779) IN PROGRESS at this observation; merge blocked until successful completion. Existing live M2 persistence/security release blockers remain unchanged. This runbook is a procedural draft, not an executed rollback drill.
+
+
+### 2026-10-14 — M4 deployment verification handoff (evidence-only)
+
+- Latest main Full UI run for `187f4e80` [#38602723292](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38602723292) **SUCCESS**; release-notes PR #42 merged at `187f4e80`.
+- Last independently observed successful Pages deployment workflow remains [#38574410043](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38574410043) for earlier runtime SHA `41c3436e`. The intervening M4 changes are documentation only; do not misrepresent Full UI success as new Pages deployment.
+- Public Pages URL `https://3bhussein.github.io/ProgressXX-Web/` could not be fetched from the available inspection environment (network/tool limitation); **LIVE DEPLOYMENT SMOKE UNVERIFIED**, not failed. No new production changes or deployment triggered.
+- Owner acceptance request: open live URL in private/incognito browser; verify homepage loads, navigation/Workout/Food/Daily/Settings visible and functional without mutating real data; report console/network failures and unexpected old cache if present. Record the result before claiming live acceptance.
+- **M4 preparation deliverables** (release notes, rollback procedure, documented CI) complete; **M4 live verification gate remains OPEN**. M2 P0 sync/data safety OPEN, security DEFERRED/NOT PASSED, commercial launch NOT APPROVED.
