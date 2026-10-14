@@ -7628,6 +7628,8 @@ function applyCloudProfileTemplates(templates){
   (templates||[]).forEach(t=>{
     const kind=cloudProfileRecordKind(t);
     if(!kind)return;
+    // A delayed cloud response must not roll back unsaved local profile edits.
+    if(kind==='TRAINING'&&cloudProfileEditRevision>cloudProfileSavedRevision)return;
     ids[kind]=String(t.id||'');
     const wrapper=Array.isArray(t.items)?t.items[0]:null;
     if(wrapper&&wrapper.data&&typeof wrapper.data==='object'){
@@ -7688,8 +7690,7 @@ async function seedOrPullCloudProfile(remoteTemplates){
   if(profileRows.length){
     // Do not overwrite newer local training plans with an older cloud snapshot.
     // The pending profile save will publish them; other profile parts can still refresh.
-    const pendingTrainingProfile=cloudProfileEditRevision>cloudProfileSavedRevision;
-    applyCloudProfileTemplates(pendingTrainingProfile?profileRows.filter(t=>cloudProfileRecordKind(t)!=='TRAINING'):profileRows);
+    applyCloudProfileTemplates(profileRows);
     renderWorkoutSchedule();
     pxInitExtras();
     pxApplyAdvancedAppearance();
