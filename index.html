@@ -7636,13 +7636,17 @@ function applyCloudProfileTemplates(templates){
 }
 let cloudProfileSaveTimer=null;
 let cloudProfileSaveInFlight=null;
+let cloudProfileEditRevision=0;
+let cloudProfileSavedRevision=0;
 function scheduleCloudProfileSync(){
+  cloudProfileEditRevision++;
   clearTimeout(cloudProfileSaveTimer);
   cloudProfileSaveTimer=setTimeout(()=>saveCloudProfileToSheet(),900);
 }
 async function saveCloudProfileToSheet(){
   if(!$('appScriptUrl')?.value.trim()||!navigator.onLine)return false;
   if(cloudProfileSaveInFlight)return cloudProfileSaveInFlight;
+  const savingRevision=cloudProfileEditRevision;
   cloudProfileSaveInFlight=(async()=>{
     try{
       const ids=cloudProfileIds(),parts=cloudProfileParts();
@@ -7658,13 +7662,20 @@ async function saveCloudProfileToSheet(){
         ids[kind]=String(r.id||ids[kind]||'');
       }
       saveCloudProfileIds(ids);
+      cloudProfileSavedRevision=Math.max(cloudProfileSavedRevision,savingRevision);
       markSyncSuccess('profile');
       renderSyncCenter();
       return true;
     }catch(e){
       if($('syncCenterLast'))$('syncCenterLast').textContent='Profile sync pending • '+e.message;
       return false;
-    }finally{cloudProfileSaveInFlight=null}
+    }finally{
+      cloudProfileSaveInFlight=null;
+      if(cloudProfileEditRevision>savingRevision){
+        clearTimeout(cloudProfileSaveTimer);
+        cloudProfileSaveTimer=setTimeout(()=>saveCloudProfileToSheet(),900);
+      }
+    }
   })();
   return cloudProfileSaveInFlight;
 }
@@ -7672,7 +7683,10 @@ async function seedOrPullCloudProfile(remoteTemplates){
   const all=Array.isArray(remoteTemplates)?remoteTemplates:[];
   const profileRows=all.filter(t=>cloudProfileRecordKind(t));
   if(profileRows.length){
-    applyCloudProfileTemplates(profileRows);
+    // Do not overwrite newer local training plans with an older cloud snapshot.
+    // The pending profile save will publish them; other profile parts can still refresh.
+    const pendingTrainingProfile=cloudProfileEditRevision>cloudProfileSavedRevision;
+    applyCloudProfileTemplates(pendingTrainingProfile?profileRows.filter(t=>cloudProfileRecordKind(t)!=='TRAINING'):profileRows);
     renderWorkoutSchedule();
     pxInitExtras();
     pxApplyAdvancedAppearance();
