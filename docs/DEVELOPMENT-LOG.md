@@ -1708,3 +1708,21 @@ Owner explicitly confirmed on physical mobile that the tested site's main pages,
 **M3 MOBILE/QA FAST-TRACK BASELINE: CLOSED WITH DOCUMENTED EXCLUSIONS**, based on historical 69/69 local UI fixtures, prior three-engine CI, 320/390/768 keyboard/RTL/barcode mock coverage, owner-reported basic physical-mobile acceptance and current main Full UI success. **Explicit exclusions/backlog:** no measured LCP/CLS/interaction or physical-device performance baseline, real camera permissions/decode, screen-reader device acceptance, authenticated offline-data recovery, or complete PWA installation across OS/browser combinations. These are NOT PASSED and remain optional QA backlog or M2 data safety gates as appropriate. No claim of full M3 performance certification or commercial signoff. If measured performance is a hard requirement for M3, treat that sub-gate as still OPEN rather than silently passed.
 
 **M2:** P0 data safety, real two-device CRUD, offline delete/reconnect and authenticated server CAS remain OPEN; database experiments PAUSED. **Security:** final tests DEFERRED/NOT PASSED. **Commercial launch:** NOT APPROVED. No runtime changes, database operations or permissions changes made by this documentation-only closure.
+
+
+## 2026-10-14 — Milestone 4 started: release preparation, no commercial approval
+
+Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c8516d` run #38600898383](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38600898383) **SUCCESS**, confirming the docs-only M1/M3 closeout did not break CI. M4 is now **IN PROGRESS** as a non-destructive release-preparation track.
+
+### M4 release checklist (status at start)
+
+- [x] M1 functional/UI baseline fast-track closed; M3 mobile/QA baseline fast-track closed with exclusions documented.
+- [x] Latest main Full UI smoke success (run above); prior Pages deploy and cross-browser tests succeeded on older runtime commit; do not represent as a fresh deployment test.
+- [ ] Confirm deployment workflow status for the current runtime commit, Pages site availability and version traceability; no runtime deployment triggered by documentation-only commits.
+- [ ] Verify clean release build, artifact version/rollback instructions and smoke test on deployed site without using real user data.
+- [ ] Produce release notes and non-destructive backup/restore operator instructions; no backup of production accounts without explicit permission.
+- [ ] Reconcile release blocker list: M2 live two-device sync/data safety and atomic server CAS remain OPEN; no silent closure.
+- [ ] Final security tests remain DEFERRED/NOT PASSED at owner's request; release approval cannot be claimed while critical safety gates remain open.
+- [ ] Owner approval for any future live changes or commercial go-live.
+
+**M4 goal:** documentation, traceability, repeatable tests, rollback readiness, deployment QA. **Not authorized:** production Supabase schema/grants/RLS/records, paid services, real-account destructive testing or bypassing release safety claims. Database experiments remain paused. Commercial launch NOT APPROVED.
