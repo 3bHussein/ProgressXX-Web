@@ -1677,3 +1677,8 @@ Synthetic concurrent refresh test on [`7fc55d8`](https://github.com/3bHussein/Pr
 5. **Release discipline:** feature branch -> automated checks -> reviewed PR -> merge -> main checks -> Pages deploy -> device verification. Record measured evidence and remaining limitations here.
 
 **Status:** M3 IN PROGRESS (planning/branch opened; feature acceptance NOT YET VERIFIED). M2 P0 Persistence OPEN. Security DEFERRED (not passed). Commercial release NOT APPROVED.
+
+
+### 2026-10-14 — Owner-approved M1/M3 fast-track scope
+
+Owner requests closing Milestones 1 and 3 as quickly as responsibly possible, targeting **1–3 working days combined**, contingent on checks. **M1 close criteria:** no outstanding critical core-feature UI regression in existing smoke suite; explicit note that unresolved live data-sync issues remain in M2. **M3 minimum close criteria:** existing Chromium/Firefox/WebKit and Full UI CI green; mobile 320/390/768 navigation, fixed-nav overlap, focus/keyboard and Arabic RTL basic acceptance covered by tests or explicitly recorded as unverified; basic PWA shell/offline and large-list usability assessed; no blocking P0/P1 frontend defects. Cosmetic polish, expanded performance profiling and device-specific optional enhancements move to post-M3 backlog, not silently marked tested. Do not merge this PR while Full UI check is pending or failing. No production DB or permissions changes. Security deferred, not passed. Milestone 2 and commercial approval remain open.
