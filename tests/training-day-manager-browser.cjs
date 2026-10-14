@@ -14,4 +14,37 @@ await p.evaluate(()=>closeWorkoutSession());
 await p.evaluate(()=>{cloudProfileEditRevision++;applyCloudProfileTemplates([{id:'cloud-training',name:CLOUD_PROFILE_PREFIX+'TRAINING',items:[{data:{workout_templates:[{id:'t1',name:'Anterior',day:'1 — ANTERIOR',exercises:['Squat']}]}}]}]);});
 assert((await p.evaluate(()=>editorTrainingDays())).includes('Anterior revised'));
 assert.equal(await p.evaluate(()=>workoutTemplates().find(t=>t.id==='t1').day),'Anterior revised');
+// Regression: a stale cloud list must not overwrite an unsent local rename,
+// and two historical entries with the same exercise/week retain distinct IDs.
+await p.evaluate(async()=>{
+  data=[{id:'sync-a',day:'Renamed day',exercise:'Squat',week:1,notes:'A'},
+        {id:'sync-b',day:'Renamed day',exercise:'Squat',week:1,notes:'B'}];
+  PXStore.setItem(KEY,JSON.stringify(data));
+  saveWorkoutQueue([{op:'upsert',localId:'sync-a',key:workoutKey(data[0]),
+    payload:{id:'sync-a',day:'Renamed day',exercise:'Squat',week:1},queuedAt:Date.now()}]);
+  const originalApi=apiCall;
+  apiCall=async action=>action==='list'?{ok:true,rows:[
+    {id:'sync-a',day:'Old day',exercise:'Squat',week:1,notes:'A'},
+    {id:'sync-b',day:'Renamed day',exercise:'Squat',week:1,notes:'B'}
+  ]}:originalApi(action);
+  try{await syncFromSheet(true,{processQueue:false})}finally{apiCall=originalApi}
+});
+assert.equal(await p.evaluate(()=>data.find(x=>x.id==='sync-a')?.day),'Renamed day');
+assert.deepEqual(await p.evaluate(()=>data.map(x=>x.id).sort()),['sync-a','sync-b']);
+assert.equal(await p.evaluate(()=>workoutQueue().length),1);
+// Offline delete tombstones must hide remote rows on refresh without removing unrelated history.
+await p.evaluate(async()=>{
+  data=[{id:'delete-a',day:'A',exercise:'Squat',week:2},
+        {id:'keep-b',day:'B',exercise:'Row',week:2}];
+  PXStore.setItem(KEY,JSON.stringify(data));
+  saveWorkoutQueue([{op:'delete',localId:'delete-a',key:'delete-a',payload:{id:'delete-a'},queuedAt:Date.now()}]);
+  const originalApi=apiCall;
+  apiCall=async action=>action==='list'?{ok:true,rows:[
+    {id:'delete-a',day:'A',exercise:'Squat',week:2},
+    {id:'keep-b',day:'B',exercise:'Row',week:2}
+  ]}:originalApi(action);
+  try{await syncFromSheet(true,{processQueue:false})}finally{apiCall=originalApi}
+});
+assert.deepEqual(await p.evaluate(()=>data.map(x=>x.id)),['keep-b']);
+assert.equal(await p.evaluate(()=>workoutQueue()[0]?.op),'delete');
 assert.deepEqual(errors,[]);assert.equal(backend,0);console.log('PASS ['+engine+']: rename IDs/history/templates/schedule/session and queued upserts, duplicate guard, storage-failure rollback, future-plan add/remove without history/session deletion, quoted exercise template controls, empty-day persistence; zero backend calls');}finally{await b.close()}})().catch(e=>{console.error(e);process.exitCode=1});

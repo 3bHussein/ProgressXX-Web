@@ -1627,3 +1627,23 @@ PR [#37](https://github.com/3bHussein/ProgressXX-Web/pull/37) squash-merged into
 ### 2026-10-14 — Post-merge persistence risk review (read-only code inspection)
 
 After successful main deploy of `b963ab7`, reviewed `syncFromSheet()`, `processWorkoutQueue()` and `seedOrPullCloudProfile()` on `main`. Workout refresh merges pending local queue operations over remote rows by ID and avoids auto-deleting historic duplicates; startup pulls before processing pending queue. The TRAINING cloud profile application now guards unsaved in-memory edits. **Residual risks requiring proof:** stale server responses arriving after queue completion; concurrent edits from two independent devices; app restart before a profile write reaches server (revision guard is in-memory); offline delete followed by remote refresh; and reintroduced historical day labels. No live account, database, or production write test was executed during this review. Recommended acceptance sequence: (1) two-device rename/reload and Start Workout consistency; (2) offline create/edit/delete/reconnect on Food/Daily/Workout/Weight/Saved Meals; (3) delete resurrection/concurrent-edit conflict cases; (4) backup/restore and direct API isolation when deferred security gate is explicitly authorized. P0 Persistence OPEN and P0 Security DEFERRED; launch NOT APPROVED.
+
+
+### 2026-10-14 — P0 sync acceptance test design (isolated branch)
+
+Created isolated branch `test/workout-sync-race-acceptance` for reproducible acceptance tests before any production code changes. Required deterministic fixtures: **A** remote workout list response #1 delayed behind response #2 must not overwrite newer local data; **B** pending rename upsert must survive remote stale day-name refresh and reload; **C** offline queued deletion must remain hidden during cloud refresh and must not reappear after reconnection; **D** cloud profile edit during an in-flight save must trigger a subsequent write of the latest revision; **E** distinct historical entries with identical exercise/week must retain separate IDs. Tests must run without live Supabase, destructive operations or paid infrastructure. Acceptance needs executable tests and then real two-device verification; this entry alone does not close a P0 gate.
+
+
+### 2026-10-14 — First executable P0 stale-pull regression added (PR #38)
+
+Commit [`ba951f2`](https://github.com/3bHussein/ProgressXX-Web/commit/ba951f23160da36e7263ac3cd31484c0bb400879) extends `tests/training-day-manager-browser.cjs` with an isolated mocked cloud list containing a stale old day name and two distinct historical IDs with the same exercise/week. It asserts the queued renamed local row wins over the stale remote row, both IDs survive and the queue remains pending. No production backend calls are intended. **Pending CI results**; this covers part of fixtures B/E only, not delayed out-of-order requests, offline delete/reconnect, or profile write races. No P0 gate closed.
+
+
+### 2026-10-14 — PR #38 isolated workout delete tombstone regression
+
+PR head `df492fb` passed three triggered checks: [Full UI 38524619703](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38524619703), [Cross-browser 38524619718](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38524619718) and [Fast Conflict 38524619662](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38524619662). Commit [`1cde283`](https://github.com/3bHussein/ProgressXX-Web/commit/1cde283fcde6a722243190dbaa343e5358636a7f) adds another synthetic browser regression: a queued workout delete tombstone must suppress the stale remote row while preserving an unrelated row and retaining the pending delete. **Await CI for this new commit.** This verifies cloud-refresh overlay only; actual offline network reconnection, server delete confirmation, simultaneous devices and cross-type Food/Daily/Weight/Saved Meals delete resurrection remain untested. P0 Persistence OPEN.
+
+
+### 2026-10-14 — PR #38 WebKit cross-browser triage
+
+At PR head `20705a2`, [Full UI 38525261919](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38525261919) and [Fast Conflict 38525261845](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38525261845) passed. [Cross-browser 38525261834](https://github.com/3bHussein/ProgressXX-Web/actions/runs/38525261834) failed **WebKit** at `tests/insights-anatomy-controls-browser.cjs` (selected last muscle focus/scroll containment at 390px), while Firefox passed. The failing assertion is outside the new workout delete regression; do not infer root cause or label it harmless without repeat evidence. Requested rerun of failed workflow jobs on the same SHA. No merge pending successful verification. P0 Persistence remains OPEN.
