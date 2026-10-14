@@ -1457,7 +1457,7 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
         <button class="btn soft" onclick="openEditor()">＋ Add</button>
       </div>
     </div>
-<details id="pxDayManager" class="pxDayManager"><summary>Manage training days</summary><p class="tiny muted">Rename a day or change its future exercise plan. Removing an exercise here keeps saved workout history.</p><div class="formGrid"><label>Training day<select id="pxDaySelect" data-px-user="1" onchange="pxRenderDayManager()"></select></label><label>Day name<input id="pxDayNewName" maxlength="80" dir="auto"></label><div class="actions full"><button class="btn primary" type="button" onclick="pxRenameTrainingDay()">Rename day</button><button class="btn soft" type="button" onclick="pxCreateTrainingDay()">Create new day</button></div><label class="full">Exercise name<input id="pxDayNewExercise" maxlength="150" dir="auto"></label><button class="btn soft full" type="button" onclick="pxChangeDayExercise(document.getElementById('pxDaySelect').value,document.getElementById('pxDayNewExercise').value,'add')">Add exercise to plan</button></div><div id="pxDayExerciseList"></div><p id="pxDayStatus" role="status" aria-live="polite" class="tiny muted"></p></details>
+<details id="pxDayManager" class="pxDayManager" ontoggle="if(this.open)pxRenderDayManager()"><summary>Manage training days</summary><p class="tiny muted">Rename a day or change its future exercise plan. Removing an exercise here keeps saved workout history.</p><div class="formGrid"><label>Training day<select id="pxDaySelect" data-px-user="1" onchange="pxRenderDayManager()"></select></label><label>Day name<input id="pxDayNewName" maxlength="80" dir="auto"></label><div class="actions full"><button class="btn primary" type="button" onclick="pxRenameTrainingDay()">Rename day</button><button class="btn soft" type="button" onclick="pxCreateTrainingDay()">Create new day</button></div><label class="full">Exercise name<input id="pxDayNewExercise" maxlength="150" dir="auto"></label><button class="btn soft full" type="button" onclick="pxChangeDayExercise(document.getElementById('pxDaySelect').value,document.getElementById('pxDayNewExercise').value,'add')">Add exercise to plan</button></div><div id="pxDayExerciseList"></div><p id="pxDayStatus" role="status" aria-live="polite" class="tiny muted"></p></details>
     <div id="workoutTemplatesPanel" class="workoutTemplatesPanel">
       <div class="panelHead" style="margin-bottom:10px">
         <div><h3 style="margin:0">Workout Templates</h3><div class="tiny muted">Save a training day once, then launch Session Mode from it anytime.</div></div>
@@ -4379,7 +4379,7 @@ function pxPersistDayChanges(entries){
 }
 function pxRenderDayManager(preferred){
  const sel=$('pxDaySelect'),list=$('pxDayExerciseList');if(!sel||!list)return;
- const current=preferred||sel.value,known=editorTrainingDays();sel.replaceChildren(...known.map(day=>new Option(day,day)));if(known.includes(current))sel.value=current;
+ const current=preferred||sel.value,known=editorTrainingDays();sel.replaceChildren(...known.map(day=>new Option(day,day)));if(known.includes(current))sel.value=current;else if(known.length)sel.selectedIndex=0;
  const day=sel.value;$('pxDayNewName').value=day;list.replaceChildren();
  for(const name of exercisesForDay(day)){
   const row=document.createElement('div');row.className='pxDayExerciseRow';const label=document.createElement('span');label.textContent=name;label.dir='auto';label.dataset.pxUser='1';
