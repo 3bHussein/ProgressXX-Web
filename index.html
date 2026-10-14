@@ -4553,8 +4553,11 @@ function saveWorkoutSessionState(){
 function openWorkoutSession(){
   const overlay=$('workoutSessionOverlay');
   if(!overlay)return;
-  const ds=days();
-  $('sessionDaySelect').innerHTML=ds.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('');
+  const ds=editorTrainingDays();
+  const daySelect=$('sessionDaySelect');
+  const previouslySelected=daySelect.value;
+  daySelect.replaceChildren(...ds.map(d=>new Option(d,d)));
+  if(ds.includes(previouslySelected))daySelect.value=previouslySelected;
   const saved=(()=>{try{return JSON.parse(PXStore.getItem(WORKOUT_SESSION_KEY))}catch{return null}})();
 
   overlay.classList.add('show');
