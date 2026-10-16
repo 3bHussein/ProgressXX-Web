@@ -406,10 +406,12 @@ const {createLogoutDialogHandler}=require('../tests/helpers/logout-dialog.cjs');
    const target=page.locator('#'+id);
    if(await target.count()!==1)throw Error('Missing Settings shortcut destination '+id);
    const index=['pxSettingsAccount','pxSettingsBackup','pxSettingsSyncCenter','pxSettingsHub','pxSettingsSchedule'].indexOf(id);
-   await page.locator('#settings .pxSettingsQuickNav button').nth(index).click({timeout:6000});
-   await page.waitForTimeout(400);
-   const check=await target.evaluate(el=>({top:el.getBoundingClientRect().top,height:el.getBoundingClientRect().height,viewport:window.innerHeight}));
-   if(check.height<1||check.top>check.viewport)throw Error('Settings shortcut did not navigate to '+id+': '+JSON.stringify(check));
+   const shortcut=page.locator('#settings .pxSettingsQuickNav button').nth(index);
+   await shortcut.scrollIntoViewIfNeeded({timeout:6000});
+   await shortcut.click({timeout:6000});
+   await page.waitForFunction(targetId=>{const el=document.getElementById(targetId);if(!el)return false;const r=el.getBoundingClientRect();return r.height>0&&r.top<window.innerHeight&&r.bottom>0},id,{timeout:6000});
+   const check=await target.evaluate(el=>({top:el.getBoundingClientRect().top,bottom:el.getBoundingClientRect().bottom,height:el.getBoundingClientRect().height,viewport:window.innerHeight}));
+   if(check.height<1||check.top>=check.viewport||check.bottom<=0)throw Error('Settings shortcut did not navigate to '+id+': '+JSON.stringify(check));
  }
  await page.evaluate(()=>go('home'));
  if(legacyGoogleCalls)throw Error('Called personal Google Sheets endpoint');
