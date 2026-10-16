@@ -10037,16 +10037,26 @@ window.__legacyBoot=init;
   try{schedule=JSON.parse(savedValues['progressx-workout-schedule-v1']||'{}')}catch{throw Error('Invalid weekly schedule snapshot')}
   if(!schedule||typeof schedule!=='object'||Array.isArray(schedule))throw Error('Invalid weekly schedule format');
   const endpoint='workout_schedule';
-  // Atomic upsert by the actual UNIQUE(user_id,weekday) constraint prevents
-  // duplicate inserts on retry, multiple devices, or existing unmarked rows.
+  // Read all rows first: do not overwrite a schedule row owned by another feature.
+  const rows=await cloud(endpoint+'?select=id,user_id,weekday,title,notes&user_id=eq.'+encodeURIComponent(account));
+  if(!Array.isArray(rows))throw Error('Weekly schedule rows unavailable');
+  const byDay=new Map();
+  for(const row of rows){
+   const day=Number(row.weekday);
+   if(byDay.has(day))throw Error('Duplicate schedule weekday: '+day);
+   byDay.set(day,row);
+  }
   for(let i=0;i<SCHEDULE_KEYS.length;i++){
-   const day=SCHEDULE_KEYS[i],title=String(schedule[day]||'').trim();
+   const day=SCHEDULE_KEYS[i],title=String(schedule[day]||'').trim(),prior=byDay.get(i);
    if(title.length>120)throw Error('Scheduled training day name exceeds 120 characters');
-   if(title){
-    await cloud(endpoint+'?on_conflict=user_id,weekday','POST',{user_id:account,weekday:i,title,notes:SCHEDULE_ROW_MARKER});
+   if(prior&&prior.notes!==SCHEDULE_ROW_MARKER)continue;
+   if(!title){
+    if(prior)await cloud(endpoint+'?id=eq.'+encodeURIComponent(prior.id)+'&user_id=eq.'+encodeURIComponent(account)+'&notes=eq.'+encodeURIComponent(SCHEDULE_ROW_MARKER),'DELETE');
+   }else if(prior){
+    if(prior.title!==title)await cloud(endpoint+'?id=eq.'+encodeURIComponent(prior.id)+'&user_id=eq.'+encodeURIComponent(account)+'&notes=eq.'+encodeURIComponent(SCHEDULE_ROW_MARKER),'PATCH',{title});
    }else{
-    // Delete only rows previously managed by ProgressXX.
-    await cloud(endpoint+'?user_id=eq.'+encodeURIComponent(account)+'&weekday=eq.'+i+'&notes=eq.'+encodeURIComponent(SCHEDULE_ROW_MARKER),'DELETE');
+    // Conflict-aware insert handles another device creating the same weekday.
+    await cloud(endpoint+'?on_conflict=user_id,weekday','POST',{user_id:account,weekday:i,title,notes:SCHEDULE_ROW_MARKER});
    }
   }
  }
