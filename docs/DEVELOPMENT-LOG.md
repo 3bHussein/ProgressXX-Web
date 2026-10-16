@@ -1796,3 +1796,9 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - Commits `5d2d1c7` and `eb43098`: expanded the CI-enforced workout chronology/deload contract to W46–W50, disappearance in W51, and no suggestion when a numeric load is missing.
 - Fixed the test fixture's performance parser to read the actual weight in each sample (`37 kg`, `45 kg`, `50 kg`) instead of always returning 37, so the second and third cycle assertions genuinely test per-cycle values.
 - **Still pending:** run/verify new GitHub Actions Full UI and Firefox/WebKit workflows. No claim of green CI or successful release.
+
+
+### 2026-10-16 — Deload latest-valid-load regression
+
+- Added CI-enforced fixture in `tests/workout-chronology-deload-contract.cjs` (commit `0b035aa`) asserting that W36 guidance uses the latest valid Bench record (40 kg), not an older 60 kg record; expected rounded 55–70% range 22.5–27.5 kg.
+- Added zero-weight exclusion. This extends automated regression coverage; latest GitHub Actions results and live-device verification remain pending. No release-gate bypass.
