@@ -34,6 +34,30 @@ assert.equal(dailyScope.load()[0].id,'keep','Saved Daily state must win over def
 const dailyScheduler=html.slice(html.indexOf('function scheduleReminderConfigSync(){'),html.indexOf('async function syncReminderConfigToSheet(){'));
 assert.match(dailyScheduler,/if\(window\.__pxCommercialReady\?\.\(\)\)return;/,'Signed-in reminder config must skip legacy Sheets timer');
 assert.match(dailyScheduler,/if\(window\.__pxCommercialReady\?\.\(\)\)\{[\s\S]*?dailyStateDirty=false;/,'Signed-in Daily must not leave legacy dirty state blocking cloud refresh');
+// Execute both scheduler branches without timers or network access.
+let scheduled=[],cleared=[],dirty=true;
+const schedulerScope={
+ window:{__pxCommercialReady:()=>true},
+ navigator:{onLine:true},
+ reminderSheetSaveTimer:11,dailySheetSaveTimer:12,
+ dailyStateDirty:true,
+ clearTimeout:id=>cleared.push(id),
+ setTimeout:(fn,delay)=>{scheduled.push(delay);return 99},
+ syncReminderConfigToSheet:()=>{},syncDailyStateToSheet:()=>{},
+ updateConnectionBanner:()=>{},connectionPendingCount:()=>0,
+ $:()=>null
+};
+vm.runInNewContext(dailyScheduler+';globalThis.runReminder=scheduleReminderConfigSync;globalThis.runDaily=scheduleDailyStateSync;',schedulerScope);
+schedulerScope.runReminder();
+schedulerScope.runDaily();
+assert.equal(schedulerScope.dailyStateDirty,false,'Supabase Daily dirty flag must clear');
+assert.equal(scheduled.length,0,'Supabase Daily must not schedule Google Sheets timers');
+assert.equal(cleared.includes(12),true,'Old Daily timer must be cancelled');
+schedulerScope.window.__pxCommercialReady=()=>false;
+schedulerScope.runReminder();
+schedulerScope.runDaily();
+assert.equal(schedulerScope.dailyStateDirty,true,'Legacy branch must retain its own dirty flag');
+assert.deepEqual(scheduled,[350,120],'Legacy scheduler timing changed unexpectedly');
 const account='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const marker='progressxx-weekly-schedule-v1';
 let rows=[{id:'legacy',user_id:account,weekday:0,title:'Existing program',notes:null}];
