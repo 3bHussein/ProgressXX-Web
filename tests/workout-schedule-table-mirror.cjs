@@ -15,6 +15,14 @@ async function cloud(path,method='GET',payload){
  const u=new URL('https://qa.example/rest/v1/'+path);
  if(method==='GET')return rows.filter(r=>r.user_id===account&&r.notes===marker);
  if(method==='POST'){
+  // Model PostgREST's unique (user_id, weekday) upsert when another device
+  // inserts the row after our initial GET but before our POST.
+  const existing=rows.find(r=>r.user_id===payload.user_id&&r.weekday===payload.weekday);
+  if(existing){
+   assert.equal(u.searchParams.get('on_conflict'),'user_id,weekday','Concurrent insert must use the unique-key upsert');
+   Object.assign(existing,payload);
+   return [existing];
+  }
   rows.push({id:'managed-'+(++id),...payload});
   return [rows.at(-1)];
  }
@@ -42,5 +50,19 @@ const send=x=>scope.mirror({'progressx-workout-schedule-v1':JSON.stringify(x)});
  assert.equal(calls.filter(c=>c.method==='DELETE').length,2);
  await scope.mirror({});
  assert.deepEqual(rows.map(r=>r.id),['legacy'],'Missing schedule snapshot must be no-op');
+ // A second device can create Monday between GET and POST. The upsert must
+ // converge to one weekday row rather than throw a duplicate-key error.
+ const beforeRace=cloud;
+ scope.cloud=async(path,method='GET',payload)=>{
+  if(method==='POST'&&payload?.weekday===1&&!rows.some(r=>r.weekday===1)){
+   rows.push({id:'concurrent-device',user_id:account,weekday:1,title:'Other device',notes:marker});
+  }
+  return beforeRace(path,method,payload);
+ };
+ await send({mon:'Race winner'});
+ assert.equal(rows.filter(r=>r.user_id===account&&r.weekday===1).length,1,'Concurrent creation duplicated Monday');
+ assert.equal(rows.find(r=>r.weekday===1).title,'Race winner','Upsert did not converge on latest requested schedule');
+ assert.equal(rows.find(r=>r.id==='legacy').title,'Existing program','Concurrent upsert must preserve unrelated schedule');
+
  console.log('PASS: schedule mirror create, idempotent upsert, edit, delete and legacy preservation');
 })().catch(e=>{console.error(e);process.exitCode=1});
