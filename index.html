@@ -2161,7 +2161,36 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
  #settings .pxRealAccountPanel .actions .btn{min-width:0;white-space:normal}
 }
 </style>
+<style id="px-settings-directory-20261017">
+#settings .pxSettingsDirectory{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0 20px}
+#settings .pxSettingsTile{display:flex;align-items:flex-start;gap:13px;text-align:left;padding:19px 15px;min-height:104px;border:1px solid var(--line);border-radius:16px;background:var(--card);color:var(--text);cursor:pointer;width:100%;transition:border-color .15s,transform .15s}
+#settings .pxSettingsTile:hover{border-color:var(--cyan);transform:translateY(-2px)}
+#settings .pxSettingsTile:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+#settings .pxSettingsTileIcon{width:44px;height:44px;flex:none;display:grid;place-items:center;border-radius:12px;background:var(--card2);font-size:23px}
+#settings .pxSettingsTileText{display:grid;gap:5px;min-width:0}
+#settings .pxSettingsTileText b{font-size:15px;color:var(--cyan)}
+#settings .pxSettingsTileText small{font-size:12px;line-height:1.45;color:var(--muted)}
+#settings .pxSettingsDetailBar{display:none;align-items:center;gap:12px;margin:10px 0 18px}
+#settings .pxSettingsDetailBar button{min-height:44px}
+#settings.pxSettingsDetailMode .pxSettingsDirectory,#settings.pxSettingsDetailMode .pxSettingsHero,#settings.pxSettingsDetailMode .pxSettingsQuickNav{display:none!important}
+#settings.pxSettingsDetailMode .pxSettingsDetailBar{display:flex}
+#settings.pxSettingsDetailMode #pxLanguagePanel,#settings.pxSettingsDetailMode #pxSettingsAccount,#settings.pxSettingsDetailMode .settingsGrid>.panel,#settings.pxSettingsDetailMode .settingsGrid #pxSettingsHub,#settings.pxSettingsDetailMode .settingsGrid .pxLegacySettingsPanel{display:none!important}
+#settings.pxSettingsDetailMode .settingsGrid>.panel.pxSettingsSelected,#settings.pxSettingsDetailMode #pxSettingsHub.pxSettingsSelected,#settings.pxSettingsDetailMode #pxLanguagePanel.pxSettingsSelected,#settings.pxSettingsDetailMode #pxSettingsAccount.pxSettingsSelected{display:block!important}
+#settings.pxSettingsDetailMode .settingsGrid{display:block}
+#settings.pxSettingsDetailMode .pxSettingsSelected{max-width:100%}
+@media(max-width:900px){#settings .pxSettingsDirectory{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:540px){#settings .pxSettingsDirectory{grid-template-columns:1fr;gap:9px}#settings .pxSettingsTile{min-height:76px;padding:13px}#settings .pxSettingsTileIcon{width:42px;height:42px}#settings .pxSettingsTileText b{font-size:14px}}
+</style>
 <section id="settings" class="section">
+<div class="pxSettingsDirectory" aria-label="Settings categories">
+ <button type="button" class="pxSettingsTile" onclick="pxShowSettingsCategory('pxSettingsAccount','Account & sync')"><span class="pxSettingsTileIcon">👤</span><span class="pxSettingsTileText"><b>Account & sync</b><small>Account status, cloud connection and sign out</small></span></button>
+ <button type="button" class="pxSettingsTile" onclick="pxShowSettingsCategory('pxLanguagePanel','Language')"><span class="pxSettingsTileIcon">🌐</span><span class="pxSettingsTileText"><b>Language</b><small>Interface language and text direction</small></span></button>
+ <button type="button" class="pxSettingsTile" onclick="pxShowSettingsCategory('pxSettingsHub','Preferences & tools')"><span class="pxSettingsTileIcon">⚙️</span><span class="pxSettingsTileText"><b>Preferences & tools</b><small>Appearance, notifications and diagnostic logs</small></span></button>
+ <button type="button" class="pxSettingsTile" onclick="pxShowSettingsCategory('pxSettingsBackup','Backup & recovery')"><span class="pxSettingsTileIcon">💾</span><span class="pxSettingsTileText"><b>Backup & recovery</b><small>Export, restore and protect your data</small></span></button>
+ <button type="button" class="pxSettingsTile" onclick="pxShowSettingsCategory('pxSettingsSyncCenter','Sync center')"><span class="pxSettingsTileIcon">🔄</span><span class="pxSettingsTileText"><b>Sync center</b><small>Workout, nutrition and Daily sync status</small></span></button>
+ <button type="button" class="pxSettingsTile" onclick="pxShowSettingsCategory('pxSettingsSchedule','Workout schedule')"><span class="pxSettingsTileIcon">🏋️</span><span class="pxSettingsTileText"><b>Workout schedule</b><small>Training days, rest days and schedule sync</small></span></button>
+</div>
+<div class="pxSettingsDetailBar"><button class="btn soft" type="button" onclick="pxShowSettingsHome()">← All settings</button><h3 id="pxSettingsDetailTitle">Settings</h3></div>
 <div class="hero pxSettingsHero"><div class="eyebrow">PREFERENCES & ACCOUNT</div><h2>⚙ Settings</h2><p>Manage your account, backups, sync, appearance and notifications in one place.</p></div>
 <div class="panel" id="pxLanguagePanel"><div class="pxLanguageRow"><div><h3>Language & direction</h3><p class="tiny muted">Choose the interface language for all pages. Saved on this device.</p></div><label for="pxUILanguage">Interface language<select id="pxUILanguage" onchange="pxSetUILanguage(this.value)"><option value="en">English</option><option value="ar">العربية</option></select></label></div><p id="pxLanguageStatus" class="tiny muted" role="status"></p></div>
 <nav class="pxSettingsQuickNav" aria-label="Settings quick navigation">
@@ -4440,6 +4469,22 @@ function startWorkoutTemplate(id){
   renderWorkoutSession();
 }
 
+function pxShowSettingsHome(){
+ const section=document.getElementById('settings');if(!section)return;
+ section.classList.remove('pxSettingsDetailMode');
+ section.querySelectorAll('.pxSettingsSelected').forEach(el=>el.classList.remove('pxSettingsSelected'));
+ section.scrollIntoView({behavior:pxScrollBehavior(),block:'start'});
+}
+function pxShowSettingsCategory(id,title){
+ const section=document.getElementById('settings'),panel=document.getElementById(id);
+ if(!section||!panel)return;
+ section.querySelectorAll('.pxSettingsSelected').forEach(el=>el.classList.remove('pxSettingsSelected'));
+ panel.classList.add('pxSettingsSelected');
+ const detail=panel.querySelector(':scope > details.pxSettingsCategory');if(detail)detail.open=true;
+ const titleEl=document.getElementById('pxSettingsDetailTitle');if(titleEl)titleEl.textContent=title;
+ section.classList.add('pxSettingsDetailMode');
+ section.scrollIntoView({behavior:pxScrollBehavior(),block:'start'});
+}
 function pxOpenSettings(id){const panel=document.getElementById(id);const category=panel?.querySelector(':scope > details.pxSettingsCategory');if(category)category.open=true;panel?.scrollIntoView({behavior:pxScrollBehavior(),block:'start'})}
 function pxInitSettingsInterface(){
  for(const panel of document.querySelectorAll('#settings .panel')){
