@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
 const html=fs.readFileSync('index.html','utf8');
-const start=html.indexOf('const PX_DELOAD_BLOCKS=');
+const start=html.indexOf('function pxDeloadBlock(');
 const end=html.indexOf('function renderWorkoutSession(){',start);
 assert(start>=0&&end>start,'Deload block helper must exist');
 const ctx={data:[],normWorkoutText:s=>String(s||'').trim().toLowerCase(),workoutDisplayTime:r=>r.time||'',
@@ -21,6 +21,10 @@ for(let week=26;week<=30;week++){
  assert.match(hint,/W26–W30/);
 }
 assert.equal(ctx.deload('Chest','Bench Press',31),'','Hint must expire after week 30');
+ctx.data.push(row(35,'Bench Press','45*5'));
+assert.match(ctx.deload('Chest','Bench Press',36),/45 kg/,'Next cycle must use new baseline');
+assert.match(ctx.deload('Chest','Bench Press',40),/W36–W40/,'Next cycle persists');
+assert.equal(ctx.deload('Chest','Bench Press',41),'','Next cycle expires');
 assert.match(ctx.deload('Chest','Incline Press',28),/20 kg/,'Separate exercise baseline');
 assert.equal(ctx.deload('Legs','Bench Press',28),'','No cross-day leak');
 assert.equal(ctx.deload('Chest','Unknown',28),'','No guessed weight');
