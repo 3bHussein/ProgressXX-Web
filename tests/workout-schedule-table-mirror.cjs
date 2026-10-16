@@ -78,14 +78,14 @@ const refreshScope={
  renderDaily:()=>{rendered++},dailyReminders:[]
 };
 vm.runInNewContext(refreshCode,refreshScope);
-(async()=>{
+async function checkDailyCloudRefresh(){
  assert.equal(await refreshScope.window.__pxRefreshAccountDailyReminders(),'pending','Pending local deletion must block remote resurrection');
  assert.equal(remoteReads,0,'Pending local deletion must not read cloud');
  refreshScope.savedRevision=2;
  assert.equal(await refreshScope.window.__pxRefreshAccountDailyReminders(),'updated','Clean local state should accept remote changes');
  assert.equal(refreshScope.dailyReminders.length,1);
  assert.equal(rendered,1);
-})();
+}
 const account='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const marker='progressxx-weekly-schedule-v1';
 let rows=[{id:'legacy',user_id:account,weekday:0,title:'Existing program',notes:null}];
@@ -117,6 +117,7 @@ const scope={account,cloud};
 vm.runInNewContext(html.slice(start,end)+';globalThis.mirror=mirrorWorkoutScheduleToTable;',scope);
 const send=x=>scope.mirror({'progressx-workout-schedule-v1':JSON.stringify(x)});
 (async()=>{
+ await checkDailyCloudRefresh();
  await send({mon:'Push',tue:'REST'});
  assert.equal(rows.length,3);
  assert.equal(rows.find(r=>r.id==='legacy').title,'Existing program');
