@@ -1744,3 +1744,13 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - Public Pages URL `https://3bhussein.github.io/ProgressXX-Web/` could not be fetched from the available inspection environment (network/tool limitation); **LIVE DEPLOYMENT SMOKE UNVERIFIED**, not failed. No new production changes or deployment triggered.
 - Owner acceptance request: open live URL in private/incognito browser; verify homepage loads, navigation/Workout/Food/Daily/Settings visible and functional without mutating real data; report console/network failures and unexpected old cache if present. Record the result before claiming live acceptance.
 - **M4 preparation deliverables** (release notes, rollback procedure, documented CI) complete; **M4 live verification gate remains OPEN**. M2 P0 sync/data safety OPEN, security DEFERRED/NOT PASSED, commercial launch NOT APPROVED.
+
+
+## 2026-10-16 — Mobile Settings, workout chronology, recurring deload, schedule sync (verification pending)
+
+- Runtime changes in `index.html`: mobile-first Settings presentation; old Google Sheets/Apps Script controls and legacy connection profile section hidden from UI, not removed from underlying source or data; Diagnostics & Error Log retained.
+- Workout Log default ordering now sorts by logged date and exercise time (descending); other sort modes retained.
+- Recurring per-exercise deload **guidance only**: W26–30, W36–40 and every ten weeks thereafter. Uses the latest parseable working weight from the five weeks before each block and suggests approximately 55–70% (rounded to 2.5 kg); no workout performance is rewritten. Visible in Start Workout and manual editor; manual week changes refresh hint. This is a heuristic, not a medical or coaching guarantee. Current cycle is fixed, not configurable.
+- Supabase workout schedule mirror changed to `POST ...?on_conflict=user_id,weekday` with merge-duplicates to address the unique constraint `workout_schedule_user_id_weekday_key`. Empty weekdays delete only managed marker rows. Needs live authenticated verification, including retry and two-device scenario; existing unrelated rows can still require inspection.
+- **QA status: NOT VERIFIED**. GitHub commits saved, but no browser/Android regression test, workflow status, Supabase live test, or deployed Pages smoke has been confirmed in this change set. Do not mark M2 sync/data safety complete or commercial launch approved.
+- Next: run mandatory Chromium UI tests, verify deployed `index.html`, check manual editor and Session Mode across W25/W26/W30/W31/W36, verify same-day time ordering and schedule sync retry without duplicate errors, confirm diagnostics remain accessible.
