@@ -18,4 +18,10 @@ for(const week of [26,27,28,29,30]){const v=scope.advice('Bench',week);assert(v&
 assert.equal(scope.advice('Bench',25),null);
 assert.equal(scope.advice('Bench',31),null);
 assert.equal(scope.advice('Bench',35),null);
-console.log('PASS: date/time order, undated keyboard stability, per-exercise W26-W30 deload boundaries');
+scope.data=[{week:35,exercise:'Bench',status:'Completed',performance:'45 kg x 6'}];
+for(const week of [36,37,38,39,40]){const v=scope.advice('Bench',week);assert(v&&v.base===45&&v.start===36&&v.end===40,'Expected recurring W36-40 guidance');}
+assert.equal(scope.advice('Bench',41),null);
+assert.equal(scope.advice('Squat',36),null,'Do not reuse Bench load for another exercise');
+scope.data=[{week:35,exercise:'Bench',status:'Skipped',performance:'45 kg x 6'}];
+assert.equal(scope.advice('Bench',36),null,'Skipped exercise cannot be a load baseline');
+console.log('PASS: date/time order, undated keyboard stability, per-exercise W26-W30/W36-W40 deload boundaries and skipped-history safety');
