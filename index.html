@@ -4641,10 +4641,15 @@ function currentSessionExercise(){
 function currentWeekExerciseRow(day,exercise,week){
   return data.find(r=>Number(r.week)===Number(week)&&normWorkoutText(r.day)===normWorkoutText(day)&&normWorkoutText(r.exercise)===normWorkoutText(exercise))||null;
 }
-// Explicit deload block; no automatic recurrence or changes to saved workout records.
-const PX_DELOAD_BLOCKS=[{start:26,end:30,previousEnd:25}];
+// Five regular weeks followed by five deload weeks; W21–25 regular, W26–30 deload, W31–35 regular, W36–40 deload.
+function pxDeloadBlock(week){
+  const w=Number(week);
+  if(!Number.isInteger(w)||w<26)return null;
+  const cycle=Math.floor((w-21)/10),start=26+cycle*10,end=start+4;
+  return w>=start&&w<=end?{start,end,previousEnd:start-1}:null;
+}
 function suggestedSessionDeload(day,exercise,week){
-  const block=PX_DELOAD_BLOCKS.find(b=>Number(week)>=b.start&&Number(week)<=b.end);
+  const block=pxDeloadBlock(week);
   if(!block)return '';
   const eligible=data.filter(r=>Number(r.week)<block.start&&Number(r.week)<=block.previousEnd
     &&normWorkoutText(r.day)===normWorkoutText(day)
@@ -9996,9 +10001,11 @@ window.__legacyBoot=init;
   try{schedule=JSON.parse(savedValues['progressx-workout-schedule-v1']||'{}')}catch{throw Error('Invalid weekly schedule snapshot')}
   if(!schedule||typeof schedule!=='object'||Array.isArray(schedule))throw Error('Invalid weekly schedule format');
   const endpoint='workout_schedule';
-  const rows=await cloud(endpoint+'?select=id,user_id,weekday,title,notes&user_id=eq.'+encodeURIComponent(account)+'&notes=eq.'+encodeURIComponent(SCHEDULE_ROW_MARKER));
+  const rows=await cloud(endpoint+'?select=id,user_id,weekday,title,notes&user_id=eq.'+encodeURIComponent(account));
   if(!Array.isArray(rows))throw Error('Weekly schedule rows unavailable');
   const owned=rows.filter(r=>r.user_id===account&&r.notes===SCHEDULE_ROW_MARKER);
+  const occupiedDays=new Set(rows.filter(r=>r.user_id===account).map(r=>Number(r.weekday)));
+  let unmanagedConflicts=0;
   const byDay=new Map();
   for(const row of owned){
    if(byDay.has(Number(row.weekday)))throw Error('Duplicate managed schedule weekday: '+row.weekday);
@@ -10011,10 +10018,15 @@ window.__legacyBoot=init;
     if(prior)await cloud(endpoint+'?id=eq.'+encodeURIComponent(prior.id)+'&user_id=eq.'+encodeURIComponent(account)+'&notes=eq.'+encodeURIComponent(SCHEDULE_ROW_MARKER),'DELETE');
    }else if(prior){
     if(prior.title!==title)await cloud(endpoint+'?id=eq.'+encodeURIComponent(prior.id)+'&user_id=eq.'+encodeURIComponent(account)+'&notes=eq.'+encodeURIComponent(SCHEDULE_ROW_MARKER),'PATCH',{title});
+   }else if(occupiedDays.has(i)){
+    // Never overwrite an unmanaged row or retry a duplicate-key insert indefinitely.
+    unmanagedConflicts++;
    }else{
     await cloud(endpoint,'POST',{user_id:account,weekday:i,title,notes:SCHEDULE_ROW_MARKER});
+    occupiedDays.add(i);
    }
   }
+  return unmanagedConflicts;
  }
  let syncRetryFailures=0;
  function scheduleCloudSync(){if(!ready||syncConflictHold)return;clearTimeout(timer);timer=setTimeout(()=>{void flush()},syncRetryFailures?Math.min(30000,1200*Math.pow(2,Math.min(syncRetryFailures,5))):1200)}
@@ -10035,8 +10047,8 @@ window.__legacyBoot=init;
    snapshotBaseline=snapshotDigest(submitted);
    // Preserve a reload-safe draft until the table mirror also succeeds.
    markPending();
-   await mirrorWorkoutScheduleToTable({...values});
-   savedRevision=writing;syncRetryFailures=0;if(revision===writing){clearPending();tell('✓ Synced to Supabase · '+new Date().toLocaleTimeString())}else tell('◷ New changes saved locally · waiting to sync');
+   const scheduleConflicts=await mirrorWorkoutScheduleToTable({...values});
+   savedRevision=writing;syncRetryFailures=0;if(revision===writing){clearPending();tell(scheduleConflicts?'⚠ Snapshot synced; '+scheduleConflicts+' schedule day(s) already exist as unmanaged rows and were left unchanged.':'✓ Synced to Supabase · '+new Date().toLocaleTimeString(),!!scheduleConflicts)}else tell('◷ New changes saved locally · waiting to sync');
   }catch(e){syncRetryFailures++;tell('◷ Saved locally · sync pending: '+e.message,true)}
   finally{uploading=false;if(!syncConflictHold&&revision!==savedRevision)scheduleCloudSync()}
  }
