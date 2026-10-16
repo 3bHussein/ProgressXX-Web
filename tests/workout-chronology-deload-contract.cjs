@@ -29,4 +29,14 @@ for(const week of [46,47,48,49,50]){const v=scope.advice('Bench',week);assert(v&
 assert.equal(scope.advice('Bench',51),null,'Hint must disappear immediately after deload');
 scope.data=[{week:45,exercise:'Bench',status:'Completed',performance:'bodyweight'}];
 assert.equal(scope.advice('Bench',46),null,'Missing positive numeric working load must not generate a weight recommendation');
-console.log('PASS: date/time order, undated keyboard stability, per-exercise W26-W30/W36-W40/W46-W50 deload boundaries and skipped-history safety');
+scope.data=[
+ {week:34,date:'2026-10-07',time:'18:00',exercise:'Bench',status:'Completed',performance:'60 kg x 5'},
+ {week:35,date:'2026-10-09',time:'18:00',exercise:'Bench',status:'Completed',performance:'42 kg x 8'},
+ {week:35,date:'2026-10-10',time:'19:00',exercise:'Bench',status:'Completed',performance:'40 kg x 8'}
+];
+const latest=scope.advice('Bench',36);
+assert(latest&&latest.base===40,'Use most recent valid workout load, not highest historical weight');
+assert(latest.lower===22.5&&latest.upper===27.5,'Deload range should follow current 55%-70% rounded to 2.5 kg');
+scope.data=[{week:35,exercise:'Bench',status:'Completed',performance:'0 kg x 8'}];
+assert.equal(scope.advice('Bench',36),null,'Zero working load cannot generate a suggestion');
+console.log('PASS: date/time order, undated keyboard stability, per-exercise W26-W30/W36-W40/W46-W50 deload boundaries and latest-valid-load safety');
