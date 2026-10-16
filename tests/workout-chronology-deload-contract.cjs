@@ -24,4 +24,9 @@ assert.equal(scope.advice('Bench',41),null);
 assert.equal(scope.advice('Squat',36),null,'Do not reuse Bench load for another exercise');
 scope.data=[{week:35,exercise:'Bench',status:'Skipped',performance:'45 kg x 6'}];
 assert.equal(scope.advice('Bench',36),null,'Skipped exercise cannot be a load baseline');
-console.log('PASS: date/time order, undated keyboard stability, per-exercise W26-W30/W36-W40 deload boundaries and skipped-history safety');
+scope.data=[{week:45,exercise:'Bench',status:'Completed',performance:'50 kg x 5'}];
+for(const week of [46,47,48,49,50]){const v=scope.advice('Bench',week);assert(v&&v.base===50&&v.start===46&&v.end===50,'Expected recurring W46-50 guidance');}
+assert.equal(scope.advice('Bench',51),null,'Hint must disappear immediately after deload');
+scope.data=[{week:45,exercise:'Bench',status:'Completed',performance:'bodyweight'}];
+assert.equal(scope.advice('Bench',46),null,'Missing positive numeric working load must not generate a weight recommendation');
+console.log('PASS: date/time order, undated keyboard stability, per-exercise W26-W30/W36-W40/W46-W50 deload boundaries and skipped-history safety');
