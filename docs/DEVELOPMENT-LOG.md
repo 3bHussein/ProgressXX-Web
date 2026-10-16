@@ -1761,3 +1761,11 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - User supplied GitHub Actions screenshot: recent Full ProgressXX migration smoke, Deploy ProgressXX Full App, and Cross-browser frontend accessibility workflows show failure; Fast conflict safety contracts shows success for commit 78a30ae. Screenshot alone does not expose failed step logs or run IDs.
 - Fixed verified code defect in manual editor: deload hint was previously appended only when **no** prior exercise record existed. Now it is shown when previous history exists as well. During deload, the editor no longer auto-prefills a potentially heavy prior performance; the user must enter actual performed load. Commit `bcbed752`.
 - **Do not claim CI fixed:** the failing workflow logs have not been retrieved, and the latest commit has not been confirmed passing. Need failing Actions run URL (or log) for root-cause debugging and mandatory regression tests. Preserve all user workout data and diagnostics.
+
+
+### 2026-10-16 — Full UI exit 1 / schedule mirror contract correction
+
+- User supplied Full UI workflow command list ending with exit code 1, without the per-test assertion/error line; exact failing test remains **unconfirmed**.
+- Inspected `tests/workout-schedule-table-mirror.cjs`: test explicitly requires idempotent retries, PATCH of existing managed weekdays, DELETE only managed rows, and preservation of unrelated legacy schedule rows. Prior unconditional POST upsert implementation did not satisfy that contract.
+- Commit `382c5e4` restores read-before-write, managed-row PATCH/DELETE, preserves nonmanaged rows, and uses conflict-aware POST only for missing weekdays.
+- **Verification pending:** Full UI workflow needs rerun and failing assertion/log capture; live Supabase concurrency and cross-device synchronization not proven. Do not mark release gate green.
