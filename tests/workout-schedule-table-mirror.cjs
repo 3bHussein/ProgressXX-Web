@@ -14,6 +14,21 @@ assert.match(dailyDelete,/saveDailyReminders\(\)/,'Daily deletion must persist a
 const dailySave=html.slice(html.indexOf('function saveDailyReminders(){'),html.indexOf('function dailyDoneMap(){'));
 assert.match(dailySave,/scheduleReminderConfigSync\(\)/,'Daily edits must enqueue reminder config sync');
 assert.match(dailySave,/scheduleDailyStateSync\(\)/,'Daily edits must enqueue Daily state sync');
+// Execute the real Daily loader against an isolated in-memory store. In
+// particular, [] is a deliberate deletion state, not missing data.
+const dailyStore=new Map();
+const dailyScope={
+ PXStore:{getItem:key=>dailyStore.has(key)?dailyStore.get(key):null},
+ DAILY_REMINDERS_KEY:'qa-daily-reminders',
+ DEFAULT_DAILY_REMINDERS:[{id:'starter',name:'Starter'}],
+ clone:x=>JSON.parse(JSON.stringify(x))
+};
+vm.runInNewContext(dailyLoader+';globalThis.load=loadDailyReminders;',dailyScope);
+assert.equal(dailyScope.load().length,1,'Missing Daily state should use defaults');
+dailyStore.set(dailyScope.DAILY_REMINDERS_KEY,'[]');
+assert.equal(dailyScope.load().length,0,'Deleted Daily reminders resurrected after reload');
+dailyStore.set(dailyScope.DAILY_REMINDERS_KEY,JSON.stringify([{id:'keep',name:'Saved'}]));
+assert.equal(dailyScope.load()[0].id,'keep','Saved Daily state must win over defaults');
 const account='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const marker='progressxx-weekly-schedule-v1';
 let rows=[{id:'legacy',user_id:account,weekday:0,title:'Existing program',notes:null}];
