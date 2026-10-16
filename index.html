@@ -2909,7 +2909,25 @@ function selectEditorExercise(){
  prefillLastPerformance();
 }
 function latestExerciseEntry(day,exercise){const d=String(day||'').trim().toLowerCase(),e=String(exercise||'').trim().toLowerCase();return data.filter(x=>String(x.day||'').trim().toLowerCase()===d&&String(x.exercise||'').trim().toLowerCase()===e&&String(x.performance||'').trim()).sort((a,b)=>(Number(b.week)||0)-(Number(a.week)||0)||String(b.date||'').localeCompare(String(a.date||''))||(Number(b.id)||0)-(Number(a.id)||0))[0]||null}
-function prefillLastPerformance(){if(editingId!==null)return;const day=$('fDay').value,exercise=$('fExercise').value.trim();const last=latestExerciseEntry(day,exercise);if(last){$('fPerformance').value=last.performance||'';$('lastPerfHint').innerHTML=`Last logged: <b>W${esc(last.week??'—')}</b>${last.date?` · ${esc(last.date)}`:''} — prefilled for faster logging.`}else{$('lastPerfHint').textContent=exercise?'No previous performance found for this exercise in this training day.':''}}
+
+// Recurring deload guidance is read-only; never changes saved workout loads.
+function pxDeloadAdvice(exercise,week){
+ const w=Number(week);if(!Number.isInteger(w)||w<26||((w-26)%10)>=5)return null;
+ const start=26+Math.floor((w-26)/10)*10,end=start+4;
+ const matches=data.filter(r=>normWorkoutText(r.exercise)===normWorkoutText(exercise)&&Number(r.week)<start&&Number(r.week)>=start-5&&String(r.status||'Completed')!=='Skipped');
+ matches.sort((a,b)=>(Number(b.week)||0)-(Number(a.week)||0)||pxWorkoutChronological(a,b));
+ const previous=matches.find(r=>parsePerformanceSets(r.performance).some(x=>!x.raw&&Number(x.weight)>0));
+ if(!previous)return null;
+ const loads=parsePerformanceSets(previous.performance).filter(x=>!x.raw&&Number(x.weight)>0).map(x=>Number(x.weight));
+ if(!loads.length)return null;
+ const base=Math.max(...loads);
+ const lower=Math.max(2.5,Math.round(base*.55/2.5)*2.5),upper=Math.max(lower,Math.round(base*.7/2.5)*2.5);
+ return {base,lower,upper,start,end};
+}
+function pxDeloadHint(exercise,week){
+ const d=pxDeloadAdvice(exercise,week);return d?'🟠 Deload W'+d.start+'–W'+d.end+': last working load '+d.base+' kg (W'+(d.start-1)+' or earlier). Suggested '+d.lower+'–'+d.upper+' kg; adjust for comfort and technique.':'';
+}
+function prefillLastPerformance(){if(editingId!==null)return;const day=$('fDay').value,exercise=$('fExercise').value.trim();const last=latestExerciseEntry(day,exercise);if(last){$('fPerformance').value=last.performance||'';$('lastPerfHint').innerHTML=`Last logged: <b>W${esc(last.week??'—')}</b>${last.date?` · ${esc(last.date)}`:''} — prefilled for faster logging.`}else{$('lastPerfHint').textContent=exercise?'No previous performance found for this exercise in this training day.':'';const hint=pxDeloadHint(exercise,Number($('fWeek')?.value)||Number($('weekFilter')?.value)||0);if(hint)$('lastPerfHint').textContent+=' '+hint}
 function statusClass(s){return s==='Completed'?'ok':s==='Skipped'?'skip':'warn'}
 
 function parsePerformanceSets(raw){
@@ -3233,6 +3251,8 @@ function logSearchText(x){
     x.exercise,x.day,'w'+(x.week??''),x.week,x.date,x.status,x.performance,x.notes,workoutDisplayTime(x)
   ].map(v=>String(v??'').toLowerCase()).join(' ');
 }
+function pxWorkoutTimestamp(row){const date=String(row?.date||'');const time=workoutDisplayTime(row)||'00:00';return date+'T'+time}
+function pxWorkoutChronological(a,b){return pxWorkoutTimestamp(b).localeCompare(pxWorkoutTimestamp(a))||(Number(b.week)||0)-(Number(a.week)||0)||String(b.id||'').localeCompare(String(a.id||''))}
 function filtered(){
   const raw=String($('search')?.value||'').trim().toLowerCase();
   const terms=raw.split(/\s+/).filter(Boolean);
@@ -3252,7 +3272,7 @@ function filtered(){
   });
   if(sort==='oldest')rows.sort((a,b)=>(a.week||0)-(b.week||0)||String(a.date||'').localeCompare(String(b.date||'')));
   else if(sort==='exercise')rows.sort((a,b)=>String(a.exercise||'').localeCompare(String(b.exercise||''))||(Number(b.week)||0)-(Number(a.week)||0));
-  else rows.sort((a,b)=>(b.week||0)-(a.week||0)||String(b.date||'').localeCompare(String(a.date||'')));
+  else rows.sort(pxWorkoutChronological);
   return rows;
 }
 function compactWorkoutCard(x){
@@ -4706,6 +4726,7 @@ function renderWorkoutSession(){
     $('sessionTime').value=currentTimeHHMM();
     $('sessionSavedState').textContent=previous?'Previous performance prefilled.':'No previous session found.';
   }
+  const deloadNote=pxDeloadHint(exercise,workoutSession.week);if(deloadNote)$('sessionSavedState').textContent+=' '+deloadNote;
   $('sessionPrevious').innerHTML=previous
     ? `<b>W${esc(previous.week)}${previous.date?' • '+esc(previous.date):''}</b><div style="margin-top:5px">${renderPerformanceSets(previous.performance||'')}</div>`
     : 'No previous performance for this exercise.';
@@ -10002,23 +10023,16 @@ window.__legacyBoot=init;
   try{schedule=JSON.parse(savedValues['progressx-workout-schedule-v1']||'{}')}catch{throw Error('Invalid weekly schedule snapshot')}
   if(!schedule||typeof schedule!=='object'||Array.isArray(schedule))throw Error('Invalid weekly schedule format');
   const endpoint='workout_schedule';
-  const rows=await cloud(endpoint+'?select=id,user_id,weekday,title,notes&user_id=eq.'+encodeURIComponent(account)+'&notes=eq.'+encodeURIComponent(SCHEDULE_ROW_MARKER));
-  if(!Array.isArray(rows))throw Error('Weekly schedule rows unavailable');
-  const owned=rows.filter(r=>r.user_id===account&&r.notes===SCHEDULE_ROW_MARKER);
-  const byDay=new Map();
-  for(const row of owned){
-   if(byDay.has(Number(row.weekday)))throw Error('Duplicate managed schedule weekday: '+row.weekday);
-   byDay.set(Number(row.weekday),row);
-  }
+  // Atomic upsert by the actual UNIQUE(user_id,weekday) constraint prevents
+  // duplicate inserts on retry, multiple devices, or existing unmarked rows.
   for(let i=0;i<SCHEDULE_KEYS.length;i++){
-   const day=SCHEDULE_KEYS[i],title=String(schedule[day]||'').trim(),prior=byDay.get(i);
+   const day=SCHEDULE_KEYS[i],title=String(schedule[day]||'').trim();
    if(title.length>120)throw Error('Scheduled training day name exceeds 120 characters');
-   if(!title){
-    if(prior)await cloud(endpoint+'?id=eq.'+encodeURIComponent(prior.id)+'&user_id=eq.'+encodeURIComponent(account)+'&notes=eq.'+encodeURIComponent(SCHEDULE_ROW_MARKER),'DELETE');
-   }else if(prior){
-    if(prior.title!==title)await cloud(endpoint+'?id=eq.'+encodeURIComponent(prior.id)+'&user_id=eq.'+encodeURIComponent(account)+'&notes=eq.'+encodeURIComponent(SCHEDULE_ROW_MARKER),'PATCH',{title});
+   if(title){
+    await cloud(endpoint+'?on_conflict=user_id,weekday','POST',{user_id:account,weekday:i,title,notes:SCHEDULE_ROW_MARKER});
    }else{
-    await cloud(endpoint,'POST',{user_id:account,weekday:i,title,notes:SCHEDULE_ROW_MARKER});
+    // Delete only rows previously managed by ProgressXX.
+    await cloud(endpoint+'?user_id=eq.'+encodeURIComponent(account)+'&weekday=eq.'+i+'&notes=eq.'+encodeURIComponent(SCHEDULE_ROW_MARKER),'DELETE');
    }
   }
  }
