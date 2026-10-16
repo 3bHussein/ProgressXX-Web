@@ -58,6 +58,34 @@ schedulerScope.runReminder();
 schedulerScope.runDaily();
 assert.equal(schedulerScope.dailyStateDirty,true,'Legacy branch must retain its own dirty flag');
 assert.deepEqual(scheduled,[350,120],'Legacy scheduler timing changed unexpectedly');
+// Exercise the real account reminder pull guard with a mocked Supabase snapshot.
+// Local unsynced edits must always win until uploaded, including deleted [].
+const refreshStart=html.indexOf(' window.__pxRefreshAccountDailyReminders=async()=>{');
+const refreshEnd=html.indexOf(' window.__pxLoadProducts=async()=>{',refreshStart);
+assert.ok(refreshStart>=0&&refreshEnd>refreshStart,'Account Daily cloud refresh missing');
+const refreshCode=html.slice(refreshStart,refreshEnd);
+let revision=2,savedRevision=1,uploading=false,remoteReads=0,rendered=0;
+const refreshValues={'progressx-reminders':'[]'};
+const refreshStorage=new Map();
+const refreshScope={
+ window:{},ready:true,account:'qa-account',navigator:{onLine:true},
+ uploading,revision,savedRevision,
+ readPending:()=>false,
+ cloud:async()=>{remoteReads++;return [{payload:{'progressx-reminders':JSON.stringify([{id:'remote'}])}}]},
+ values:refreshValues,browserStorage:{setItem:(k,v)=>refreshStorage.set(k,v)},
+ storagePrefix:x=>x+':',
+ loadDailyReminders:()=>JSON.parse(refreshValues['progressx-reminders']),
+ renderDaily:()=>{rendered++},dailyReminders:[]
+};
+vm.runInNewContext(refreshCode,refreshScope);
+(async()=>{
+ assert.equal(await refreshScope.window.__pxRefreshAccountDailyReminders(),'pending','Pending local deletion must block remote resurrection');
+ assert.equal(remoteReads,0,'Pending local deletion must not read cloud');
+ refreshScope.savedRevision=2;
+ assert.equal(await refreshScope.window.__pxRefreshAccountDailyReminders(),'updated','Clean local state should accept remote changes');
+ assert.equal(refreshScope.dailyReminders.length,1);
+ assert.equal(rendered,1);
+})();
 const account='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const marker='progressxx-weekly-schedule-v1';
 let rows=[{id:'legacy',user_id:account,weekday:0,title:'Existing program',notes:null}];
