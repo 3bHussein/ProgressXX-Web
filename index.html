@@ -2928,6 +2928,7 @@ function pxDeloadHint(exercise,week){
  const d=pxDeloadAdvice(exercise,week);return d?'🟠 Deload W'+d.start+'–W'+d.end+': last working load '+d.base+' kg (W'+(d.start-1)+' or earlier). Suggested '+d.lower+'–'+d.upper+' kg; adjust for comfort and technique.':'';
 }
 function prefillLastPerformance(){if(editingId!==null)return;const day=$('fDay').value,exercise=$('fExercise').value.trim();const last=latestExerciseEntry(day,exercise);if(last){$('fPerformance').value=last.performance||'';$('lastPerfHint').innerHTML=`Last logged: <b>W${esc(last.week??'—')}</b>${last.date?` · ${esc(last.date)}`:''} — prefilled for faster logging.`}else{$('lastPerfHint').textContent=exercise?'No previous performance found for this exercise in this training day.':'';const hint=pxDeloadHint(exercise,Number($('fWeek')?.value)||Number($('weekFilter')?.value)||0);if(hint)$('lastPerfHint').textContent+=' '+hint}
+}
 function statusClass(s){return s==='Completed'?'ok':s==='Skipped'?'skip':'warn'}
 
 function parsePerformanceSets(raw){
