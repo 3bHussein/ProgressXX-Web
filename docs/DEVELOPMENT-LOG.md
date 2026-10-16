@@ -1808,3 +1808,9 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 
 - Commit `8542888`: added `tests/workout-chronology-deload-contract.cjs` to Firefox/WebKit cross-browser workflow execution and both push/PR path filters. Full UI already executes this contract.
 - Pending: confirm new GitHub Actions run conclusions for Full UI and Cross-browser. No green CI claim or release gate override.
+
+
+### 2026-10-16 — Mobile Settings anchor visibility
+
+- Commit `51f9afd`: increased Settings panel anchor `scroll-margin-top` from 24px to 104px so sticky quick navigation does not obscure target headings on mobile.
+- The change is deployed to source only; actual browser and latest GitHub Actions validation still pending. Do not claim green release checks.
