@@ -1769,3 +1769,11 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - Inspected `tests/workout-schedule-table-mirror.cjs`: test explicitly requires idempotent retries, PATCH of existing managed weekdays, DELETE only managed rows, and preservation of unrelated legacy schedule rows. Prior unconditional POST upsert implementation did not satisfy that contract.
 - Commit `382c5e4` restores read-before-write, managed-row PATCH/DELETE, preserves nonmanaged rows, and uses conflict-aware POST only for missing weekdays.
 - **Verification pending:** Full UI workflow needs rerun and failing assertion/log capture; live Supabase concurrency and cross-device synchronization not proven. Do not mark release gate green.
+
+
+### 2026-10-16 — Root-cause CI logs from runs 38904415944 and 38904415949
+
+- Retrieved GitHub Actions logs for Firefox job 116984312130, WebKit 116984312870, Chromium full UI job 116984312141. Deployment release gate correctly blocked due to failed cross-browser checks; release gate itself is not the root cause.
+- Firefox/WebKit failure: `tests/workout-log-keyboard-browser.cjs` expected stable original order for 60 undated synthetic workout rows (Bench 48 at index 48), but timestamp comparator used ID as tie-breaker and showed Bench 19. Fix `f358782`: when both entries have no date, sort by week only and rely on stable JS sort for equal-week input order. Dated rows still use date/time descending.
+- Full UI failures: `tests/ui-language-catalogue.cjs` missing translation for newly introduced placeholder `Connection profile`; replaced with existing catalogued `Profile name`. `tests/settings-language-pages-browser.cjs` keyboard-native first details failed because CSS hid the first details; restored accessible details. `scripts/smoke-full-ui.cjs` mobile shortcut clicks intercepted by fixed bottom nav after scrolling; changed mobile Settings shortcuts to sticky top position in `98be399`.
+- Fix commits `f358782`, `98be399`; **new CI results still unverified**. Do not bypass deployment gates, remove tests, or claim success until workflows are green. Follow up with new job logs if any assertions persist.
