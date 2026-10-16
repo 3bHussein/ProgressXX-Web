@@ -1777,3 +1777,9 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - Firefox/WebKit failure: `tests/workout-log-keyboard-browser.cjs` expected stable original order for 60 undated synthetic workout rows (Bench 48 at index 48), but timestamp comparator used ID as tie-breaker and showed Bench 19. Fix `f358782`: when both entries have no date, sort by week only and rely on stable JS sort for equal-week input order. Dated rows still use date/time descending.
 - Full UI failures: `tests/ui-language-catalogue.cjs` missing translation for newly introduced placeholder `Connection profile`; replaced with existing catalogued `Profile name`. `tests/settings-language-pages-browser.cjs` keyboard-native first details failed because CSS hid the first details; restored accessible details. `scripts/smoke-full-ui.cjs` mobile shortcut clicks intercepted by fixed bottom nav after scrolling; changed mobile Settings shortcuts to sticky top position in `98be399`.
 - Fix commits `f358782`, `98be399`; **new CI results still unverified**. Do not bypass deployment gates, remove tests, or claim success until workflows are green. Follow up with new job logs if any assertions persist.
+
+
+### 2026-10-16 — Workout chronology and deload regression coverage
+
+- Added `tests/workout-chronology-deload-contract.cjs` (commit `b20a179`) to check timestamp descending order, stable ordering for undated equal-week rows (keyboard pagination regression), and recurring W26–W30 deload visibility boundaries.
+- New test file is not yet wired into CI or confirmed executed. Latest push workflows could not be retrieved through the available commit workflow listing (PR-triggered runs only). Existing release gate must remain enforced; next step is to wire and run the test, and confirm latest Firefox/WebKit/Full UI results.
