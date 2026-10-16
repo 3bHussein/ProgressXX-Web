@@ -1802,3 +1802,9 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 
 - Added CI-enforced fixture in `tests/workout-chronology-deload-contract.cjs` (commit `0b035aa`) asserting that W36 guidance uses the latest valid Bench record (40 kg), not an older 60 kg record; expected rounded 55–70% range 22.5–27.5 kg.
 - Added zero-weight exclusion. This extends automated regression coverage; latest GitHub Actions results and live-device verification remain pending. No release-gate bypass.
+
+
+### 2026-10-16 — Cross-browser deload regression gate
+
+- Commit `8542888`: added `tests/workout-chronology-deload-contract.cjs` to Firefox/WebKit cross-browser workflow execution and both push/PR path filters. Full UI already executes this contract.
+- Pending: confirm new GitHub Actions run conclusions for Full UI and Cross-browser. No green CI claim or release gate override.
