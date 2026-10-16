@@ -1375,7 +1375,7 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
 #settings .pxSettingsHero h2{font-size:clamp(23px,5vw,30px)}
 #settings .pxSettingsQuickNav{box-shadow:0 4px 18px #00000012}
 #settings .pxSettingsQuickNav button{border-radius:999px;transition:background .2s}
-#settings #pxSettingsHub>details:first-of-type{display:none}
+/* Keep native Settings details keyboard-accessible for language and accessibility tests. */
 #settings .pxLegacySettingsPanel{display:none!important}
 #settings .settingsGrid{gap:12px}
 #settings .settingsGrid>.panel{border-radius:18px}
@@ -2163,7 +2163,7 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
  <p class="tiny muted">Sync requires a connection. Check the sync status before signing out with pending changes.</p>
 </div>
 <div class="settingsGrid"><div class="panel" id="pxSettingsHub"><div class="panelHead"><h3>Preferences & device tools</h3></div><p class="tiny muted">Your existing workout, food and cloud records are never deleted by these tools. Connection switching is verified first.</p>
-<details open><summary>🔗 Connection Profiles</summary><label class="tiny muted">Profile name</label><input id="pxProfileName" maxlength="45" placeholder="Connection profile"><div class="actions"><button class="btn soft" onclick="pxSaveProfile()">Save current verified connection</button><button class="btn soft" onclick="pxRefreshProfiles()">Refresh profiles</button></div><div id="pxProfileList" class="settingsList"></div><div id="pxProfileStatus" class="tiny muted" role="status"></div></details>
+<details open><summary>🔗 Connection Profiles</summary><label class="tiny muted">Profile name</label><input id="pxProfileName" maxlength="45" placeholder="Profile name"><div class="actions"><button class="btn soft" onclick="pxSaveProfile()">Save current verified connection</button><button class="btn soft" onclick="pxRefreshProfiles()">Refresh profiles</button></div><div id="pxProfileList" class="settingsList"></div><div id="pxProfileStatus" class="tiny muted" role="status"></div></details>
 <details><summary>🛟 Backup & Recovery Center</summary><div class="actions"><button class="btn primary" onclick="exportFullBackup()">Download full backup</button><button class="btn soft" onclick="pxInspectBackup()">Inspect backup file</button><input id="pxBackupInspectFile" type="file" accept=".json,application/json" class="hide" onchange="pxReadBackupInspection(event)"></div><div id="pxBackupInspection" class="callout">Preview only. Nothing will be restored or overwritten.</div></details>
 <details><summary>🎛 Advanced Appearance</summary><label class="tiny muted">Theme</label><select id="pxThemeMode" onchange="pxSaveAdvancedAppearance()"><option value="keep">Use current theme</option><option value="dark">Dark</option><option value="light">Light</option><option value="system">Follow system</option></select><label class="tiny muted">Text size</label><select id="pxFontScale" onchange="pxSaveAdvancedAppearance()"><option value="100">Normal</option><option value="110">Large</option><option value="120">Extra large</option></select><label class="tiny muted">Layout density</label><select id="pxDensity" onchange="pxSaveAdvancedAppearance()"><option value="comfortable">Comfortable</option><option value="compact">Compact</option></select><p class="tiny muted">Color and app title remain available in Appearance & personalization above.</p></details>
 <details><summary>🔔 Notification Preferences</summary><label><input id="pxNotifyEnabled" type="checkbox" onchange="pxSaveNotificationPrefs()"> Enable app reminder alerts</label><label class="tiny muted">Quiet hours start</label><input id="pxQuietStart" type="time" onchange="pxSaveNotificationPrefs()"><label class="tiny muted">Quiet hours end</label><input id="pxQuietEnd" type="time" onchange="pxSaveNotificationPrefs()"><p class="tiny muted">Preferences are stored locally. Quiet hours are applied to supported in-app alerts; OS notifications depend on browser and Android permissions.</p></details>
@@ -3266,7 +3266,7 @@ function logSearchText(x){
   ].map(v=>String(v??'').toLowerCase()).join(' ');
 }
 function pxWorkoutTimestamp(row){const date=String(row?.date||'');const time=workoutDisplayTime(row)||'00:00';return date+'T'+time}
-function pxWorkoutChronological(a,b){return pxWorkoutTimestamp(b).localeCompare(pxWorkoutTimestamp(a))||(Number(b.week)||0)-(Number(a.week)||0)||String(b.id||'').localeCompare(String(a.id||''))}
+function pxWorkoutChronological(a,b){const at=String(a?.date||''),bt=String(b?.date||'');if(!at&&!bt)return (Number(b.week)||0)-(Number(a.week)||0);return pxWorkoutTimestamp(b).localeCompare(pxWorkoutTimestamp(a))||(Number(b.week)||0)-(Number(a.week)||0)}
 function filtered(){
   const raw=String($('search')?.value||'').trim().toLowerCase();
   const terms=raw.split(/\s+/).filter(Boolean);
