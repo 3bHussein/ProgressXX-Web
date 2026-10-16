@@ -1754,3 +1754,10 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - Supabase workout schedule mirror changed to `POST ...?on_conflict=user_id,weekday` with merge-duplicates to address the unique constraint `workout_schedule_user_id_weekday_key`. Empty weekdays delete only managed marker rows. Needs live authenticated verification, including retry and two-device scenario; existing unrelated rows can still require inspection.
 - **QA status: NOT VERIFIED**. GitHub commits saved, but no browser/Android regression test, workflow status, Supabase live test, or deployed Pages smoke has been confirmed in this change set. Do not mark M2 sync/data safety complete or commercial launch approved.
 - Next: run mandatory Chromium UI tests, verify deployed `index.html`, check manual editor and Session Mode across W25/W26/W30/W31/W36, verify same-day time ordering and schedule sync retry without duplicate errors, confirm diagnostics remain accessible.
+
+
+### 2026-10-16 — CI failure triage and deload editor correction
+
+- User supplied GitHub Actions screenshot: recent Full ProgressXX migration smoke, Deploy ProgressXX Full App, and Cross-browser frontend accessibility workflows show failure; Fast conflict safety contracts shows success for commit 78a30ae. Screenshot alone does not expose failed step logs or run IDs.
+- Fixed verified code defect in manual editor: deload hint was previously appended only when **no** prior exercise record existed. Now it is shown when previous history exists as well. During deload, the editor no longer auto-prefills a potentially heavy prior performance; the user must enter actual performed load. Commit `bcbed752`.
+- **Do not claim CI fixed:** the failing workflow logs have not been retrieved, and the latest commit has not been confirmed passing. Need failing Actions run URL (or log) for root-cause debugging and mandatory regression tests. Preserve all user workout data and diagnostics.
