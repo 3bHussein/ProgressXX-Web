@@ -2115,6 +2115,30 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
 <div class="calcCard"><h3>🧍 Navy body-fat estimate</h3><p>Circumference-based estimate. Measure with a tape under consistent conditions.</p><div class="formGrid"><select id="bfSex" onchange="toggleHip()"><option value="male">Male</option><option value="female">Female</option></select><input id="bfHeight" type="number" step=".1" placeholder="Height cm"><input id="bfNeck" type="number" step=".1" placeholder="Neck cm"><input id="bfWaist" type="number" step=".1" placeholder="Waist cm"><input id="bfHip" class="hide" type="number" step=".1" placeholder="Hip cm"><button class="btn primary full" onclick="calcBF()">Estimate body fat</button></div><div id="bfResult" class="resultBox">Treat the result as a trend estimate, not a lab measurement.</div></div>
 </div></div></section>
 
+<style>
+/* Mobile-first Settings: keep underlying controls, IDs and sync handlers intact. */
+#settings .pxSettingsQuickNav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}
+#settings .pxSettingsQuickNav button{min-height:54px;border-radius:14px;text-align:left;padding:12px 14px;font-weight:650}
+#settings .pxLegacySettingsPanel{display:none!important}
+#settings .pxSettingsHero{margin-bottom:12px}
+#settings .settingsGrid{display:block}
+#settings .settingsGrid>.panel{margin-bottom:12px}
+#settings .panel{min-width:0}
+#settings .panel input,#settings .panel select{max-width:100%}
+@media(max-width:640px){
+ #settings{padding-bottom:88px}
+ #settings .pxSettingsHero{padding:16px;border-radius:18px}
+ #settings .pxSettingsHero h2{font-size:1.4rem}
+ #settings .panel{border-radius:16px;padding:15px;margin-bottom:12px}
+ #settings .panelHead{gap:8px;flex-wrap:wrap}
+ #settings .actions{display:flex;flex-wrap:wrap;gap:8px}
+ #settings .actions>.btn,#settings .actions>button{min-height:42px}
+ #settings .pxLanguageRow{display:flex;flex-direction:column;gap:12px}
+ #settings .pxSettingsQuickNav button{font-size:14px}
+ #settings details{border-radius:12px;overflow-wrap:anywhere}
+ #settings .syncCenterGrid{grid-template-columns:1fr}
+}
+</style>
 <section id="settings" class="section">
 <div class="hero pxSettingsHero"><div class="eyebrow">PREFERENCES & ACCOUNT</div><h2>⚙ Settings</h2><p>Manage your account, backups, sync, appearance and notifications in one place.</p></div>
 <div class="panel" id="pxLanguagePanel"><div class="pxLanguageRow"><div><h3>Language & direction</h3><p class="tiny muted">Choose the interface language for all pages. Saved on this device.</p></div><label for="pxUILanguage">Interface language<select id="pxUILanguage" onchange="pxSetUILanguage(this.value)"><option value="en">English</option><option value="ar">العربية</option></select></label></div><p id="pxLanguageStatus" class="tiny muted" role="status"></p></div>
@@ -2131,12 +2155,12 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
  <p class="tiny muted">Sync requires a connection. Check the sync status before signing out with pending changes.</p>
 </div>
 <div class="settingsGrid"><div class="panel" id="pxSettingsHub"><div class="panelHead"><h3>Preferences & device tools</h3></div><p class="tiny muted">Your existing workout, food and cloud records are never deleted by these tools. Connection switching is verified first.</p>
-<details open><summary>🔗 Connection Profiles</summary><label class="tiny muted">Profile name</label><input id="pxProfileName" maxlength="45" placeholder="My training sheet"><div class="actions"><button class="btn soft" onclick="pxSaveProfile()">Save current verified connection</button><button class="btn soft" onclick="pxRefreshProfiles()">Refresh profiles</button></div><div id="pxProfileList" class="settingsList"></div><div id="pxProfileStatus" class="tiny muted" role="status"></div></details>
+<details class="pxLegacySettingsPanel"><summary>🔗 Connection Profiles</summary><label class="tiny muted">Profile name</label><input id="pxProfileName" maxlength="45" placeholder="My training sheet"><div class="actions"><button class="btn soft" onclick="pxSaveProfile()">Save current verified connection</button><button class="btn soft" onclick="pxRefreshProfiles()">Refresh profiles</button></div><div id="pxProfileList" class="settingsList"></div><div id="pxProfileStatus" class="tiny muted" role="status"></div></details>
 <details><summary>🛟 Backup & Recovery Center</summary><div class="actions"><button class="btn primary" onclick="exportFullBackup()">Download full backup</button><button class="btn soft" onclick="pxInspectBackup()">Inspect backup file</button><input id="pxBackupInspectFile" type="file" accept=".json,application/json" class="hide" onchange="pxReadBackupInspection(event)"></div><div id="pxBackupInspection" class="callout">Preview only. Nothing will be restored or overwritten.</div></details>
 <details><summary>🎛 Advanced Appearance</summary><label class="tiny muted">Theme</label><select id="pxThemeMode" onchange="pxSaveAdvancedAppearance()"><option value="keep">Use current theme</option><option value="dark">Dark</option><option value="light">Light</option><option value="system">Follow system</option></select><label class="tiny muted">Text size</label><select id="pxFontScale" onchange="pxSaveAdvancedAppearance()"><option value="100">Normal</option><option value="110">Large</option><option value="120">Extra large</option></select><label class="tiny muted">Layout density</label><select id="pxDensity" onchange="pxSaveAdvancedAppearance()"><option value="comfortable">Comfortable</option><option value="compact">Compact</option></select><p class="tiny muted">Color and app title remain available in Appearance & personalization above.</p></details>
 <details><summary>🔔 Notification Preferences</summary><label><input id="pxNotifyEnabled" type="checkbox" onchange="pxSaveNotificationPrefs()"> Enable app reminder alerts</label><label class="tiny muted">Quiet hours start</label><input id="pxQuietStart" type="time" onchange="pxSaveNotificationPrefs()"><label class="tiny muted">Quiet hours end</label><input id="pxQuietEnd" type="time" onchange="pxSaveNotificationPrefs()"><p class="tiny muted">Preferences are stored locally. Quiet hours are applied to supported in-app alerts; OS notifications depend on browser and Android permissions.</p></details>
-<details><summary>💾 Storage Inspector</summary><button class="btn soft" onclick="pxInspectStorage()">Inspect local storage</button><div id="pxStorageInfo" class="callout">Shows storage usage without exposing saved values or deleting anything.</div></details>
-<details><summary>🩺 Diagnostics & Error Log</summary><div class="actions"><button class="btn soft" onclick="pxRenderDiagnostics()">Refresh diagnostics</button><button class="btn soft" onclick="pxCopyDiagnostics()">Copy sanitized report</button><button class="btn soft" onclick="pxClearDiagnostics()">Clear diagnostic events only</button></div><div id="pxDiagnosticsInfo" class="callout">Diagnostic events remain on this device. Reports exclude URLs, credentials and workout details.</div></details></div>
+<details class="pxSettingsAdvanced"><summary>💾 Storage Inspector</summary><button class="btn soft" onclick="pxInspectStorage()">Inspect local storage</button><div id="pxStorageInfo" class="callout">Shows storage usage without exposing saved values or deleting anything.</div></details>
+<details class="pxSettingsAdvanced"><summary>🩺 Diagnostics & Error Log</summary><div class="actions"><button class="btn soft" onclick="pxRenderDiagnostics()">Refresh diagnostics</button><button class="btn soft" onclick="pxCopyDiagnostics()">Copy sanitized report</button><button class="btn soft" onclick="pxClearDiagnostics()">Clear diagnostic events only</button></div><div id="pxDiagnosticsInfo" class="callout">Diagnostic events remain on this device. Reports exclude URLs, credentials and workout details.</div></details></div>
   <div class="panel" id="pxSettingsBackup">
     <div class="panelHead"><h3>Data & backup</h3></div>
     <div class="actions">
