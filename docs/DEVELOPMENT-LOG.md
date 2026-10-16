@@ -1827,3 +1827,9 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - User-provided GitHub Actions screenshot shows green Full ProgressXX migration smoke runs #925, #926, #927; green Cross-browser frontend accessibility #64; green Fast conflict safety contracts #101; and green Deploy ProgressXX Full App #138, all following the mobile Settings smoke fix `8657526` (deployment at that commit).
 - Subsequent commit `da5f56e` added downloadable failure logs; its Full UI run #927 passed. This confirms the previously failing Full UI pipeline recovered, but does not establish production Supabase multi-device data integrity or complete commercial launch readiness.
 - Next: prioritize live two-device Daily/Workout Schedule deletion and retry checks, and verify no `workout_schedule_user_id_weekday_key` errors. Preserve required CI and deployment gates.
+
+
+### 2026-10-16 — Concurrent weekday schedule upsert regression
+
+- Commit `f1230b9`: extended `tests/workout-schedule-table-mirror.cjs` with a simulated second-device insertion between the schedule GET and POST, enforcing `on_conflict=user_id,weekday` and asserting exactly one Monday row after convergence.
+- Preserves unrelated legacy rows. This is mocked regression coverage, not a live Supabase two-device acceptance result. Confirm GitHub Actions and authenticated two-device behavior before marking P0 persistence/sync complete.
