@@ -3218,9 +3218,10 @@ function filtered(){
     }
     return true;
   });
-  if(sort==='oldest')rows.sort((a,b)=>(a.week||0)-(b.week||0)||String(a.date||'').localeCompare(String(b.date||'')));
+  const workoutChronology=(a,b)=>String(a.date||'').localeCompare(String(b.date||'') )||String(workoutDisplayTime(a)||'').localeCompare(String(workoutDisplayTime(b)||''))||(Number(a.week)||0)-(Number(b.week)||0)||(Number(a.id)||0)-(Number(b.id)||0);
+  if(sort==='oldest')rows.sort(workoutChronology);
   else if(sort==='exercise')rows.sort((a,b)=>String(a.exercise||'').localeCompare(String(b.exercise||''))||(Number(b.week)||0)-(Number(a.week)||0));
-  else rows.sort((a,b)=>(b.week||0)-(a.week||0)||String(b.date||'').localeCompare(String(a.date||'')));
+  else rows.sort((a,b)=>workoutChronology(b,a));
   return rows;
 }
 function compactWorkoutCard(x){
@@ -4640,6 +4641,16 @@ function currentSessionExercise(){
 function currentWeekExerciseRow(day,exercise,week){
   return data.find(r=>Number(r.week)===Number(week)&&normWorkoutText(r.day)===normWorkoutText(day)&&normWorkoutText(r.exercise)===normWorkoutText(exercise))||null;
 }
+function suggestedSessionDeload(previous){
+  if(!previous)return '';
+  const weights=parsePerformanceSets(previous.performance||'').filter(s=>s.weight!==undefined).map(s=>Number(s.weight)).filter(n=>Number.isFinite(n)&&n>0);
+  if(!weights.length)return '';
+  const last=Math.max(...weights);
+  const roundPlate=n=>Math.round(n/2.5)*2.5;
+  const low=roundPlate(last*.65),high=roundPlate(last*.8);
+  if(low<=0||high<low)return '';
+  return 'Optional deload: last logged '+last+' kg. If this is a planned deload session, consider '+low+'–'+high+' kg (roughly 65–80% of your previous top set), with fewer hard sets and comfortable effort. This is a suggestion, not an automatic change.';
+}
 function renderWorkoutSession(){
   if(!workoutSession)return;
   const total=workoutSession.exercises.length;
@@ -4674,8 +4685,9 @@ function renderWorkoutSession(){
     $('sessionTime').value=currentTimeHHMM();
     $('sessionSavedState').textContent=previous?'Previous performance prefilled.':'No previous session found.';
   }
+  const deloadHint=suggestedSessionDeload(previous);
   $('sessionPrevious').innerHTML=previous
-    ? `<b>W${esc(previous.week)}${previous.date?' • '+esc(previous.date):''}</b><div style="margin-top:5px">${renderPerformanceSets(previous.performance||'')}</div>`
+    ? `<b>W${esc(previous.week)}${previous.date?' • '+esc(previous.date):''}</b><div style="margin-top:5px">${renderPerformanceSets(previous.performance||'')}</div>${deloadHint?`<div class="tiny" style="margin-top:9px">💡 ${esc(deloadHint)}</div>`:''}`
     : 'No previous performance for this exercise.';
 
   const completed=workoutSession.exercises.filter(ex=>currentWeekExerciseRow(workoutSession.day,ex,workoutSession.week));
