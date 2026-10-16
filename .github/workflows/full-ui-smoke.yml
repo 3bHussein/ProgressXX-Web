@@ -108,9 +108,14 @@ jobs:
             tests/workout-sync-noop-regression.cjs \
             tests/mobile-settings-insights-regression.cjs; do
             echo "::group::Run ${test_file}"
-            if node "$test_file"; then
+            if node "$test_file" > /tmp/px-current-test.log 2>&1; then
+              cat /tmp/px-current-test.log
               echo "PASS: ${test_file}"
             else
+              cat /tmp/px-current-test.log
+              mkdir -p ci-failure-logs
+              cp /tmp/px-current-test.log "ci-failure-logs/$(basename "$test_file").log"
+
               echo "::error file=${test_file}::FAIL: ${test_file}"
               failed_tests+=("${test_file}")
               failed=1
@@ -133,3 +138,11 @@ jobs:
             printf 'FAILED TESTS: %s\\n' "${failed_tests[@]}" >&2
           fi
           exit "$failed"
+      - name: Upload failed test logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-ui-failed-test-logs
+          path: ci-failure-logs/
+          if-no-files-found: ignore
+          retention-days: 7
