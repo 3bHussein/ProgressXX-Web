@@ -1789,3 +1789,10 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 
 - Commit `6177f5f`: added `tests/workout-chronology-deload-contract.cjs` to `.github/workflows/full-ui-smoke.yml`, immediately after the workout keyboard browser test.
 - New commits trigger the existing full UI workflow; its outcome has not yet been verified. Do not bypass the release gate or claim deployment succeeded until full UI, cross-browser, and fast conflict workflows pass.
+
+
+### 2026-10-16 — Third recurring deload cycle and weight fixture correction
+
+- Commits `5d2d1c7` and `eb43098`: expanded the CI-enforced workout chronology/deload contract to W46–W50, disappearance in W51, and no suggestion when a numeric load is missing.
+- Fixed the test fixture's performance parser to read the actual weight in each sample (`37 kg`, `45 kg`, `50 kg`) instead of always returning 37, so the second and third cycle assertions genuinely test per-cycle values.
+- **Still pending:** run/verify new GitHub Actions Full UI and Firefox/WebKit workflows. No claim of green CI or successful release.
