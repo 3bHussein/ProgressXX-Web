@@ -29,6 +29,11 @@ dailyStore.set(dailyScope.DAILY_REMINDERS_KEY,'[]');
 assert.equal(dailyScope.load().length,0,'Deleted Daily reminders resurrected after reload');
 dailyStore.set(dailyScope.DAILY_REMINDERS_KEY,JSON.stringify([{id:'keep',name:'Saved'}]));
 assert.equal(dailyScope.load()[0].id,'keep','Saved Daily state must win over defaults');
+// Supabase Daily must not activate legacy Apps Script timers or dirty flags,
+// which previously prevented the next cross-device refresh indefinitely.
+const dailyScheduler=html.slice(html.indexOf('function scheduleReminderConfigSync(){'),html.indexOf('async function syncReminderConfigToSheet(){'));
+assert.match(dailyScheduler,/if\(window\.__pxCommercialReady\?\.\(\)\)return;/,'Signed-in reminder config must skip legacy Sheets timer');
+assert.match(dailyScheduler,/if\(window\.__pxCommercialReady\?\.\(\)\)\{[\s\S]*?dailyStateDirty=false;/,'Signed-in Daily must not leave legacy dirty state blocking cloud refresh');
 const account='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const marker='progressxx-weekly-schedule-v1';
 let rows=[{id:'legacy',user_id:account,weekday:0,title:'Existing program',notes:null}];
