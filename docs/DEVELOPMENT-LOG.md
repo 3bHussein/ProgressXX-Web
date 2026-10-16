@@ -1820,3 +1820,10 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 
 - Commit `8657526`: replaced a fixed 400ms sleep in `scripts/smoke-full-ui.cjs` with a 6-second bounded wait for actual Settings destination visibility. Ensures the target is inside the viewport vertically (top and bottom) and scrolls the shortcut into view before clicking.
 - This addresses a plausible timing failure but the precise assertion for the previously failing smoke run was not available. New GitHub Actions validation remains required; no release bypass.
+
+
+### 2026-10-16 — CI recovery verified from Actions screenshot
+
+- User-provided GitHub Actions screenshot shows green Full ProgressXX migration smoke runs #925, #926, #927; green Cross-browser frontend accessibility #64; green Fast conflict safety contracts #101; and green Deploy ProgressXX Full App #138, all following the mobile Settings smoke fix `8657526` (deployment at that commit).
+- Subsequent commit `da5f56e` added downloadable failure logs; its Full UI run #927 passed. This confirms the previously failing Full UI pipeline recovered, but does not establish production Supabase multi-device data integrity or complete commercial launch readiness.
+- Next: prioritize live two-device Daily/Workout Schedule deletion and retry checks, and verify no `workout_schedule_user_id_weekday_key` errors. Preserve required CI and deployment gates.
