@@ -1839,3 +1839,10 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 
 - Commit `534fcfe` extends mocked concurrent weekday insertion test to cover idempotent retry, managed-row deletion, and re-creation after a collision, while preserving unrelated legacy schedule rows.
 - Requires green CI and authenticated two-device acceptance before marking synchronization safe. No user data or production database changes.
+
+
+### 2026-10-17 — Supabase Daily refresh unblocked
+
+- Runtime commit `8b7b6d1`: for authenticated Supabase accounts, stop scheduling retired Apps Script Daily/reminder writes and clear legacy `dailyStateDirty` so it cannot indefinitely suppress cross-device reminder refresh. Account-scoped PXStore continues to queue snapshot persistence.
+- Test commits `01dab3d` and `0673fc6`: enforce the routing contract and execute both Supabase and legacy scheduler branches with isolated mocks; Supabase branch must schedule no legacy timers and clear dirty state.
+- Pending: new CI results, authenticated two-device delete/reload checks, offline/reconnect conflict acceptance. Do not mark Milestone 2 complete based on mocks alone.
