@@ -5,6 +5,15 @@ const html=fs.readFileSync('index.html','utf8');
 const start=html.indexOf(' const SCHEDULE_ROW_MARKER=');
 const end=html.indexOf(' function scheduleCloudSync()',start);
 assert.ok(start>0&&end>start,'Schedule mirror code missing');
+// Daily deletion must remain an intentional empty list across reloads and sync.
+const dailyLoader=html.slice(html.indexOf('function loadDailyReminders(){'),html.indexOf('function saveDailyReminders(){'));
+assert.match(dailyLoader,/Array\.isArray\(x\)\?x:clone\(DEFAULT_DAILY_REMINDERS\)/,'Empty Daily reminders must not be repopulated by defaults');
+const dailyDelete=html.slice(html.indexOf('function deleteDailyReminder(id){'),html.indexOf('function renderDaily(){'));
+assert.match(dailyDelete,/dailyReminders=dailyReminders\.filter\(x=>x\.id!==id\)/,'Daily deletion must remove the matching reminder');
+assert.match(dailyDelete,/saveDailyReminders\(\)/,'Daily deletion must persist and queue sync');
+const dailySave=html.slice(html.indexOf('function saveDailyReminders(){'),html.indexOf('function dailyDoneMap(){'));
+assert.match(dailySave,/scheduleReminderConfigSync\(\)/,'Daily edits must enqueue reminder config sync');
+assert.match(dailySave,/scheduleDailyStateSync\(\)/,'Daily edits must enqueue Daily state sync');
 const account='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const marker='progressxx-weekly-schedule-v1';
 let rows=[{id:'legacy',user_id:account,weekday:0,title:'Existing program',notes:null}];
