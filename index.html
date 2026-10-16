@@ -1369,6 +1369,38 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
 @media(max-width:560px){#nutrition .nutritionOrderDiary>.panelHead,#daily .dailyShell>.panelHead{flex-wrap:wrap}#nutrition .nutritionOrderDiary>.panelHead>div:first-child,#daily .dailyShell>.panelHead>div:first-child{flex-basis:100%}#nutrition .nutritionOrderDiary>.panelHead>.actions,#daily .dailyToolbar{width:100%}#nutrition .nutritionOrderDiary>.panelHead>.actions .btn{flex:1;white-space:normal}#settings .pxSettingsQuickNav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}#settings .pxSettingsQuickNav button{min-width:0;width:100%}.pxDayExerciseRow{flex-wrap:wrap}.pxLanguageRow select{width:100%}}
 
 </style>
+<!-- px-mobile-settings-refresh-20261016 -->
+<style id="px-mobile-settings-refresh-20261016">
+#settings .pxSettingsHero{padding:18px 16px;margin-bottom:10px}
+#settings .pxSettingsHero h2{font-size:clamp(23px,5vw,30px)}
+#settings .pxSettingsQuickNav{box-shadow:0 4px 18px #00000012}
+#settings .pxSettingsQuickNav button{border-radius:999px;transition:background .2s}
+#settings #pxSettingsHub>details:first-of-type{display:none}
+#settings .pxLegacySettingsPanel{display:none!important}
+#settings .settingsGrid{gap:12px}
+#settings .settingsGrid>.panel{border-radius:18px}
+#settings #pxSettingsHub details{border-top:1px solid var(--line)}
+#settings #pxSettingsHub summary{min-height:48px;display:flex;align-items:center}
+#settings #pxSettingsHub details:not([open]){padding:3px 0}
+@media(max-width:820px){
+#settings{padding:10px 10px calc(120px + env(safe-area-inset-bottom,0px))}
+#settings .pxSettingsHero{border-radius:20px}
+#settings .pxSettingsQuickNav{position:relative;top:auto;z-index:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible;gap:7px;padding:8px;border-radius:18px}
+#settings .pxSettingsQuickNav button{min-width:0;min-height:52px;padding:7px 4px;font-size:11px;white-space:normal;line-height:1.3;border-radius:13px}
+#settings .panel{border-radius:18px;margin-bottom:10px;padding:14px}
+#settings .panelHead{gap:8px;flex-wrap:wrap}
+#settings .panelHead h3{font-size:16px}
+#settings .settingsGrid{display:flex;flex-direction:column;gap:10px}
+#settings .settingsGrid>.panel{width:100%;box-sizing:border-box}
+#settings .actions .btn,#settings .actions label.btn{min-height:44px}
+#settings input,#settings select{font-size:16px;max-width:100%;box-sizing:border-box}
+#settings .syncCenterGrid{grid-template-columns:1fr}
+#settings .versionMetaGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+#settings .changelogList{display:none}
+#settings #pxSettingsHub>p.tiny{display:none}
+#settings #pxSettingsHub details[open]{padding-bottom:12px}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -2131,7 +2163,7 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
  <p class="tiny muted">Sync requires a connection. Check the sync status before signing out with pending changes.</p>
 </div>
 <div class="settingsGrid"><div class="panel" id="pxSettingsHub"><div class="panelHead"><h3>Preferences & device tools</h3></div><p class="tiny muted">Your existing workout, food and cloud records are never deleted by these tools. Connection switching is verified first.</p>
-<details open><summary>🔗 Connection Profiles</summary><label class="tiny muted">Profile name</label><input id="pxProfileName" maxlength="45" placeholder="My training sheet"><div class="actions"><button class="btn soft" onclick="pxSaveProfile()">Save current verified connection</button><button class="btn soft" onclick="pxRefreshProfiles()">Refresh profiles</button></div><div id="pxProfileList" class="settingsList"></div><div id="pxProfileStatus" class="tiny muted" role="status"></div></details>
+<details open><summary>🔗 Connection Profiles</summary><label class="tiny muted">Profile name</label><input id="pxProfileName" maxlength="45" placeholder="Connection profile"><div class="actions"><button class="btn soft" onclick="pxSaveProfile()">Save current verified connection</button><button class="btn soft" onclick="pxRefreshProfiles()">Refresh profiles</button></div><div id="pxProfileList" class="settingsList"></div><div id="pxProfileStatus" class="tiny muted" role="status"></div></details>
 <details><summary>🛟 Backup & Recovery Center</summary><div class="actions"><button class="btn primary" onclick="exportFullBackup()">Download full backup</button><button class="btn soft" onclick="pxInspectBackup()">Inspect backup file</button><input id="pxBackupInspectFile" type="file" accept=".json,application/json" class="hide" onchange="pxReadBackupInspection(event)"></div><div id="pxBackupInspection" class="callout">Preview only. Nothing will be restored or overwritten.</div></details>
 <details><summary>🎛 Advanced Appearance</summary><label class="tiny muted">Theme</label><select id="pxThemeMode" onchange="pxSaveAdvancedAppearance()"><option value="keep">Use current theme</option><option value="dark">Dark</option><option value="light">Light</option><option value="system">Follow system</option></select><label class="tiny muted">Text size</label><select id="pxFontScale" onchange="pxSaveAdvancedAppearance()"><option value="100">Normal</option><option value="110">Large</option><option value="120">Extra large</option></select><label class="tiny muted">Layout density</label><select id="pxDensity" onchange="pxSaveAdvancedAppearance()"><option value="comfortable">Comfortable</option><option value="compact">Compact</option></select><p class="tiny muted">Color and app title remain available in Appearance & personalization above.</p></details>
 <details><summary>🔔 Notification Preferences</summary><label><input id="pxNotifyEnabled" type="checkbox" onchange="pxSaveNotificationPrefs()"> Enable app reminder alerts</label><label class="tiny muted">Quiet hours start</label><input id="pxQuietStart" type="time" onchange="pxSaveNotificationPrefs()"><label class="tiny muted">Quiet hours end</label><input id="pxQuietEnd" type="time" onchange="pxSaveNotificationPrefs()"><p class="tiny muted">Preferences are stored locally. Quiet hours are applied to supported in-app alerts; OS notifications depend on browser and Android permissions.</p></details>
