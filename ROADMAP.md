@@ -802,3 +802,9 @@ Completed selected Phase 3 navigation semantics and fixture reliability, plus Ph
 
 - Added an enforced Full UI test for stable undated workout log ordering, newest-first dated entries, W26–W30 and W36–W40 deload cycles, per-exercise isolation and skipped history (commits `6177f5f`, `776b9dd`).
 - **Status: pending CI verification.** Cross-browser Firefox/WebKit and full UI workflows must pass; release gate remains required. Live multi-device/Supabase concurrency is not proven by this isolated contract test.
+
+
+### 2026-10-16 — Deload latest-valid-load regression
+
+- Added CI-enforced fixture in `tests/workout-chronology-deload-contract.cjs` (commit `0b035aa`) asserting that W36 guidance uses the latest valid Bench record (40 kg), not an older 60 kg record; expected rounded 55–70% range 22.5–27.5 kg.
+- Added zero-weight exclusion. This extends automated regression coverage; latest GitHub Actions results and live-device verification remain pending. No release-gate bypass.
