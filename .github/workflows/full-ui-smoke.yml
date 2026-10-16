@@ -45,6 +45,7 @@ jobs:
             tests/mobile-motion-anatomy-accessibility.cjs \
             tests/mobile-barcode-keyboard-rtl-browser.cjs \
             tests/workout-log-keyboard-browser.cjs \
+            tests/workout-chronology-deload-contract.cjs \
             tests/workout-log-incremental-browser.cjs \
             tests/barcode-lazy-library-browser.cjs \
             tests/pwa-shell-cache-contract.cjs \
