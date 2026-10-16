@@ -7877,10 +7877,22 @@ function setReminderSheetState(text,ok=null){
 }
 
 function scheduleReminderConfigSync(){
+  // Signed-in accounts persist reminders through PXStore/Supabase snapshots.
+  // Do not schedule the retired Google Sheets writer for those accounts.
+  if(window.__pxCommercialReady?.())return;
   clearTimeout(reminderSheetSaveTimer);
   reminderSheetSaveTimer=setTimeout(syncReminderConfigToSheet,350);
 }
 function scheduleDailyStateSync(){
+  // PXStore already queues the account-scoped snapshot. Setting the legacy
+  // dirty flag here used to block cloud pulls indefinitely when Apps Script
+  // was absent, leaving deleted reminders visible on another device.
+  if(window.__pxCommercialReady?.()){
+    dailyStateDirty=false;
+    clearTimeout(dailySheetSaveTimer);
+    if(!navigator.onLine)updateConnectionBanner('offline');
+    return;
+  }
   dailyStateDirty=true;
   clearTimeout(dailySheetSaveTimer);
   dailySheetSaveTimer=setTimeout(syncDailyStateToSheet,120);
