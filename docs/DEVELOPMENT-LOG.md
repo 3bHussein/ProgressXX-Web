@@ -1783,3 +1783,9 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 
 - Added `tests/workout-chronology-deload-contract.cjs` (commit `b20a179`) to check timestamp descending order, stable ordering for undated equal-week rows (keyboard pagination regression), and recurring W26–W30 deload visibility boundaries.
 - New test file is not yet wired into CI or confirmed executed. Latest push workflows could not be retrieved through the available commit workflow listing (PR-triggered runs only). Existing release gate must remain enforced; next step is to wire and run the test, and confirm latest Firefox/WebKit/Full UI results.
+
+
+### 2026-10-16 — CI regression test now enforced
+
+- Commit `6177f5f`: added `tests/workout-chronology-deload-contract.cjs` to `.github/workflows/full-ui-smoke.yml`, immediately after the workout keyboard browser test.
+- New commits trigger the existing full UI workflow; its outcome has not yet been verified. Do not bypass the release gate or claim deployment succeeded until full UI, cross-browser, and fast conflict workflows pass.
