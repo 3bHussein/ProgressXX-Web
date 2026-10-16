@@ -1833,3 +1833,9 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 
 - Commit `f1230b9`: extended `tests/workout-schedule-table-mirror.cjs` with a simulated second-device insertion between the schedule GET and POST, enforcing `on_conflict=user_id,weekday` and asserting exactly one Monday row after convergence.
 - Preserves unrelated legacy rows. This is mocked regression coverage, not a live Supabase two-device acceptance result. Confirm GitHub Actions and authenticated two-device behavior before marking P0 persistence/sync complete.
+
+
+### 2026-10-16 — Workout Schedule conflict lifecycle coverage
+
+- Commit `534fcfe` extends mocked concurrent weekday insertion test to cover idempotent retry, managed-row deletion, and re-creation after a collision, while preserving unrelated legacy schedule rows.
+- Requires green CI and authenticated two-device acceptance before marking synchronization safe. No user data or production database changes.
