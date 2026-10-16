@@ -12,7 +12,7 @@ undated.sort(ctx.sorter);
 assert.equal(undated[48].exercise,'Bench 48','Undated same-week rows must retain stable keyboard pagination order');
 const dstart=html.indexOf('function pxDeloadAdvice('),dend=html.indexOf('function prefillLastPerformance()',dstart);
 assert(dstart>=0&&dend>dstart,'Deload functions missing');
-const scope={data:[{week:25,exercise:'Bench',status:'Completed',performance:'37 kg x 8'}],normWorkoutText:x=>String(x).toLowerCase(),parsePerformanceSets:()=>[{weight:37}],pxWorkoutChronological:ctx.sorter};
+const scope={data:[{week:25,exercise:'Bench',status:'Completed',performance:'37 kg x 8'}],normWorkoutText:x=>String(x).toLowerCase(),parsePerformanceSets:input=>{const m=String(input||'').match(/(\d+(?:\.\d+)?)\s*kg/i);return m?[{weight:Number(m[1]),raw:false}]:[];},pxWorkoutChronological:ctx.sorter};
 vm.runInNewContext(html.slice(dstart,dend)+';globalThis.advice=pxDeloadAdvice;',scope);
 for(const week of [26,27,28,29,30]){const v=scope.advice('Bench',week);assert(v&&v.base===37&&v.start===26&&v.end===30,'Expected fixed W26-30 guidance');}
 assert.equal(scope.advice('Bench',25),null);
