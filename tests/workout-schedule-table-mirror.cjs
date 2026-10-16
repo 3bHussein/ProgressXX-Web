@@ -63,6 +63,18 @@ const send=x=>scope.mirror({'progressx-workout-schedule-v1':JSON.stringify(x)});
  assert.equal(rows.filter(r=>r.user_id===account&&r.weekday===1).length,1,'Concurrent creation duplicated Monday');
  assert.equal(rows.find(r=>r.weekday===1).title,'Race winner','Upsert did not converge on latest requested schedule');
  assert.equal(rows.find(r=>r.id==='legacy').title,'Existing program','Concurrent upsert must preserve unrelated schedule');
+ // Retrying the same schedule after the collision must not create extra rows.
+ await send({mon:'Race winner'});
+ assert.equal(rows.filter(r=>r.user_id===account&&r.weekday===1).length,1,'Retry after concurrent insert duplicated weekday');
+ // Removing the collided weekday must only remove the managed row.
+ await send({});
+ assert.equal(rows.some(r=>r.id==='concurrent-device'),false,'Clearing collided weekday left a stale managed row');
+ assert.equal(rows.find(r=>r.id==='legacy').title,'Existing program','Clearing collided weekday changed unrelated schedule');
+ // Re-adding after deletion must still produce exactly one managed row.
+ await send({mon:'After retry'});
+ assert.equal(rows.filter(r=>r.user_id===account&&r.weekday===1).length,1,'Re-create after collision duplicated weekday');
+ assert.equal(rows.find(r=>r.weekday===1).title,'After retry');
 
- console.log('PASS: schedule mirror create, idempotent upsert, edit, delete and legacy preservation');
+
+ console.log('PASS: schedule mirror create, idempotent upsert, edit, delete, concurrent insert, retry and legacy preservation');
 })().catch(e=>{console.error(e);process.exitCode=1});
