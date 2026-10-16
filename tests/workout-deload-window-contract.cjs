@@ -7,7 +7,7 @@ const start=html.indexOf('const PX_DELOAD_BLOCKS=');
 const end=html.indexOf('function renderWorkoutSession(){',start);
 assert(start>=0&&end>start,'Deload block helper must exist');
 const ctx={data:[],normWorkoutText:s=>String(s||'').trim().toLowerCase(),workoutDisplayTime:r=>r.time||'',
-  parsePerformanceSets:raw=>String(raw||'').split(',').map(x=>{const m=x.trim().match(/^(\\d+(?:\\.\\d+)?)\\s*\\*\\s*\\d+/);return m?{weight:m[1]}:{raw:x}})};
+  parsePerformanceSets:raw=>String(raw||'').split(',').map(x=>{const n=Number(x.trim().split('*')[0]);return Number.isFinite(n)&&n>0?{weight:n}:{raw:x}})};
 vm.createContext(ctx);
 vm.runInContext(html.slice(start,end)+'\nthis.deload=suggestedSessionDeload;',ctx);
 const row=(week,exercise,performance,day='Chest')=>({week,exercise,performance,day,status:'Completed'});
