@@ -1,5 +1,5 @@
 // Cache only the public shell. Account/API data never enters this cache.
-const CACHE='progressxx-web-full-v2';
+const CACHE='progressxx-web-full-v3-settings-directory';
 const BASE=new URL('./',self.location.href);
 const STATIC=['index.html','manifest.webmanifest','icon-192.svg','icon-512.svg'].map(path=>new URL(path,BASE).href);
 const SHELL=STATIC[0];
