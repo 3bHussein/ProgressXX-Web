@@ -796,3 +796,9 @@ Completed selected Phase 3 navigation semantics and fixture reliability, plus Ph
 - Supabase workout schedule mirror changed to `POST ...?on_conflict=user_id,weekday` with merge-duplicates to address the unique constraint `workout_schedule_user_id_weekday_key`. Empty weekdays delete only managed marker rows. Needs live authenticated verification, including retry and two-device scenario; existing unrelated rows can still require inspection.
 - **QA status: NOT VERIFIED**. GitHub commits saved, but no browser/Android regression test, workflow status, Supabase live test, or deployed Pages smoke has been confirmed in this change set. Do not mark M2 sync/data safety complete or commercial launch approved.
 - Next: run mandatory Chromium UI tests, verify deployed `index.html`, check manual editor and Session Mode across W25/W26/W30/W31/W36, verify same-day time ordering and schedule sync retry without duplicate errors, confirm diagnostics remain accessible.
+
+
+### 2026-10-16 — Workout chronology / Deload release regression
+
+- Added an enforced Full UI test for stable undated workout log ordering, newest-first dated entries, W26–W30 and W36–W40 deload cycles, per-exercise isolation and skipped history (commits `6177f5f`, `776b9dd`).
+- **Status: pending CI verification.** Cross-browser Firefox/WebKit and full UI workflows must pass; release gate remains required. Live multi-device/Supabase concurrency is not proven by this isolated contract test.
