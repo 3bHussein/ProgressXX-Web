@@ -25,6 +25,7 @@ jobs:
           python3 -m http.server 8765 > /tmp/full-ui-server.log 2>&1 &
           sleep 2
           failed=0
+          failed_tests=()
           for test_file in \
             tests/ui-language-catalogue.cjs \
             tests/settings-language-pages-browser.cjs \
@@ -111,8 +112,24 @@ jobs:
               echo "PASS: ${test_file}"
             else
               echo "::error file=${test_file}::FAIL: ${test_file}"
+              failed_tests+=("${test_file}")
               failed=1
             fi
             echo "::endgroup::"
           done
+          {
+            echo "## Full UI smoke results"
+            if [ "${#failed_tests[@]}" -eq 0 ]; then
+              echo "All Full UI smoke tests passed."
+            else
+              echo "### Failed tests (${#failed_tests[@]})"
+              for test_file in "${failed_tests[@]}"; do
+                echo "- \`${test_file}\`"
+              done
+              echo "Open the **Full UI browser smoke** step and expand the matching test group for the assertion and stack trace."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "${#failed_tests[@]}" -gt 0 ]; then
+            printf 'FAILED TESTS: %s\\n' "${failed_tests[@]}" >&2
+          fi
           exit "$failed"
