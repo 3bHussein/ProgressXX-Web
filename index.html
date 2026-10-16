@@ -2181,6 +2181,20 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
 @media(max-width:900px){#settings .pxSettingsDirectory{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:540px){#settings .pxSettingsDirectory{grid-template-columns:1fr;gap:9px}#settings .pxSettingsTile{min-height:76px;padding:13px}#settings .pxSettingsTileIcon{width:42px;height:42px}#settings .pxSettingsTileText b{font-size:14px}}
 </style>
+<style id="px-settings-directory-enforce-20261017">
+/* The directory is the only default Settings view; legacy cards stay mounted for their handlers. */
+#settings:not(.pxSettingsDetailMode)>.pxSettingsHero,
+#settings:not(.pxSettingsDetailMode)>.pxSettingsQuickNav,
+#settings:not(.pxSettingsDetailMode)>#pxLanguagePanel,
+#settings:not(.pxSettingsDetailMode)>#pxSettingsAccount,
+#settings:not(.pxSettingsDetailMode)>.settingsGrid{display:none!important}
+#settings:not(.pxSettingsDetailMode)>.pxSettingsDirectory{display:grid!important}
+#settings.pxSettingsDetailMode>.pxSettingsDirectory{display:none!important}
+#settings.pxSettingsDetailMode>.settingsGrid{display:block!important}
+#settings.pxSettingsDetailMode>.settingsGrid>.panel{display:none!important}
+#settings.pxSettingsDetailMode>.settingsGrid>.panel.pxSettingsSelected{display:block!important}
+#settings.pxSettingsDetailMode>.pxSettingsDetailBar{display:flex!important}
+</style>
 <section id="settings" class="section">
 <div class="pxSettingsDirectory" aria-label="Settings categories">
  <button type="button" class="pxSettingsTile" onclick="pxShowSettingsCategory('pxSettingsAccount','Account & sync')"><span class="pxSettingsTileIcon">👤</span><span class="pxSettingsTileText"><b>Account & sync</b><small>Account status, cloud connection and sign out</small></span></button>
@@ -2820,7 +2834,7 @@ if($('foodQuickProduct'))$('foodQuickProduct').addEventListener('change',()=>{
   updateFoodQuickPreview()
 });if($('foodQuickAmount'))$('foodQuickAmount').addEventListener('input',()=>{$('foodQuickAmount').dataset.changed='1';updateFoodQuickPreview()});bindLogFilters();$('exerciseSelect').addEventListener('change',renderExercise);$('progressDaySelect').addEventListener('change',()=>{buildProgressFilters();renderExercise()});$('importFile').addEventListener('change',importJSON);if($('restoreFullBackupFile'))$('restoreFullBackupFile').addEventListener('change',restoreFullBackup);$('fDay').addEventListener('change',()=>{buildExerciseOptions($('fDay').value);if(editingId===null){$('fExercise').value='';$('fPerformance').value='';$('lastPerfHint').textContent=''}});$('fExercise').addEventListener('change',prefillLastPerformance);$('fExercise').addEventListener('input',()=>{const name=$('fExercise').value.trim();if(exercisesForDay($('fDay').value).some(x=>x.toLowerCase()===name.toLowerCase()))prefillLastPerformance()});}
 function pxScrollBehavior(){return window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?'auto':'smooth'}
-function go(p){currentPage=p;document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===p));document.querySelectorAll('.navbtn').forEach(b=>{const active=b.dataset.page===p;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});const activeNav=document.querySelector('.navbtn.active');if(activeNav&&window.innerWidth<=820){setTimeout(()=>activeNav.scrollIntoView({behavior:pxScrollBehavior(),block:'nearest',inline:'center'}),0)}if(p==='intelligence'){renderIntelligence()}if(p==='analytics'){renderAnalytics();if($('progressPhotoDate')&&!$('progressPhotoDate').value)$('progressPhotoDate').value=localDateKey();syncWeightCheckinsFromSheet(true);}if(p==='daily'){renderDaily();syncRemindersFromSheet()}if(p==='nutrition'){renderNutrition();syncNutritionFromSheet(null,true)}if(p==='home'){renderNutritionHome();syncNutritionFromSheet(localDateKey(),true)}if(p==='settings'){pxShowSettingsHome(false);renderSyncCenter();renderWorkoutSchedule();renderDataHealth(false);renderAutoBackupList();previewDataRepairs();updatePwaInstallUI();}scrollTo(0,0)}
+function go(p){currentPage=p;document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===p));document.querySelectorAll('.navbtn').forEach(b=>{const active=b.dataset.page===p;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});const activeNav=document.querySelector('.navbtn.active');if(activeNav&&window.innerWidth<=820){setTimeout(()=>activeNav.scrollIntoView({behavior:pxScrollBehavior(),block:'nearest',inline:'center'}),0)}if(p==='intelligence'){renderIntelligence()}if(p==='analytics'){renderAnalytics();if($('progressPhotoDate')&&!$('progressPhotoDate').value)$('progressPhotoDate').value=localDateKey();syncWeightCheckinsFromSheet(true);}if(p==='daily'){renderDaily();syncRemindersFromSheet()}if(p==='nutrition'){renderNutrition();syncNutritionFromSheet(null,true)}if(p==='home'){renderNutritionHome();syncNutritionFromSheet(localDateKey(),true)}if(p==='settings'){pxShowSettingsHome(false);requestAnimationFrame(()=>{window.scrollTo(0,0)});renderSyncCenter();renderWorkoutSchedule();renderDataHealth(false);renderAutoBackupList();previewDataRepairs();updatePwaInstallUI();}scrollTo(0,0)}
 function handleAndroidBack(){
   if($('pxAnatomyZoom')){pxCloseAnatomyZoom();return true}
   if($('workoutSessionOverlay')?.classList.contains('show')){closeWorkoutSession();return true}
