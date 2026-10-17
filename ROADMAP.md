@@ -1,4 +1,6 @@
 
+**2026-10-17 Deload safety:** Existing recurring W26–W30 and every 10-week deload advice now also prevents heavy previous-load autofill in Session Mode for new entries; saved current-week values remain untouched. Commit `7909349`; CI pending. PR #45 draft; Milestone 2 OPEN.
+
 **2026-10-17:** CI for V3 visual base passed 8/8 on `c04d62b` (Full UI #39007842602). Added bilingual accessible Workout Log result summary on later commits; their CI still pending. Keep PR #45 draft until latest green and mobile review; Milestone 2 OPEN.
 
 **2026-10-17 V3 visual foundation in PR #45:** Responsive Dashboard/Workout Log/Insights card polish, PROGRESSX header and Insights V3 label committed as `551a24f`. No data/sync changes. CI for this commit NOT VERIFIED. Next: CI/browser/mobile visual acceptance, then targeted Smart Deload and other older tasks; Milestone 2 live sync OPEN.
