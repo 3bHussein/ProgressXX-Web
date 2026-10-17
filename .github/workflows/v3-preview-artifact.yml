@@ -22,7 +22,7 @@ jobs:
           node - <<'NODE'
           const fs=require('fs'),vm=require('vm');
           const html=fs.readFileSync('index.html','utf8');
-          for(const m of html.matchAll(/<script(?:\\s+[^>]*)?>([\\s\\S]*?)<\\/script>/g))new vm.Script(m[1]);
+          for(const m of html.matchAll(new RegExp('<script(?:\\s+[^>]*)?>([\\s\\S]*?)</script>','g')))new vm.Script(m[1]);
           if(!html.includes('id="pxSessionDeloadCard"'))throw Error('Missing Deload card');
           NODE
       - name: Package standalone local preview
