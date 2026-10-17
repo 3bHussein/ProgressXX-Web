@@ -1468,6 +1468,11 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
 #pxSessionAddSet:not([hidden]){min-height:44px;margin:4px 0 12px}
 @media(max-width:390px){.pxSessionSetRow{grid-template-columns:42px minmax(0,1fr) minmax(0,1fr) 38px;gap:5px;padding:7px}.pxSessionSetRow button{min-width:38px}}
 </style>
+<style id="px-v3-session-week-picker-20261017">
+.pxSessionWeekPicker{display:flex;gap:7px;align-items:center;font-size:12px;color:var(--muted);min-width:110px}
+.pxSessionWeekPicker input{width:85px;min-height:44px;font-size:16px}
+@media(max-width:480px){#sessionDayPickerWrap{flex-wrap:wrap}.pxSessionWeekPicker{flex:1 1 100%}.pxSessionWeekPicker input{flex:1}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -2472,6 +2477,7 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
 
     <div class="sessionDayPicker" id="sessionDayPickerWrap">
       <select id="sessionDaySelect"></select>
+      <label class="pxSessionWeekPicker">Week <input id="sessionWeekSelect" type="number" min="1" max="999" step="1" inputmode="numeric" aria-label="Workout session week"></label>
       <button class="btn primary" onclick="startWorkoutSession()">Start</button>
     </div>
 
@@ -4774,6 +4780,8 @@ function openWorkoutSession(){
   const previouslySelected=daySelect.value;
   daySelect.replaceChildren(...ds.map(d=>new Option(d,d)));
   if(ds.includes(previouslySelected))daySelect.value=previouslySelected;
+  const weekPicker=$('sessionWeekSelect');
+  if(weekPicker)weekPicker.value=String(activeWeek());
   const saved=(()=>{try{return JSON.parse(PXStore.getItem(WORKOUT_SESSION_KEY))}catch{return null}})();
 
   overlay.classList.add('show');
@@ -4812,6 +4820,7 @@ function restartWorkoutSession(){
   $('sessionResumePrompt')?.classList.add('hide');
   $('sessionBody')?.classList.add('hide');
   $('sessionDayPickerWrap')?.classList.remove('hide');
+  if($('sessionWeekSelect'))$('sessionWeekSelect').value=String(activeWeek());
   const ds=days();
   if($('sessionDaySelect'))$('sessionDaySelect').innerHTML=ds.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('');
 }
@@ -4834,7 +4843,8 @@ function nextPendingSessionIndex(fromIndex){
 }
 function startWorkoutSession(){
   const day=$('sessionDaySelect').value;
-  const week=activeWeek();
+  const week=Number($('sessionWeekSelect')?.value);
+  if(!Number.isInteger(week)||week<1||week>999)return alert('Choose a valid workout week.');
   const exercises=orderedExercisesForDay(day,week);
   if(!exercises.length)return alert('No exercises found for this training day yet.');
   workoutSession={
