@@ -4956,6 +4956,7 @@ function pxSessionAddSet(){
   const host=$('pxSessionSetEditor');if(!host||host.hidden)return;
   pxSessionReadSets();
   const field=$('sessionPerformance');
+  if(field?.dataset.incompleteSets){alert('Complete the started set before adding another.');return;}
   const i=host.querySelectorAll('[data-set-weight]').length;
   host.insertAdjacentHTML('beforeend','<div class="pxSessionSetRow"><span class="pxSessionSetNumber">SET '+(i+1)+'</span><label>Weight (kg)<input type="number" inputmode="decimal" min="0" step="any" data-set-weight="'+i+'"></label><label>Reps<input type="number" inputmode="numeric" min="1" step="1" data-set-reps="'+i+'"></label><button type="button" class="btn soft" aria-label="Remove set '+(i+1)+'" onclick="pxSessionRemoveSet('+i+')">×</button></div>');
   host.querySelectorAll('[data-set-weight]')[i]?.focus();
@@ -4964,7 +4965,9 @@ function pxSessionRemoveSet(index){
   const host=$('pxSessionSetEditor');if(!host||host.hidden)return;
   const weights=Array.from(host.querySelectorAll('[data-set-weight]'));
   const reps=Array.from(host.querySelectorAll('[data-set-reps]'));
-  $('sessionPerformance').value=weights.filter((_,i)=>i!==index).map(w=>{const i=weights.indexOf(w);return w.value.trim()&&reps[i]?.value.trim()?w.value.trim()+'*'+reps[i].value.trim():''}).filter(Boolean).join(',');
+  const remaining=weights.map((w,i)=>({weight:w.value.trim(),reps:reps[i]?.value.trim()||''})).filter((_,i)=>i!==index);
+  if(remaining.some(set=>(set.weight&&!set.reps)||(!set.weight&&set.reps))){alert('Complete or remove the other incomplete set first.');return;}
+  $('sessionPerformance').value=remaining.filter(set=>set.weight&&set.reps).map(set=>set.weight+'*'+set.reps).join(',');
   pxSessionRenderSetEditor();
 }
 
