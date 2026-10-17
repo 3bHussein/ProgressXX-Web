@@ -1,4 +1,6 @@
 
+**2026-10-17:** Per-exercise Deload card CI green on `00f5a228a` (8/8). Bilingual AR/EN card and RTL support added (`b203ad8`), pending new CI. Keep PR #45 draft; Milestone 2 OPEN.
+
 **2026-10-17:** Smart Deload Session card now displays exercise-specific previous working weight and suggested lighter range for recurring deload weeks, and hides outside those weeks (`8af2f91`). No persisted data changes. Latest commit CI pending; PR #45 draft.
 
 **2026-10-17 Deload safety:** Existing recurring W26–W30 and every 10-week deload advice now also prevents heavy previous-load autofill in Session Mode for new entries; saved current-week values remain untouched. Commit `7909349`; CI pending. PR #45 draft; Milestone 2 OPEN.
