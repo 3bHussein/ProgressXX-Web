@@ -817,5 +817,9 @@
   "Edit reminder": "تعديل التذكير",
   "Snacks": "وجبات خفيفة",
   "Manage appearance, notification permissions and local diagnostics.": "إدارة المظهر وأذونات الإشعارات والتشخيصات المحلية.",
-  "Your existing workout, food and cloud records are never deleted by these tools. Manage appearance, notification permissions and local diagnostics.": "لا تحذف هذه الأدوات سجلات التمارين والطعام والسحابة. أدر المظهر وأذونات الإشعارات والتشخيصات المحلية."
+  "Your existing workout, food and cloud records are never deleted by these tools. Manage appearance, notification permissions and local diagnostics.": "لا تحذف هذه الأدوات سجلات التمارين والطعام والسحابة. أدر المظهر وأذونات الإشعارات والتشخيصات المحلية.",
+  "Your calories, macros and meals in one place.": "السعرات والماكروز والوجبات في مكان واحد.",
+  "Saved locally": "محفوظ محليًا",
+  "Privacy & data": "الخصوصية والبيانات",
+  "Backups include your fitness history. Diagnostics reports exclude credentials and workout details. Account and backup controls are available here.": "تتضمن النسخ الاحتياطية سجل اللياقة. تستبعد تقارير التشخيص بيانات الدخول وتفاصيل التمارين. تتوفر هنا أدوات الحساب والنسخ الاحتياطي."
 }

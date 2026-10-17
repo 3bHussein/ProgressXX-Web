@@ -1,4 +1,14 @@
 
+## 2026-10-17 — V3 review refinement and first verified suite
+
+- Review PR: https://github.com/3bHussein/ProgressXX-Web/pull/46 (DRAFT). PR #45/main/production unchanged.
+- Initial review runtime `e1f159b1`: local Full UI workflow test list **84/84 PASS**, using Playwright 1.55 Chromium and a same-command local server. Earlier missing-browser/connection-refused setup attempts are superseded by this complete run; they were not test passes. Initial CI Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39014292931 ; Firefox/WebKit matrix https://github.com/3bHussein/ProgressXX-Web/actions/runs/39014292961 SUCCESS; snapshot https://github.com/3bHussein/ProgressXX-Web/actions/runs/39014292942 SUCCESS. Seven other/remaining initial workflows are checked separately; final refinement CI not yet verified.
+- Visual QA prompted explicit Daily statistics grid, three mobile macro columns, calorie summary before secondary controls and scrollable 48px bottom-navigation targets. Food retry/offline tools moved into Account recovery; obsolete Sheets status placeholders removed. Privacy/data explanation added under Account.
+- Smart Deload now appears on saved Log cards and in the editor without changing saved performance. Adaptive quarter-kg increments for loads below 5kg keep suggested loads lighter. Deload test now runs the actual performance parser, replacing a fake kg-parser fixture; unknown/lb annotations remain raw and never guessed. Browser fixture checks Schedule/Log same exercise weights, unchanged saved sets and guidance hidden outside cycle.
+- This refinement: language catalogue, actual-parser Deload and actual exporter/restore VM checks PASS locally. Expanded Chromium fixture passed before the final text/placement refinements; full suite rerun and final matching-runtime CI pending. No production database operations or deployment.
+- Next: finish latest 84-check run and PR CI; record verified runtime/links, then owner visual review. Milestone 2 remains IN PROGRESS: mock isolation/retry/delete/conflict and isolated VM restore are partial evidence; real authorization, atomic CAS, cross-feature physical-device CRUD and Android/PWA acceptance remain OPEN.
+
+
 ## 2026-10-17 — V3 mobile diary and isolated reliability work (review branch)
 
 - Branch: `feature/v3-mobile-reliability`, based on PR #45 head `354ec964` and main `89bc045`; PR #45 remains draft/unmerged. Root `index.html` remains the app entry. No production deploy or database/schema/RLS/grants/account operations.
