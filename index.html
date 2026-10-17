@@ -1435,6 +1435,12 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
 }
 @media(prefers-reduced-motion:reduce){#home .hero:before,#intelligence>.hero:before{transition:none}}
 </style>
+<style id="px-v3-deload-card-20261017">
+.pxSessionDeloadCard:not([hidden]){display:grid;gap:6px;margin:12px 0;padding:14px;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:14px;background:var(--card2);font-size:13px;line-height:1.5}
+.pxSessionDeloadCard strong{font-size:14px;color:var(--text)}
+.pxSessionDeloadCard span{color:var(--text)}
+.pxSessionDeloadCard small{color:var(--muted)}
+</style>
 </head>
 <body>
 <div class="app">
@@ -2499,6 +2505,7 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
       <label class="tiny muted" style="display:block;margin-top:9px">Exercise time</label>
       <input id="sessionTime" type="time">
 
+      <div id="pxSessionDeloadCard" class="pxSessionDeloadCard" role="status" aria-live="polite" hidden></div>
       <div id="sessionSavedState" class="tiny muted" style="margin-top:8px"></div>
       <div id="sessionDoneList" class="sessionDoneList"></div>
 
@@ -4857,6 +4864,17 @@ function renderWorkoutSession(){
     $('sessionSavedState').textContent=deloadNote?'Deload week — enter your lighter working load.':(previous?'Previous performance prefilled.':'No previous session found.');
   }
   if(deloadNote)$('sessionSavedState').textContent+=' '+deloadNote;
+  const deloadCard=$('pxSessionDeloadCard');
+  if(deloadCard){
+    const guidance=pxDeloadAdvice(exercise,workoutSession.week);
+    deloadCard.hidden=!guidance;
+    if(guidance){
+      deloadCard.innerHTML='<strong>🟠 Deload · W'+guidance.start+'–W'+guidance.end+'</strong>'+
+        '<span>Previous working load: <b>'+guidance.base+' kg</b></span>'+
+        '<span>Suggested lighter range: <b>'+guidance.lower+'–'+guidance.upper+' kg</b></span>'+
+        '<small>Guidance only. Choose a comfortable load; existing records are never changed.</small>';
+    }else deloadCard.textContent='';
+  }
   $('sessionPrevious').innerHTML=previous
     ? `<b>W${esc(previous.week)}${previous.date?' • '+esc(previous.date):''}</b><div style="margin-top:5px">${renderPerformanceSets(previous.performance||'')}</div>`
     : 'No previous performance for this exercise.';
