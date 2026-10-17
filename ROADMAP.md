@@ -1,4 +1,6 @@
 
+**2026-10-17:** Mobile Workout Log browser test expanded for live count, viewport fit, search, empty state and accessibility (`d13ec2c`); CI pending. Real phone and two-device live sync acceptance still OPEN; PR #45 draft.
+
 **2026-10-17:** Added Smart Deload Session card regression assertions to existing Full UI test (`d66d20c`); previous SHA passed 8/8 CI, latest pending. PR #45 draft; Milestone 2 OPEN.
 
 **2026-10-17:** Per-exercise Deload card CI green on `00f5a228a` (8/8). Bilingual AR/EN card and RTL support added (`b203ad8`), pending new CI. Keep PR #45 draft; Milestone 2 OPEN.
