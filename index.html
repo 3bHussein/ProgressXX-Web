@@ -4843,18 +4843,20 @@ function renderWorkoutSession(){
     jump.value=String(workoutSession.index);
   }
 
+  const deloadNote=pxDeloadHint(exercise,workoutSession.week);
   if(existing){
     $('sessionPerformance').value=existing.performance||'';
     $('sessionNotes').value=existing.notes||'';
     $('sessionTime').value=workoutDisplayTime(existing)||currentTimeHHMM();
     $('sessionSavedState').textContent='✓ Already saved this week — saving again will update this entry.';
   }else{
-    $('sessionPerformance').value=previous?.performance||'';
+    // Deload guidance must not auto-fill a heavier prior working load.
+    $('sessionPerformance').value=deloadNote?'':(previous?.performance||'');
     $('sessionNotes').value='';
     $('sessionTime').value=currentTimeHHMM();
-    $('sessionSavedState').textContent=previous?'Previous performance prefilled.':'No previous session found.';
+    $('sessionSavedState').textContent=deloadNote?'Deload week — enter your lighter working load.':(previous?'Previous performance prefilled.':'No previous session found.');
   }
-  const deloadNote=pxDeloadHint(exercise,workoutSession.week);if(deloadNote)$('sessionSavedState').textContent+=' '+deloadNote;
+  if(deloadNote)$('sessionSavedState').textContent+=' '+deloadNote;
   $('sessionPrevious').innerHTML=previous
     ? `<b>W${esc(previous.week)}${previous.date?' • '+esc(previous.date):''}</b><div style="margin-top:5px">${renderPerformanceSets(previous.performance||'')}</div>`
     : 'No previous performance for this exercise.';
