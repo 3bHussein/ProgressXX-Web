@@ -5,4 +5,8 @@ assert(/function persistSessionExercise\(status='Completed'\)\{[\s\S]{0,170}pxSe
 assert(/function sessionSaveNext\(\)\{[\s\S]{0,110}pxSessionReadSets\(\)/.test(html),'Save & Next must read pending edits');
 assert(html.includes("const supported=parsed.every(set=>!set.raw)"),'Legacy raw notes must stay editable');
 assert(html.includes("field.hidden=supported"),'Raw fallback must remain visible for unsupported records');
+assert(html.includes('id="sessionWeekSelect"'),'Start Workout must allow selecting the session week');
+assert(html.includes("const week=Number($('sessionWeekSelect')?.value)"),'Start Workout must use the selected week');
+assert(html.includes("if(weekPicker)weekPicker.value=String(activeWeek())"),'Default week must match active week');
+assert(html.includes('const guidance=pxDeloadAdvice(exercise,workoutSession.week)'),'Deload guidance must use the session week');
 console.log('PASS: V3 structured set UI, save boundary, raw fallback and Smart Deload contracts');
