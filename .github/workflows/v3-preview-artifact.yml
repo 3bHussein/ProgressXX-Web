@@ -18,6 +18,7 @@ jobs:
           test "${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}" = "feature/progressx-v3-brand-foundation"
           node tests/database-experiments-paused.cjs
           node tests/workout-chronology-deload-contract.cjs
+          node tests/v3-structured-session-contract.cjs
           node tests/mobile-settings-insights-regression.cjs
           node - <<'NODE'
           const fs=require('fs'),vm=require('vm');
