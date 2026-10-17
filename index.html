@@ -1401,6 +1401,40 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
 #settings #pxSettingsHub details[open]{padding-bottom:12px}
 }
 </style>
+<style id="progressx-v3-layout-20261017">
+/* PROGRESSX V3: visual-only enhancement. Existing theme tokens, IDs and event handlers remain unchanged. */
+#home,#log,#analytics,#intelligence{--px-v3-radius:18px}
+#home .hero,#intelligence>.hero{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:24px;padding:clamp(18px,3vw,30px);background:linear-gradient(125deg,var(--card),var(--card2))}
+#home .hero:before,#intelligence>.hero:before{content:"";position:absolute;inset:0 0 auto auto;width:200px;height:200px;pointer-events:none;border-radius:50%;background:radial-gradient(circle,var(--accent),transparent 70%);opacity:.13;transform:translate(35%,-45%)}
+#home .hero>.eyebrow,#intelligence>.hero>.eyebrow{font-weight:800;letter-spacing:.12em;color:var(--accent)}
+#home .weekHero{align-items:center;gap:20px}
+#home .weekCircle{flex-shrink:0;box-shadow:0 0 0 5px var(--card2)}
+#home .panel,#log>.panel,#analytics>.panel,#intelligence>.panel{border-radius:var(--px-v3-radius);box-shadow:0 6px 24px rgba(0,0,0,.045)}
+#home .panelHead,#log .panelHead,#analytics .panelHead,#intelligence .panelHead{gap:12px;align-items:center}
+#home .panelHead h3,#log .panelHead h3,#analytics .panelHead h3,#intelligence .panelHead h3{letter-spacing:-.015em}
+#home .kpis{gap:12px}
+#home .kpi{border-radius:16px;border:1px solid var(--line);background:var(--card);min-width:0}
+#home .kpi .v{font-variant-numeric:tabular-nums}
+#home .homeOrderRecent .logGrid{max-width:100%}
+#log .panelHead>.actions{display:flex;flex-wrap:wrap;gap:8px}
+#log .panelHead>.actions .btn{min-height:42px}
+#log #resultCount{font-variant-numeric:tabular-nums}
+#analytics .calendarGrid{overflow:hidden;border-radius:14px}
+#intelligence .pxAnatomyPanel{overflow:hidden}
+@media(max-width:600px){
+ #home .hero,#intelligence>.hero{padding:17px;border-radius:18px}
+ #home .weekHero{gap:12px}
+ #home .weekCircle{width:64px;height:64px;min-width:64px;font-size:18px}
+ #home .hero .actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #home .hero .actions .btn{min-width:0;white-space:normal;min-height:44px}
+ #home .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #home .kpi{padding:12px}
+ #log .panelHead>.actions{width:100%}
+ #log .panelHead>.actions .btn{flex:1 1 auto;min-height:44px}
+ #analytics .panelHead>.actions{flex-wrap:wrap}
+}
+@media(prefers-reduced-motion:reduce){#home .hero:before,#intelligence>.hero:before{transition:none}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -1408,7 +1442,7 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
   <div><span id="connectionBannerTitle">Offline</span> <small id="connectionBannerText">— changes saved locally</small></div>
   <span id="connectionBannerPending" class="pill">0 pending</span>
 </div>
-<header class="topbar"><div class="brand"><div class="logo">⚡</div><div><h1>ProgressX</h1><small>Workout + nutrition control center</small></div></div><button class="iconbtn" onclick="toggleTheme()" title="Toggle theme">◐</button></header>
+<header class="topbar"><div class="brand"><div class="logo">⚡</div><div><h1>PROGRESSX</h1><small>Workout + nutrition control center</small></div></div><button class="iconbtn" onclick="toggleTheme()" title="Toggle theme">◐</button></header>
 
 <section id="home" class="section active">
 <div class="hero"><div class="eyebrow">Training dashboard</div><div class="weekHero"><div class="weekCircle" id="heroWeek">W19</div><div><h2 style="margin-bottom:4px">Build. Track. Progress.</h2><p style="margin:0">Your training history, notes, calculations and backups in one mobile-first app.</p></div></div><div class="actions" style="margin-top:18px"><button class="btn primary" onclick="openEditor()">＋ Log workout</button><button class="btn soft" onclick="go('calculators')">🧮 Calculators</button></div></div>
@@ -2377,7 +2411,7 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
 </section>
 </div>
 
-<section id="intelligence" class="section"><div class="hero"><div class="eyebrow">PROGRESSXX V2</div><h2>🧠 Training Intelligence</h2><p>Insights from your existing workout and nutrition records. No import required.</p><button class="btn soft" onclick="renderIntelligence()">Refresh insights</button></div>
+<section id="intelligence" class="section"><div class="hero"><div class="eyebrow">PROGRESSX V3</div><h2>🧠 Training Intelligence</h2><p>Insights from your existing workout and nutrition records. No import required.</p><button class="btn soft" onclick="renderIntelligence()">Refresh insights</button></div>
 <div class="panel pxAnatomyPanel"><div class="panelHead"><div><h3>🫀 Human Muscular Anatomy</h3><p class="tiny muted">An illustrated muscle atlas with actions, training ideas and your saved exercises.</p></div><select id="pxAnatomyLang" aria-label="Anatomy language" onchange="pxRenderAnatomy()"><option value="en">English</option><option value="ar">العربية</option></select></div><nav class="pxAnatomyMobileTabs" aria-label="Anatomy sections"><button id="pxAnatomyTabAtlas" type="button" class="btn primary" onclick="pxSetAnatomyMobileTab('atlas')">🫀 Anatomy Atlas</button><button id="pxAnatomyTabCoverage" type="button" class="btn soft" onclick="pxSetAnatomyMobileTab('coverage')">💪 Muscle Coverage</button></nav><div class="pxAnatomyControls"><input id="pxAnatomySearch" aria-label="Search muscles" type="search" placeholder="Search muscles / ابحث عن عضلة" oninput="pxRenderAnatomy()"><select id="pxAnatomyRegion" aria-label="Muscle region" onchange="pxRenderAnatomy()"><option value="all">All regions</option><option value="upper">Upper body</option><option value="core">Core</option><option value="lower">Lower body</option></select></div><section class="pxCoverage" style="border:1px solid var(--line);border-radius:16px;padding:12px;margin:12px 0"><div class="panelHead"><div><h3>💪 Muscle Coverage Analysis</h3><p class="tiny muted">Based on your logged exercise names; not a measure of recovery or exact muscle activation.</p></div><select id="pxCoveragePeriod" onchange="pxRenderCoverage()" aria-label="Coverage period"><option value="7">7 days</option><option value="28" selected>28 days</option><option value="90">90 days</option></select></div><div class="pxAtlasViewBtns"><button type="button" id="pxCoverageFront" class="btn primary" onclick="pxSetCoverageView('front')">Front</button><button type="button" id="pxCoverageBack" class="btn soft" onclick="pxSetCoverageView('back')">Back</button></div><div id="pxCoverageSummary" class="tiny muted" aria-live="polite"></div><div id="pxCoverageMap" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin:12px 0"></div><div id="pxCoverageDetail"></div></section><div class="pxAnatomyLayout" id="pxAnatomyAtlasContent"><div class="pxAnatomyIndex"><div id="pxAnatomyList" class="pxAnatomyList"></div><select id="pxAnatomySelect" onchange="pxAnatomySelected=Number(this.value)||0;pxRenderAnatomy()" aria-label="Selected muscle" class="hide"></select></div><article id="pxAnatomyDetail" class="pxAnatomyDetail" aria-live="polite"></article></div><p class="tiny muted" style="margin-top:12px">Educational reference only; muscle diagrams are simplified, not medical illustrations.</p></div><div class="panel"><h3>🏋️ Exercise Intelligence & Overload</h3><select id="v2Exercise" aria-label="Exercise for insights" onchange="renderV2Exercise()"></select><div id="v2ExerciseInfo"></div></div>
 <div class="panel"><h3>📊 Weekly Performance</h3><select id="v2Week" aria-label="Training week for insights" onchange="renderV2Week()"></select><div id="v2WeekInfo"></div></div>
 <div class="panel"><h3>🍽 Nutrition Intelligence</h3><div id="v2NutritionInfo"></div></div>
