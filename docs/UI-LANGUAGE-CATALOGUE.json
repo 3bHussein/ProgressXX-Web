@@ -798,5 +798,8 @@
   "🔗 Connection Profiles (advanced)": "🔗 ملفات الاتصال (متقدم)",
   "PROGRESSX": "PROGRESSX",
   "PROGRESSX V3": "PROGRESSX V3",
-  "No workouts match your filters. Try another week or search term.": "لا توجد تمارين مطابقة للتصفية. جرّب أسبوعًا أو كلمة بحث أخرى."
+  "No workouts match your filters. Try another week or search term.": "لا توجد تمارين مطابقة للتصفية. جرّب أسبوعًا أو كلمة بحث أخرى.",
+  "Workout sets": "مجموعات التمرين",
+  "Performance raw text fallback": "إدخال الأداء النصي البديل",
+  "+ Add set": "+ إضافة مجموعة"
 }
