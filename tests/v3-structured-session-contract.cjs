@@ -9,4 +9,6 @@ assert(html.includes('id="sessionWeekSelect"'),'Start Workout must allow selecti
 assert(html.includes("const week=Number($('sessionWeekSelect')?.value)"),'Start Workout must use the selected week');
 assert(html.includes("if(weekPicker)weekPicker.value=String(activeWeek())"),'Default week must match active week');
 assert(html.includes('const guidance=pxDeloadAdvice(exercise,workoutSession.week)'),'Deload guidance must use the session week');
+assert(html.includes("if(field?.dataset.incompleteSets){alert('Complete the started set before adding another.');return;}"),'Add Set must not drop partial entries');
+assert(html.includes("if(remaining.some(set=>(set.weight&&!set.reps)||(!set.weight&&set.reps)))"),'Remove Set must not drop other partial entries');
 console.log('PASS: V3 structured set UI, save boundary, raw fallback and Smart Deload contracts');
