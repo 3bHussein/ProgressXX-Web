@@ -1,4 +1,6 @@
 
+**2026-10-17 mobile UI:** Workout Log card readability and Session touch-target styling added in `bd2ff6c` (CSS only). Structured per-set editing remains OPEN pending isolated parsing/round-trip tests; real-device verification OPEN.
+
 **2026-10-17:** Added pull-request-triggered V3 local preview artifact workflow (`540e359`), isolated from Pages deployment. Artifact generation and CI pending; real mobile/two-device validation still OPEN. PR #45 draft.
 
 **2026-10-17:** Mobile Workout Log browser test expanded for live count, viewport fit, search, empty state and accessibility (`d13ec2c`); CI pending. Real phone and two-device live sync acceptance still OPEN; PR #45 draft.
