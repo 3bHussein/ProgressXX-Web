@@ -39,4 +39,10 @@ assert(latest&&latest.base===40,'Use most recent valid workout load, not highest
 assert(latest.lower===22.5&&latest.upper===27.5,'Deload range should follow current 55%-70% rounded to 2.5 kg');
 scope.data=[{week:35,exercise:'Bench',status:'Completed',performance:'0 kg x 8'}];
 assert.equal(scope.advice('Bench',36),null,'Zero working load cannot generate a suggestion');
+assert(html.includes('id="pxSessionDeloadCard"'),'Workout Session needs the Deload guidance card');
+assert(html.includes("deloadCard.hidden=!guidance"),'Card must disappear when no deload advice exists');
+assert(html.includes("const guidance=pxDeloadAdvice(exercise,workoutSession.week)"),'Card must use exercise-specific advice for the active week');
+assert(html.includes("deloadCard.setAttribute('dir',arabic?'rtl':'ltr')"),'Deload card must follow active AR/EN reading direction');
+assert(html.includes("$('sessionPerformance').value=deloadNote?'':(previous?.performance||'')"),'Deload session must not prefill the previous heavy load');
+assert(html.includes("$('sessionPerformance').value=existing.performance||''"),'Previously saved current-week performance must remain available');
 console.log('PASS: date/time order, undated keyboard stability, per-exercise W26-W30/W36-W40/W46-W50 deload boundaries and latest-valid-load safety');
