@@ -1458,6 +1458,16 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
  .sessionNav .btn{min-height:46px;white-space:normal;line-height:1.3}
 }
 </style>
+<style id="px-v3-structured-sets-20261017">
+.pxSessionSetEditor:not([hidden]){display:grid;gap:9px;margin:9px 0}
+.pxSessionSetRow{display:grid;grid-template-columns:55px minmax(0,1fr) minmax(0,1fr) 42px;gap:7px;align-items:end;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--card2)}
+.pxSessionSetNumber{font-size:11px;font-weight:800;align-self:center}
+.pxSessionSetRow label{font-size:11px;color:var(--muted);min-width:0}
+.pxSessionSetRow input{width:100%;min-width:0;min-height:44px;font-size:16px;margin-top:4px}
+.pxSessionSetRow button{min-width:42px;min-height:44px}
+#pxSessionAddSet:not([hidden]){min-height:44px;margin:4px 0 12px}
+@media(max-width:390px){.pxSessionSetRow{grid-template-columns:42px minmax(0,1fr) minmax(0,1fr) 38px;gap:5px;padding:7px}.pxSessionSetRow button{min-width:38px}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -2514,7 +2524,9 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
       </div>
 
       <label class="tiny muted">Performance</label>
-      <textarea id="sessionPerformance" rows="4" placeholder="Example: 25*8, 27.5*7, 30*6"></textarea>
+      <div id="pxSessionSetEditor" class="pxSessionSetEditor" aria-label="Workout sets"></div>
+      <button id="pxSessionAddSet" class="btn soft" type="button" onclick="pxSessionAddSet()">+ Add set</button>
+      <textarea id="sessionPerformance" rows="4" placeholder="Example: 25*8, 27.5*7, 30*6" aria-label="Performance raw text fallback"></textarea>
 
       <label class="tiny muted" style="display:block;margin-top:9px">Notes</label>
       <input id="sessionNotes" placeholder="RIR, grip, machine setting, pain-free...">
@@ -4894,6 +4906,7 @@ function renderWorkoutSession(){
         '<small>'+(arabic?'هذه إرشادات فقط. اختر وزنًا مريحًا؛ لن تتغير سجلاتك المحفوظة.':'Guidance only. Choose a comfortable load; existing records are never changed.')+'</small>';
     }else deloadCard.textContent='';
   }
+  pxSessionRenderSetEditor();
   $('sessionPrevious').innerHTML=previous
     ? `<b>W${esc(previous.week)}${previous.date?' • '+esc(previous.date):''}</b><div style="margin-top:5px">${renderPerformanceSets(previous.performance||'')}</div>`
     : 'No previous performance for this exercise.';
@@ -4903,8 +4916,48 @@ function renderWorkoutSession(){
   saveWorkoutSessionState();
   renderRestTimer();
 }
+
+// V3 structured set editor: a presentation layer over the unchanged performance string.
+// Unsupported legacy annotations remain in the original textarea, never silently rewritten.
+function pxSessionRenderSetEditor(){
+  const host=$('pxSessionSetEditor'),field=$('sessionPerformance'),add=$('pxSessionAddSet');
+  if(!host||!field)return;
+  const raw=field.value.trim(),parsed=parsePerformanceSets(raw);
+  const supported=parsed.every(set=>!set.raw)&&parsed.length<=30;
+  host.hidden=!supported;
+  if(add)add.hidden=!supported;
+  field.hidden=supported;
+  if(!supported){host.replaceChildren();return;}
+  const rows=parsed.length?parsed:[{weight:'',reps:''}];
+  host.innerHTML=rows.map((set,i)=>'<div class="pxSessionSetRow"><span class="pxSessionSetNumber">SET '+(i+1)+'</span><label>Weight (kg)<input type="number" inputmode="decimal" min="0" step="any" data-set-weight="'+i+'" value="'+esc(set.weight||'')+'"></label><label>Reps<input type="number" inputmode="numeric" min="1" step="1" data-set-reps="'+i+'" value="'+esc(set.reps||'')+'"></label><button type="button" class="btn soft" aria-label="Remove set '+(i+1)+'" onclick="pxSessionRemoveSet('+i+')">×</button></div>').join('');
+}
+function pxSessionReadSets(){
+  const host=$('pxSessionSetEditor'),field=$('sessionPerformance');
+  if(!host||host.hidden||!field)return;
+  const weights=Array.from(host.querySelectorAll('[data-set-weight]'));
+  const reps=Array.from(host.querySelectorAll('[data-set-reps]'));
+  field.value=weights.map((w,i)=>w.value.trim()&&reps[i]?.value.trim()?w.value.trim()+'*'+reps[i].value.trim():'').filter(Boolean).join(',');
+}
+function pxSessionAddSet(){
+  const host=$('pxSessionSetEditor');if(!host||host.hidden)return;
+  pxSessionReadSets();
+  const field=$('sessionPerformance');
+  field.value+=(field.value?',':'')+'0*1';
+  pxSessionRenderSetEditor();
+  const last=host.querySelector('[data-set-weight]:last-of-type');
+  if(last&&last.value==='0'){last.value='';last.focus();}
+}
+function pxSessionRemoveSet(index){
+  const host=$('pxSessionSetEditor');if(!host||host.hidden)return;
+  const weights=Array.from(host.querySelectorAll('[data-set-weight]'));
+  const reps=Array.from(host.querySelectorAll('[data-set-reps]'));
+  $('sessionPerformance').value=weights.filter((_,i)=>i!==index).map(w=>{const i=weights.indexOf(w);return w.value.trim()&&reps[i]?.value.trim()?w.value.trim()+'*'+reps[i].value.trim():''}).filter(Boolean).join(',');
+  pxSessionRenderSetEditor();
+}
+
 function persistSessionExercise(status='Completed'){
   if(!workoutSession)return null;
+  pxSessionReadSets();
   const exercise=currentSessionExercise();
   const existing=currentWeekExerciseRow(workoutSession.day,exercise,workoutSession.week);
   const obj={
@@ -5021,6 +5074,7 @@ function sessionCompleteIfReady(){
 }
 function sessionSaveNext(){
   if(!workoutSession)return;
+  pxSessionReadSets();
   // Never overwrite a saved exercise with empty performance just to finish a workout.
   const existing=currentWeekExerciseRow(workoutSession.day,currentSessionExercise(),workoutSession.week);
   if(existing&&!$('sessionPerformance').value.trim()){
