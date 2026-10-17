@@ -1,4 +1,6 @@
 
+**2026-10-17 PR #45:** Eight GitHub CI workflows PASS on `e45cedb4a` (Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39006926945). Settings directory and PWA fixture regressions repaired. PR remains draft/unmerged. Next: safe UI V3 design work (Dashboard, Insights, Workout Log) retaining existing palette; Milestone 2 real-device sync validation remains OPEN.
+
 **2026-10-17 PR #45 CI repair pending:** Settings directory language strings and legacy browser test navigation/PWA cache fixture updated on feature branch. Full UI run https://github.com/3bHussein/ProgressXX-Web/actions/runs/39006654039 queued when recorded; PASS **NOT VERIFIED**. Milestone 2 remains PAUSED/INCOMPLETE; production/database untouched and commercial NO-GO.
 **Frontend 2.1.0 VERIFIED:** [PR #34](https://github.com/3bHussein/ProgressXX-Web/pull/34) / `cfc9192`: Food portion/calorie recovery, training-day management and readable bilingual Settings. Final82/82 local, all eight PR/four main workflows SUCCESS; Chromium/Firefox/WebKit new fixtures verified, root/worker deployed byte-exact. Milestone2 stays paused/incomplete; Phase3/4 incomplete; commercial NO-GO. See [acceptance](docs/FRONTEND-2.1-ACCEPTANCE.md).
 
