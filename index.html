@@ -1556,6 +1556,7 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
       <button class="chip" onclick="setLogQuickFilter('notes')">With notes</button>
       <button class="chip" onclick="setLogQuickFilter('completed')">Completed</button>
     </div>
+    <p id="pxV3LogSummary" class="tiny muted" role="status" aria-live="polite" aria-atomic="true"></p>
     <div id="logList" class="compactLogList"></div>
     <div id="logPager" class="logPager"></div>
   </div>
@@ -3410,6 +3411,12 @@ function renderLog(reset=false){
   const f=filtered(),shown=f.slice(0,logVisibleCount);
   const total=f.length;
   $('resultCount').textContent=total?(total+' match'+(total===1?'':'es')+' • showing '+shown.length):'0 matches';
+  const v3Summary=$('pxV3LogSummary');
+  if(v3Summary){
+    const week=$('weekFilter')?.value;
+    const completed=f.filter(row=>String(row.status||'')==='Completed').length;
+    v3Summary.textContent=total?'Showing '+shown.length+' of '+total+' entries · '+completed+' completed'+(week?' · Week '+week:''):'No workouts match your filters. Try another week or search term.';
+  }
   const list=$('logList'),cards=shown.map(compactWorkoutCard);
   // Reuse the unchanged prefix when loading more. Compare rendered content,
   // not record IDs: edits, reorders and restored snapshots must stay visible.
