@@ -1,4 +1,6 @@
 
+**2026-10-17 V3 visual foundation in PR #45:** Responsive Dashboard/Workout Log/Insights card polish, PROGRESSX header and Insights V3 label committed as `551a24f`. No data/sync changes. CI for this commit NOT VERIFIED. Next: CI/browser/mobile visual acceptance, then targeted Smart Deload and other older tasks; Milestone 2 live sync OPEN.
+
 **2026-10-17 PR #45:** Eight GitHub CI workflows PASS on `e45cedb4a` (Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39006926945). Settings directory and PWA fixture regressions repaired. PR remains draft/unmerged. Next: safe UI V3 design work (Dashboard, Insights, Workout Log) retaining existing palette; Milestone 2 real-device sync validation remains OPEN.
 
 **2026-10-17 PR #45 CI repair pending:** Settings directory language strings and legacy browser test navigation/PWA cache fixture updated on feature branch. Full UI run https://github.com/3bHussein/ProgressXX-Web/actions/runs/39006654039 queued when recorded; PASS **NOT VERIFIED**. Milestone 2 remains PAUSED/INCOMPLETE; production/database untouched and commercial NO-GO.
