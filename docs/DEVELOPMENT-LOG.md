@@ -1866,3 +1866,8 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - CI run `39007842602` and all seven companion workflows passed on `c04d62be0` (8/8). Previous static language catalogue failure from PROGRESSX branding fixed.
 - Added a read-only live region summary to Workout Log, showing number of visible/total entries, completed entries, and selected week, with English/Arabic display and translated empty-filter message. Code commits `4e0f9fc`, `0a644d1`, `49fc221`. No database, sync or persisted record changes.
 - New commits have not yet been validated by CI; PR #45 remains draft and unmerged. Milestone 2 live sync acceptance remains open.
+
+## 2026-10-17 — Smart Deload Session Mode safety
+- CI on prior branch HEAD `0fd2fef0af4ed4b3aeb5875bab1b9928ea53d925` passed all 8 workflows (Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39008072221).
+- Commit `7909349dec801e91663e6b6019df5bafe43e9751` fixes Workout Session Mode: during existing recurring per-exercise deload weeks, a newly opened exercise no longer automatically prefills the heavier previous performance. Existing saved performance is preserved on reopen/edit, and lighter-load guidance stays visible. No stored data changed.
+- CI for this new commit pending; PR #45 remains draft/unmerged. Real-device Milestone 2 validation remains open.
