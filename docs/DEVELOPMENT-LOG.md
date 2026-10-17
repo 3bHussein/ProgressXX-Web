@@ -1891,3 +1891,8 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - Previous branch HEAD `c0d8ee42a` passed all 8 CI workflows, including Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39009177185.
 - Extended `tests/workout-log-keyboard-browser.cjs` at 390×844 mobile viewport to assert live result count, pagination, accessibility announcement, viewport fit, filtered result summary, and empty-state recovery text. Commit `d13ec2c3d26a35897eaec9b664e39365bb376da3`.
 - Browser test uses synthetic data and blocks backend calls. No production data or database operations. CI on new commit pending; PR #45 remains draft.
+
+## 2026-10-17 — Safe V3 preview artifact
+- Previous `d0179b456` passed all eight CI workflows. Added `.github/workflows/v3-preview-artifact.yml` (`540e35941048d207be5222a05ef5eec4b0959930`) to create a downloadable local preview from PR #45 only, without GitHub Pages deployment or database writes.
+- Workflow runs on pull requests to main, gates on source branch, validates paused database experiments and deload contract, then packages app files with local HTTP server instructions. Signing into preview may still connect to production backend: use test account only and do not modify real data.
+- Latest CI and artifact generation pending. PR #45 draft/unmerged.
