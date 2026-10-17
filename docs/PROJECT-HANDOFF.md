@@ -1,4 +1,6 @@
 
+**2026-10-17:** V3 draft PR #45 adds structured session set editor over unchanged performance string, legacy raw fallback, incomplete-set save guard, Smart Deload unchanged. Preview workflow now runs `tests/v3-structured-session-contract.cjs`. Do not merge until CI and real-device testing.
+
 **2026-10-17:** CSS-only mobile workout legibility improvements `bd2ff6c` on V3 draft PR #45. No data model, sync, or save changes. Verify mobile visual layout and CI; structured per-set input not implemented.
 
 **2026-10-17:** PR #45 now includes `.github/workflows/v3-preview-artifact.yml` to package a local V3 preview as a GitHub Actions artifact on pull requests, not deploy to Pages. The preview may connect to existing backend upon login; test accounts only, no real-data edits. CI/artifact pending. PR draft/unmerged.
