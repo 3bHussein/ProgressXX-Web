@@ -50,6 +50,16 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+## 2026-10-17 — Owner-provided mobile UX visual references and Work handoff (documentation only)
+
+- **Inputs:** Two screenshots supplied in ChatGPT on 2026-10-17: a compact mobile nutrition diary with weekly day selector, calories/macros progress and Breakfast/Lunch/Dinner logging; and a MyFitnessPal dashboard showing a calorie-remaining ring, goal/food/exercise breakdown, cards, persistent food search and bottom navigation. Screenshots are design references, NOT copied assets and are not stored in the repository by this documentation change.
+- **Design direction:** Build original ProgressXX mobile-first UI retaining current brand palette and features. Daily: compact today/week header, thumb-friendly cards and completion controls, readable hierarchy, safe-area bottom navigation, accessible touch targets. Food: prominently show remaining calories and goal/food/exercise equation with accurate existing app calculations; macros progress, meal diary Breakfast/Lunch/Dinner/Snacks, quick add, food search, portions/barcode where already supported, collapsible library; responsive desktop retained. Do not assume exercise calories are tracked if unavailable; do not fabricate data. Keep labels translatable, RTL/LTR functional.
+- **Settings:** Audit all current settings, remove obsolete Google Sheets-only controls if no longer functional, streamline for mobile, preserve diagnostics/error logs, backup/recovery, sync status and necessary account/privacy controls. Remove **Sync Center** as a standalone user-facing page/nav item, but do not remove underlying sync, offline queue, conflict protection, logs or recovery; expose necessary status/errors unobtrusively in Settings.
+- **Smart Deload:** Improve prominent, recurring per-exercise deload cues for W26–30 and later cycles, grounded in each exercise's last known weight and with suggested reduced load, without overwriting logged sets; retain workout schedule/start workout parity.
+- **Status:** Design requirements only, **NOT IMPLEMENTED / NOT TESTED**. Main log update only. Draft PR #45 remains unmerged; production root index.html and Supabase production DB unchanged. Milestone 2 still OPEN pending account isolation, all-feature CRUD sync, conflict policy/atomic safety, isolated recovery, and mobile/browser regression.
+- **Next action:** In ChatGPT Work, inspect repository main and PR #45, existing ROADMAP.md, this log, docs/PROJECT-HANDOFF.md, current UI/tests. Implement on reviewable branch without merging or production deployment, add browser regression, update all three tracking docs in the feature branch, and report PR and CI evidence. Await owner review of screenshots and UI before release.
+
+
 
 ## 2026-10-17 — Owner-reported V3 W26 sync acceptance and next UX scope (main documentation only)
 
