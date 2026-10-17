@@ -1,4 +1,6 @@
 
+**2026-10-17:** V3 visual base and brand translations CI green on `c04d62b` (8 workflows). Follow-on branch changes `4e0f9fc`/`0a644d1`/`49fc221` add read-only bilingual live Workout Log result summary, no persistence changes. CI for latest SHA NOT YET VERIFIED; PR #45 remains draft/unmerged; no live DB operations. Milestone 2 OPEN.
+
 **2026-10-17 PROGRESSX V3 UI branch:** Commit `551a24fb44c4cf08e4d3fdaeba94be90aebd2599` adds scoped responsive CSS for Dashboard, Workout Log, Calendar/Insights and Anatomy plus visible PROGRESSX brand. Existing colors, element IDs, logic and backend remain unchanged. Previous CI green baseline `e45cedb4a`; V3 CSS commit CI NOT YET VERIFIED. PR #45 stays draft; do not merge/deploy until tests and mobile review. No Supabase operations; Milestone 2 remains paused/open.
 
 **2026-10-17 PR #45 green baseline:** SHA `e45cedb4a7e81803a0956708f745f43cbc947e32` passed all eight observed CI workflows, including Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39006926945. PR #45 draft, not merged; do not treat as live deployment. Retain `ProgressXX-Web` repository and Pages URL, PROGRESSX PWA display name and original accent colors. Continue UI V3 separately after checking CI. Milestone 2 real-device sync remains OPEN.
