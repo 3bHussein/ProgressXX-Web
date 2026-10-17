@@ -1,4 +1,26 @@
 
+## 2026-10-17 — V3 published and byte-exact verified on production
+
+- Release commit on main: `a717a7f041337ab4bff3607b05e5fbb366b8178f`, owner-approved PR #46 merge. **All four observed main workflows SUCCESS**: Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39040940797 ; Firefox/WebKit https://github.com/3bHussein/ProgressXX-Web/actions/runs/39040940651 ; conflict contracts https://github.com/3bHussein/ProgressXX-Web/actions/runs/39040940687 ; Pages deploy https://github.com/3bHussein/ProgressXX-Web/actions/runs/39040940695 . The deployment gate waited for successful same-SHA main validators and then passed its additional mobile/login checks.
+- Production URL https://3bhussein.github.io/ProgressXX-Web/ now serves the reviewed V3 frontend. Direct HTTP downloads of root index, worker and manifest compared byte-for-byte with reviewed main source using `cmp`; all identical. SHA-256: index `fc4b0af314370c5dd7ac3a8d986c96d310a33f26269d062e2fc21b08b768d108`; worker `2b8eef87f5f046b2b5e502cbe748112b620d400661e91248bd7692ec396e7ade`; manifest `6980b6ac936461e1b92d81847fa1f9feb6a8441413441d6815c2ab8a0b60b743`.
+- Current state: V3 Settings/Daily/Food and read-only Smart Deload improvements are deployed; PR #46 merged and contained PR #45 automatically marked merged by GitHub. Root index remains the entry point. This follow-up commit changes the three tracking documents only, not the published runtime.
+- Data impact: no production Supabase/database/schema/RLS/grants/account/data modifications, migrations or real-data restore performed. Deployment publishes static frontend assets only. No production login/edit/delete was used for release verification.
+- Milestone 2 remains IN PROGRESS / partially verified. Frontend publication and mock CI do not certify real-user API authorization, atomic CAS, full real-device CRUD/update/conflict/recovery or Android/PWA/screen-reader acceptance. Commercial readiness status unchanged.
+- Exact next step: owner checks the deployed Settings, Daily, Food and W26–W30 Deload on the phone (refresh app if an already-open page shows the prior layout). Continue synthetic mobile/PWA/accessibility coverage and, when an isolated backend is explicitly available, negative-authorization/full two-device CRUD and browser backup/restore acceptance. Keep production database protections in force.
+
+
+## 2026-10-17 — Owner-approved V3 merge to main
+
+- GitHub also automatically marked PR #45 merged at 2026-10-17 14:29:02 UTC because its head is contained in merged PR #46. No separate merge request was made for #45; this follows the owner's authorization to move the combined V3 code into main.
+
+- Owner explicitly requested continuing and uploading the code to `main` in this session. This supersedes the earlier no-merge boundary for the reviewed V3 candidate; production database/schema/RLS/grants/real-data protections remain unchanged.
+- Merged PR #46 https://github.com/3bHussein/ProgressXX-Web/pull/46 with expected head `bca17cbd90a25b9d93c85cc013006234460c572f` into `main` as `a717a7f041337ab4bff3607b05e5fbb366b8178f`. Merge tree is byte-identical to the verified PR head; no extra runtime changes. Root index SHA-256: `fc4b0af314370c5dd7ac3a8d986c96d310a33f26269d062e2fc21b08b768d108`.
+- Before merge: all nine workflows on the exact final PR head SUCCESS, including Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39014877478 and Firefox/WebKit https://github.com/3bHussein/ProgressXX-Web/actions/runs/39014877492. Earlier final local suite 84/84 PASS.
+- Main validation started: Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39040940797 ; Firefox/WebKit https://github.com/3bHussein/ProgressXX-Web/actions/runs/39040940651 ; Fast conflict contracts https://github.com/3bHussein/ProgressXX-Web/actions/runs/39040940687 (SUCCESS when recorded). Automatic deployment https://github.com/3bHussein/ProgressXX-Web/actions/runs/39040940695 waits for successful same-SHA validation. Deployment and live byte verification initially PENDING; follow-up evidence below is authoritative.
+- No production database operations, migrations, grant/RLS changes, account edits or real-data restores. Milestone 2 remains IN PROGRESS; frontend release does not close server authorization/CAS, full physical-device CRUD/restore or Android/PWA acceptance gates.
+- Next: verify main validation and Pages deployment, compare live root/worker/manifest to reviewed source, append results here and synchronize roadmap/handoff. Do not modify database permissions as part of publishing this frontend.
+
+
 ## 2026-10-17 — PR #46 verified review runtime / final handoff
 
 - **Review:** https://github.com/3bHussein/ProgressXX-Web/pull/46 — DRAFT, unmerged; independent branch `feature/v3-mobile-reliability` contains PR #45 source plus main documentation. PR #45 remains untouched. Tested runtime commit: `3ebb1b4dc68de4577021c2a28448c2483dfa2e5f`. Subsequent evidence commit changes documentation only.
