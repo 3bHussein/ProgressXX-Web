@@ -1,4 +1,6 @@
 
+**2026-10-17:** New `#pxSessionDeloadCard` in Workout Session (commit `8af2f91`), rendered from existing `pxDeloadAdvice` without writes. Shows per-exercise prior load and suggested lighter range during recurring deload weeks, hidden otherwise. Last validated SHA `8b10ed0d9` (8/8 green); latest commit CI pending. PR #45 draft/unmerged; Milestone 2 still open.
+
 **2026-10-17 Smart Deload:** `7909349` changed only Session Mode prefill behavior: when `pxDeloadHint(exercise,week)` is active and no saved current-week record exists, keep performance field blank and display lighter-load guidance. Do not overwrite existing entries. Previous 8 CI workflows green on `0fd2fef`; new commit CI pending. PR #45 draft/unmerged; no database changes.
 
 **2026-10-17:** V3 visual base and brand translations CI green on `c04d62b` (8 workflows). Follow-on branch changes `4e0f9fc`/`0a644d1`/`49fc221` add read-only bilingual live Workout Log result summary, no persistence changes. CI for latest SHA NOT YET VERIFIED; PR #45 remains draft/unmerged; no live DB operations. Milestone 2 OPEN.
