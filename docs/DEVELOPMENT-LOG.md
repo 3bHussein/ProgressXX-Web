@@ -1886,3 +1886,8 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - All 8 CI workflows passed on previous HEAD `470ffd95e` including Full UI run https://github.com/3bHussein/ProgressXX-Web/actions/runs/39008960714.
 - Extended existing `tests/workout-chronology-deload-contract.cjs` (`d66d20cf6866ff150f0e553f445929804056de7d`) with assertions for Session Mode card presence, hidden outside deload, active exercise/week guidance, bilingual direction, no heavy prefill in new deload entries, and preservation of existing saved entries. The test was already wired into Full UI smoke.
 - CI for this latest commit pending. PR #45 remains draft/unmerged; no database or user data changes.
+
+## 2026-10-17 — Mobile Workout Log browser acceptance
+- Previous branch HEAD `c0d8ee42a` passed all 8 CI workflows, including Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39009177185.
+- Extended `tests/workout-log-keyboard-browser.cjs` at 390×844 mobile viewport to assert live result count, pagination, accessibility announcement, viewport fit, filtered result summary, and empty-state recovery text. Commit `d13ec2c3d26a35897eaec9b664e39365bb376da3`.
+- Browser test uses synthetic data and blocks backend calls. No production data or database operations. CI on new commit pending; PR #45 remains draft.
