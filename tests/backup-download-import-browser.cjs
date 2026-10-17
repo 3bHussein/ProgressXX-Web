@@ -5,6 +5,8 @@ const {browserType,engine}=require('./helpers/browser-engine.cjs');
  const context=await b.newContext({viewport:{width:390,height:844},acceptDownloads:true,serviceWorkers:'block'});
  await context.route('**/*',route=>{if(new URL(route.request().url()).hostname==='127.0.0.1')return route.continue();external++;return route.abort()});
  await context.addInitScript(()=>document.addEventListener('DOMContentLoaded',()=>{
+  // Firefox may fire this on the initial opaque about:blank document.
+  if(location.protocol!=='http:'||location.hostname!=='127.0.0.1')return;
   const prefix='qa-browser-restore:';
   window.__pxActiveStore={getItem:k=>localStorage.getItem(prefix+k),setItem:(k,v)=>localStorage.setItem(prefix+k,String(v)),removeItem:k=>localStorage.removeItem(prefix+k)};
   if(!localStorage.getItem(prefix+'fixture-ready')){
@@ -26,7 +28,7 @@ const {browserType,engine}=require('./helpers/browser-engine.cjs');
   $('pxCommercialGate').hidden=true;wire();rebuild();window.qaRestoreReady=true;
  }));
  const p=await context.newPage(),errors=[],downloads=[];let mode='reject',unexpected=[];
- p.on('pageerror',e=>errors.push(e.message));p.on('download',d=>downloads.push(d));
+ p.on('pageerror',e=>errors.push(e.stack||e.message));p.on('download',d=>downloads.push(d));
  p.on('dialog',async d=>{
   if(d.type()==='confirm'&&d.message().startsWith('Restore this ProgressX backup?'))return mode==='accept'?d.accept():d.dismiss();
   if(d.type()==='alert'&&(/Could not restore backup:/.test(d.message())||d.message()==='Full backup restored successfully. ProgressX will reload now.'))return d.accept();
