@@ -1,3 +1,6 @@
+
+## 2026-10-17 — Mobile workout readability pass
+- Commit `bd2ff6c`: CSS-only mobile improvements in root `index.html` for Workout Log card spacing, readable performance and notes, larger edit targets, accessible session navigation targets and performance input. Existing workout save/storage handlers and Settings design unchanged. CI pending.
 # ProgressX — Development Log (Persistent)
 
 This is the **append-only** chronological log of completed work, investigations, releases and handoffs. Last updated: **2026-10-12**.
