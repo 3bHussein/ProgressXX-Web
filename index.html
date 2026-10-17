@@ -4869,10 +4869,12 @@ function renderWorkoutSession(){
     const guidance=pxDeloadAdvice(exercise,workoutSession.week);
     deloadCard.hidden=!guidance;
     if(guidance){
-      deloadCard.innerHTML='<strong>🟠 Deload · W'+guidance.start+'–W'+guidance.end+'</strong>'+
-        '<span>Previous working load: <b>'+guidance.base+' kg</b></span>'+
-        '<span>Suggested lighter range: <b>'+guidance.lower+'–'+guidance.upper+' kg</b></span>'+
-        '<small>Guidance only. Choose a comfortable load; existing records are never changed.</small>';
+      const arabic=typeof pxUILanguage!=='undefined'&&pxUILanguage==='ar';
+      deloadCard.setAttribute('dir',arabic?'rtl':'ltr');
+      deloadCard.innerHTML='<strong>🟠 '+(arabic?'تخفيف الحمل':'Deload')+' · W'+guidance.start+'–W'+guidance.end+'</strong>'+
+        '<span>'+(arabic?'آخر وزن مستخدم: ':'Previous working load: ')+'<b>'+guidance.base+' kg</b></span>'+
+        '<span>'+(arabic?'نطاق الوزن الأخف المقترح: ':'Suggested lighter range: ')+'<b>'+guidance.lower+'–'+guidance.upper+' kg</b></span>'+
+        '<small>'+(arabic?'هذه إرشادات فقط. اختر وزنًا مريحًا؛ لن تتغير سجلاتك المحفوظة.':'Guidance only. Choose a comfortable load; existing records are never changed.')+'</small>';
     }else deloadCard.textContent='';
   }
   $('sessionPrevious').innerHTML=previous
