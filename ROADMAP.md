@@ -1,4 +1,15 @@
 
+## 2026-10-17 — Browser backup download/import acceptance (synthetic local store)
+
+- Branch `test/browser-backup-restore`, based on published main `eacb17ea72a1cb50fa8a10e0d4b2e98f01e80376`. This is test/CI/documentation work only: root app, worker, manifest, production records and database permissions unchanged.
+- Added `tests/backup-download-import-browser.cjs`: opens root index.html, uses the real Settings backup button, Blob download, real file-input change listener, native confirmation/alert dialogs, automatic safety download and actual page reload. Synthetic prefixed browser storage rehydrates with app loaders; no login is used and every non-local request is blocked/count-asserted.
+- Verified locally in Chromium/Playwright 1.55: export includes synthetic Workout/Food/Daily/Schedule/Weight/targets; malformed JSON and incomplete backup rejection leave storage/navigation/download count unchanged; cancelling restore causes no write/download/reload; accepting restores selected domains after reload, exports pre-restore working data and clears old workout/Food pending queues. Zero external requests and zero page errors. This extends the prior actual-function VM test into browser file/dialog/navigation behavior.
+- Existing actual-function restore VM, offline backup integrity/round-trip, database-pause and release-workflow contracts PASS locally. Initial browser executable was absent; installation completed before the verified browser run. Firefox/WebKit and PR CI pending, NOT VERIFIED yet.
+- CI wiring: new fixture in Full UI and Firefox/WebKit matrix, with path triggers. Fixed inherited preview workflow so unrelated branches skip the two approved V3-preview job branches instead of failing their PR; retained existing in-job branch safety check. No production deployment workflow changes.
+- Milestone 2: local browser backup/import drill VERIFIED in Chromium with synthetic storage; cloud reconciliation, authenticated restore, isolated backend dump/restore and authorization remain OPEN. No real account/export/restore or production database access.
+- Next: verify CI across Chromium/Firefox/WebKit; record run links, integrate this test-only batch into main under existing owner continuation/main authorization when green. Continue real-device accessibility and isolated-backend acceptance separately; do not infer commercial readiness.
+
+
 ## 2026-10-17 — V3 published and byte-exact verified on production
 
 - Release commit on main: `a717a7f041337ab4bff3607b05e5fbb366b8178f`, owner-approved PR #46 merge. **All four observed main workflows SUCCESS**: Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39040940797 ; Firefox/WebKit https://github.com/3bHussein/ProgressXX-Web/actions/runs/39040940651 ; conflict contracts https://github.com/3bHussein/ProgressXX-Web/actions/runs/39040940687 ; Pages deploy https://github.com/3bHussein/ProgressXX-Web/actions/runs/39040940695 . The deployment gate waited for successful same-SHA main validators and then passed its additional mobile/login checks.

@@ -7,6 +7,7 @@ permissions:
   contents: read
 jobs:
   preview:
+    if: ${{ github.head_ref == 'feature/progressx-v3-brand-foundation' || github.head_ref == 'feature/v3-mobile-reliability' || github.ref_name == 'feature/progressx-v3-brand-foundation' || github.ref_name == 'feature/v3-mobile-reliability' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
