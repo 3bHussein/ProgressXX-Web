@@ -1,4 +1,6 @@
 
+**2026-10-17:** Smart Deload Session card now displays exercise-specific previous working weight and suggested lighter range for recurring deload weeks, and hides outside those weeks (`8af2f91`). No persisted data changes. Latest commit CI pending; PR #45 draft.
+
 **2026-10-17 Deload safety:** Existing recurring W26–W30 and every 10-week deload advice now also prevents heavy previous-load autofill in Session Mode for new entries; saved current-week values remain untouched. Commit `7909349`; CI pending. PR #45 draft; Milestone 2 OPEN.
 
 **2026-10-17:** CI for V3 visual base passed 8/8 on `c04d62b` (Full UI #39007842602). Added bilingual accessible Workout Log result summary on later commits; their CI still pending. Keep PR #45 draft until latest green and mobile review; Milestone 2 OPEN.
