@@ -1,4 +1,6 @@
 
+**2026-10-17:** Added pull-request-triggered V3 local preview artifact workflow (`540e359`), isolated from Pages deployment. Artifact generation and CI pending; real mobile/two-device validation still OPEN. PR #45 draft.
+
 **2026-10-17:** Mobile Workout Log browser test expanded for live count, viewport fit, search, empty state and accessibility (`d13ec2c`); CI pending. Real phone and two-device live sync acceptance still OPEN; PR #45 draft.
 
 **2026-10-17:** Added Smart Deload Session card regression assertions to existing Full UI test (`d66d20c`); previous SHA passed 8/8 CI, latest pending. PR #45 draft; Milestone 2 OPEN.
