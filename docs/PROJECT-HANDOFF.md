@@ -1,4 +1,6 @@
 
+**2026-10-17 Smart Deload:** `7909349` changed only Session Mode prefill behavior: when `pxDeloadHint(exercise,week)` is active and no saved current-week record exists, keep performance field blank and display lighter-load guidance. Do not overwrite existing entries. Previous 8 CI workflows green on `0fd2fef`; new commit CI pending. PR #45 draft/unmerged; no database changes.
+
 **2026-10-17:** V3 visual base and brand translations CI green on `c04d62b` (8 workflows). Follow-on branch changes `4e0f9fc`/`0a644d1`/`49fc221` add read-only bilingual live Workout Log result summary, no persistence changes. CI for latest SHA NOT YET VERIFIED; PR #45 remains draft/unmerged; no live DB operations. Milestone 2 OPEN.
 
 **2026-10-17 PROGRESSX V3 UI branch:** Commit `551a24fb44c4cf08e4d3fdaeba94be90aebd2599` adds scoped responsive CSS for Dashboard, Workout Log, Calendar/Insights and Anatomy plus visible PROGRESSX brand. Existing colors, element IDs, logic and backend remain unchanged. Previous CI green baseline `e45cedb4a`; V3 CSS commit CI NOT YET VERIFIED. PR #45 stays draft; do not merge/deploy until tests and mobile review. No Supabase operations; Milestone 2 remains paused/open.
