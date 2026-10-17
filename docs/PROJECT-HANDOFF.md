@@ -1,4 +1,6 @@
 
+**2026-10-17:** PR #45 now includes `.github/workflows/v3-preview-artifact.yml` to package a local V3 preview as a GitHub Actions artifact on pull requests, not deploy to Pages. The preview may connect to existing backend upon login; test accounts only, no real-data edits. CI/artifact pending. PR draft/unmerged.
+
 **2026-10-17:** `d13ec2c` extends 390px Playwright Workout Log regression using synthetic 60-entry fixture; verifies summary, pagination, filtering, accessibility, empty state and zero backend calls. Prior CI green on `c0d8ee42a`, new CI pending. PR #45 draft/unmerged; real-device acceptance pending.
 
 **2026-10-17:** `tests/workout-chronology-deload-contract.cjs` now asserts Deload card visibility logic, active exercise/week, RTL/EN behavior, no heavy auto-prefill and existing-record safety (`d66d20c`). This test is in `.github/workflows/full-ui-smoke.yml` already. Latest CI pending; PR #45 draft/unmerged; no DB changes.
