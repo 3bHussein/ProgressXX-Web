@@ -400,18 +400,18 @@ const {createLogoutDialogHandler}=require('../tests/helpers/logout-dialog.cjs');
    }
  }
  await page.setViewportSize({width:390,height:844});
- // Real mobile Settings shortcut interaction: each control must scroll to its target.
- await page.evaluate(()=>go('settings'));
- for(const id of ['pxSettingsAccount','pxSettingsBackup','pxSettingsSyncCenter','pxSettingsHub','pxSettingsSchedule']){
+ // Mobile Settings uses category tiles; old quick-nav buttons are intentionally hidden.
+ await page.evaluate(()=>{go('settings');pxShowSettingsHome(false)});
+ for(const [tileIndex,id] of [[0,'pxSettingsAccount'],[3,'pxSettingsBackup'],[4,'pxSettingsSyncCenter'],[2,'pxSettingsHub'],[5,'pxSettingsSchedule']]){
    const target=page.locator('#'+id);
-   if(await target.count()!==1)throw Error('Missing Settings shortcut destination '+id);
-   const index=['pxSettingsAccount','pxSettingsBackup','pxSettingsSyncCenter','pxSettingsHub','pxSettingsSchedule'].indexOf(id);
-   const shortcut=page.locator('#settings .pxSettingsQuickNav button').nth(index);
-   await shortcut.scrollIntoViewIfNeeded({timeout:6000});
-   await shortcut.click({timeout:6000});
-   await page.waitForFunction(targetId=>{const el=document.getElementById(targetId);if(!el)return false;const r=el.getBoundingClientRect();return r.height>0&&r.top<window.innerHeight&&r.bottom>0},id,{timeout:6000});
-   const check=await target.evaluate(el=>({top:el.getBoundingClientRect().top,bottom:el.getBoundingClientRect().bottom,height:el.getBoundingClientRect().height,viewport:window.innerHeight}));
-   if(check.height<1||check.top>=check.viewport||check.bottom<=0)throw Error('Settings shortcut did not navigate to '+id+': '+JSON.stringify(check));
+   if(await target.count()!==1)throw Error('Missing Settings category destination '+id);
+   await page.evaluate(()=>pxShowSettingsHome(false));
+   const tile=page.locator('#settings .pxSettingsDirectory .pxSettingsTile').nth(tileIndex);
+   await tile.click({timeout:6000});
+   await page.waitForFunction(targetId=>{
+     const section=document.getElementById('settings'),el=document.getElementById(targetId);
+     return section?.classList.contains('pxSettingsDetailMode')&&el?.classList.contains('pxSettingsSelected')&&el.getBoundingClientRect().height>0;
+   },id,{timeout:6000});
  }
  await page.evaluate(()=>go('home'));
  if(legacyGoogleCalls)throw Error('Called personal Google Sheets endpoint');
