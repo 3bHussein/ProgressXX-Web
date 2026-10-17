@@ -45,12 +45,16 @@ const {browserType,engine}=require('./helpers/browser-engine.cjs');
  }
  await p.locator('#restoreFullBackupFile').setInputFiles({name:'valid.json',mimeType:'application/json',buffer:Buffer.from(raw)});
  await p.waitForFunction(()=>$('restoreFullBackupFile').value==='');assert.deepEqual(await snapshot(),before);assert.equal(navigations,0);assert.equal(downloads.length,1,'Cancel must not export or overwrite');
- await p.evaluate(()=>{data=[{id:'qa-current',week:1,day:'Rest',exercise:'Current synthetic draft',performance:'5*5'}];PXStore.setItem(KEY,JSON.stringify(data));PXStore.setItem(FOOD_LOG_KEY,'[]');PXStore.setItem(WORKOUT_QUEUE_KEY,'[]');PXStore.setItem(FOOD_LOG_PENDING_KEY,'[]')});
+ await p.evaluate(()=>{
+  data=[{id:'qa-current',week:1,day:'Rest',exercise:'Current synthetic draft',performance:'5*5'}];foodProducts=[];foodLog=[];dailyReminders=[];nutritionTargets={calories:1000,protein:50,carbs:100,fat:30};
+  const current={[KEY]:data,[FOOD_PRODUCTS_KEY]:[],[FOOD_LOG_KEY]:[],[DAILY_REMINDERS_KEY]:[],[DAILY_DONE_KEY]:{},[WORKOUT_SCHEDULE_KEY]:{tue:'REST'},[PROGRESS_PHOTOS_KEY]:[],[NUTRITION_TARGETS_KEY]:nutritionTargets,[WORKOUT_QUEUE_KEY]:[{id:'stale-workout'}],[FOOD_LOG_PENDING_KEY]:[{id:'stale-food'}]};
+  for(const [key,value]of Object.entries(current))PXStore.setItem(key,JSON.stringify(value));
+ });
  mode='accept';
  const [safety]=await Promise.all([p.waitForEvent('download'),p.waitForEvent('domcontentloaded'),p.locator('#restoreFullBackupFile').setInputFiles({name:'valid.json',mimeType:'application/json',buffer:Buffer.from(raw)})]);
  await p.waitForFunction(()=>window.qaRestoreReady);
  assert.match(safety.suggestedFilename(),/^progressx-safety-before-restore-/);
- const safetyBackup=JSON.parse(await fs.readFile(await safety.path(),'utf8'));assert.equal(safetyBackup.workouts[0].id,'qa-current','Safety file must hold pre-restore working data');
+ const safetyBackup=JSON.parse(await fs.readFile(await safety.path(),'utf8'));assert.equal(safetyBackup.workouts[0].id,'qa-current','Safety file must hold pre-restore working data');assert.deepEqual(safetyBackup.food_log,[]);assert.deepEqual(safetyBackup.workout_schedule,{tue:'REST'});assert.equal(safetyBackup.nutrition_targets.calories,1000);
  const restored=await p.evaluate(()=>({backup:buildFullBackup(),queues:[PXStore.getItem(WORKOUT_QUEUE_KEY),PXStore.getItem(FOOD_LOG_PENDING_KEY)],log:data,food:foodLog}));
  for(const key of ['workouts','food_products','food_log','reminders','reminder_done','workout_schedule','progress_photos','nutrition_targets'])assert.deepEqual(restored.backup[key],backup[key],key+' browser round trip');
  assert.equal(restored.log[0].performance,'37*8');assert.equal(restored.food[0].amount,100);assert.deepEqual(restored.queues,[null,null]);assert.equal(navigations,1);assert.equal(downloads.length,2);
