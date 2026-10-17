@@ -6,6 +6,7 @@ on:
       - docs/UI-LANGUAGE-CATALOGUE.json
       - scripts/update-ui-catalogue.cjs
       - tests/ui-language-catalogue.cjs
+      - tests/backup-download-import-browser.cjs
       - tests/settings-language-pages-browser.cjs
       - tests/training-day-manager-browser.cjs
       - tests/food-portions-after-refresh-browser.cjs
@@ -45,6 +46,7 @@ on:
       - docs/UI-LANGUAGE-CATALOGUE.json
       - scripts/update-ui-catalogue.cjs
       - tests/ui-language-catalogue.cjs
+      - tests/backup-download-import-browser.cjs
       - tests/settings-language-pages-browser.cjs
       - tests/training-day-manager-browser.cjs
       - tests/food-portions-after-refresh-browser.cjs
@@ -112,6 +114,7 @@ jobs:
           node tests/workout-log-keyboard-browser.cjs
           node tests/workout-chronology-deload-contract.cjs
           node tests/food-priority-collapse-browser.cjs
+          node tests/backup-download-import-browser.cjs
           node tests/v3-mobile-diary-browser.cjs
           node tests/settings-language-pages-browser.cjs
           node tests/training-day-manager-browser.cjs
