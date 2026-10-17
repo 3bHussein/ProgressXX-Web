@@ -1,4 +1,8 @@
 
+## 2026-10-17 — Structured Session Sets + Deload compatibility
+- Added mobile set editor in root index.html: weight/reps per set, add/remove, original `weight*reps` storage, raw-text fallback for unsupported legacy annotations, incomplete set guard, no DB schema change. Smart Deload guidance remains and does not prefill heavy weights.
+- Added `tests/v3-structured-session-contract.cjs` and wired to V3 preview workflow. CI pending; real-device round-trip verification remains OPEN.
+
 ## 2026-10-17 — Mobile workout readability pass
 - Commit `bd2ff6c`: CSS-only mobile improvements in root `index.html` for Workout Log card spacing, readable performance and notes, larger edit targets, accessible session navigation targets and performance input. Existing workout save/storage handlers and Settings design unchanged. CI pending.
 # ProgressX — Development Log (Persistent)
