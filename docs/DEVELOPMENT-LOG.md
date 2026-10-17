@@ -1,4 +1,7 @@
 
+## 2026-10-17 — Session partial-set protection
+- Guarded Add Set and Remove Set against dropping incomplete weight/reps entries; retained original performance string, Smart Deload and historical rows. Updated V3 contract test. CI and real-device two-device sync verification pending.
+
 ## 2026-10-17 — Start Workout Deload week selection
 - Added explicit week selector to Start Workout day picker; defaults to active week, uses selected week for session records, ordered exercises and existing Smart Deload guidance. Does not mutate global active week or historical workouts. Resume keeps saved session week. Added contract coverage; CI pending.
 
