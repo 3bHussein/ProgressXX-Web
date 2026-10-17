@@ -1,0 +1,17 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const root = path.resolve(__dirname, '..');
+const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const manifest = JSON.parse(fs.readFileSync(path.join(root, 'manifest.webmanifest'), 'utf8'));
+assert.equal(manifest.name, 'PROGRESSX — Workout & Nutrition');
+assert.equal(manifest.short_name, 'PROGRESSX');
+assert.equal(manifest.start_url, './index.html');
+assert.equal(manifest.scope, './');
+assert.match(html, /<title>ProgressX — Train\. Track\. Progress\.<\/title>/);
+assert.match(html, /--accent:#7c3aed/);
+assert.match(html, /--accent2:#22c55e/);
+assert.match(html, /--cyan:#22d3ee/);
+assert.match(html, /data-theme="light"/);
+assert.match(html, /data-theme="dark"/);
+console.log('PROGRESSX brand and existing theme contract: PASS');
