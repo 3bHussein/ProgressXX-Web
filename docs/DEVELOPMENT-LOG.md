@@ -1,6 +1,6 @@
 # ProgressX — Development Log (Persistent)
 
-This is the **append-only** chronological log of completed work, investigations, releases and handoffs. Last updated: **2026-10-12**.
+This is the **append-only** chronological log of completed work, investigations, releases and handoffs. Last updated: **2026-10-17**.
 
 ## Rules — mandatory for all future tasks
 
@@ -50,6 +50,18 @@ This is the **append-only** chronological log of completed work, investigations,
 5. Preserve real account data, defer unapproved migrations and keep secrets/health records out of public repository.
 
 ## Entries (newest first)
+
+## 2026-10-17 — Owner-reported V3 W26 sync acceptance and next UX scope (main documentation only)
+
+- **Scope:** Record owner-provided manual test results and upcoming V3 design/milestone requests. This entry does NOT merge PR #45 or ship a runtime change.
+- **Source/target:** Owner's 2026-10-17 manual reports; `docs/DEVELOPMENT-LOG.md` on `main` only. V3 work remains in draft PR #45 (`feature/progressx-v3-brand-foundation`, head `354ec9641004856c6fc4b712ab2ca5a7dc2345a2`).
+- **Owner-reported PASS:** W26 Set save/reopen (20 kg × 12); bidirectional two-device sync (22.5 kg × 10 then 8 reps); cross-device deletion; offline-to-online retry with no duplicate; concurrent-edit test converged across devices. No issues reported. These are manual user reports, not independently instrumented tests. Conflict winner, atomic server CAS, account isolation and cross-feature coverage are **NOT VERIFIED**.
+- **CI evidence:** GitHub Actions run https://github.com/3bHussein/ProgressXX-Web/actions/runs/39012277653 — `full-ui-test` completed SUCCESS, as checked 2026-10-17. CI success does not prove real-device sync or commercial readiness.
+- **New owner UX requests (PENDING, NOT IMPLEMENTED):** Review and simplify mobile Settings; remove **Sync Center** from user-facing navigation/UI while retaining essential sync/error logging, recovery and data safety; redesign **Daily** for thumb-friendly mobile UX; redesign **Food** with MyFitnessPal-inspired diary, quick-add, search, portions and food library UX without copying proprietary assets; enhance/raise visibility of recurring per-exercise **Smart Deload** guidance, preserving saved weights and workout history; continue Milestone 2 hardening. Await new design references before locking visuals.
+- **Next acceptance gates:** (1) account isolation and negative authorization; (2) rapid writes, retries and explicit conflict outcome; (3) two-device Food/Daily/Workout Schedule/Weight CRUD and deletion non-resurrection; (4) backup/export and isolated restore; (5) mobile/PWA/accessibility, browser matrix, matching SHA CI; (6) Settings/Sync Center removal and new Daily/Food/Deload UI regression tests.
+- **Deployment/data impact:** Documentation-only main commit; no `index.html` change, no Supabase SQL/schema/RLS/grants/records change, no production deployment requested, no PR merge. Owner's database experiments/security deferral remains in force. Milestone 2 **IN PROGRESS**, commercial launch **NO-GO**; prior subjective estimate unchanged.
+- **Exact next step:** Receive owner-provided new design, review existing Settings/Daily/Food/Deload implementations on V3 branch, implement on separate reviewable feature branch or PR without merging PR #45, and run regression/CI before any release. Update `ROADMAP.md` and `docs/PROJECT-HANDOFF.md` together with subsequent code changes.
+
 ## 2026-10-12 — Verified P0 overbroad database grants
 
 Read-only Supabase production metadata inspection: snapshot table RLS enabled; owner predicate `(select auth.uid()) = user_id` is installed for USING and WITH CHECK. However `anon` and `authenticated` each have TRUNCATE, TRIGGER, REFERENCES and CRUD privileges; TRUNCATE is outside normal RLS row protection, making this an authorization hardening blocker. Details and a staged mitigation sequence recorded in `docs/COMMERCIAL-READINESS.md` (ea971c90). No exploitation demonstrated and no grants changed. Existing non-atomic upsert CAS blocker still open. Latest CI not verified. Next: backed-up isolated grant audit and negative direct-client tests, then request explicit authorization for a controlled production grant change; do not equate RLS enabled with commercial security signoff. Production accounts and records untouched; paid-security work remains deferred pending instruction.
