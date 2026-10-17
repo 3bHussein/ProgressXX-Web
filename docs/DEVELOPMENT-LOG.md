@@ -1,4 +1,7 @@
 
+## 2026-10-17 — Start Workout Deload week selection
+- Added explicit week selector to Start Workout day picker; defaults to active week, uses selected week for session records, ordered exercises and existing Smart Deload guidance. Does not mutate global active week or historical workouts. Resume keeps saved session week. Added contract coverage; CI pending.
+
 ## 2026-10-17 — Structured Session Sets + Deload compatibility
 - Added mobile set editor in root index.html: weight/reps per set, add/remove, original `weight*reps` storage, raw-text fallback for unsupported legacy annotations, incomplete set guard, no DB schema change. Smart Deload guidance remains and does not prefill heavy weights.
 - Added `tests/v3-structured-session-contract.cjs` and wired to V3 preview workflow. CI pending; real-device round-trip verification remains OPEN.
