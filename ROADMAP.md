@@ -1,3 +1,5 @@
+
+**2026-10-17 PR #45 CI repair pending:** Settings directory language strings and legacy browser test navigation/PWA cache fixture updated on feature branch. Full UI run https://github.com/3bHussein/ProgressXX-Web/actions/runs/39006654039 queued when recorded; PASS **NOT VERIFIED**. Milestone 2 remains PAUSED/INCOMPLETE; production/database untouched and commercial NO-GO.
 **Frontend 2.1.0 VERIFIED:** [PR #34](https://github.com/3bHussein/ProgressXX-Web/pull/34) / `cfc9192`: Food portion/calorie recovery, training-day management and readable bilingual Settings. Final82/82 local, all eight PR/four main workflows SUCCESS; Chromium/Firefox/WebKit new fixtures verified, root/worker deployed byte-exact. Milestone2 stays paused/incomplete; Phase3/4 incomplete; commercial NO-GO. See [acceptance](docs/FRONTEND-2.1-ACCEPTANCE.md).
 
 ## Current milestone map — 2026-10-13 Cairo
