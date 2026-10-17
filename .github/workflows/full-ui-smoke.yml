@@ -27,6 +27,8 @@ jobs:
           failed=0
           failed_tests=()
           for test_file in \
+            tests/v3-mobile-diary-browser.cjs \
+            tests/v3-backup-restore-runtime.cjs \
             tests/ui-language-catalogue.cjs \
             tests/settings-language-pages-browser.cjs \
             tests/training-day-manager-browser.cjs \

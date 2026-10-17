@@ -802,5 +802,20 @@
   "Workout sets": "مجموعات التمرين",
   "Performance raw text fallback": "إدخال الأداء النصي البديل",
   "+ Add set": "+ إضافة مجموعة",
-  "Workout session week": "أسبوع جلسة التمرين"
+  "Workout session week": "أسبوع جلسة التمرين",
+  "Calorie summary": "ملخص السعرات",
+  "Remaining calories": "السعرات المتبقية",
+  "Calorie goal": "هدف السعرات",
+  "Food consumed": "الطعام المستهلك",
+  "Exercise adjustment is not tracked.": "لا يتم تتبع سعرات التمرين.",
+  "＋ Add food": "＋ إضافة طعام",
+  "Search food library": "بحث في مكتبة الطعام",
+  "Connection & recovery": "الاتصال والاستعادة",
+  "Supplements, hydration and your daily progress.": "المكملات والماء وتقدمك اليومي.",
+  "Daily week navigation": "التنقل بين أيام الأسبوع",
+  "Daily completion": "إكمال المهام اليومية",
+  "Edit reminder": "تعديل التذكير",
+  "Snacks": "وجبات خفيفة",
+  "Manage appearance, notification permissions and local diagnostics.": "إدارة المظهر وأذونات الإشعارات والتشخيصات المحلية.",
+  "Your existing workout, food and cloud records are never deleted by these tools. Manage appearance, notification permissions and local diagnostics.": "لا تحذف هذه الأدوات سجلات التمارين والطعام والسحابة. أدر المظهر وأذونات الإشعارات والتشخيصات المحلية."
 }

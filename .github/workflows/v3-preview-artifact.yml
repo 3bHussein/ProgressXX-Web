@@ -15,7 +15,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}" = "feature/progressx-v3-brand-foundation"
+          case "${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}" in
+            feature/progressx-v3-brand-foundation|feature/v3-mobile-reliability) ;;
+            *) echo "Not an approved V3 preview branch"; exit 1 ;;
+          esac
           node tests/database-experiments-paused.cjs
           node tests/workout-chronology-deload-contract.cjs
           node tests/v3-structured-session-contract.cjs

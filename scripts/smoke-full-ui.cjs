@@ -402,7 +402,7 @@ const {createLogoutDialogHandler}=require('../tests/helpers/logout-dialog.cjs');
  await page.setViewportSize({width:390,height:844});
  // Mobile Settings uses category tiles; old quick-nav buttons are intentionally hidden.
  await page.evaluate(()=>{go('settings');pxShowSettingsHome(false)});
- for(const [tileIndex,id] of [[0,'pxSettingsAccount'],[3,'pxSettingsBackup'],[4,'pxSettingsSyncCenter'],[2,'pxSettingsHub'],[5,'pxSettingsSchedule']]){
+ for(const [tileIndex,id] of [[0,'pxSettingsAccount'],[3,'pxSettingsBackup'],[2,'pxSettingsHub'],[4,'pxSettingsSchedule']]){
    const target=page.locator('#'+id);
    if(await target.count()!==1)throw Error('Missing Settings category destination '+id);
    await page.evaluate(()=>pxShowSettingsHome(false));

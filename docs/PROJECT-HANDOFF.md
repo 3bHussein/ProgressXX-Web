@@ -1,4 +1,16 @@
 
+## 2026-10-17 — V3 mobile diary and isolated reliability work (review branch)
+
+- Branch: `feature/v3-mobile-reliability`, based on PR #45 head `354ec964` and main `89bc045`; PR #45 remains draft/unmerged. Root `index.html` remains the app entry. No production deploy or database/schema/RLS/grants/account operations.
+- Implemented: original calorie remaining ring and goal/food breakdown (exercise energy explicitly untracked), existing macro bars, always-visible Breakfast/Lunch/Dinner/Snacks with meal-specific quick-add, library search focus and barcode shortcut. Existing portions, library, meals and storage handlers retained.
+- Daily: compact Today header, seven local-date buttons opening existing history, completion progress and pressed states, larger reminder cards with collapsible labelled editors; hydration and history retained. Future/unrecorded dates disabled; actions remain today-scoped.
+- Settings: five category rows; removed standalone Sync Center destination and Google Sheets-only connection/profile controls. Connection/retry status is under Account > Connection & recovery. Backup category now exposes snapshots, health check and repair tools previously unreachable through directory. Appearance tools reachable under Preferences; diagnostics/error logs retained.
+- Deload: existing per-exercise recurring W26–30 / W36–40 / later formula retained; schedule shows the same read-only guidance as Session/Log at active week. No saved set/history changes.
+- Tests: actual root exporter/restore functions exercised in disposable VM: synthetic Workout/Food/Daily/Schedule/Weight round trip, cancel/invalid no-write, safety download and queue removal PASS locally. Language catalogue, structured sets, deload, paused DB and release-workflow contracts PASS locally. New browser fixture covers calorie arithmetic, meal actions, Daily completion/edit, Settings recovery and EN/AR 320/390/768/1280 layouts. Browser/CI results **NOT VERIFIED yet**; initial environment attempts lacked browsers/server. Final CI links to be appended after checks.
+- Milestone 2: IN PROGRESS / partial synthetic verification. Owner-reported W26 two-device/delete/offline/conflict PASS recorded separately; server authorization/atomic CAS, all-feature real two-device CRUD, true account lifecycle and real backup restore still OPEN. No commercial readiness claim.
+- Exact next step: run browser tests and Actions on this branch, fix regressions, append matching-SHA evidence; obtain owner design review and approval before any merge/deployment. Real Android/PWA and production security remain unverified.
+
+
 **2026-10-17:** Draft PR #45 now prevents Add/Remove Set from discarding partially entered weights/reps. No DB writes/schema changes. CI and device sync verification remain outstanding.
 
 **2026-10-17:** Deload discrepancy traced to Start Workout using `activeWeek()` (W21), while Log Workout was manually set to W26. Added session-specific week selector; session saves use that week without changing global week. CI and mobile validation pending.
