@@ -4922,6 +4922,7 @@ function renderWorkoutSession(){
 function pxSessionRenderSetEditor(){
   const host=$('pxSessionSetEditor'),field=$('sessionPerformance'),add=$('pxSessionAddSet');
   if(!host||!field)return;
+  delete field.dataset.incompleteSets;
   const raw=field.value.trim(),parsed=parsePerformanceSets(raw);
   const supported=parsed.every(set=>!set.raw)&&parsed.length<=30;
   host.hidden=!supported;
@@ -4936,16 +4937,18 @@ function pxSessionReadSets(){
   if(!host||host.hidden||!field)return;
   const weights=Array.from(host.querySelectorAll('[data-set-weight]'));
   const reps=Array.from(host.querySelectorAll('[data-set-reps]'));
+  const partial=weights.some((w,i)=>(w.value.trim()&&!reps[i]?.value.trim())||(!w.value.trim()&&reps[i]?.value.trim()));
+  if(partial){field.dataset.incompleteSets='true';return;}
+  delete field.dataset.incompleteSets;
   field.value=weights.map((w,i)=>w.value.trim()&&reps[i]?.value.trim()?w.value.trim()+'*'+reps[i].value.trim():'').filter(Boolean).join(',');
 }
 function pxSessionAddSet(){
   const host=$('pxSessionSetEditor');if(!host||host.hidden)return;
   pxSessionReadSets();
   const field=$('sessionPerformance');
-  field.value+=(field.value?',':'')+'0*1';
-  pxSessionRenderSetEditor();
-  const last=host.querySelector('[data-set-weight]:last-of-type');
-  if(last&&last.value==='0'){last.value='';last.focus();}
+  const i=host.querySelectorAll('[data-set-weight]').length;
+  host.insertAdjacentHTML('beforeend','<div class="pxSessionSetRow"><span class="pxSessionSetNumber">SET '+(i+1)+'</span><label>Weight (kg)<input type="number" inputmode="decimal" min="0" step="any" data-set-weight="'+i+'"></label><label>Reps<input type="number" inputmode="numeric" min="1" step="1" data-set-reps="'+i+'"></label><button type="button" class="btn soft" aria-label="Remove set '+(i+1)+'" onclick="pxSessionRemoveSet('+i+')">×</button></div>');
+  host.querySelectorAll('[data-set-weight]')[i]?.focus();
 }
 function pxSessionRemoveSet(index){
   const host=$('pxSessionSetEditor');if(!host||host.hidden)return;
@@ -4958,6 +4961,7 @@ function pxSessionRemoveSet(index){
 function persistSessionExercise(status='Completed'){
   if(!workoutSession)return null;
   pxSessionReadSets();
+  if($('sessionPerformance')?.dataset.incompleteSets){alert('Complete both weight and reps for every started set.');return null;}
   const exercise=currentSessionExercise();
   const existing=currentWeekExerciseRow(workoutSession.day,exercise,workoutSession.week);
   const obj={
