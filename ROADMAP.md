@@ -1,4 +1,6 @@
 
+**2026-10-17:** Added Smart Deload Session card regression assertions to existing Full UI test (`d66d20c`); previous SHA passed 8/8 CI, latest pending. PR #45 draft; Milestone 2 OPEN.
+
 **2026-10-17:** Per-exercise Deload card CI green on `00f5a228a` (8/8). Bilingual AR/EN card and RTL support added (`b203ad8`), pending new CI. Keep PR #45 draft; Milestone 2 OPEN.
 
 **2026-10-17:** Smart Deload Session card now displays exercise-specific previous working weight and suggested lighter range for recurring deload weeks, and hides outside those weeks (`8af2f91`). No persisted data changes. Latest commit CI pending; PR #45 draft.
