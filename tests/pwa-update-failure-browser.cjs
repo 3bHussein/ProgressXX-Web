@@ -6,7 +6,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),http=require('n
   if(networkOffline){req.socket.destroy();return}
   const path=new URL(req.url,'http://localhost').pathname.replace(/^\/ProgressXX-Web\//,'');
   res.setHeader('Cache-Control','no-store');
-  if(path==='sw.js'){res.setHeader('Content-Type','application/javascript');return res.end(source.replace('progressxx-web-full-v2','progressxx-web-full-'+version))}
+  if(path==='sw.js'){res.setHeader('Content-Type','application/javascript');return res.end(source.replace(/const CACHE='progressxx-web-full-[^']+';/, "const CACHE='progressxx-web-full-"+version+"';"))}
   if(path==='icon-512.svg'&&failAsset){res.writeHead(503);return res.end('synthetic install failure')}
   const names=['manifest.webmanifest','icon-192.svg','icon-512.svg'];
   if(path===''||path==='index.html'){res.setHeader('Content-Type','text/html');return res.end(root.replace('<head>','<head><meta name="qa-shell" content="'+version+'">'))}

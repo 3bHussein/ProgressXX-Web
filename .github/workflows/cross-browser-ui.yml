@@ -112,6 +112,7 @@ jobs:
           node tests/workout-log-keyboard-browser.cjs
           node tests/workout-chronology-deload-contract.cjs
           node tests/food-priority-collapse-browser.cjs
+          node tests/v3-mobile-diary-browser.cjs
           node tests/settings-language-pages-browser.cjs
           node tests/training-day-manager-browser.cjs
           node tests/food-portions-after-refresh-browser.cjs

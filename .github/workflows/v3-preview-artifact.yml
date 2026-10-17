@@ -1,0 +1,53 @@
+name: Build V3 Preview Artifact
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify preview source and safety boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}" in
+            feature/progressx-v3-brand-foundation|feature/v3-mobile-reliability) ;;
+            *) echo "Not an approved V3 preview branch"; exit 1 ;;
+          esac
+          node tests/database-experiments-paused.cjs
+          node tests/workout-chronology-deload-contract.cjs
+          node tests/v3-structured-session-contract.cjs
+          node tests/mobile-settings-insights-regression.cjs
+          node - <<'NODE'
+          const fs=require('fs'),vm=require('vm');
+          const html=fs.readFileSync('index.html','utf8');
+          for(const m of html.matchAll(new RegExp('<script[^>]*>([\\s\\S]*?)</script>','g')))new vm.Script(m[1]);
+          if(!html.includes('id="pxSessionDeloadCard"'))throw Error('Missing Deload card');
+          NODE
+      - name: Package standalone local preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p v3-preview
+          cp index.html full-app.html commercial-v1.html manifest.webmanifest sw.js icon-192.svg icon-512.svg v3-preview/
+          cat > v3-preview/README.txt <<'EOF'
+          PROGRESSX V3 - LOCAL PREVIEW (NOT PRODUCTION)
+          This is a preview of the feature branch; it does not deploy or update GitHub Pages.
+          On a computer with Python installed, open a terminal in this folder and run:
+            python -m http.server 8765
+          Then open http://127.0.0.1:8765/index.html in a browser.
+          On a phone, use the computer's local-network address on the same Wi-Fi.
+          IMPORTANT: The app may connect to the existing backend if you sign in.
+          Use a test account only; do not enter, edit or delete real workout data during preview.
+          Close the local server when finished. Never use this artifact as a production release.
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: progressx-v3-local-preview
+          path: v3-preview/
+          retention-days: 7

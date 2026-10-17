@@ -343,7 +343,7 @@ const {createLogoutDialogHandler}=require('../tests/helpers/logout-dialog.cjs');
    throw Error('Schedule or Weight Goal lost on account logout/login: '+JSON.stringify(afterRelogin));
  // Mobile touch layout regression for the signed-in account and Insights/Settings.
  for(const section of ['settings','intelligence']){
-   await page.evaluate(name=>go(name),section);
+   await page.evaluate(name=>{go(name);if(name==='settings')pxShowSettingsCategory('pxSettingsAccount','Account & sync')},section);
    const layout=await page.evaluate(name=>{
      const sectionEl=document.getElementById(name);
      const viewport=document.documentElement.clientWidth;
@@ -359,7 +359,7 @@ const {createLogoutDialogHandler}=require('../tests/helpers/logout-dialog.cjs');
  // Narrow-phone regression: controls stay usable at 320px.
  await page.setViewportSize({width:320,height:700});
  for(const section of ['settings','intelligence']){
-   await page.evaluate(name=>go(name),section);
+   await page.evaluate(name=>{go(name);if(name==='settings')pxShowSettingsCategory('pxSettingsAccount','Account & sync')},section);
    const bounds=await page.evaluate(name=>(name==='settings'?['pxSettingsSync','pxSettingsSignOut']:['pxAnatomyLang']).map(id=>{
      const r=document.getElementById(id)?.getBoundingClientRect();
      return {id,left:r?.left,right:r?.right,height:r?.height,width:document.documentElement.clientWidth};
@@ -371,14 +371,14 @@ const {createLogoutDialogHandler}=require('../tests/helpers/logout-dialog.cjs');
  for(const width of [320,390]){
    await page.setViewportSize({width,height:780});
    for(const name of ['settings','intelligence']){
-     await page.evaluate(section=>go(section),name);
+     await page.evaluate(section=>{go(section);if(section==='settings')pxShowSettingsHome(false)},name);
      const metrics=await page.evaluate(section=>{
-       const selector=section==='settings'?'#settings .pxSettingsQuickNav':'#intelligence .pxAnatomyMobileTabs';
+       const selector=section==='settings'?'#settings .pxSettingsDirectory':'#intelligence .pxAnatomyMobileTabs';
        const row=document.querySelector(selector);
        return {section,rowHeight:row?.getBoundingClientRect().height,
          buttonHeights:[...row.querySelectorAll('button')].map(b=>b.getBoundingClientRect().height)};
      },name);
-     if(!metrics.rowHeight||metrics.rowHeight>85||metrics.buttonHeights.some(h=>h<40||h>55))
+     if(!metrics.rowHeight||(name!=='settings'&&metrics.rowHeight>85)||metrics.buttonHeights.some(h=>h<40||(name!=='settings'&&h>55)))
        throw Error('Oversized mobile navigation tabs: '+JSON.stringify(metrics));
    }
  }
@@ -400,18 +400,18 @@ const {createLogoutDialogHandler}=require('../tests/helpers/logout-dialog.cjs');
    }
  }
  await page.setViewportSize({width:390,height:844});
- // Real mobile Settings shortcut interaction: each control must scroll to its target.
- await page.evaluate(()=>go('settings'));
- for(const id of ['pxSettingsAccount','pxSettingsBackup','pxSettingsSyncCenter','pxSettingsHub','pxSettingsSchedule']){
+ // Mobile Settings uses category tiles; old quick-nav buttons are intentionally hidden.
+ await page.evaluate(()=>{go('settings');pxShowSettingsHome(false)});
+ for(const [tileIndex,id] of [[0,'pxSettingsAccount'],[3,'pxSettingsBackup'],[2,'pxSettingsHub'],[4,'pxSettingsSchedule']]){
    const target=page.locator('#'+id);
-   if(await target.count()!==1)throw Error('Missing Settings shortcut destination '+id);
-   const index=['pxSettingsAccount','pxSettingsBackup','pxSettingsSyncCenter','pxSettingsHub','pxSettingsSchedule'].indexOf(id);
-   const shortcut=page.locator('#settings .pxSettingsQuickNav button').nth(index);
-   await shortcut.scrollIntoViewIfNeeded({timeout:6000});
-   await shortcut.click({timeout:6000});
-   await page.waitForFunction(targetId=>{const el=document.getElementById(targetId);if(!el)return false;const r=el.getBoundingClientRect();return r.height>0&&r.top<window.innerHeight&&r.bottom>0},id,{timeout:6000});
-   const check=await target.evaluate(el=>({top:el.getBoundingClientRect().top,bottom:el.getBoundingClientRect().bottom,height:el.getBoundingClientRect().height,viewport:window.innerHeight}));
-   if(check.height<1||check.top>=check.viewport||check.bottom<=0)throw Error('Settings shortcut did not navigate to '+id+': '+JSON.stringify(check));
+   if(await target.count()!==1)throw Error('Missing Settings category destination '+id);
+   await page.evaluate(()=>pxShowSettingsHome(false));
+   const tile=page.locator('#settings .pxSettingsDirectory .pxSettingsTile').nth(tileIndex);
+   await tile.click({timeout:6000});
+   await page.waitForFunction(targetId=>{
+     const section=document.getElementById('settings'),el=document.getElementById(targetId);
+     return section?.classList.contains('pxSettingsDetailMode')&&el?.classList.contains('pxSettingsSelected')&&el.getBoundingClientRect().height>0;
+   },id,{timeout:6000});
  }
  await page.evaluate(()=>go('home'));
  if(legacyGoogleCalls)throw Error('Called personal Google Sheets endpoint');

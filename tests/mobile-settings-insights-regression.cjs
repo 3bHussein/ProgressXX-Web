@@ -9,7 +9,7 @@ assert.match(html,/id="pxSettingsSignOut"[^>]+pxLogout/);
 assert.match(html,/#pxAccountTools\{position:relative!important/);
 assert.match(html,/#intelligence \.hero \.btn\{width:100%/);
 assert.match(html,/#settings \.settingsGrid\{grid-template-columns:minmax\(0,1fr\)!important/);
-for(const id of ['pxSettingsAccount','pxSettingsBackup','pxSettingsSyncCenter','pxSettingsHub','pxSettingsSchedule']) assert.match(html,new RegExp('id="'+id+'"'),'Missing Settings jump target '+id);
+for(const id of ['pxSettingsAccount','pxSettingsBackup','pxSettingsHub','pxSettingsSchedule']) assert.match(html,new RegExp('id="'+id+'"'),'Missing Settings jump target '+id);
 assert.match(html,/class="pxSettingsQuickNav"/);
 assert.match(html,/#settings \.pxSettingsQuickNav button\{/);
 console.log('PASS: account settings, no legacy commercial link, mobile account controls and Insights CSS');

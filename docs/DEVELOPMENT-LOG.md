@@ -1,3 +1,16 @@
+
+## 2026-10-17 — Session partial-set protection
+- Guarded Add Set and Remove Set against dropping incomplete weight/reps entries; retained original performance string, Smart Deload and historical rows. Updated V3 contract test. CI and real-device two-device sync verification pending.
+
+## 2026-10-17 — Start Workout Deload week selection
+- Added explicit week selector to Start Workout day picker; defaults to active week, uses selected week for session records, ordered exercises and existing Smart Deload guidance. Does not mutate global active week or historical workouts. Resume keeps saved session week. Added contract coverage; CI pending.
+
+## 2026-10-17 — Structured Session Sets + Deload compatibility
+- Added mobile set editor in root index.html: weight/reps per set, add/remove, original `weight*reps` storage, raw-text fallback for unsupported legacy annotations, incomplete set guard, no DB schema change. Smart Deload guidance remains and does not prefill heavy weights.
+- Added `tests/v3-structured-session-contract.cjs` and wired to V3 preview workflow. CI pending; real-device round-trip verification remains OPEN.
+
+## 2026-10-17 — Mobile workout readability pass
+- Commit `bd2ff6c`: CSS-only mobile improvements in root `index.html` for Workout Log card spacing, readable performance and notes, larger edit targets, accessible session navigation targets and performance input. Existing workout save/storage handlers and Settings design unchanged. CI pending.
 # ProgressX — Development Log (Persistent)
 
 This is the **append-only** chronological log of completed work, investigations, releases and handoffs. Last updated: **2026-10-17**.
@@ -1868,3 +1881,102 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - Runtime commit `8b7b6d1`: for authenticated Supabase accounts, stop scheduling retired Apps Script Daily/reminder writes and clear legacy `dailyStateDirty` so it cannot indefinitely suppress cross-device reminder refresh. Account-scoped PXStore continues to queue snapshot persistence.
 - Test commits `01dab3d` and `0673fc6`: enforce the routing contract and execute both Supabase and legacy scheduler branches with isolated mocks; Supabase branch must schedule no legacy timers and clear dirty state.
 - Pending: new CI results, authenticated two-device delete/reload checks, offline/reconnect conflict acceptance. Do not mark Milestone 2 complete based on mocks alone.
+
+## 2026-10-17 — PR #45 Full UI failure repair (unverified)
+- Scope: Diagnosed failed workflow run https://github.com/3bHussein/ProgressXX-Web/actions/runs/39006325552 on PR #45. Four failures: untranslated Settings directory labels; Language select hidden by Settings directory; mobile account controls hidden by new directory layout; PWA fixture assumed outdated fixed v2 worker cache identifier.
+- Changed: `index.html`, `docs/UI-LANGUAGE-CATALOGUE.json`, `tests/settings-language-pages-browser.cjs`, `scripts/smoke-full-ui.cjs`, `tests/pwa-update-failure-browser.cjs` on `feature/progressx-v3-brand-foundation`. Translation source and inline offline dictionary updated together; browser tests now open relevant Settings categories; PWA test rewrites actual source cache version instead of a fixed obsolete value. No change to live `sw.js` runtime, account records, database schemas/grants, or data migration.
+- Evidence: diagnostic original run above; corrective CI full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39006654039 (queued at write). **TESTS NOT VERIFIED; NO MERGE OR DEPLOYMENT.**
+- Risk: Need current full UI, PWA and cross-browser CI PASS before review; real-device sync safety/Milestone 2 remain open. Next: inspect CI logs and correct remaining regressions, only merge after gates.
+
+## 2026-10-17 — PR #45 CI green after Settings directory smoke fix
+- The final corrective commit `e45cedb4a7e81803a0956708f745f43cbc947e32` passed all 8 observed GitHub Actions workflows. Full UI: https://github.com/3bHussein/ProgressXX-Web/actions/runs/39006926945 ; cross-browser: https://github.com/3bHussein/ProgressXX-Web/actions/runs/39006926950 ; cross-device snapshot: https://github.com/3bHussein/ProgressXX-Web/actions/runs/39006926967 ; workout log Chromium: https://github.com/3bHussein/ProgressXX-Web/actions/runs/39006926924 . Other passed: fast conflict safety, workout schedule table safety, weight bridge, workout log table safety.
+- PR #45 remains DRAFT and UNMERGED. This is CI contract green, not proof of real-device production sync or commercial readiness. Milestone 2 stays OPEN.
+
+## 2026-10-17 — PROGRESSX V3 responsive visual foundation
+- Branch `feature/progressx-v3-brand-foundation`, commit `551a24fb44c4cf08e4d3fdaeba94be90aebd2599`: added scoped `progressx-v3-layout-20261017` CSS for Dashboard, Workout Log, Calendar/Insights and Anatomy cards; standardized visible header to PROGRESSX and Insights eyebrow to PROGRESSX V3.
+- Preserved existing dark/light theme tokens, controls, element IDs, event handlers, persistence, account data, Supabase configuration and current GitHub Pages repository/URL. Visual change only, no migrations.
+- **Validation pending** on this new code commit; previous eight green CI runs were for `e45cedb4a` only. Keep PR #45 draft/unmerged pending CI and responsive visual review. Milestone 2 live sync validation remains open/paused.
+
+## 2026-10-17 — PROGRESSX V3 CI and mobile Workout Log summary
+- CI run `39007842602` and all seven companion workflows passed on `c04d62be0` (8/8). Previous static language catalogue failure from PROGRESSX branding fixed.
+- Added a read-only live region summary to Workout Log, showing number of visible/total entries, completed entries, and selected week, with English/Arabic display and translated empty-filter message. Code commits `4e0f9fc`, `0a644d1`, `49fc221`. No database, sync or persisted record changes.
+- New commits have not yet been validated by CI; PR #45 remains draft and unmerged. Milestone 2 live sync acceptance remains open.
+
+## 2026-10-17 — Smart Deload Session Mode safety
+- CI on prior branch HEAD `0fd2fef0af4ed4b3aeb5875bab1b9928ea53d925` passed all 8 workflows (Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39008072221).
+- Commit `7909349dec801e91663e6b6019df5bafe43e9751` fixes Workout Session Mode: during existing recurring per-exercise deload weeks, a newly opened exercise no longer automatically prefills the heavier previous performance. Existing saved performance is preserved on reopen/edit, and lighter-load guidance stays visible. No stored data changed.
+- CI for this new commit pending; PR #45 remains draft/unmerged. Real-device Milestone 2 validation remains open.
+
+## 2026-10-17 — Per-exercise Smart Deload Session card
+- All eight workflows green on prior SHA `8b10ed0d9` including Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39008468761.
+- Added a read-only, accessible Smart Deload guidance card in Workout Session showing current recurring deload week range, previous working load, and suggested lighter weight range for the selected exercise. Card is hidden outside eligible deload weeks. Commit `8af2f9198d7fe804c4ebeb5321403e4aeceba08f`.
+- No automatic changes to saved weights, session entries, synchronization, or database. CI for the new commit pending; PR #45 remains draft/unmerged.
+
+## 2026-10-17 — Smart Deload bilingual guidance
+- Previous branch HEAD `00f5a228a` passed all eight GitHub Actions workflows, including Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39008700405.
+- Commit `b203ad89636b465d7028ac60c865e76e1d7e28ec` localizes Session Mode Smart Deload card text in English/Arabic and switches card text direction based on active UI language. Weight calculations and persisted data unchanged.
+- CI for this latest change pending; PR #45 draft/unmerged. Real-device sync acceptance remains OPEN.
+
+## 2026-10-17 — Deload regression coverage
+- All 8 CI workflows passed on previous HEAD `470ffd95e` including Full UI run https://github.com/3bHussein/ProgressXX-Web/actions/runs/39008960714.
+- Extended existing `tests/workout-chronology-deload-contract.cjs` (`d66d20cf6866ff150f0e553f445929804056de7d`) with assertions for Session Mode card presence, hidden outside deload, active exercise/week guidance, bilingual direction, no heavy prefill in new deload entries, and preservation of existing saved entries. The test was already wired into Full UI smoke.
+- CI for this latest commit pending. PR #45 remains draft/unmerged; no database or user data changes.
+
+## 2026-10-17 — Mobile Workout Log browser acceptance
+- Previous branch HEAD `c0d8ee42a` passed all 8 CI workflows, including Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39009177185.
+- Extended `tests/workout-log-keyboard-browser.cjs` at 390×844 mobile viewport to assert live result count, pagination, accessibility announcement, viewport fit, filtered result summary, and empty-state recovery text. Commit `d13ec2c3d26a35897eaec9b664e39365bb376da3`.
+- Browser test uses synthetic data and blocks backend calls. No production data or database operations. CI on new commit pending; PR #45 remains draft.
+
+## 2026-10-17 — Safe V3 preview artifact
+- Previous `d0179b456` passed all eight CI workflows. Added `.github/workflows/v3-preview-artifact.yml` (`540e35941048d207be5222a05ef5eec4b0959930`) to create a downloadable local preview from PR #45 only, without GitHub Pages deployment or database writes.
+- Workflow runs on pull requests to main, gates on source branch, validates paused database experiments and deload contract, then packages app files with local HTTP server instructions. Signing into preview may still connect to production backend: use test account only and do not modify real data.
+- Latest CI and artifact generation pending. PR #45 draft/unmerged.
+
+## 2026-10-17 — V3 mobile diary and isolated reliability work (review branch)
+
+- Branch: `feature/v3-mobile-reliability`, based on PR #45 head `354ec964` and main `89bc045`; PR #45 remains draft/unmerged. Root `index.html` remains the app entry. No production deploy or database/schema/RLS/grants/account operations.
+- Implemented: original calorie remaining ring and goal/food breakdown (exercise energy explicitly untracked), existing macro bars, always-visible Breakfast/Lunch/Dinner/Snacks with meal-specific quick-add, library search focus and barcode shortcut. Existing portions, library, meals and storage handlers retained.
+- Daily: compact Today header, seven local-date buttons opening existing history, completion progress and pressed states, larger reminder cards with collapsible labelled editors; hydration and history retained. Future/unrecorded dates disabled; actions remain today-scoped.
+- Settings: five category rows; removed standalone Sync Center destination and Google Sheets-only connection/profile controls. Connection/retry status is under Account > Connection & recovery. Backup category now exposes snapshots, health check and repair tools previously unreachable through directory. Appearance tools reachable under Preferences; diagnostics/error logs retained.
+- Deload: existing per-exercise recurring W26–30 / W36–40 / later formula retained; schedule shows the same read-only guidance as Session/Log at active week. No saved set/history changes.
+- Tests: actual root exporter/restore functions exercised in disposable VM: synthetic Workout/Food/Daily/Schedule/Weight round trip, cancel/invalid no-write, safety download and queue removal PASS locally. Language catalogue, structured sets, deload, paused DB and release-workflow contracts PASS locally. New browser fixture covers calorie arithmetic, meal actions, Daily completion/edit, Settings recovery and EN/AR 320/390/768/1280 layouts. Browser/CI results **NOT VERIFIED yet**; initial environment attempts lacked browsers/server. Final CI links to be appended after checks.
+- Milestone 2: IN PROGRESS / partial synthetic verification. Owner-reported W26 two-device/delete/offline/conflict PASS recorded separately; server authorization/atomic CAS, all-feature real two-device CRUD, true account lifecycle and real backup restore still OPEN. No commercial readiness claim.
+- Exact next step: run browser tests and Actions on this branch, fix regressions, append matching-SHA evidence; obtain owner design review and approval before any merge/deployment. Real Android/PWA and production security remain unverified.
+
+## 2026-10-17 — V3 review refinement and first verified suite
+
+- Review PR: https://github.com/3bHussein/ProgressXX-Web/pull/46 (DRAFT). PR #45/main/production unchanged.
+- Initial review runtime `e1f159b1`: local Full UI workflow test list **84/84 PASS**, using Playwright 1.55 Chromium and a same-command local server. Earlier missing-browser/connection-refused setup attempts are superseded by this complete run; they were not test passes. Initial CI Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39014292931 ; Firefox/WebKit matrix https://github.com/3bHussein/ProgressXX-Web/actions/runs/39014292961 SUCCESS; snapshot https://github.com/3bHussein/ProgressXX-Web/actions/runs/39014292942 SUCCESS. Seven other/remaining initial workflows are checked separately; final refinement CI not yet verified.
+- Visual QA prompted explicit Daily statistics grid, three mobile macro columns, calorie summary before secondary controls and scrollable 48px bottom-navigation targets. Food retry/offline tools moved into Account recovery; obsolete Sheets status placeholders removed. Privacy/data explanation added under Account.
+- Smart Deload now appears on saved Log cards and in the editor without changing saved performance. Adaptive quarter-kg increments for loads below 5kg keep suggested loads lighter. Deload test now runs the actual performance parser, replacing a fake kg-parser fixture; unknown/lb annotations remain raw and never guessed. Browser fixture checks Schedule/Log same exercise weights, unchanged saved sets and guidance hidden outside cycle.
+- This refinement: language catalogue, actual-parser Deload and actual exporter/restore VM checks PASS locally. Expanded Chromium fixture passed before the final text/placement refinements; full suite rerun and final matching-runtime CI pending. No production database operations or deployment.
+- Next: finish latest 84-check run and PR CI; record verified runtime/links, then owner visual review. Milestone 2 remains IN PROGRESS: mock isolation/retry/delete/conflict and isolated VM restore are partial evidence; real authorization, atomic CAS, cross-feature physical-device CRUD and Android/PWA acceptance remain OPEN.
+
+## 2026-10-17 — PR #46 verified review runtime / final handoff
+
+- **Review:** https://github.com/3bHussein/ProgressXX-Web/pull/46 — DRAFT, unmerged; independent branch `feature/v3-mobile-reliability` contains PR #45 source plus main documentation. PR #45 remains untouched. Tested runtime commit: `3ebb1b4dc68de4577021c2a28448c2483dfa2e5f`. Subsequent evidence commit changes documentation only.
+- **Local:** final Full UI workflow list **84/84 PASS**, Chromium/Playwright 1.55. New UI test uses synthetic memory storage and rejects all external requests. Actual-parser Deload and actual exporter/restore VM tests PASS; inline scripts compile and `git diff --check` passes. Final source matches the remote runtime tree. Initial setup failures (missing browser/server) are superseded, not counted as passes.
+- **GitHub Actions:** **9/9 workflows SUCCESS on tested runtime** (confirmed 2026-10-17 UTC):
+  - Full UI: https://github.com/3bHussein/ProgressXX-Web/actions/runs/39014618369
+  - Firefox + WebKit accessibility/UI: https://github.com/3bHussein/ProgressXX-Web/actions/runs/39014618375
+  - Cross-context page snapshots: https://github.com/3bHussein/ProgressXX-Web/actions/runs/39014618377
+  - Workout Log Chromium: https://github.com/3bHussein/ProgressXX-Web/actions/runs/39014618462
+  - Workout table safety: https://github.com/3bHussein/ProgressXX-Web/actions/runs/39014618399
+  - Schedule table safety: https://github.com/3bHussein/ProgressXX-Web/actions/runs/39014618378
+  - Weight bridge: https://github.com/3bHussein/ProgressXX-Web/actions/runs/39014618416
+  - Conflict contracts: https://github.com/3bHussein/ProgressXX-Web/actions/runs/39014618354
+  - Non-deploying preview: https://github.com/3bHussein/ProgressXX-Web/actions/runs/39014618429 (artifact `progressx-v3-local-preview`, expires 2026-10-24). Preview sign-in uses the existing backend; do not use real-account edits for isolated review.
+- **Actual changes:** mobile calorie remaining/goal/food dashboard, three macro columns, four meal groups and add/search/barcode shortcuts; Daily local-date week/history navigation, progress, labelled collapsible task editors and statistics; five Settings categories with obsolete Sheets controls removed, recovery/status under Account, reachable backup/health/repair and privacy explanation, retained error logs; scrollable safe-area mobile navigation; read-only Schedule/Session/Log/editor Deload parity and safer small-load suggestions. Root `index.html` only; no schema or stored-record migration.
+
+| Milestone 2 gate | Verified in this review | Still required |
+| --- | --- | --- |
+| Account isolation | Fake-account scoped storage, pending queue isolation, reload tests | Real JWT/API negative authorization and account lifecycle; no production permissions changed |
+| Food / Daily | Root app mocked CRUD/portions/retry/delete and stale-device conflict regressions; mobile actions | Full independent real-device CRUD and conflict outcome coverage |
+| Workout Schedule / Weight | Isolated bridge/table safety, retry/deduplication and cross-context snapshot tests | Complete physical-device CRUD, including update behavior, against authorized isolated backend |
+| Offline / conflicts | Synthetic HTTP 503/reload/retry, pending recovery, duplicate/deletion/non-resurrection and conflict review tests | Atomic server CAS/security acceptance and real multi-device stress |
+| Backup / recovery | Actual root export/restore in disposable VM; cancellation/invalid no-write, safety export, selected domains round trip and queue clearing | Browser download/import drill and independently restorable backend backup on isolated approved environment |
+| Mobile / browsers | Chromium + Firefox + WebKit CI, EN/AR 320/390/768/1280 regression, desktop/mobile visual inspection | Owner design acceptance; physical Android/PWA, screen-reader and full accessibility audit |
+
+- **Known limitations:** no exercise-calorie source exists, so it is explicitly untracked; Deload only uses supported numeric performance notation and prior-cycle working records, keeps unknown/annotated records raw and never overwrites saved sets; Daily historical navigation is read-only and unrecorded/future days are disabled. Existing production authorization/atomic CAS blockers remain unresolved by UI/mock tests.
+- **Status:** Milestone 2 IN PROGRESS / partially verified; mobile Phase 3 improved, not fully accepted. Commercial NO-GO and deferred production/security gates unchanged. No production deployment, database/Supabase connection, schema/RLS/grant/account changes, real-data export/restore, or PR merge was performed in this task. All remote changes are on the review branch.
+- **Exact next steps:** (1) review PR #46 design and its preview/source without production-data edits; (2) validate actual Android/PWA/touch/screen-reader behavior with synthetic data; (3) when an isolated backend is explicitly available, run negative authorization and full two-device Food/Daily/Schedule/Weight CRUD/update/delete/reload plus browser backup restore; (4) handle production CAS/grants only in a separately authorized task; (5) merge/deploy only after owner approval. Do not merge #45 or #46 automatically.
