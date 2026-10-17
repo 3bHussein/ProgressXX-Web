@@ -1,4 +1,6 @@
 
+**2026-10-17:** V3 structured session weight/reps editor implemented on draft PR #45, with raw fallback and Deload compatibility. Contract test added to preview CI. Browser interaction/real-device verification pending.
+
 **2026-10-17 mobile UI:** Workout Log card readability and Session touch-target styling added in `bd2ff6c` (CSS only). Structured per-set editing remains OPEN pending isolated parsing/round-trip tests; real-device verification OPEN.
 
 **2026-10-17:** Added pull-request-triggered V3 local preview artifact workflow (`540e359`), isolated from Pages deployment. Artifact generation and CI pending; real mobile/two-device validation still OPEN. PR #45 draft.
