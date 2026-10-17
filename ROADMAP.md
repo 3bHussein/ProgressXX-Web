@@ -1,4 +1,6 @@
 
+**2026-10-17:** Session structured-set partial-input loss prevention added; validate CI and live-device save/reopen and two-device sync before PR #45 merge.
+
 **2026-10-17:** Start Workout now has a week picker (defaults to active week) so W26–W30 Deload can be selected independently of Log Workout. Validate UI and CI before merge.
 
 **2026-10-17:** V3 structured session weight/reps editor implemented on draft PR #45, with raw fallback and Deload compatibility. Contract test added to preview CI. Browser interaction/real-device verification pending.
