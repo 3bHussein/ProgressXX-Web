@@ -1856,3 +1856,8 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 ## 2026-10-17 — PR #45 CI green after Settings directory smoke fix
 - The final corrective commit `e45cedb4a7e81803a0956708f745f43cbc947e32` passed all 8 observed GitHub Actions workflows. Full UI: https://github.com/3bHussein/ProgressXX-Web/actions/runs/39006926945 ; cross-browser: https://github.com/3bHussein/ProgressXX-Web/actions/runs/39006926950 ; cross-device snapshot: https://github.com/3bHussein/ProgressXX-Web/actions/runs/39006926967 ; workout log Chromium: https://github.com/3bHussein/ProgressXX-Web/actions/runs/39006926924 . Other passed: fast conflict safety, workout schedule table safety, weight bridge, workout log table safety.
 - PR #45 remains DRAFT and UNMERGED. This is CI contract green, not proof of real-device production sync or commercial readiness. Milestone 2 stays OPEN.
+
+## 2026-10-17 — PROGRESSX V3 responsive visual foundation
+- Branch `feature/progressx-v3-brand-foundation`, commit `551a24fb44c4cf08e4d3fdaeba94be90aebd2599`: added scoped `progressx-v3-layout-20261017` CSS for Dashboard, Workout Log, Calendar/Insights and Anatomy cards; standardized visible header to PROGRESSX and Insights eyebrow to PROGRESSX V3.
+- Preserved existing dark/light theme tokens, controls, element IDs, event handlers, persistence, account data, Supabase configuration and current GitHub Pages repository/URL. Visual change only, no migrations.
+- **Validation pending** on this new code commit; previous eight green CI runs were for `e45cedb4a` only. Keep PR #45 draft/unmerged pending CI and responsive visual review. Milestone 2 live sync validation remains open/paused.
