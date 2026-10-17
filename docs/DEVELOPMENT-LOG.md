@@ -1876,3 +1876,8 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - All eight workflows green on prior SHA `8b10ed0d9` including Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39008468761.
 - Added a read-only, accessible Smart Deload guidance card in Workout Session showing current recurring deload week range, previous working load, and suggested lighter weight range for the selected exercise. Card is hidden outside eligible deload weeks. Commit `8af2f9198d7fe804c4ebeb5321403e4aeceba08f`.
 - No automatic changes to saved weights, session entries, synchronization, or database. CI for the new commit pending; PR #45 remains draft/unmerged.
+
+## 2026-10-17 — Smart Deload bilingual guidance
+- Previous branch HEAD `00f5a228a` passed all eight GitHub Actions workflows, including Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39008700405.
+- Commit `b203ad89636b465d7028ac60c865e76e1d7e28ec` localizes Session Mode Smart Deload card text in English/Arabic and switches card text direction based on active UI language. Weight calculations and persisted data unchanged.
+- CI for this latest change pending; PR #45 draft/unmerged. Real-device sync acceptance remains OPEN.
