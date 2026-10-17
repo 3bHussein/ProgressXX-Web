@@ -1,4 +1,6 @@
 
+**2026-10-17:** Draft PR #45 now prevents Add/Remove Set from discarding partially entered weights/reps. No DB writes/schema changes. CI and device sync verification remain outstanding.
+
 **2026-10-17:** Deload discrepancy traced to Start Workout using `activeWeek()` (W21), while Log Workout was manually set to W26. Added session-specific week selector; session saves use that week without changing global week. CI and mobile validation pending.
 
 **2026-10-17:** V3 draft PR #45 adds structured session set editor over unchanged performance string, legacy raw fallback, incomplete-set save guard, Smart Deload unchanged. Preview workflow now runs `tests/v3-structured-session-contract.cjs`. Do not merge until CI and real-device testing.
