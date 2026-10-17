@@ -1861,3 +1861,8 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - Branch `feature/progressx-v3-brand-foundation`, commit `551a24fb44c4cf08e4d3fdaeba94be90aebd2599`: added scoped `progressx-v3-layout-20261017` CSS for Dashboard, Workout Log, Calendar/Insights and Anatomy cards; standardized visible header to PROGRESSX and Insights eyebrow to PROGRESSX V3.
 - Preserved existing dark/light theme tokens, controls, element IDs, event handlers, persistence, account data, Supabase configuration and current GitHub Pages repository/URL. Visual change only, no migrations.
 - **Validation pending** on this new code commit; previous eight green CI runs were for `e45cedb4a` only. Keep PR #45 draft/unmerged pending CI and responsive visual review. Milestone 2 live sync validation remains open/paused.
+
+## 2026-10-17 — PROGRESSX V3 CI and mobile Workout Log summary
+- CI run `39007842602` and all seven companion workflows passed on `c04d62be0` (8/8). Previous static language catalogue failure from PROGRESSX branding fixed.
+- Added a read-only live region summary to Workout Log, showing number of visible/total entries, completed entries, and selected week, with English/Arabic display and translated empty-filter message. Code commits `4e0f9fc`, `0a644d1`, `49fc221`. No database, sync or persisted record changes.
+- New commits have not yet been validated by CI; PR #45 remains draft and unmerged. Milestone 2 live sync acceptance remains open.
