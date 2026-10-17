@@ -1881,3 +1881,8 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - Previous branch HEAD `00f5a228a` passed all eight GitHub Actions workflows, including Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39008700405.
 - Commit `b203ad89636b465d7028ac60c865e76e1d7e28ec` localizes Session Mode Smart Deload card text in English/Arabic and switches card text direction based on active UI language. Weight calculations and persisted data unchanged.
 - CI for this latest change pending; PR #45 draft/unmerged. Real-device sync acceptance remains OPEN.
+
+## 2026-10-17 — Deload regression coverage
+- All 8 CI workflows passed on previous HEAD `470ffd95e` including Full UI run https://github.com/3bHussein/ProgressXX-Web/actions/runs/39008960714.
+- Extended existing `tests/workout-chronology-deload-contract.cjs` (`d66d20cf6866ff150f0e553f445929804056de7d`) with assertions for Session Mode card presence, hidden outside deload, active exercise/week guidance, bilingual direction, no heavy prefill in new deload entries, and preservation of existing saved entries. The test was already wired into Full UI smoke.
+- CI for this latest commit pending. PR #45 remains draft/unmerged; no database or user data changes.
