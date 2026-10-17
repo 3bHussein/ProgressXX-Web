@@ -343,7 +343,7 @@ const {createLogoutDialogHandler}=require('../tests/helpers/logout-dialog.cjs');
    throw Error('Schedule or Weight Goal lost on account logout/login: '+JSON.stringify(afterRelogin));
  // Mobile touch layout regression for the signed-in account and Insights/Settings.
  for(const section of ['settings','intelligence']){
-   await page.evaluate(name=>go(name),section);
+   await page.evaluate(name=>{go(name);if(name==='settings')pxShowSettingsCategory('pxSettingsAccount','Account & sync')},section);
    const layout=await page.evaluate(name=>{
      const sectionEl=document.getElementById(name);
      const viewport=document.documentElement.clientWidth;
@@ -359,7 +359,7 @@ const {createLogoutDialogHandler}=require('../tests/helpers/logout-dialog.cjs');
  // Narrow-phone regression: controls stay usable at 320px.
  await page.setViewportSize({width:320,height:700});
  for(const section of ['settings','intelligence']){
-   await page.evaluate(name=>go(name),section);
+   await page.evaluate(name=>{go(name);if(name==='settings')pxShowSettingsCategory('pxSettingsAccount','Account & sync')},section);
    const bounds=await page.evaluate(name=>(name==='settings'?['pxSettingsSync','pxSettingsSignOut']:['pxAnatomyLang']).map(id=>{
      const r=document.getElementById(id)?.getBoundingClientRect();
      return {id,left:r?.left,right:r?.right,height:r?.height,width:document.documentElement.clientWidth};
@@ -371,14 +371,14 @@ const {createLogoutDialogHandler}=require('../tests/helpers/logout-dialog.cjs');
  for(const width of [320,390]){
    await page.setViewportSize({width,height:780});
    for(const name of ['settings','intelligence']){
-     await page.evaluate(section=>go(section),name);
+     await page.evaluate(section=>{go(section);if(section==='settings')pxShowSettingsHome(false)},name);
      const metrics=await page.evaluate(section=>{
-       const selector=section==='settings'?'#settings .pxSettingsQuickNav':'#intelligence .pxAnatomyMobileTabs';
+       const selector=section==='settings'?'#settings .pxSettingsDirectory':'#intelligence .pxAnatomyMobileTabs';
        const row=document.querySelector(selector);
        return {section,rowHeight:row?.getBoundingClientRect().height,
          buttonHeights:[...row.querySelectorAll('button')].map(b=>b.getBoundingClientRect().height)};
      },name);
-     if(!metrics.rowHeight||metrics.rowHeight>85||metrics.buttonHeights.some(h=>h<40||h>55))
+     if(!metrics.rowHeight||(name!=='settings'&&metrics.rowHeight>85)||metrics.buttonHeights.some(h=>h<40||(name!=='settings'&&h>55)))
        throw Error('Oversized mobile navigation tabs: '+JSON.stringify(metrics));
    }
  }
