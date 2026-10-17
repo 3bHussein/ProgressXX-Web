@@ -1,4 +1,6 @@
 
+**2026-10-17:** `tests/workout-chronology-deload-contract.cjs` now asserts Deload card visibility logic, active exercise/week, RTL/EN behavior, no heavy auto-prefill and existing-record safety (`d66d20c`). This test is in `.github/workflows/full-ui-smoke.yml` already. Latest CI pending; PR #45 draft/unmerged; no DB changes.
+
 **2026-10-17:** `b203ad8` makes the read-only Session Mode Deload card bilingual with direction based on `pxUILanguage`; no data or algorithm changes. Previous `00f5a228a` passed all 8 CI workflows, latest SHA unverified. PR #45 draft/unmerged; Milestone 2 OPEN.
 
 **2026-10-17:** New `#pxSessionDeloadCard` in Workout Session (commit `8af2f91`), rendered from existing `pxDeloadAdvice` without writes. Shows per-exercise prior load and suggested lighter range during recurring deload weeks, hidden otherwise. Last validated SHA `8b10ed0d9` (8/8 green); latest commit CI pending. PR #45 draft/unmerged; Milestone 2 still open.
