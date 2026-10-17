@@ -780,5 +780,20 @@
   "Thu": "خمي",
   "Fri": "جمع",
   "Sat": "سبت",
-  "Sun": "أحد"
+  "Sun": "أحد",
+  "Account & sync": "الحساب والمزامنة",
+  "Account status, cloud connection and sign out": "حالة الحساب والاتصال السحابي وتسجيل الخروج",
+  "Appearance, notifications and diagnostic logs": "المظهر والإشعارات وسجلات التشخيص",
+  "Backup & recovery": "النسخ الاحتياطي والاستعادة",
+  "Export, restore and protect your data": "تصدير بياناتك واستعادتها وحمايتها",
+  "Interface language and text direction": "لغة الواجهة واتجاه النص",
+  "Language": "اللغة",
+  "Preferences & tools": "التفضيلات والأدوات",
+  "Settings categories": "أقسام الإعدادات",
+  "Sync center": "مركز المزامنة",
+  "Training days, rest days and schedule sync": "أيام التدريب والراحة ومزامنة الجدول",
+  "Workout schedule": "جدول التمارين",
+  "Workout, nutrition and Daily sync status": "حالة مزامنة التمارين والتغذية والمهام اليومية",
+  "← All settings": "← كل الإعدادات",
+  "🔗 Connection Profiles (advanced)": "🔗 ملفات الاتصال (متقدم)"
 }
