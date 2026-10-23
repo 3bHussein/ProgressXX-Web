@@ -32,6 +32,8 @@ on:
       - 'scripts/release-ci-gate.cjs'
       - index.html
       - tests/workout-log-keyboard-browser.cjs
+      - tests/session-mixed-performance-browser.cjs
+      - tests/v3-structured-session-contract.cjs
       - tests/workout-chronology-deload-contract.cjs
       - tests/workout-log-incremental-browser.cjs
       - tests/barcode-lazy-library-browser.cjs
@@ -62,6 +64,8 @@ on:
       - .github/workflows/deploy-pages.yml
       - index.html
       - tests/workout-log-keyboard-browser.cjs
+      - tests/session-mixed-performance-browser.cjs
+      - tests/v3-structured-session-contract.cjs
       - tests/workout-chronology-deload-contract.cjs
       - tests/workout-log-incremental-browser.cjs
       - tests/barcode-lazy-library-browser.cjs
@@ -113,6 +117,8 @@ jobs:
           node tests/workout-log-incremental-browser.cjs
           node tests/workout-log-keyboard-browser.cjs
           node tests/workout-chronology-deload-contract.cjs
+          node tests/v3-structured-session-contract.cjs
+          node tests/session-mixed-performance-browser.cjs
           node tests/food-priority-collapse-browser.cjs
           node tests/backup-download-import-browser.cjs
           node tests/v3-mobile-diary-browser.cjs

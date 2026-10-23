@@ -1465,6 +1465,8 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
 .pxSessionSetRow label{font-size:11px;color:var(--muted);min-width:0}
 .pxSessionSetRow input{width:100%;min-width:0;min-height:44px;font-size:16px;margin-top:4px}
 .pxSessionSetRow button{min-width:42px;min-height:44px}
+.pxSessionRawSet{grid-column:2/4}
+#sessionPerformance[hidden],#pxSessionAddSet[hidden],#pxSessionSetEditor[hidden]{display:none!important}
 #pxSessionAddSet:not([hidden]){min-height:44px;margin:4px 0 12px}
 @media(max-width:390px){.pxSessionSetRow{grid-template-columns:42px minmax(0,1fr) minmax(0,1fr) 38px;gap:5px;padding:7px}.pxSessionSetRow button{min-width:38px}}
 </style>
@@ -4955,47 +4957,60 @@ function renderWorkoutSession(){
   renderRestTimer();
 }
 
-// V3 structured set editor: a presentation layer over the unchanged performance string.
-// Unsupported legacy annotations remain in the original textarea, never silently rewritten.
+// Mixed legacy text and numeric sets share the unchanged performance-string storage.
+function pxSessionSetRow(set,i){
+  const content=set.raw!==undefined
+    ? '<label class="pxSessionRawSet">Performance<input type="text" data-set-raw="'+i+'" value="'+esc(set.raw)+'"></label>'
+    : '<label>Weight (kg)<input type="number" inputmode="decimal" min="0" step="any" data-set-weight="'+i+'" value="'+esc(set.weight||'')+'"></label><label>Reps<input type="number" inputmode="numeric" min="1" step="1" data-set-reps="'+i+'" value="'+esc(set.reps||'')+'"></label>';
+  return '<div class="pxSessionSetRow"><span class="pxSessionSetNumber">SET '+(i+1)+'</span>'+content+'<button type="button" class="btn soft" aria-label="Remove set '+(i+1)+'" onclick="pxSessionRemoveSet('+i+')">×</button></div>';
+}
 function pxSessionRenderSetEditor(){
   const host=$('pxSessionSetEditor'),field=$('sessionPerformance'),add=$('pxSessionAddSet');
   if(!host||!field)return;
   delete field.dataset.incompleteSets;
-  const raw=field.value.trim(),parsed=parsePerformanceSets(raw);
-  const supported=parsed.every(set=>!set.raw)&&parsed.length<=30;
-  host.hidden=!supported;
-  if(add)add.hidden=!supported;
-  field.hidden=supported;
-  if(!supported){host.replaceChildren();return;}
+  const parsed=parsePerformanceSets(field.value);
+  host.hidden=false;
+  if(add)add.hidden=false;
+  field.hidden=parsed.every(set=>!set.raw);
   const rows=parsed.length?parsed:[{weight:'',reps:''}];
-  host.innerHTML=rows.map((set,i)=>'<div class="pxSessionSetRow"><span class="pxSessionSetNumber">SET '+(i+1)+'</span><label>Weight (kg)<input type="number" inputmode="decimal" min="0" step="any" data-set-weight="'+i+'" value="'+esc(set.weight||'')+'"></label><label>Reps<input type="number" inputmode="numeric" min="1" step="1" data-set-reps="'+i+'" value="'+esc(set.reps||'')+'"></label><button type="button" class="btn soft" aria-label="Remove set '+(i+1)+'" onclick="pxSessionRemoveSet('+i+')">×</button></div>').join('');
+  host.innerHTML=rows.map(pxSessionSetRow).join('');
+  // Keep the exact original string if the user only saves or changes notes/time.
+  host.dataset.serialized=pxSessionSetValues().map(set=>set.raw!==undefined?set.raw:(set.weight&&set.reps?set.weight+'*'+set.reps:'')).filter(Boolean).join(',');
+  field.oninput=pxSessionRenderSetEditor;
+  host.oninput=pxSessionReadSets;
+}
+function pxSessionSetValues(){
+  return Array.from($('pxSessionSetEditor').querySelectorAll('.pxSessionSetRow')).map(row=>{
+    const raw=row.querySelector('[data-set-raw]');
+    return raw?{raw:raw.value.trim()}:{weight:row.querySelector('[data-set-weight]').value.trim(),reps:row.querySelector('[data-set-reps]').value.trim()};
+  });
 }
 function pxSessionReadSets(){
   const host=$('pxSessionSetEditor'),field=$('sessionPerformance');
   if(!host||host.hidden||!field)return;
-  const weights=Array.from(host.querySelectorAll('[data-set-weight]'));
-  const reps=Array.from(host.querySelectorAll('[data-set-reps]'));
-  const partial=weights.some((w,i)=>(w.value.trim()&&!reps[i]?.value.trim())||(!w.value.trim()&&reps[i]?.value.trim()));
-  if(partial){field.dataset.incompleteSets='true';return;}
+  const sets=pxSessionSetValues();
+  if(sets.some(set=>set.raw===undefined&&((set.weight&&!set.reps)||(!set.weight&&set.reps)))){field.dataset.incompleteSets='true';return;}
   delete field.dataset.incompleteSets;
-  field.value=weights.map((w,i)=>w.value.trim()&&reps[i]?.value.trim()?w.value.trim()+'*'+reps[i].value.trim():'').filter(Boolean).join(',');
+  const serialized=sets.map(set=>set.raw!==undefined?set.raw:(set.weight&&set.reps?set.weight+'*'+set.reps:'')).filter(Boolean).join(',');
+  if(serialized!==host.dataset.serialized){field.value=serialized;host.dataset.serialized=serialized;}
 }
 function pxSessionAddSet(){
   const host=$('pxSessionSetEditor');if(!host||host.hidden)return;
   pxSessionReadSets();
   const field=$('sessionPerformance');
   if(field?.dataset.incompleteSets){alert('Complete the started set before adding another.');return;}
-  const i=host.querySelectorAll('[data-set-weight]').length;
-  host.insertAdjacentHTML('beforeend','<div class="pxSessionSetRow"><span class="pxSessionSetNumber">SET '+(i+1)+'</span><label>Weight (kg)<input type="number" inputmode="decimal" min="0" step="any" data-set-weight="'+i+'"></label><label>Reps<input type="number" inputmode="numeric" min="1" step="1" data-set-reps="'+i+'"></label><button type="button" class="btn soft" aria-label="Remove set '+(i+1)+'" onclick="pxSessionRemoveSet('+i+')">×</button></div>');
-  host.querySelectorAll('[data-set-weight]')[i]?.focus();
+  const i=host.querySelectorAll('.pxSessionSetRow').length;
+  host.insertAdjacentHTML('beforeend',pxSessionSetRow({weight:'',reps:''},i));
+  host.lastElementChild.querySelector('[data-set-weight]')?.focus();
 }
 function pxSessionRemoveSet(index){
   const host=$('pxSessionSetEditor');if(!host||host.hidden)return;
-  const weights=Array.from(host.querySelectorAll('[data-set-weight]'));
-  const reps=Array.from(host.querySelectorAll('[data-set-reps]'));
-  const remaining=weights.map((w,i)=>({weight:w.value.trim(),reps:reps[i]?.value.trim()||''})).filter((_,i)=>i!==index);
+  const remaining=pxSessionSetValues().filter((_,i)=>i!==index);
   if(remaining.some(set=>(set.weight&&!set.reps)||(!set.weight&&set.reps))){alert('Complete or remove the other incomplete set first.');return;}
-  $('sessionPerformance').value=remaining.filter(set=>set.weight&&set.reps).map(set=>set.weight+'*'+set.reps).join(',');
+  const rows=host.querySelectorAll('.pxSessionSetRow');
+  if(!rows[index])return;
+  rows[index].remove();
+  pxSessionReadSets();
   pxSessionRenderSetEditor();
 }
 

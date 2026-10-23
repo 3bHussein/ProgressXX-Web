@@ -1195,3 +1195,8 @@ Completed selected Phase 3 navigation semantics and fixture reliability, plus Ph
 
 - Added CI-enforced fixture in `tests/workout-chronology-deload-contract.cjs` (commit `0b035aa`) asserting that W36 guidance uses the latest valid Bench record (40 kg), not an older 60 kg record; expected rounded 55–70% range 22.5–27.5 kg.
 - Added zero-weight exclusion. This extends automated regression coverage; latest GitHub Actions results and live-device verification remain pending. No release-gate bypass.
+
+
+## 2026-10-23 — Workout session text-set fix
+
+Root session editor now supports mixed numeric and editable legacy-text rows, including Add Set, remove and raw textarea synchronization. Unchanged strings and incomplete-set protection are retained. Chromium actual save/reload regression, set contracts and Deload checks PASS locally with synthetic data; real-account/cloud verification remains OPEN. No database migration or record changes. Main CI and Pages publication PENDING; next verify deployment and phone acceptance. See Development Log for scope and evidence. Milestone completion statuses unchanged.

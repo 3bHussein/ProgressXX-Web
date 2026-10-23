@@ -1,0 +1,62 @@
+// Real session editor/save/local reload with synthetic data; all remote traffic blocked.
+const assert=require('node:assert/strict');
+const {browserType,engine}=require('./helpers/browser-engine.cjs');
+(async()=>{const browser=await browserType.launch({headless:true});try{
+ const context=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block'});
+ await context.route('**/*',r=>new URL(r.request().url()).hostname==='127.0.0.1'?r.continue():r.abort());
+ await context.addInitScript(()=>document.addEventListener('DOMContentLoaded',()=>{
+  if(location.hostname!=='127.0.0.1')return;
+  const prefix='qa-mixed-session:';
+  window.__pxActiveStore={getItem:k=>localStorage.getItem(prefix+k),setItem:(k,v)=>localStorage.setItem(prefix+k,String(v)),removeItem:k=>localStorage.removeItem(prefix+k)};
+  processWorkoutQueue=()=>{};scheduleAutoBackup=()=>{};scheduleCloudProfileSync=()=>{};
+  scheduleDailyStateSync=()=>{};scheduleReminderConfigSync=()=>{};
+  data=loadLocalArray(KEY,[]);$('pxCommercialGate').hidden=true;
+  window.qaOpen=(performance,existing=true)=>{
+   if(performance!==undefined){data=[{id:'qa-mixed',day:'QA day',exercise:'QA exercise',week:existing?22:21,date:'2026-10-20',performance,status:'Completed',notes:''}];PXStore.setItem(KEY,JSON.stringify(data));}
+   workoutSession={day:'QA day',week:22,date:'2026-10-20',exercises:['QA exercise'],index:0,startedAt:new Date().toISOString()};
+   $('workoutSessionOverlay').classList.add('show');$('sessionBody').classList.remove('hide');$('sessionDayPickerWrap').classList.add('hide');$('sessionResumePrompt').classList.add('hide');$('sessionSummary').classList.remove('show');renderWorkoutSession();
+  };window.qaReady=true;
+ }));
+ const page=await context.newPage(),errors=[],dialogs=[];
+ page.on('pageerror',e=>errors.push(e.message));page.on('dialog',async d=>{dialogs.push(d.message());await d.dismiss()});
+ await page.goto('http://127.0.0.1:8765/index.html');await page.waitForFunction(()=>window.qaReady);
+ const open=(text,existing=true)=>page.evaluate(([text,existing])=>qaOpen(text,existing),[text,existing]);
+ const save=async()=>{await page.locator('[onclick="sessionSaveNext()"]').click();return page.evaluate(()=>data.find(r=>r.week===22)?.performance)};
+ const raw='60*10,60*10 leg press , 120*10,120*10 machine';
+ await open(raw);
+ assert.equal(await page.locator('.pxSessionSetRow').count(),4);
+ assert.equal(await page.locator('[data-set-raw]').count(),2);
+ assert.equal(await save(),raw,'Unchanged legacy formatting must survive save');
+ await open(undefined);
+ await page.locator('[data-set-raw="1"]').fill('60*12 leg press');
+ await page.locator('[data-set-weight="0"]').fill('65');
+ await page.locator('#pxSessionAddSet').click();
+ await page.locator('[data-set-weight="4"]').fill('130');await page.locator('[data-set-reps="4"]').fill('8');
+ const mixed='65*10,60*12 leg press,120*10,120*10 machine,130*8';
+ assert.equal(await save(),mixed);
+ await page.reload();await page.waitForFunction(()=>window.qaReady);await open(undefined);
+ assert.equal(await page.locator('[data-set-raw="1"]').inputValue(),'60*12 leg press');
+ assert.equal(await page.locator('[data-set-weight="4"]').inputValue(),'130');
+ await page.locator('[aria-label="Remove set 3"]').click();
+ assert.equal(await save(),'65*10,60*12 leg press,120*10 machine,130*8');
+ await open('Completed',false);
+ assert.equal(await page.locator('[data-set-raw="0"]').inputValue(),'Completed');
+ await page.locator('#pxSessionAddSet').click();
+ await page.locator('[data-set-weight="1"]').fill('0');await page.locator('[data-set-reps="1"]').fill('30');
+ assert.equal(await save(),'Completed,0*30','Text-only prior week must support a new current-week record');
+ assert.equal(await page.evaluate(()=>data.find(r=>r.week===21).performance),'Completed');
+ await open('Completed');
+ await page.locator('#sessionPerformance').fill('Completed,20*8 machine');
+ assert.equal(await page.locator('[data-set-raw]').count(),2,'Raw fallback edits must rebuild live rows');
+ await page.locator('#pxSessionAddSet').click();await page.locator('[data-set-weight="2"]').fill('25');
+ await page.locator('#pxSessionAddSet').click();assert.equal(await page.locator('.pxSessionSetRow').count(),3);
+ assert.match(dialogs.pop(),/Complete the started set/);
+ await page.locator('[onclick="sessionSaveNext()"]').click();assert.match(dialogs.pop(),/Complete both weight and reps/);
+ assert.equal(await page.evaluate(()=>data.find(r=>r.week===22).performance),'Completed','Partial set cannot overwrite saved data');
+ await page.locator('[aria-label="Remove set 1"]').click();assert.match(dialogs.pop(),/other incomplete set/);
+ await page.locator('[data-set-reps="2"]').fill('6');assert.equal(await save(),'Completed,20*8 machine,25*6');
+ await open('20*8,25*6');assert.equal(await page.locator('#sessionPerformance').isVisible(),false);
+ await page.locator('[data-set-reps="1"]').fill('7');assert.equal(await save(),'20*8,25*7');
+ assert.deepEqual(dialogs,[]);assert.deepEqual(errors,[]);
+ console.log('PASS '+engine+': mixed/text-only/numeric sets, add/edit/remove, raw fallback, partial guards, real save and reload');
+ }finally{await browser.close()}})().catch(e=>{console.error(e);process.exitCode=1});

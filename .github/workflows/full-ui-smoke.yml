@@ -50,6 +50,8 @@ jobs:
             tests/mobile-barcode-keyboard-rtl-browser.cjs \
             tests/workout-log-keyboard-browser.cjs \
             tests/workout-chronology-deload-contract.cjs \
+            tests/v3-structured-session-contract.cjs \
+            tests/session-mixed-performance-browser.cjs \
             tests/workout-log-incremental-browser.cjs \
             tests/barcode-lazy-library-browser.cjs \
             tests/pwa-shell-cache-contract.cjs \
