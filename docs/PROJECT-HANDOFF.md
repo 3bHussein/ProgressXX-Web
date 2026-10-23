@@ -1200,3 +1200,12 @@ Completed selected Phase 3 navigation semantics and fixture reliability, plus Ph
 ## 2026-10-23 — Workout session text-set fix
 
 Root session editor now supports mixed numeric and editable legacy-text rows, including Add Set, remove and raw textarea synchronization. Unchanged strings and incomplete-set protection are retained. Chromium actual save/reload regression, set contracts and Deload checks PASS locally with synthetic data; real-account/cloud verification remains OPEN. No database migration or record changes. Main CI and Pages publication PENDING; next verify deployment and phone acceptance. See Development Log for scope and evidence. Milestone completion statuses unchanged.
+
+
+## 2026-10-23 — Text-set fix deployed and verified
+
+- Runtime commit: `5551c4e259a8a3678e4b6bc01d82967e47d41751` on main. Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/39967270349 and Fast contracts https://github.com/3bHussein/ProgressXX-Web/actions/runs/39967270301 SUCCESS.
+- Firefox and WebKit https://github.com/3bHussein/ProgressXX-Web/actions/runs/39967270267 SUCCESS, including actual mixed/text-only/numeric editor save/reload regression. Initial WebKit attempt timed out downloading Ubuntu packages before tests; rerun succeeded. Pages https://github.com/3bHussein/ProgressXX-Web/actions/runs/39967270249 SUCCESS after rerun following the initial validation block.
+- Downloaded https://3bhussein.github.io/ProgressXX-Web/ and compared byte-for-byte with tested root index: IDENTICAL. SHA-256 `9e7b0aa3be86ae31adec0f60be7ce370ddd640137bb7809f33850f525ce30046`.
+- Local language/RTL across eight pages and workout keyboard regression also PASS. No database/schema/account or live workout data modifications. Real-account cloud sync and phone acceptance remain owner checks; this release does not close other milestone gates.
+- Next: refresh the phone app, open an annotated or Completed workout, edit/add a set and confirm normal save. Never clear local storage to receive this update.
