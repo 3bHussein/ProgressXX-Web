@@ -2118,3 +2118,12 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - Initial `baf1f824a2262e70d92e3dce96d839a1652b4d72` passed Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/40103530593 and Fast; Firefox passed. WebKit in https://github.com/3bHussein/ProgressXX-Web/actions/runs/40103530503 detected a desktop RTL overflow with the deliberately very long product name. Mobile layouts passed; publication remained blocked.
 - Bounded Saved product's grid track/parent and native select across desktop as well as mobile, with wrapping preview names; the full food name remains available in the food browser/preview. Compact 48px mobile control retained.
 - Next-session date validation now compares calendar dates for future records, so a valid date-only entry today is not rejected merely because its approximate display timestamp uses noon. Added the seventeenth data-quality case; updated the maintained audit. Local Chromium new regression, add/reload and Food priority checks PASS. Final cross-browser CI/Pages PENDING; no database or real-record changes.
+
+
+## 2026-10-24 — Simplified Insights / coaching / portions deployed
+
+- Runtime `76ea770ee0a8fe56349a18daf82cec4d8573bd97` on main. Required exact-runtime checks SUCCESS: Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/40103958262 ; Firefox/WebKit https://github.com/3bHussein/ProgressXX-Web/actions/runs/40103958265 ; Fast contracts https://github.com/3bHussein/ProgressXX-Web/actions/runs/40103958315 .
+- Pages deployment SUCCESS https://github.com/3bHussein/ProgressXX-Web/actions/runs/40103958233 . Production root downloaded and compared byte-for-byte with the tested index: IDENTICAL, SHA-256 `32821fd422acc347dcb805bf31d16a512ef349b57023d1a63d577eff56d76bc7`.
+- Verified scope includes the three-summary/four-disclosure Insights layout, scoped totals, explanatory weekly/exercise decisions with 17 data-quality branches, compact long-name food selection, unit-safe last-portion restoration and real local add/reload. Prior desktop WebKit failure is superseded by these final successful checks.
+- The audit in INSIGHTS-LOGIC-AUDIT.md distinguishes recorded observations and conservative app rules from validated physiological predictions. No production database/schema/account/record edits. Real-account/physical-device acceptance remains separate; broader roadmap gates unchanged.
+- Next: owner refreshes the mobile app and checks Insights, Weekly Review and last food quantities. Keep local records intact.
