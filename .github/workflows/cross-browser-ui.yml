@@ -16,6 +16,7 @@ on:
       - tests/insights-anatomy-controls-browser.cjs
       - tests/insights-panel-recovery-browser.cjs
       - tests/diagnostics-redaction-browser.cjs
+      - tests/food-weight-browsing-browser.cjs
       - tests/food-priority-collapse-browser.cjs
       - tests/release-ci-workflow-contract.cjs
       - 'tests/login-imported-archive-regression.cjs'
@@ -58,6 +59,7 @@ on:
       - tests/insights-anatomy-controls-browser.cjs
       - tests/insights-panel-recovery-browser.cjs
       - tests/diagnostics-redaction-browser.cjs
+      - tests/food-weight-browsing-browser.cjs
       - tests/food-priority-collapse-browser.cjs
       - scripts/release-ci-gate.cjs
       - tests/release-ci-gate.cjs
@@ -120,6 +122,7 @@ jobs:
           node tests/v3-structured-session-contract.cjs
           node tests/session-mixed-performance-browser.cjs
           node tests/food-priority-collapse-browser.cjs
+          node tests/food-weight-browsing-browser.cjs
           node tests/backup-download-import-browser.cjs
           node tests/v3-mobile-diary-browser.cjs
           node tests/settings-language-pages-browser.cjs

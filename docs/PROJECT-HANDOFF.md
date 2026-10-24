@@ -1209,3 +1209,8 @@ Root session editor now supports mixed numeric and editable legacy-text rows, in
 - Downloaded https://3bhussein.github.io/ProgressXX-Web/ and compared byte-for-byte with tested root index: IDENTICAL. SHA-256 `9e7b0aa3be86ae31adec0f60be7ce370ddd640137bb7809f33850f525ce30046`.
 - Local language/RTL across eight pages and workout keyboard regression also PASS. No database/schema/account or live workout data modifications. Real-account cloud sync and phone acceptance remain owner checks; this release does not close other milestone gates.
 - Next: refresh the phone app, open an annotated or Completed workout, edit/add a set and confirm normal save. Never clear local storage to receive this update.
+
+
+## 2026-10-24 — Food browser / Weight history
+
+Added searchable All/Favorites/Recent food cards, portions/macros/calories, progressive display and choice-to-amount focus; redesigned Weight history with month groups/filter, chronological deltas, notes and progressive display. Existing add and confirmed-delete storage paths retained. New Chromium display/interaction regression and existing Food portion, language, priority and session tests PASS; mobile synthetic screenshots reviewed. Full UI/cross-browser CI and deployment PENDING. No migrations or real-data changes. Next: verify publication then phone acceptance; milestone statuses remain unchanged. See Development Log for evidence.

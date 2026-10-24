@@ -41,6 +41,7 @@ jobs:
             tests/insights-panel-recovery-browser.cjs \
             tests/diagnostics-redaction-browser.cjs \
             tests/food-priority-collapse-browser.cjs \
+            tests/food-weight-browsing-browser.cjs \
             tests/release-ci-workflow-contract.cjs \
             tests/release-ci-gate.cjs \
             scripts/smoke-full-ui.cjs \
