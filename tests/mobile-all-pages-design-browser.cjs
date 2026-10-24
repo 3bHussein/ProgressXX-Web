@@ -35,7 +35,7 @@ const {browserType,engine}=require('./helpers/browser-engine.cjs');
     assert.equal(geometry.buttons.length,8);assert(geometry.scroll<=geometry.width+1,'All destinations must be visible without nav scrolling');assert(geometry.buttons.every(r=>r.x>=0&&r.right<=width+1&&r.w>=44&&r.h>=44&&r.y>=geometry.top),'Thumb targets '+id+' '+width);
     assert.equal(new Set(geometry.buttons.map(r=>Math.round(r.y))).size,2,'Two visible navigation rows');
     const overflow=await p.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,offenders:[...document.querySelectorAll('.section.active *')].map(el=>({tag:el.tagName,id:el.id,cls:String(el.className),r:el.getBoundingClientRect()})).filter(x=>x.r.right>innerWidth+1||x.r.left< -1).slice(0,15).map(x=>({tag:x.tag,id:x.id,cls:x.cls,left:x.r.left,right:x.r.right,width:x.r.width}))}));
-    assert(overflow.scroll<=width+1,id+' '+language+' overflow '+width+' '+JSON.stringify(overflow));
+    assert(overflow.scroll<=width,id+' '+language+' overflow '+width+' '+JSON.stringify(overflow));
     if(id==='intelligence'){const gap=await p.evaluate(()=>({page:document.body.dataset.pxPage,title:$('pxMobilePageTitle').textContent,viewport:innerWidth,active:document.querySelector('.section.active')?.id,style:getComputedStyle(document.querySelector('.app')).cssText,padding:parseFloat(getComputedStyle(document.querySelector('.app')).paddingBottom),gap:$('intelligence').getBoundingClientRect().top-document.querySelector('.pxMobilePageHeader').getBoundingClientRect().bottom}));assert(gap.padding<1&&gap.gap<44,'Insights header-to-content gap '+JSON.stringify(gap));}
     if(id==='settings')assert.equal(await p.locator('.pxSettingsTile').first().isVisible(),true);
     if(snapshotDir&&width===390)await p.screenshot({path:snapshotDir+'/'+language+'-'+id+'.png'});
@@ -53,8 +53,8 @@ const {browserType,engine}=require('./helpers/browser-engine.cjs');
  const editor=await p.locator('#editorWrap .modal').boundingBox();assert(editor.x>=0&&editor.x+editor.width<=390&&editor.height<=844);
  await p.evaluate(()=>closeEditor());
  await p.evaluate(()=>{go('log');workoutSession={day:'QA training day',week:22,date:'2026-10-24',exercises:['Exercise 1'],index:0,startedAt:new Date().toISOString()};$('workoutSessionOverlay').classList.add('show');$('sessionBody').classList.remove('hide');$('sessionDayPickerWrap').classList.add('hide');renderWorkoutSession()});
- assert.equal(await p.locator('#pxSessionAddSet').isVisible(),true);assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await p.evaluate(()=>closeWorkoutSession());
- for(const theme of ['light','dark']){await p.evaluate(theme=>document.documentElement.dataset.theme=theme,theme);for(const id of pages){await p.evaluate(id=>go(id),id);assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));if(snapshotDir)await p.screenshot({path:snapshotDir+'/'+theme+'-'+id+'.png'});}}
+ assert.equal(await p.locator('#pxSessionAddSet').isVisible(),true);assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await p.evaluate(()=>closeWorkoutSession());
+ for(const theme of ['light','dark']){await p.evaluate(theme=>document.documentElement.dataset.theme=theme,theme);for(const id of pages){await p.evaluate(id=>go(id),id);assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));if(snapshotDir)await p.screenshot({path:snapshotDir+'/'+theme+'-'+id+'.png'});}}
  assert.equal(await p.evaluate(()=>JSON.stringify({data,foodProducts,foodLog,weights:progressPhotos()})===qaData),true,'Presentation/navigation must preserve fitness records');
  await p.evaluate(()=>{$('pxAccountTools').hidden=false});await p.locator('#pxLogout').scrollIntoViewIfNeeded();
  const logout=await p.locator('#pxLogout').boundingBox(),navBox=await p.locator('.bottomNav').boundingBox();assert(logout.y+logout.height<=navBox.y,'Account actions must sit above navigation');

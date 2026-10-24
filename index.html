@@ -10904,7 +10904,7 @@ function pxInitMobileDesign(){
  const selectLabels={tSex:'Sex',tActivity:'Activity level',tGoal:'Goal',bfSex:'Sex'};
  document.querySelectorAll('#calculators .formGrid>input,#calculators .formGrid>select').forEach(input=>{
   const source=selectLabels[input.id]||(typeof pxUiOriginalAttributes!=='undefined'?pxUiOriginalAttributes.get(input)?.placeholder?.source:'')||input.getAttribute('placeholder');if(!source)return;
-  const label=document.createElement('label');label.className='pxCalcField'+(input.classList.contains('full')?' full':'');label.htmlFor=input.id;label.hidden=input.classList.contains('hide');
+  const label=document.createElement('label');label.className='pxCalcField'+(input.classList.contains('full')||['tActivity','tGoal'].includes(input.id)?' full':'');label.htmlFor=input.id;label.hidden=input.classList.contains('hide');
   const caption=document.createElement('span');caption.textContent=source;input.before(label);label.append(caption,input);
  });
  pxUpdateMobilePage(document.querySelector('.bottomNav .navbtn.active')?.dataset.page||'home');
