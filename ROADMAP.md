@@ -952,3 +952,10 @@ Root session editor now supports mixed numeric and editable legacy-text rows, in
 ## 2026-10-24 — Food browser / Weight history
 
 Added searchable All/Favorites/Recent food cards, portions/macros/calories, progressive display and choice-to-amount focus; redesigned Weight history with month groups/filter, chronological deltas, notes and progressive display. Existing add and confirmed-delete storage paths retained. New Chromium display/interaction regression and existing Food portion, language, priority and session tests PASS; mobile synthetic screenshots reviewed. Full UI/cross-browser CI and deployment PENDING. No migrations or real-data changes. Next: verify publication then phone acceptance; milestone statuses remain unchanged. See Development Log for evidence.
+
+
+## 2026-10-24 — Translation catalogue integration follow-up
+
+- Initial UI commit `dde84f19041f5dc5084628b6251b49f98c2c50d6`: Firefox/WebKit SUCCESS https://github.com/3bHussein/ProgressXX-Web/actions/runs/40075578154 ; Fast SUCCESS https://github.com/3bHussein/ProgressXX-Web/actions/runs/40075578140 . Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/40075578158 failed only `tests/ui-language-catalogue.cjs` because new translations were added outside the maintained inline/source catalogue pair. Publication was correctly blocked.
+- Merged the new labels into the existing inline dictionary and synchronized `docs/UI-LANGUAGE-CATALOGUE.json`. Catalogue/static-label coverage now PASS locally (841 entries); no UI interaction or storage logic changed. New main validation and publication still PENDING; later verification supersedes this initial failed attempt.
+- Next: verify all checks and Pages on the follow-up commit, then byte-compare the live index. No database or record changes.

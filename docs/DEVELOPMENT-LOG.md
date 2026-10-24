@@ -2049,3 +2049,10 @@ Owner requested proceeding after fast-track M1/M3 closure. Latest [Full UI `4c85
 - Local Chromium/Playwright 1.55 PASS: new `tests/food-weight-browsing-browser.cjs` exercises search/no results, favorites/recent ranking, product selection/default portion, paging, weight month/delta, escaped notes, cancel/accept local deletion, RTL at 320/390/768/1280, unchanged browsing storage/library and zero backend calls. Reviewed mobile QA screenshots with synthetic data. Existing Food portion add/refresh/edit, Food priority, eight-page language/RTL, and mixed workout session regressions PASS. Inline scripts and diff whitespace checks PASS.
 - Wired the new browser regression into Full UI and Firefox/WebKit CI and relevant path triggers. Commit/main CI/Pages status PENDING at this entry; append exact verification after publication. No migrations, database/schema/account changes or real user data edits; live device/cloud acceptance not claimed.
 - Next: verify matching-commit CI and Pages, compare published root index with tested source, then owner checks Browse all foods and Check-in history on phone.
+
+
+## 2026-10-24 — Translation catalogue integration follow-up
+
+- Initial UI commit `dde84f19041f5dc5084628b6251b49f98c2c50d6`: Firefox/WebKit SUCCESS https://github.com/3bHussein/ProgressXX-Web/actions/runs/40075578154 ; Fast SUCCESS https://github.com/3bHussein/ProgressXX-Web/actions/runs/40075578140 . Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/40075578158 failed only `tests/ui-language-catalogue.cjs` because new translations were added outside the maintained inline/source catalogue pair. Publication was correctly blocked.
+- Merged the new labels into the existing inline dictionary and synchronized `docs/UI-LANGUAGE-CATALOGUE.json`. Catalogue/static-label coverage now PASS locally (841 entries); no UI interaction or storage logic changed. New main validation and publication still PENDING; later verification supersedes this initial failed attempt.
+- Next: verify all checks and Pages on the follow-up commit, then byte-compare the live index. No database or record changes.
