@@ -959,3 +959,11 @@ Added searchable All/Favorites/Recent food cards, portions/macros/calories, prog
 - Initial UI commit `dde84f19041f5dc5084628b6251b49f98c2c50d6`: Firefox/WebKit SUCCESS https://github.com/3bHussein/ProgressXX-Web/actions/runs/40075578154 ; Fast SUCCESS https://github.com/3bHussein/ProgressXX-Web/actions/runs/40075578140 . Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/40075578158 failed only `tests/ui-language-catalogue.cjs` because new translations were added outside the maintained inline/source catalogue pair. Publication was correctly blocked.
 - Merged the new labels into the existing inline dictionary and synchronized `docs/UI-LANGUAGE-CATALOGUE.json`. Catalogue/static-label coverage now PASS locally (841 entries); no UI interaction or storage logic changed. New main validation and publication still PENDING; later verification supersedes this initial failed attempt.
 - Next: verify all checks and Pages on the follow-up commit, then byte-compare the live index. No database or record changes.
+
+
+## 2026-10-24 — Food browser and Weight history deployed
+
+- Final runtime commit `2a7f898cbc258bea743bc470fd9e0ebe7a0d5a29` on main. All required final checks SUCCESS: Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/40075841855 ; Firefox/WebKit https://github.com/3bHussein/ProgressXX-Web/actions/runs/40075841899 ; Fast contracts https://github.com/3bHussein/ProgressXX-Web/actions/runs/40075841860 .
+- Pages deployment SUCCESS https://github.com/3bHussein/ProgressXX-Web/actions/runs/40075841854 . Downloaded production root and compared byte-for-byte with tested index: IDENTICAL, SHA-256 `6ee7fa466b2d3c383ec470fd948e893fdc00afd125f0dab180516e680bfaaa0f`.
+- New Food/Weight browsing interactions, storage-preservation fixtures, translation catalogue and existing portion/edit/session regressions passed. Initial catalogue failure recorded above is superseded by the final successful same-runtime checks. Synthetic fixtures only; no live-record or database changes.
+- Next: owner refreshes the app and checks Browse all foods and Check-in history on a phone. Other roadmap/cloud acceptance gates remain unchanged.
