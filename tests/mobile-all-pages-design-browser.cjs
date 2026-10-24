@@ -27,15 +27,16 @@ const {browserType,engine}=require('./helpers/browser-engine.cjs');
   await p.evaluate(language=>pxSetUILanguage(language),language);
   for(const width of [320,390,768]){await p.setViewportSize({width,height:844});
    for(const id of pages){
-    const nav=p.locator('.bottomNav [data-page="'+id+'"]');await nav.focus();await p.keyboard.press('Enter');
+    const nav=p.locator('.bottomNav [data-page="'+id+'"]');await nav.focus();await p.keyboard.press('Enter');await p.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
     assert.equal(await p.locator('.section.active').getAttribute('id'),id);
     assert.equal(await nav.getAttribute('aria-current'),'page');
     assert.equal(await p.locator('#pxMobilePageTitle').isVisible(),true);assert((await p.locator('#pxMobilePageTitle').textContent()).trim().length>0);
     const geometry=await p.locator('.bottomNav').evaluate(el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,scroll:el.scrollWidth,width:el.clientWidth,buttons:[...el.querySelectorAll('button')].map(b=>{const r=b.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height,right:r.right}})}});
     assert.equal(geometry.buttons.length,8);assert(geometry.scroll<=geometry.width+1,'All destinations must be visible without nav scrolling');assert(geometry.buttons.every(r=>r.x>=0&&r.right<=width+1&&r.w>=44&&r.h>=44&&r.y>=geometry.top),'Thumb targets '+id+' '+width);
     assert.equal(new Set(geometry.buttons.map(r=>Math.round(r.y))).size,2,'Two visible navigation rows');
-    assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),id+' '+language+' overflow '+width);
-    if(id==='intelligence'){const top=await p.locator('#intelligence').evaluate(el=>el.getBoundingClientRect().top);assert(top<330,'Insights must not have an empty app padding gap');}
+    const overflow=await p.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,offenders:[...document.querySelectorAll('.section.active *')].map(el=>({tag:el.tagName,id:el.id,cls:String(el.className),r:el.getBoundingClientRect()})).filter(x=>x.r.right>innerWidth+1||x.r.left< -1).slice(0,15).map(x=>({tag:x.tag,id:x.id,cls:x.cls,left:x.r.left,right:x.r.right,width:x.r.width}))}));
+    assert(overflow.scroll<=width+1,id+' '+language+' overflow '+width+' '+JSON.stringify(overflow));
+    if(id==='intelligence'){const gap=await p.evaluate(()=>({page:document.body.dataset.pxPage,title:$('pxMobilePageTitle').textContent,viewport:innerWidth,active:document.querySelector('.section.active')?.id,style:getComputedStyle(document.querySelector('.app')).cssText,padding:parseFloat(getComputedStyle(document.querySelector('.app')).paddingBottom),gap:$('intelligence').getBoundingClientRect().top-document.querySelector('.pxMobilePageHeader').getBoundingClientRect().bottom}));assert(gap.padding<1&&gap.gap<44,'Insights header-to-content gap '+JSON.stringify(gap));}
     if(id==='settings')assert.equal(await p.locator('.pxSettingsTile').first().isVisible(),true);
     if(snapshotDir&&width===390)await p.screenshot({path:snapshotDir+'/'+language+'-'+id+'.png'});
    }
@@ -47,6 +48,7 @@ const {browserType,engine}=require('./helpers/browser-engine.cjs');
  assert((await p.locator('#pxCalcCard2').boundingBox()).y>=0);assert((await p.locator('#pxCalcCard2').boundingBox()).y<100,'Jump scrolls directly to the calculator');
  assert.equal(await p.locator('#rWeight').getAttribute('id'),'rWeight');assert(await p.locator('#rWeight').evaluate(el=>el.labels.length>0),'Filled calculator inputs retain visible labels');
  await p.locator('#rWeight').fill('50');await p.locator('#rReps').fill('8');await p.locator('[onclick="calc1RM()"]').click();assert.match(await p.locator('#rResult').textContent(),/62\.7/);
+ await p.locator('#bfSex').selectOption('female');assert.equal(await p.locator('#bfHip').isVisible(),true);await p.locator('#bfSex').selectOption('male');assert.equal(await p.locator('#bfHip').isVisible(),false);
  await p.evaluate(()=>{go('log');openEditor()});assert.equal(await p.locator('#editorWrap').isVisible(),true);
  const editor=await p.locator('#editorWrap .modal').boundingBox();assert(editor.x>=0&&editor.x+editor.width<=390&&editor.height<=844);
  await p.evaluate(()=>closeEditor());
@@ -54,6 +56,9 @@ const {browserType,engine}=require('./helpers/browser-engine.cjs');
  assert.equal(await p.locator('#pxSessionAddSet').isVisible(),true);assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await p.evaluate(()=>closeWorkoutSession());
  for(const theme of ['light','dark']){await p.evaluate(theme=>document.documentElement.dataset.theme=theme,theme);for(const id of pages){await p.evaluate(id=>go(id),id);assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));if(snapshotDir)await p.screenshot({path:snapshotDir+'/'+theme+'-'+id+'.png'});}}
  assert.equal(await p.evaluate(()=>JSON.stringify({data,foodProducts,foodLog,weights:progressPhotos()})===qaData),true,'Presentation/navigation must preserve fitness records');
+ await p.evaluate(()=>{$('pxAccountTools').hidden=false});await p.locator('#pxLogout').scrollIntoViewIfNeeded();
+ const logout=await p.locator('#pxLogout').boundingBox(),navBox=await p.locator('.bottomNav').boundingBox();assert(logout.y+logout.height<=navBox.y,'Account actions must sit above navigation');
+ assert.equal(await p.locator('#pxLogout').evaluate(el=>document.elementFromPoint(el.getBoundingClientRect().x+el.offsetWidth/2,el.getBoundingClientRect().y+el.offsetHeight/2)===el),true,'Logout must receive pointer input');
  assert.deepEqual(errors,[]);assert.equal(backend,0);
  console.log('PASS '+engine+': all eight mobile routes, two visible nav rows, 44px targets, EN/AR at 320/390/768, themes, calculator jump/labels/estimate, editor/session, unchanged fitness records');
  }finally{await b.close()}})().catch(e=>{console.error(e);process.exitCode=1});

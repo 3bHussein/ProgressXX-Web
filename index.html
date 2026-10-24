@@ -9357,7 +9357,7 @@ function calcOverload(){const w=n('oWeight'),sets=n('oSets'),min=n('oMin'),max=n
 function calcHydration(){const w=n('hWeight'),mins=n('hMinutes');if(!(w>0&&mins>=0))return $('hResult').textContent='Enter valid body weight and training time.';const base=w*35/1000,training=mins/60*.5,total=base+training;$('hResult').innerHTML=`<div class="resultBig">≈ ${fmt(total,2)} L/day</div><div class="tiny muted">Base ${fmt(base,2)} L + ~${fmt(training,2)} L training allowance. Adjust to thirst, urine color, heat and sweat rate.</div>`}
 function calcCreatine(){const w=n('cWeight');if(!(w>0))return $('cResult').textContent='Enter body weight.';const weightBased=w*.03,maint=Math.min(5,Math.max(3,weightBased));const load=w*.3;$('cResult').innerHTML=`<div class="resultBig">${fmt(maint,1)}–5 g/day</div><div class="tiny muted">Weight-based maintenance ≈ ${fmt(weightBased,1)} g/day. Optional loading ≈ ${fmt(load,1)} g/day split into 4 doses for ~5–7 days, then maintenance.</div>`}
 function calcBMI(){const w=n('bWeight'),h=n('bHeight')/100;if(!(w>0&&h>0))return $('bResult').textContent='Enter weight and height.';const bmi=w/(h*h);let cat=bmi<18.5?'Underweight':bmi<25?'Standard range':bmi<30?'Overweight range':'Obesity range';$('bResult').innerHTML=`<div class="resultBig">${fmt(bmi,1)}</div><span class="tiny muted">${cat}; interpret carefully in muscular lifters.</span>`}
-function toggleHip(){$('bfHip').classList.toggle('hide',$('bfSex').value==='male')}
+function toggleHip(){const hidden=$('bfSex').value==='male';$('bfHip').classList.toggle('hide',hidden);const field=$('bfHip').closest('.pxCalcField');if(field)field.hidden=hidden}
 function calcBF(){const sex=$('bfSex').value,h=n('bfHeight'),neck=n('bfNeck'),waist=n('bfWaist'),hip=n('bfHip');if(!(h>0&&neck>0&&waist>neck&&(sex==='male'||hip>0)))return $('bfResult').textContent='Enter valid circumference measurements.';let bf;if(sex==='male')bf=495/(1.0324-0.19077*Math.log10(waist-neck)+0.15456*Math.log10(h))-450;else bf=495/(1.29579-0.35004*Math.log10(waist+hip-neck)+0.22100*Math.log10(h))-450;$('bfResult').innerHTML=`<div class="resultBig">≈ ${fmt(bf,1)}%</div><div class="tiny muted">Use the same tape technique each time; trend is more useful than a single reading.</div>`}
 const V2_MUSCLE_RULES=[
  ['Chest',/chest|bench|push.?up|pec.?deck|fly(?:es)?|incline.?press/i],
@@ -10744,7 +10744,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 /* One mobile presentation system for all eight routes. Account/data handlers stay intact. */
 .pxMobilePageHeader,.pxCalculatorShortcuts{display:none}
 .pxAuthField{display:block;font-size:13px;font-weight:650;margin-top:12px}
-.pxCalcField{display:grid;gap:6px;min-width:0}.pxCalcField>span{display:none}
+.pxCalcField{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;min-width:0}.pxCalcField>span{display:none}.pxCalcField[hidden]{display:none!important}
 @media(max-width:820px){
  html{--px-mobile-clearance:144px;scroll-padding-bottom:calc(var(--px-mobile-clearance) + env(safe-area-inset-bottom,0px))}
  html[data-theme="dark"]{--bg:#090f1a;--bg2:#0d1625;--card:#111e30;--card2:#142238;--soft:#1a2b43;--line:#293d56;--text:#f5f8ff;--muted:#a8b8ce;--shadow:0 8px 24px #02061715}
@@ -10827,14 +10827,14 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  #daily .reminderName{font-size:16px}#daily .reminderMeta{font-size:12px;line-height:1.5}#daily .reminderControls{gap:10px}
  #daily .dailyForm{border-radius:17px;padding:13px}#daily .notifyBanner{border-radius:15px;font-size:13px;line-height:1.6}
  #calculators>.panel{margin-top:0}#calculators .calcGrid{gap:14px;grid-template-columns:minmax(0,1fr)}
- #calculators .calcCard{border-radius:18px;background:var(--card2);padding:15px;scroll-margin-top:14px}
+ #calculators .calcCard{min-width:0;max-width:100%;border-radius:18px;background:var(--card2);padding:15px;scroll-margin-top:14px}
  #calculators .calcCard h3{font-size:18px;line-height:1.45;margin:0 0 8px}#calculators .calcCard>p{font-size:13px;line-height:1.65;margin-bottom:16px}
- #calculators .formGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px}#calculators .formGrid .full{grid-column:1/-1}
+ #calculators .formGrid{min-width:0;max-width:100%;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px}#calculators .formGrid .full{grid-column:1/-1}
  #calculators .pxCalcField>span{display:block;font-size:12px;color:var(--muted);line-height:1.4;font-weight:650}#calculators .pxCalcField:has(>.hide){display:none}
  #calculators .formula{font-size:11px;line-height:1.6;margin-top:12px}
  .pxCalculatorShortcuts{position:static!important;inset:auto!important;transform:none!important;display:flex!important;width:100%!important;max-width:100%!important;min-height:0;height:auto!important;max-height:none!important;overflow-x:auto!important;overflow-y:hidden!important;justify-content:flex-start!important;flex-wrap:nowrap!important;box-shadow:none!important;border:0!important;border-radius:0!important;background:transparent!important;padding:0 0 6px!important;gap:7px!important;margin:0 0 18px!important;scrollbar-width:thin;z-index:auto!important}
  .pxCalculatorShortcuts>.chip{flex-shrink:0;white-space:nowrap;max-width:none}
- body:has(#intelligence.active) .app{padding-bottom:0!important}
+ body[data-px-page="intelligence"] .app{padding-bottom:0!important}
  #intelligence{max-width:760px;margin:0 auto;padding:0 12px calc(var(--px-mobile-clearance) + env(safe-area-inset-bottom,0px))!important}
  #intelligence>.hero{margin-top:0;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%,var(--card)),var(--card))}
  #intelligence>.hero h2{font-size:24px;line-height:1.35;margin-bottom:8px}#intelligence>.hero p{font-size:13px;line-height:1.6}
@@ -10859,6 +10859,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  .restTimerTime{font-size:38px}.restTimerPresets,.restTimerControls{gap:8px}.restTimerControls .btn{padding-inline:10px}
  .pxSessionSetRow{border-radius:15px;padding:11px;background:var(--card)}.pxSessionSetRow input{min-height:46px!important;padding:10px!important}
  .sessionNav{gap:9px}.sessionNav .btn.primary{min-height:50px}.sessionSummary{border-radius:20px;padding:16px}
+ #pxAccountTools{width:calc(100% - 24px)!important;max-width:calc(100% - 24px)!important;margin:12px 12px calc(var(--px-mobile-clearance) + env(safe-area-inset-bottom,0px))!important;scroll-margin-bottom:calc(var(--px-mobile-clearance) + env(safe-area-inset-bottom,0px));border-radius:16px}
+ #pxAccountTools button{min-height:44px;border-radius:11px}#pxSyncPill{scroll-margin-bottom:calc(var(--px-mobile-clearance) + env(safe-area-inset-bottom,0px))}
  #pxCommercialGate{padding:20px;background:var(--bg);color:var(--text);overflow-y:auto}
  #pxCommercialGate .pxAuthBox{background:var(--card);border-color:var(--line);padding:24px 20px;border-radius:24px;box-shadow:var(--shadow)}
  #pxCommercialGate h2{font-size:28px;line-height:1.3;margin-bottom:10px}#pxCommercialGate p{font-size:13px;line-height:1.65;color:var(--muted)}
@@ -10869,6 +10871,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 }
 @media(max-width:650px){#intelligence .pxAnatomyMobileTabs{display:flex!important;position:sticky!important;top:8px!important}}
 @media(max-width:360px){
+ #calculators .formGrid{grid-template-columns:minmax(0,1fr)!important}
  .app{padding-inline:10px!important}.brand small{font-size:9px;max-width:190px}.pxMobilePageHeader h2{font-size:25px}
  .pxMobilePageHeader p{font-size:12px}.pxMobilePageDate{max-width:82px;padding:7px}
  body .bottomNav .navbtn{flex-direction:column;gap:3px;padding:4px!important}body .bottomNav .navbtn .label{font-size:9px!important}
@@ -10882,6 +10885,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 function pxUpdateMobilePage(page){
  const titles={home:'Home',log:'Workouts',analytics:'Progress',nutrition:'Food',daily:'Daily',calculators:'Calculators',intelligence:'Insights',settings:'Settings'};
  const descriptions={home:'Your training, food and daily habits.',log:'Train, log sets and track your sessions.',analytics:'Your weight, measurements and progress.',nutrition:'Your diary, portions and daily nutrition.',daily:'Stay on top of your daily habits.',calculators:'Find the right numbers for your plan.',intelligence:'Explore your muscles and training patterns.',settings:'Make ProgressX work for you.'};
+ document.body.dataset.pxPage=page;
  const title=document.getElementById('pxMobilePageTitle'),description=document.getElementById('pxMobilePageDescription'),date=document.getElementById('pxMobilePageDate');
  if(title)title.textContent=titles[page]||'ProgressX';if(description)description.textContent=descriptions[page]||'';
  if(date){const now=new Date();date.dateTime=localDateKey();date.textContent=now.toLocaleDateString(document.documentElement.lang==='ar'?'ar-EG':'en-GB',{day:'numeric',month:'short'});}
@@ -10900,7 +10904,7 @@ function pxInitMobileDesign(){
  const selectLabels={tSex:'Sex',tActivity:'Activity level',tGoal:'Goal',bfSex:'Sex'};
  document.querySelectorAll('#calculators .formGrid>input,#calculators .formGrid>select').forEach(input=>{
   const source=selectLabels[input.id]||(typeof pxUiOriginalAttributes!=='undefined'?pxUiOriginalAttributes.get(input)?.placeholder?.source:'')||input.getAttribute('placeholder');if(!source)return;
-  const label=document.createElement('label');label.className='pxCalcField'+(input.classList.contains('full')?' full':'');label.htmlFor=input.id;
+  const label=document.createElement('label');label.className='pxCalcField'+(input.classList.contains('full')?' full':'');label.htmlFor=input.id;label.hidden=input.classList.contains('hide');
   const caption=document.createElement('span');caption.textContent=source;input.before(label);label.append(caption,input);
  });
  pxUpdateMobilePage(document.querySelector('.bottomNav .navbtn.active')?.dataset.page||'home');
