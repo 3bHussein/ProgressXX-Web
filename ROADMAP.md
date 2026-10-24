@@ -1001,3 +1001,10 @@ Implemented shared mobile design across Home, Workouts, Progress, Food, Daily, C
 ## 2026-10-24 — Simplified Insights and explainable review
 
 Insights now has three scoped summaries and four collapsed topic groups; Weekly Review and exercise Insights show plain-language, data-qualified next-session decisions. Today-only food totals, no pseudo recovery percentage/rested state, explicit uncertainty, date/readiness corrections, compact food selector and unit-safe last portions are included. Local synthetic Chromium logic/interaction/domain/auth regressions PASS; audit and scientific-context limitations are documented in INSIGHTS-LOGIC-AUDIT.md. Final main CI/Pages PENDING. No real data or backend/schema changes; broader acceptance gates unchanged. Next verify publication and phone acceptance.
+
+
+## 2026-10-24 — Date-only and long-product cross-browser follow-up
+
+- Initial `baf1f824a2262e70d92e3dce96d839a1652b4d72` passed Full UI https://github.com/3bHussein/ProgressXX-Web/actions/runs/40103530593 and Fast; Firefox passed. WebKit in https://github.com/3bHussein/ProgressXX-Web/actions/runs/40103530503 detected a desktop RTL overflow with the deliberately very long product name. Mobile layouts passed; publication remained blocked.
+- Bounded Saved product's grid track/parent and native select across desktop as well as mobile, with wrapping preview names; the full food name remains available in the food browser/preview. Compact 48px mobile control retained.
+- Next-session date validation now compares calendar dates for future records, so a valid date-only entry today is not rejected merely because its approximate display timestamp uses noon. Added the seventeenth data-quality case; updated the maintained audit. Local Chromium new regression, add/reload and Food priority checks PASS. Final cross-browser CI/Pages PENDING; no database or real-record changes.

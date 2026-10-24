@@ -8,7 +8,7 @@
 | Nutrition | Summary and detailed Insights totals include only entries with today's local diary date. They are logged totals, not a claim about complete dietary intake. |
 | Exercise load advice | Removed the former automatic +2.5 kg suggestion based solely on a >1% estimated-1RM increase. The primary view now explains the records and missing information. |
 | Muscle history | Removed elapsed-time percentage bars and the `rested` display classification. Elapsed days do not establish physiological recovery. Name-based muscle mapping remains approximate and can be corrected manually. |
-| Dates | Invalid calendar dates and future dates cannot support a load decision. Date-only history uses noon as an approximation for elapsed-time displays. |
+| Dates | Invalid calendar dates and future calendar dates cannot support a load decision. A date-only entry dated today is valid; its approximate noon display timestamp is not treated as a future session. Date-only history uses noon as an approximation for elapsed-time displays. |
 | Self check-in | Explicit zero sleep is recognized as an entered value; null/empty values are missing. Review flags are simple subjective app heuristics, not a diagnosis or training clearance. |
 | Food amount | A product selection reuses the most recent dated/time-ordered positive portion for that product ID in the same unit. Same-minute ties use later entry order. Missing/incompatible portions fall back to the saved serving. Explicit manual amounts remain in control. |
 
@@ -30,6 +30,6 @@ The [2026 ACSM update](https://acsm.org/resistance-training-guidelines-update-20
 
 ## Verification
 
-`tests/simple-insights-coaching-browser.cjs` exercises 16 decision/data-quality branches, default closed disclosures, today-only nutrition totals, readable food selection, unit-safe portion restoration, real local add/reload, bilingual responsive layout and unchanged workout records. Existing Anatomy control and panel-failure fixtures explicitly open the new disclosures before verifying their content/actions; the main signed-in smoke follows the same anatomy disclosure flow. No test uses production credentials or health records.
+`tests/simple-insights-coaching-browser.cjs` exercises 17 decision/data-quality branches, default closed disclosures, today-only nutrition totals, readable food selection, unit-safe portion restoration, real local add/reload, bilingual responsive layout and unchanged workout records. Existing Anatomy control and panel-failure fixtures explicitly open the new disclosures before verifying their content/actions; the main signed-in smoke follows the same anatomy disclosure flow. No test uses production credentials or health records.
 
 Cross-browser CI and final publication evidence are recorded in `DEVELOPMENT-LOG.md` after verification. Real account/device acceptance is separate from synthetic tests. No database schema, account or existing fitness records were edited for this release.
