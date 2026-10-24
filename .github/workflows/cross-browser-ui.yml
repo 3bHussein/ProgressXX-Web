@@ -16,6 +16,7 @@ on:
       - tests/insights-anatomy-controls-browser.cjs
       - tests/insights-panel-recovery-browser.cjs
       - tests/diagnostics-redaction-browser.cjs
+      - tests/simple-insights-coaching-browser.cjs
       - tests/mobile-all-pages-design-browser.cjs
       - tests/food-weight-browsing-browser.cjs
       - tests/food-priority-collapse-browser.cjs
@@ -60,6 +61,7 @@ on:
       - tests/insights-anatomy-controls-browser.cjs
       - tests/insights-panel-recovery-browser.cjs
       - tests/diagnostics-redaction-browser.cjs
+      - tests/simple-insights-coaching-browser.cjs
       - tests/mobile-all-pages-design-browser.cjs
       - tests/food-weight-browsing-browser.cjs
       - tests/food-priority-collapse-browser.cjs
@@ -126,6 +128,7 @@ jobs:
           node tests/food-priority-collapse-browser.cjs
           node tests/food-weight-browsing-browser.cjs
           node tests/mobile-all-pages-design-browser.cjs
+          node tests/simple-insights-coaching-browser.cjs
           node tests/backup-download-import-browser.cjs
           node tests/v3-mobile-diary-browser.cjs
           node tests/settings-language-pages-browser.cjs

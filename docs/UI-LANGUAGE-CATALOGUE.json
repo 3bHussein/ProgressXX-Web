@@ -863,5 +863,16 @@
   "Hydration target": "هدف شرب الماء",
   "Creatine guide": "دليل الكرياتين",
   "Navy body-fat estimate": "تقدير نسبة الدهون",
-  "Your private fitness workspace.": "مساحتك الخاصة للتمرين والتغذية."
+  "Your private fitness workspace.": "مساحتك الخاصة للتمرين والتغذية.",
+  "Training details": "تفاصيل التمرين",
+  "Food & body details": "تفاصيل الطعام والقياسات",
+  "Check-in & training history": "المتابعة وسجل التدريب",
+  "Anatomy reference": "مرجع التشريح",
+  "Detailed weekly numbers": "الأرقام الأسبوعية التفصيلية",
+  "Muscle Training History": "سجل تدريب العضلات",
+  "Detailed training dates": "تواريخ التدريب التفصيلية",
+  "Longest gaps in dated logs": "أطول فترات منذ آخر تسجيل مؤرخ",
+  "🗺 Muscle Training History": "🗺 سجل تدريب العضلات",
+  "Dates show training history, not recovery. Date-only entries use an approximate midday timestamp. Check automatic muscle links manually.": "التواريخ تعرض سجل التدريب ولا تقيس التعافي. السجل بلا وقت يستخدم منتصف النهار كتوقيت تقريبي. راجع ربط العضلات التلقائي يدويًا.",
+  "Training dates cannot confirm recovery": "تواريخ التمرين لا تؤكد التعافي"
 }

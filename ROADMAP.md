@@ -996,3 +996,8 @@ Implemented shared mobile design across Home, Workouts, Progress, Food, Daily, C
 - All eight routes, login labels, responsive workout sheets, visible eight-destination navigation, calculator shortcuts/conditional labelled fields, account-action clearance, EN/AR and theme layouts are included. Strict no-horizontal-overflow fixture and existing language/auth/CRUD/backup/accessibility tests passed. Earlier failed attempts above are superseded by these successful checks.
 - No production database/schema/account/live-record changes. CI uses synthetic/mock fixtures; physical-phone and real-account cloud acceptance remain owner checks. Broader roadmap gates unchanged.
 - Next: refresh the mobile app and review the published presentation; keep existing local data intact.
+
+
+## 2026-10-24 — Simplified Insights and explainable review
+
+Insights now has three scoped summaries and four collapsed topic groups; Weekly Review and exercise Insights show plain-language, data-qualified next-session decisions. Today-only food totals, no pseudo recovery percentage/rested state, explicit uncertainty, date/readiness corrections, compact food selector and unit-safe last portions are included. Local synthetic Chromium logic/interaction/domain/auth regressions PASS; audit and scientific-context limitations are documented in INSIGHTS-LOGIC-AUDIT.md. Final main CI/Pages PENDING. No real data or backend/schema changes; broader acceptance gates unchanged. Next verify publication and phone acceptance.

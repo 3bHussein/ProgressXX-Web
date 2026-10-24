@@ -343,7 +343,7 @@ const {createLogoutDialogHandler}=require('../tests/helpers/logout-dialog.cjs');
    throw Error('Schedule or Weight Goal lost on account logout/login: '+JSON.stringify(afterRelogin));
  // Mobile touch layout regression for the signed-in account and Insights/Settings.
  for(const section of ['settings','intelligence']){
-   await page.evaluate(name=>{go(name);if(name==='settings')pxShowSettingsCategory('pxSettingsAccount','Account & sync')},section);
+   await page.evaluate(name=>{go(name);if(name==='intelligence')document.getElementById('pxInsightGroup3').open=true;if(name==='settings')pxShowSettingsCategory('pxSettingsAccount','Account & sync')},section);
    const layout=await page.evaluate(name=>{
      const sectionEl=document.getElementById(name);
      const viewport=document.documentElement.clientWidth;
@@ -359,7 +359,7 @@ const {createLogoutDialogHandler}=require('../tests/helpers/logout-dialog.cjs');
  // Narrow-phone regression: controls stay usable at 320px.
  await page.setViewportSize({width:320,height:700});
  for(const section of ['settings','intelligence']){
-   await page.evaluate(name=>{go(name);if(name==='settings')pxShowSettingsCategory('pxSettingsAccount','Account & sync')},section);
+   await page.evaluate(name=>{go(name);if(name==='intelligence')document.getElementById('pxInsightGroup3').open=true;if(name==='settings')pxShowSettingsCategory('pxSettingsAccount','Account & sync')},section);
    const bounds=await page.evaluate(name=>(name==='settings'?['pxSettingsSync','pxSettingsSignOut']:['pxAnatomyLang']).map(id=>{
      const r=document.getElementById(id)?.getBoundingClientRect();
      return {id,left:r?.left,right:r?.right,height:r?.height,width:document.documentElement.clientWidth};
@@ -371,7 +371,7 @@ const {createLogoutDialogHandler}=require('../tests/helpers/logout-dialog.cjs');
  for(const width of [320,390]){
    await page.setViewportSize({width,height:780});
    for(const name of ['settings','intelligence']){
-     await page.evaluate(section=>{go(section);if(section==='settings')pxShowSettingsHome(false)},name);
+     await page.evaluate(section=>{go(section);if(section==='intelligence')document.getElementById('pxInsightGroup3').open=true;if(section==='settings')pxShowSettingsHome(false)},name);
      const metrics=await page.evaluate(section=>{
        const selector=section==='settings'?'#settings .pxSettingsDirectory':'#intelligence .pxAnatomyMobileTabs';
        const row=document.querySelector(selector);
@@ -386,7 +386,7 @@ const {createLogoutDialogHandler}=require('../tests/helpers/logout-dialog.cjs');
  // Exercise real mobile anatomy tab clicks at narrow and standard phone sizes.
  for(const width of [320,390]){
    await page.setViewportSize({width,height:780});
-   await page.evaluate(()=>go('intelligence'));
+   await page.evaluate(()=>{go('intelligence');document.getElementById('pxInsightGroup3').open=true});
    await page.evaluate(()=>{if(document.getElementById('alarmOverlay')?.classList.contains('show'))dismissActiveAlarm()});
    if(await page.locator('#alarmOverlay.show').count())throw Error('Daily alarm not dismissed before anatomy tests');
    for(const [id,expected] of [['pxAnatomyTabCoverage','coverage'],['pxAnatomyTabAtlas','atlas']]){
