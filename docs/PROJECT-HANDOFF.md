@@ -1229,3 +1229,8 @@ Added searchable All/Favorites/Recent food cards, portions/macros/calories, prog
 - Pages deployment SUCCESS https://github.com/3bHussein/ProgressXX-Web/actions/runs/40075841854 . Downloaded production root and compared byte-for-byte with tested index: IDENTICAL, SHA-256 `6ee7fa466b2d3c383ec470fd948e893fdc00afd125f0dab180516e680bfaaa0f`.
 - New Food/Weight browsing interactions, storage-preservation fixtures, translation catalogue and existing portion/edit/session regressions passed. Initial catalogue failure recorded above is superseded by the final successful same-runtime checks. Synthetic fixtures only; no live-record or database changes.
 - Next: owner refreshes the app and checks Browse all foods and Check-in history on a phone. Other roadmap/cloud acceptance gates remain unchanged.
+
+
+## 2026-10-24 — All-page mobile presentation
+
+Implemented shared mobile design across Home, Workouts, Progress, Food, Daily, Calculators, Insights and Settings, plus login and workout sheets. All eight navigation destinations are visible; route headers, themes, touch controls, labeled calculator shortcuts and correctly positioned Anatomy tabs are included. New synthetic Chromium route/theme/RTL/pointer/keyboard/layout coverage and existing domain regressions PASS locally; screenshots reviewed. Main CI/Pages PENDING. No storage/API/schema or live-data changes; broader release gates remain OPEN. Next verify same-commit CI/deployment then phone acceptance. See Development Log for detailed scope and evidence.
