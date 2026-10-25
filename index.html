@@ -4887,18 +4887,23 @@ function openWorkoutSession(){
   renderRestTimer();
 }
 function closeWorkoutSession(){
+  pxCaptureSessionDraft();
   $('workoutSessionOverlay')?.classList.remove('show');
   document.body.style.overflow='';
+  if(currentPage==='home'&&typeof pxRenderHomeHub==='function')pxRenderHomeHub();
 }
 function resumeWorkoutSession(){
   if(!workoutSession)return restartWorkoutSession();
   $('sessionResumePrompt').classList.add('hide');
   $('sessionDayPickerWrap').classList.add('hide');
   $('sessionBody').classList.remove('hide');
-  if(nextPendingSessionIndex(workoutSession.index)<0){showSessionSummary();return;}
+  if(nextPendingSessionIndex(workoutSession.index)<0&&!pxSessionDraft()){showSessionSummary();return;}
   renderWorkoutSession();
+  pxRestoreDraftFocus();
 }
 function restartWorkoutSession(){
+  pxCaptureSessionDraft();
+  if(workoutSession?.drafts&&Object.keys(workoutSession.drafts).length&&!confirm(pxExplain('Discard unsaved exercise drafts and choose another day? Saved workout records stay unchanged.','تجاهل مسودات التمارين غير المحفوظة واختيار يوم تاني؟ سجلات التمرين المحفوظة هتفضل زي ما هي.')))return;
   skipRestTimer();
   workoutSession=null;
   PXStore.removeItem(WORKOUT_SESSION_KEY);
@@ -4913,6 +4918,7 @@ function jumpToSessionExercise(value){
   if(!workoutSession)return;
   const idx=Number(value);
   if(!Number.isInteger(idx)||idx<0||idx>=workoutSession.exercises.length)return;
+  pxCaptureSessionDraft();
   workoutSession.index=idx;
   renderWorkoutSession();
 }
@@ -5001,7 +5007,16 @@ function renderWorkoutSession(){
         '<small>'+(arabic?'هذه إرشادات فقط. اختر وزنًا مريحًا؛ لن تتغير سجلاتك المحفوظة.':'Guidance only. Choose a comfortable load; existing records are never changed.')+'</small>';
     }else deloadCard.textContent='';
   }
+  const draft=pxSessionDraft();
+  if($('pxSessionDraftNotice'))$('pxSessionDraftNotice').hidden=!draft;
+  if(draft){$('sessionPerformance').value=draft.performance;$('sessionNotes').value=draft.notes;$('sessionTime').value=draft.time;}
   pxSessionRenderSetEditor();
+  if(draft&&Array.isArray(draft.sets)){
+    $('pxSessionSetEditor').innerHTML=draft.sets.map(pxSessionSetRow).join('');
+    $('pxSessionSetEditor').dataset.serialized=draft.serialized;
+    pxSessionReadSets();
+    $('sessionSavedState').textContent=pxExplain('Draft restored on this device. Save & Next records this exercise.','تم استرجاع المسودة على الجهاز ده. اضغط حفظ والتالي لتسجيل التمرين.');
+  }
   $('sessionPrevious').innerHTML=previous
     ? `<b>W${esc(previous.week)}${previous.date?' • '+esc(previous.date):''}</b><div style="margin-top:5px">${renderPerformanceSets(previous.performance||'')}</div>`
     : 'No previous performance for this exercise.';
@@ -5057,6 +5072,7 @@ function pxSessionAddSet(){
   const i=host.querySelectorAll('.pxSessionSetRow').length;
   host.insertAdjacentHTML('beforeend',pxSessionSetRow({weight:'',reps:''},i));
   host.lastElementChild.querySelector('[data-set-weight]')?.focus();
+  pxCaptureSessionDraft();
 }
 function pxSessionRemoveSet(index){
   const host=$('pxSessionSetEditor');if(!host||host.hidden)return;
@@ -5067,6 +5083,7 @@ function pxSessionRemoveSet(index){
   rows[index].remove();
   pxSessionReadSets();
   pxSessionRenderSetEditor();
+  pxCaptureSessionDraft();
 }
 
 function persistSessionExercise(status='Completed'){
@@ -5096,6 +5113,8 @@ function persistSessionExercise(status='Completed'){
     data.push(clone(obj));
   }
   PXStore.setItem(KEY,JSON.stringify(data));
+  if(workoutSession.drafts)delete workoutSession.drafts[currentSessionExercise()];
+  saveWorkoutSessionState();
 
   const payload={...obj};delete payload._sync;
   payload.notes=encodeWorkoutNotes(obj.notes,obj.time);
@@ -5178,6 +5197,7 @@ function finishWorkoutSession(){
 
 function sessionCompleteIfReady(){
   if(!workoutSession)return;
+  pxCaptureSessionDraft();
   const pending=nextPendingSessionIndex(workoutSession.index);
   if(pending>=0){
     workoutSession.index=pending;
@@ -5221,6 +5241,7 @@ function sessionSkip(){
 }
 function sessionPrev(){
   if(!workoutSession||workoutSession.index<=0)return;
+  pxCaptureSessionDraft();
   workoutSession.index--;
   renderWorkoutSession();
 }
@@ -5281,6 +5302,8 @@ async function saveEntry(){
   if(existingIndex>=0)data[existingIndex]=clone(obj);
   else data.push(clone(obj));
   PXStore.setItem(KEY,JSON.stringify(data));
+  if(workoutSession.drafts)delete workoutSession.drafts[currentSessionExercise()];
+  saveWorkoutSessionState();
 
   const payload={...obj};
   delete payload._sync;
@@ -6931,6 +6954,7 @@ function renderNutrition(){
   updateFoodQuickPreview();
   renderFavoriteFoods();
   renderRecentFoods();
+  if(typeof pxRenderRepeatMeals==='function')pxRenderRepeatMeals();
   renderProteinSuggestions();
   renderNutritionAnalytics();
   renderMealTemplates();
@@ -10999,11 +11023,12 @@ function pxRenderHomeHub(){
  }
  const t=(en,ar)=>pxExplain(en,ar),date=localDateKey(),rest=isRestDay(date),scheduled=scheduledTrainingForDate(date),rows=data.filter(x=>x.date===date&&x.status==='Completed'),food=nutritionTotals(date),logs=foodLog.filter(x=>x.date===date),water=getWaterState(),active=activeDailyReminders(),doneMap=dailyDoneMap()[date]||{},done=active.filter(x=>normalizeDailyDoneValue(doneMap[x.id])).length;
  const target=Number(nutritionTargets.calories)||0,used=Math.round(Number(food.calories)||0),left=Math.round(Math.abs(target-used));
- const training=rest?t('Rest day','يوم راحة'):rows.length?t('Training logged','تم تسجيل تمرين'):scheduled&&scheduled!=='REST'?scheduled:t('Choose a workout','اختار تمرينك');
+ const savedSession=pxSavedSessionInfo();
+ const training=savedSession?t('Session in progress','جلسة لسه مستمرة'):rest?t('Rest day','يوم راحة'):rows.length?t('Training logged','تم تسجيل تمرين'):scheduled&&scheduled!=='REST'?scheduled:t('Choose a workout','اختار تمرينك');
  const card=(title,value,note,action,label,progress='')=>'<article class="pxHomeAction"><h4>'+esc(title)+'</h4><b>'+esc(value)+'</b><p>'+esc(note)+'</p>'+progress+'<button type="button" class="btn soft" onclick="'+action+'">'+esc(label)+'</button></article>';
  const meter=(value,max,label)=>'<progress aria-label="'+esc(label)+'" value="'+Math.max(0,Math.min(value,max))+'" max="'+Math.max(1,max)+'"></progress>';
  hub.innerHTML='<div class="pxHomeHubHead"><h3>'+t('Your next step','خطوتك الجاية')+'</h3><span class="pill">'+esc(new Date().toLocaleDateString(document.documentElement.lang==='ar'?'ar-EG':'en-GB',{weekday:'short',day:'numeric',month:'short'}))+'</span></div><div class="pxHomeHubGrid">'+
- card(t('Training','التمرين'),training,rest?t('Your plan allows rest. Review your history whenever you need.','خطتك تسمح بالراحة. تقدر تراجع سجلك في أي وقت.'):rows.length?rows.length+' '+t('completed exercise entries today; this may be a partial session.','سجل تمرين مكتمل النهارده؛ ممكن تكون الجلسة لسه مستمرة.'):t('Start a session and record each set as you go.','ابدأ جلسة وسجل كل مجموعة أثناء التمرين.'),rest?"go('log')":scheduled&&scheduled!=='REST'&&!rows.length?'launchScheduledWorkout()':"openWorkoutSession()",rest?t('View workouts','عرض التمارين'):rows.length?t('Open session','افتح جلسة التمرين'):t('Start workout','ابدأ التمرين'))+
+ card(t('Training','التمرين'),training,savedSession?'W'+savedSession.week+' • '+savedSession.day+' • '+t('Exercise','تمرين')+' '+(Math.max(0,Math.min(savedSession.exercises.length-1,Number(savedSession.index)||0))+1)+' / '+savedSession.exercises.length:rest?t('Your plan allows rest. Review your history whenever you need.','خطتك تسمح بالراحة. تقدر تراجع سجلك في أي وقت.'):rows.length?rows.length+' '+t('completed exercise entries today; this may be a partial session.','سجل تمرين مكتمل النهارده؛ ممكن تكون الجلسة لسه مستمرة.'):t('Start a session and record each set as you go.','ابدأ جلسة وسجل كل مجموعة أثناء التمرين.'),savedSession?"openWorkoutSession()":rest?"go('log')":scheduled&&scheduled!=='REST'&&!rows.length?'launchScheduledWorkout()':"openWorkoutSession()",savedSession?t('Resume session','استكمل الجلسة'):rest?t('View workouts','عرض التمارين'):rows.length?t('Open session','افتح جلسة التمرين'):t('Start workout','ابدأ التمرين'))+
  card(t('Food today','أكل النهارده'),used+' kcal',target>0?left+' kcal '+(used>target?t('above your saved target.','فوق هدفك المحفوظ.'):t('to your saved target.','متبقية لهدفك المحفوظ.')):t('Set a calorie target in Food when ready.','حدد هدف السعرات في صفحة الأكل لما تكون جاهز.'),"pxHomeJump('nutrition','foodQuickProduct')",t('Add food','سجل أكل'),target>0?meter(used,target,t('Logged calories against saved target','السعرات المسجلة من الهدف المحفوظ')):'')+
  card(t('Water','الماء'),Number(water.current).toLocaleString(document.documentElement.lang==='ar'?'ar-EG':'en-GB',{maximumFractionDigits:2})+' / '+Number(water.target).toLocaleString(document.documentElement.lang==='ar'?'ar-EG':'en-GB',{maximumFractionDigits:2})+' L',t('Recorded today. Adjust the amount in Daily.','المسجل النهارده. تقدر تعدل الكمية من صفحة اليوم.'),"pxHomeJump('daily','waterCurrentInput')",t('Update water','حدّث الماء'),meter(water.current,water.target,t('Recorded water','الماء المسجل')))+
  card(t('Daily habits','عاداتك اليومية'),done+' / '+active.length,active.length?t('Completed reminders today. Open Daily to check off the rest.','عادات مكتملة النهارده. افتح صفحة اليوم لتسجيل الباقي.'):t('Add your own reminders to build a useful routine.','أضف تذكيراتك عشان تبني روتين مناسب ليك.'),"go('daily')",active.length?t('Review habits','راجع عاداتك'):t('Set up habits','أضف عاداتك'),active.length?meter(done,active.length,t('Completed habits','العادات المكتملة')):'')+'</div><p class="pxHomeHint">'+t('These are your saved records, not a health or recovery assessment. Food totals include only what you logged.','ده ملخص سجلاتك، مش تقييم لصحتك أو تعافيك. إجمالي الأكل يشمل اللي سجلته فقط.')+'</p>';
@@ -11016,6 +11041,67 @@ function pxRenderHomeHub(){
  renderTodayPlan();
 }
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&currentPage==='home')renderNutritionHome()});
+</script>
+
+
+<style id="px-daily-convenience-style">
+.pxRepeatMeals{margin:12px 0;border:1px solid var(--line);border-radius:16px;padding:13px;background:var(--card2)}.pxRepeatMeals>summary{cursor:pointer;font-weight:800;min-height:30px}.pxRepeatMeals label{display:block;margin:12px 0 5px;font-size:12px;color:var(--muted)}.pxRepeatMeals select{width:100%;min-width:0;max-width:100%;min-height:46px}.pxRepeatMeals ul{list-style:none;padding:0;font-size:13px;line-height:1.8;overflow-wrap:anywhere}.pxRepeatMeals li{padding:5px 0;border-bottom:1px solid var(--line)}.pxRepeatMeals .btn{min-height:46px;white-space:normal;width:100%}.pxRepeatMeals p{font-size:12px;line-height:1.6}.pxDraftNotice{font-size:12px;color:var(--muted);line-height:1.6;margin-top:9px}
+</style>
+<script id="px-daily-convenience">
+function pxSessionDraft(){const map=workoutSession?.drafts,d=map&&Object.hasOwn(map,currentSessionExercise())?map[currentSessionExercise()]:null;return d&&typeof d.performance==='string'&&typeof d.notes==='string'&&typeof d.time==='string'&&Array.isArray(d.sets)&&d.sets.every(s=>s&&((typeof s.raw==='string')||(typeof s.weight==='string'&&typeof s.reps==='string')))?d:null}
+function pxSavedSessionInfo(){try{const s=JSON.parse(PXStore.getItem(WORKOUT_SESSION_KEY));return s&&typeof s.day==='string'&&Number.isInteger(s.week)&&s.week>0&&Array.isArray(s.exercises)&&s.exercises.length?s:null}catch{return null}}
+function pxCaptureSessionDraft(){
+ if(!workoutSession||!$('workoutSessionOverlay')?.classList.contains('show')||$('sessionBody')?.classList.contains('hide'))return;
+ if($('sessionExerciseName').textContent!==currentSessionExercise())return;
+ const field=$('sessionPerformance'),host=$('pxSessionSetEditor');
+ const focused=document.activeElement,rows=[...host.querySelectorAll('.pxSessionSetRow')],row=focused?.closest('.pxSessionSetRow');
+ const focus=row?{row:rows.indexOf(row),kind:focused.hasAttribute('data-set-weight')?'weight':focused.hasAttribute('data-set-reps')?'reps':'raw'}:focused?.id==='sessionNotes'||focused?.id==='sessionTime'?{id:focused.id}:pxSessionDraft()?.focus||null;
+ const draft={performance:field.value,notes:$('sessionNotes').value,time:$('sessionTime').value,sets:pxSessionSetValues(),serialized:host.dataset.serialized||'',focus};
+ if(!workoutSession.drafts||typeof workoutSession.drafts!=='object'||Array.isArray(workoutSession.drafts))workoutSession.drafts={};
+ // Define own keys safely even when an imported exercise is named "__proto__".
+ Object.defineProperty(workoutSession.drafts,currentSessionExercise(),{value:draft,writable:true,enumerable:true,configurable:true});
+ try{saveWorkoutSessionState();if(PXStore.getItem(WORKOUT_SESSION_KEY)!==JSON.stringify(workoutSession))throw Error('Draft storage unavailable');pxDraftStatus(true)}catch{pxDraftStatus(false)}
+}
+function pxDraftStatus(ok){let el=$('pxSessionDraftNotice');if(!el){el=document.createElement('p');el.id='pxSessionDraftNotice';el.className='pxDraftNotice';el.setAttribute('role','status');el.setAttribute('data-px-user','1');$('sessionSavedState').after(el)}el.hidden=false;const message=ok?pxExplain('Draft saved on this device. Use Save & Next to record it.','المسودة محفوظة على الجهاز ده. استخدم حفظ والتالي لتسجيلها.'):pxExplain('Could not save the draft on this device. Keep this page open and retry.','تعذر حفظ المسودة على الجهاز ده. خلي الصفحة مفتوحة وحاول تاني.');if(el.textContent!==message)el.textContent=message}
+function pxRestoreDraftFocus(){const focus=pxSessionDraft()?.focus;if(!focus||(!['sessionNotes','sessionTime'].includes(focus.id)&&(!Number.isInteger(focus.row)||!['weight','reps','raw'].includes(focus.kind))))return;requestAnimationFrame(()=>{const target=focus.id?$(focus.id):$('pxSessionSetEditor').querySelectorAll('.pxSessionSetRow')[focus.row]?.querySelector('[data-set-'+focus.kind+']');target?.focus()})}
+document.addEventListener('input',event=>{if(event.target.closest('#pxSessionSetEditor')||['sessionPerformance','sessionNotes','sessionTime'].includes(event.target.id))pxCaptureSessionDraft()});
+document.addEventListener('focusin',event=>{if(event.target.closest('#pxSessionSetEditor')||['sessionPerformance','sessionNotes','sessionTime'].includes(event.target.id))pxCaptureSessionDraft()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pxCaptureSessionDraft()});
+window.addEventListener('pagehide',pxCaptureSessionDraft);
+let pxRepeatMealBusy=false;
+function pxRepeatMealGroups(){
+ const target=selectedNutritionDate(),groups=new Map();
+ for(const row of foodLog){if(!/^\d{4}-\d{2}-\d{2}$/.test(String(row.date))||row.date>=target||shiftDateKey(row.date,0)!==row.date)continue;const key=JSON.stringify([row.date,String(row.meal||'Snack')]);if(!groups.has(key))groups.set(key,{key,date:row.date,meal:String(row.meal||'Snack'),rows:[]});groups.get(key).rows.push(row)}
+ return [...groups.values()].sort((a,b)=>b.date.localeCompare(a.date)||a.meal.localeCompare(b.meal)).slice(0,8);
+}
+function pxRepeatMealValid(group){return group&&group.rows.length&&group.rows.every(x=>String(x.name||'').trim()&&Number.isFinite(Number(x.amount))&&Number(x.amount)>0&&['calories','protein','carbs','fat'].every(k=>x[k]!==null&&x[k]!==''&&x[k]!==undefined&&Number.isFinite(Number(x[k]))&&Number(x[k])>=0))}
+function pxRenderRepeatMeals(){
+ let box=$('pxRepeatMeals');if(!box){box=document.createElement('details');box.id='pxRepeatMeals';box.className='pxRepeatMeals';box.setAttribute('data-px-user','1');box.innerHTML='<summary></summary><label for="pxRepeatMealSelect"></label><select id="pxRepeatMealSelect"></select><div id="pxRepeatMealPreview"></div><button id="pxRepeatMealAdd" class="btn soft" type="button"></button><p id="pxRepeatMealStatus" role="status" aria-live="polite"></p>';$('nutrition').querySelector('.pxFoodShortcuts').after(box);$('pxRepeatMealSelect').onchange=pxRenderRepeatMealPreview;$('pxRepeatMealAdd').onclick=pxAddRepeatMeal;}
+ const t=pxExplain;box.querySelector('summary').textContent=t('Repeat a previous meal','كرر وجبة سابقة');box.querySelector('label').textContent=t('Choose from earlier diary days','اختار من أيام السجل السابقة');
+ const sel=$('pxRepeatMealSelect'),prior=sel.value,groups=pxRepeatMealGroups();sel.replaceChildren(...groups.map(g=>new Option(g.date+' • '+t(g.meal,PX_UI_AR[g.meal]||g.meal)+' • '+g.rows.length+' '+t('items','أصناف'),g.key)));if(groups.some(g=>g.key===prior))sel.value=prior;sel.disabled=!groups.length;pxRenderRepeatMealPreview();pxRenderRepeatMealStatus();
+}
+function pxRenderRepeatMealStatus(){const el=$('pxRepeatMealStatus');if(!el)return;if(el.dataset.date!==selectedNutritionDate()){el.textContent='';delete el.dataset.state;return}el.textContent=el.dataset.state==='added'?pxExplain('Meal added locally. Pending items sync when connected.','الوجبة اتضافت محليًا. الأصناف المعلقة هتتزامن عند الاتصال.'):el.dataset.state==='error'?pxExplain('Could not confirm this meal was saved. Check the diary before retrying.','تعذر تأكيد حفظ الوجبة. راجع السجل قبل إعادة المحاولة.'):''}
+function pxRenderRepeatMealPreview(){
+ const t=pxExplain,g=pxRepeatMealGroups().find(x=>x.key===$('pxRepeatMealSelect').value),preview=$('pxRepeatMealPreview'),btn=$('pxRepeatMealAdd');
+ btn.disabled=pxRepeatMealBusy||!pxRepeatMealValid(g);btn.textContent=t('Add meal to selected day','أضف الوجبة لليوم المختار');
+ if(!g){preview.textContent=t('No earlier meals in the loaded diary yet. Log food first, or select a later diary date.','مفيش وجبات سابقة في السجل المحمل. سجل أكل الأول أو اختار تاريخ لاحق.');return}
+ preview.innerHTML='<ul role="list">'+g.rows.map(x=>'<li dir="auto">'+esc(x.name)+' — '+esc(x.amount)+' '+esc(x.servingUnit||'')+'</li>').join('')+'</ul><p>'+esc(selectedNutritionDate())+' • '+Math.round(g.rows.reduce((n,x)=>n+(Number(x.calories)||0),0))+' kcal</p><p class="muted">'+t('Uses the amounts and nutrition saved in that meal, even if your food library changed.','بنستخدم الكميات والقيم المسجلة في الوجبة دي، حتى لو مكتبة الأكل اتغيرت.')+'</p>';
+ if(!pxRepeatMealValid(g))preview.append(document.createTextNode(t('This meal has incomplete amounts or nutrition. Correct the source entries first.','الوجبة فيها كميات أو قيم غذائية ناقصة. صحح السجلات الأصلية الأول.')));
+}
+async function pxAddRepeatMeal(){
+ if(pxRepeatMealBusy)return;const g=pxRepeatMealGroups().find(x=>x.key===$('pxRepeatMealSelect').value),date=selectedNutritionDate(),status=$('pxRepeatMealStatus');
+ if(!pxRepeatMealValid(g)||shiftDateKey(date,0)!==date)return;
+ if(nutritionEntries(date).some(x=>String(x.meal)===g.meal)&&!confirm(pxExplain('This day already has items in this meal. Add another copy?','اليوم ده فيه أصناف لنفس الوجبة. تضيف نسخة تانية؟')))return;
+ pxRepeatMealBusy=true;$('pxRepeatMealAdd').disabled=true;
+ try{
+ const stamp=Date.now(),nonce=crypto.randomUUID(),time=currentTimeHHMM();
+ const rows=g.rows.map((x,i)=>({id:'temp_food_repeat_'+nonce+'_'+i,date,meal:g.meal,time,productId:x.productId||'',name:x.name,amount:Number(x.amount),servingQty:Number(x.servingQty)>0?Number(x.servingQty):1,servingUnit:x.servingUnit||'g',...Object.fromEntries(['calories','protein','carbs','fat'].map(k=>[k,Number(x[k])]))}));
+ const next=[...foodLog,...rows],pending=[...new Set([...foodPendingIds(),...rows.map(x=>x.id)])],queue=[...pxFoodOutbox(),...rows.map(x=>({type:'log',id:x.id,createdAt:stamp}))];
+ pxPersistDayChanges([[FOOD_LOG_KEY,JSON.stringify(next)],[FOOD_LOG_PENDING_KEY,JSON.stringify(pending)],[PX_FOOD_OUTBOX_KEY,JSON.stringify(queue)]]);
+ foodLog=next;renderNutrition();if(!navigator.onLine)updateConnectionBanner('offline');status.dataset.state='added';status.dataset.date=date;pxRenderRepeatMealStatus();setNutritionSyncState(status.textContent,true);pxFlushFoodOutbox().catch(console.warn);
+ }catch{status.dataset.state='error';status.dataset.date=date;pxRenderRepeatMealStatus()}
+ finally{pxRepeatMealBusy=false;pxRenderRepeatMealPreview()}
+}
 </script>
 
 </body></html>
