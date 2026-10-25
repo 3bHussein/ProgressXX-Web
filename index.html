@@ -9723,15 +9723,20 @@ function pxRenderAnatomy(){
  if(sel.options.length!==PX_ANATOMY.length)sel.replaceChildren(...PX_ANATOMY.map((m,i)=>new Option(m[0],String(i))));
  const choices=PX_ANATOMY.map((m,i)=>i).filter(i=>(region==='all'||PX_ANATOMY_REGION[i]===region)&&(!query||(PX_ANATOMY[i].join(' ')+' '+PX_ANATOMY_AR[i]+' '+PX_ANATOMY_AR_DETAILS[i].join(' ')).toLowerCase().includes(query)));
  if(choices.length&&!choices.includes(pxAnatomySelected))pxAnatomySelected=choices[0];
- list.replaceChildren();
- for(const i of choices){
-  const btn=document.createElement('button');btn.type='button';btn.className=i===pxAnatomySelected?'active':'';btn.textContent=ar?PX_ANATOMY_AR[i]:PX_ANATOMY[i][0];btn.setAttribute('aria-pressed',String(i===pxAnatomySelected));
-  const small=document.createElement('small');small.textContent=ar?PX_ANATOMY_AR_DETAILS[i][0]:PX_ANATOMY[i][1];btn.appendChild(small);
-  btn.onclick=()=>{pxAnatomySelected=i;sel.value=String(i);pxRenderAnatomy();};list.appendChild(btn);
- }
- if(hadListFocus){list.scrollTop=listScroll.top;list.scrollLeft=listScroll.left;list.querySelector('[aria-pressed="true"]')?.focus({preventScroll:true});}
  out.dir=list.dir=ar?'rtl':'ltr';
  out.lang=list.lang=ar?'ar':'en';
+ const choicesKey=JSON.stringify([ar,choices]),rebuildList=list.dataset.pxChoices!==choicesKey;
+ if(rebuildList){
+  list.replaceChildren();
+  for(const i of choices){
+   const btn=document.createElement('button');btn.type='button';btn.dataset.anatomyIndex=String(i);btn.textContent=ar?PX_ANATOMY_AR[i]:PX_ANATOMY[i][0];
+   const small=document.createElement('small');small.textContent=ar?PX_ANATOMY_AR_DETAILS[i][0]:PX_ANATOMY[i][1];btn.appendChild(small);
+   btn.onclick=()=>{pxAnatomySelected=i;sel.value=String(i);pxRenderAnatomy();};list.appendChild(btn);
+  }
+  list.dataset.pxChoices=choicesKey;
+ }
+ for(const btn of list.querySelectorAll('button[data-anatomy-index]')){const selected=Number(btn.dataset.anatomyIndex)===pxAnatomySelected;btn.classList.toggle('active',selected);btn.setAttribute('aria-pressed',String(selected))}
+ if(rebuildList&&hadListFocus){list.scrollTop=listScroll.top;list.scrollLeft=listScroll.left;const selected=list.querySelector('[aria-pressed="true"]');selected?.focus({preventScroll:true});selected?.scrollIntoView({behavior:'instant',block:'nearest',inline:'nearest'});}
  if(!choices.length){out.textContent=ar?'لا توجد نتائج مطابقة':'No matching muscles';return}
  const i=pxAnatomySelected,m=PX_ANATOMY[i];sel.value=String(i);
  const availablePlate=PX_ANATOMY_PLATES[i]||{};
@@ -9967,6 +9972,7 @@ function v2Checkins(){try{const x=JSON.parse(PXStore.getItem(V2_CHECKIN_KEY)||'{
 function renderV2Checkin(message=''){
   const x=v2Checkins()[localDateKey()]||{};
   if(!$('v2Sleep'))return;
+  $('v2Sleep').dataset.pxCheckDate=localDateKey();
   $('v2Sleep').value=x.sleepHours??'';
   $('v2Soreness').value=x.soreness??'';
   $('v2Energy').value=x.energy??'';
@@ -11441,8 +11447,8 @@ function pxInsightReadModel(start){const today=localDateKey(),active=activeDaily
 function pxInsightLtr(value){return '\u2066'+String(value)+'\u2069'}
 function pxInsightFraction(a,b){return pxInsightLtr(a+' / '+b)}
 function pxInsightNode(tag,text,cls){const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(cls)el.className=cls;return el}
-function pxInsightAction(en,ar,action){const button=pxInsightNode('button',pxExplain(en,ar),'btn soft');button.type='button';button.onclick=action;return button}
-function pxInsightOpenCheckin(){if(typeof pxRevealOptional==='function')pxRevealOptional('insights2');$('pxInsightGroup2').open=true;$('v2Sleep').scrollIntoView({behavior:pxScrollBehavior(),block:'center'});$('v2Sleep').focus({preventScroll:true})}
+function pxInsightAction(en,ar,action){const button=pxInsightNode('button',pxExplain(en,ar),'btn soft');button.type='button';button.dataset.insightAction=en;button.onclick=action;return button}
+function pxInsightOpenCheckin(){if($('v2Sleep')?.dataset.pxCheckDate!==localDateKey())renderV2Checkin();if(typeof pxRevealOptional==='function')pxRevealOptional('insights2');$('pxInsightGroup2').open=true;$('v2Sleep').scrollIntoView({behavior:pxScrollBehavior(),block:'center'});$('v2Sleep').focus({preventScroll:true})}
 function pxInsightOpenFood(date){if(!pxCalendarDate(date,localDateKey()))date=localDateKey();$('nutritionDate').value=date;go('nutrition');$('nutritionDate').scrollIntoView({behavior:pxScrollBehavior(),block:'center'});$('nutritionDate').focus({preventScroll:true})}
 function pxInsightOpenWeight(){go('analytics');$('progressPhotoDate').value=localDateKey();$('progressPhotoWeight').scrollIntoView({behavior:pxScrollBehavior(),block:'center'});$('progressPhotoWeight').focus({preventScroll:true})}
 function pxInsightOpenTraining(group){
@@ -11459,7 +11465,7 @@ function pxInsightChangeReason(group){const r=group.result;if(r.kind==='load_up'
 function pxRenderEvidenceInsights(){
  const host=$('pxInsightOverview');if(!host)return;const today=localDateKey(),scope=typeof pxSafetyScope==='function'?pxSafetyScope():PXStore,weights=progressPhotos(),periods=pxInsightPeriods(data.filter(r=>r.status==='Completed'),foodLog,weights,today);const changedScope=pxInsightPeriodState.scope!==scope;
  if(changedScope)pxInsightPeriodState={scope,start:null};if(!periods.includes(pxInsightPeriodState.start)){const recentTraining=periods.find(start=>data.some(r=>r?.status==='Completed'&&pxCalendarDate(r.date,today)&&r.date>=shiftDateKey(today,-27)&&pxCalendarWeekStart(r.date)===start));const observed=periods.find(start=>[...data.filter(r=>r.status==='Completed'),...foodLog,...weights].some(r=>r&&pxCalendarDate(r.date,today)&&pxCalendarWeekStart(r.date)===start));pxInsightPeriodState.start=recentTraining||observed||pxCalendarWeekStart(today)}
- const model=pxInsightReadModel(pxInsightPeriodState.start);if(!model)return;pxInsightRenderedDay=today;const open=new Set(changedScope?[]:[...host.querySelectorAll('details[open]')].map(d=>d.dataset.insightEvidence)),focused=host.contains(document.activeElement)&&document.activeElement.id==='pxInsightPeriod';host.dataset.pxUser='1';host.replaceChildren();
+ const model=pxInsightReadModel(pxInsightPeriodState.start);if(!model)return;pxInsightRenderedDay=today;const open=new Set(changedScope?[]:[...host.querySelectorAll('details[open]')].map(d=>d.dataset.insightEvidence)),focused=!changedScope&&host.contains(document.activeElement)?{period:document.activeElement.id==='pxInsightPeriod',evidence:document.activeElement.tagName==='SUMMARY'?document.activeElement.parentElement.dataset.insightEvidence:null,action:document.activeElement.dataset.insightAction,card:document.activeElement.closest('[data-insight-card]')?.dataset.insightCard}:null;host.dataset.pxUser='1';host.replaceChildren();
  const period=pxInsightNode('div',undefined,'pxInsightPeriod'),field=pxInsightNode('div'),label=pxInsightNode('label',pxExplain('Review period · calendar week','فترة المراجعة · أسبوع تقويمي'));label.htmlFor='pxInsightPeriod';const select=pxInsightNode('select');select.id='pxInsightPeriod';select.dir='ltr';periods.forEach(start=>select.append(new Option(start+' → '+(shiftDateKey(start,6)>today?today:shiftDateKey(start,6)),start)));select.value=model.start;select.onchange=()=>{pxInsightPeriodState.start=select.value;pxRenderEvidenceInsights()};field.append(label,select);period.append(field);host.append(period);
  const lead=pxInsightNode('div',undefined,'pxInsightLead');lead.append(pxInsightNode('small',pxExplain('One useful next step','خطوة واحدة مفيدة دلوقتي')));let title,reason,action;
  if(model.focus==='checkin'){title=pxExplain('Review today’s self check-in before a load decision','راجع متابعتك النهارده قبل قرار تغيير الوزن');reason=pxExplain('Your saved sleep, energy or soreness has a review flag in the existing app rule. This is your own report; training dates cannot measure recovery.','النوم أو الطاقة أو ألم العضلات اللي سجلتهم عليهم إشارة مراجعة حسب قاعدة التطبيق الحالية. ده تقييمك الشخصي، وتواريخ التمرين لا تقيس التعافي.');action=pxInsightAction('Review check-in','راجع المتابعة',pxInsightOpenCheckin)}
@@ -11479,7 +11485,7 @@ function pxRenderEvidenceInsights(){
  daily.append(pxInsightDetail('daily',open.has('daily'),details=>{for(const [key,en,ar,suffix] of [['sleepHours','Saved sleep','النوم المسجل',' h'],['energy','Saved energy','الطاقة المسجلة',' / 5'],['soreness','Saved soreness','ألم العضلات المسجل',' / 5']])pxInsightFact(details,pxExplain(en,ar)+': '+(model.check[key]===null?'—':model.check[key]+suffix));pxInsightFact(details,pxExplain('Daily supplies reminders and water. This check-in supplies your own sleep, energy and soreness. Neither dates nor unchecked reminders establish physiological recovery.','صفحة اليومي مصدر التذكيرات والماء. والمتابعة الذاتية مصدر نومك وطاقتك وألم العضلات اللي سجلتهم. التواريخ والتذكيرات غير المكتملة لا تحدد التعافي الجسدي.'))}));grid.append(daily);host.append(grid);
  const pending=typeof pxFoodOutbox==='function'?pxFoodOutbox().length:0,state=window.__pxSaveState?.()||{};host.append(pxInsightNode('p',pxExplain('Results use loaded records on this device. ','النتائج مبنية على السجلات المحملة على الجهاز. ')+(pending||state.dirty||state.busy||state.conflict?pxExplain('There are pending writes or sync review; check save status before comparing devices.','فيه حفظ معلق أو مراجعة مزامنة؛ راجع حالة الحفظ قبل المقارنة بين الأجهزة.'):''),'pxInsightSourceNote'));
  if(Object.values(model.rejected).some(n=>n>0)){const quality=pxInsightDetail('sources',open.has('sources'),details=>{pxInsightFact(details,pxExplain('Ignored invalid/future/duplicate records: ','السجلات غير الصالحة أو المستقبلية أو المكررة المستبعدة: ')+pxInsightLtr(model.rejected.workout+' / '+model.rejected.food+' / '+model.rejected.weight)+' '+pxExplain('(training / food / weight). Source records remain available for review.','(تمرين / أكل / وزن). السجلات الأصلية تفضل متاحة للمراجعة.'))});quality.querySelector('summary').textContent=pxExplain('Records excluded from this analysis','سجلات لم تُستخدم في التحليل');host.append(quality)}
- const hero=$('intelligence').querySelector('.hero');for(const selector of ['h2','p'])hero.querySelector(selector).dataset.pxUser='1';hero.querySelector('h2').textContent=pxExplain('What do your records tell you?','سجلاتك بتقول إيه؟');hero.querySelector('p').textContent=pxExplain('A result, its evidence, and one useful action.','نتيجة واضحة، والدليل عليها، وخطوة مفيدة.');if(focused)$('pxInsightPeriod').focus({preventScroll:true});
+ const hero=$('intelligence').querySelector('.hero');for(const selector of ['h2','p'])hero.querySelector(selector).dataset.pxUser='1';hero.querySelector('h2').textContent=pxExplain('What do your records tell you?','سجلاتك بتقول إيه؟');hero.querySelector('p').textContent=pxExplain('A result, its evidence, and one useful action.','نتيجة واضحة، والدليل عليها، وخطوة مفيدة.');if(focused){let target;if(focused.period)target=$('pxInsightPeriod');else if(focused.evidence)target=[...host.querySelectorAll('[data-insight-evidence]')].find(d=>d.dataset.insightEvidence===focused.evidence)?.querySelector('summary');else if(focused.action){const area=focused.card?[...host.querySelectorAll('[data-insight-card]')].find(c=>c.dataset.insightCard===focused.card):host.querySelector('.pxInsightLead');target=[...(area?.querySelectorAll('[data-insight-action]')||[])].find(b=>b.dataset.insightAction===focused.action)}target?.focus({preventScroll:true})}
 }
 function pxRefreshInsightIfVisible(){if(!$('intelligence')?.classList.contains('active')||pxInsightFrame!==null)return;pxInsightFrame=requestAnimationFrame(()=>{pxInsightFrame=null;if($('intelligence')?.classList.contains('active'))pxRenderInsightSummary()})}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)pxRefreshInsightIfVisible()});window.addEventListener('focus',pxRefreshInsightIfVisible);setInterval(()=>{if(!document.hidden&&pxInsightRenderedDay!==localDateKey())pxRefreshInsightIfVisible()},60000);
