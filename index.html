@@ -7135,7 +7135,8 @@ function renderNutritionHome(){
     const ring=$(`home${suffix}Ring`);
 
     if(value)value.textContent=`${pnum(used)} / ${pnum(target)}${unit==='kcal'?' kcal':unit}`;
-    if(leftEl)leftEl.textContent=pnum(left);
+    if(target<=0&&value){value.setAttribute('data-px-user','1');value.textContent=pnum(used)+(unit==='kcal'?' kcal':'g')+' • '+pxExplain('Target not set','الهدف غير محدد')}
+    if(leftEl)leftEl.textContent=target>0?pnum(left):'—';
     if(ring){
       const over=target>0&&used>target;
       ring.style.background=over
