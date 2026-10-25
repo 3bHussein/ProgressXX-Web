@@ -10980,6 +10980,7 @@ function pxDecisionCard(day,name,week){
  return '<article class="pxDecisionCard" data-px-user="1"><div class="pxDecisionTop"><b>'+esc(name)+'</b><span class="pill">'+esc(pxExplain(...title))+'</span></div><small>'+esc(day)+'</small><p class="pxDecisionEvidence" dir="auto">'+esc(evidence)+'</p>'+(d.goal?'<small>'+esc(pxExplain('Target in exercise name: ','الهدف في اسم التمرين: '))+d.goal.sets+' × '+d.goal.reps+'</small>':'')+'<p>'+esc(d.reason)+'</p><strong>'+esc(d.action)+'</strong></article>';
 }
 function pxRenderWeeklyCoach(week){
+ if(typeof pxRenderPracticalWeek==='function')return pxRenderPracticalWeek(week);
  const host=$('pxWeeklyCoach');if(!host)return;
  const pairs=new Map();weeklyReviewRows(week).filter(r=>r.status==='Completed').forEach(r=>pairs.set(normWorkoutText(r.day)+'|'+normWorkoutText(r.exercise),r));
  host.innerHTML='<h3>'+pxExplain('Your next-session decisions','قرارك للجلسة القادمة')+'</h3><p class="tiny muted">'+pxExplain('Based on recorded targets and comparable entries. No calendar-based promise to increase weight.','بناءً على الأهداف المسجلة وسجلات قابلة للمقارنة؛ لا يوجد موعد مضمون لزيادة الوزن.')+'</p>'+([...pairs.values()].map(r=>pxDecisionCard(r.day,r.exercise,week)).join('')||'<p>'+pxExplain('Log a completed workout in this week to start.','سجل تمرينًا مكتملًا في هذا الأسبوع أولًا.')+'</p>');
@@ -11000,7 +11001,7 @@ function pxRenderInsightSummary(){
 function pxRenderExerciseExplanation(){
  const name=$('v2Exercise')?.value;if(!name)return;
  const latest=data.filter(r=>r.status==='Completed'&&normWorkoutText(r.exercise)===normWorkoutText(name)).slice().sort((a,b)=>Number(b.week)-Number(a.week)||pxWorkoutChronological(a,b))[0];
- $('v2ExerciseInfo').innerHTML=latest?pxDecisionCard(latest.day,name,latest.week):'<p>'+pxExplain('No completed entries for this exercise.','لا توجد سجلات مكتملة لهذا التمرين.')+'</p>';
+ $('v2ExerciseInfo').innerHTML=latest?pxRecordedDecisionFor(latest.day,name,latest.week)+pxExerciseRecordedView(latest.day,name,latest.week):'<p>'+pxExplain('No completed entries for this exercise.','لا توجد سجلات مكتملة لهذا التمرين.')+'</p>';
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{pxInitInsightLayout();pxRenderInsightSummary();},{once:true});else{pxInitInsightLayout();pxRenderInsightSummary();}
 </script>
@@ -11103,6 +11104,84 @@ async function pxAddRepeatMeal(){
  foodLog=next;renderNutrition();if(!navigator.onLine)updateConnectionBanner('offline');status.dataset.state='added';status.dataset.date=date;pxRenderRepeatMealStatus();setNutritionSyncState(status.textContent,true);pxFlushFoodOutbox().catch(console.warn);
  }catch{status.dataset.state='error';status.dataset.date=date;pxRenderRepeatMealStatus()}
  finally{pxRepeatMealBusy=false;pxRenderRepeatMealPreview()}
+}
+</script>
+
+
+<style id="px-practical-progress-style">
+.pxWeekDigest{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0}.pxWeekDigest button{border:1px solid var(--line);border-radius:15px;background:var(--card2);color:var(--text);padding:13px 8px;min-height:100px;cursor:pointer;min-width:0}.pxWeekDigest button[aria-pressed="true"]{outline:2px solid var(--cyan);outline-offset:-2px}.pxWeekDigest b{display:block;font-size:27px;font-variant-numeric:tabular-nums}.pxWeekDigest span{display:block;font-size:12px;line-height:1.6;margin-top:5px}.pxWeekDigest .pxImproved b{color:var(--cyan)}.pxProgressPicker{margin:15px 0;min-width:0;max-width:100%}.pxProgressPicker label{display:block;font-weight:800;margin:12px 0 7px}.pxProgressPicker select{width:100%;min-width:0;max-width:100%;min-height:48px;overflow:hidden;text-overflow:ellipsis}.pxRecordedTrend{background:var(--card2);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}.pxRecordedTrend h4{margin:0 0 10px;font-size:17px}.pxRecordedTrend p,.pxProgressNote{font-size:12px;color:var(--muted);line-height:1.7;overflow-wrap:anywhere}.pxComparePair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}.pxComparePair>div{border:1px solid var(--line);background:var(--soft);padding:11px;border-radius:12px;min-width:0}.pxComparePair small,.pxComparePair strong{display:block;overflow-wrap:anywhere}.pxComparePair small{font-size:11px;color:var(--muted);line-height:1.7}.pxComparePair strong{font-size:16px;margin:8px 0;white-space:pre-line}.pxProgressHistory{border-top:1px solid var(--line);padding-top:8px;margin:13px 0}.pxProgressHistory>summary{min-height:44px;font-weight:800;cursor:pointer;display:flex;align-items:center}.pxProgressHistory>summary:after{content:"+";margin-inline-start:auto;font-size:22px;color:var(--muted)}.pxProgressHistory[open]>summary:after{content:"−"}.pxProgressHistory ol{list-style:none;padding:0;margin:0}.pxProgressHistory li{border-bottom:1px solid var(--line);padding:11px 0}.pxProgressHistory small{display:block;color:var(--muted);font-size:11px}.pxProgressHistory p{margin:6px 0;font-size:13px;overflow-wrap:anywhere}.pxWeekEmpty{padding:16px;border-radius:14px;background:var(--soft);font-size:13px;line-height:1.7}
+@media(max-width:360px){.pxWeekDigest button{padding:10px 5px}.pxWeekDigest span{font-size:11px}.pxRecordedTrend{padding:11px}.pxComparePair>div{padding:9px}.pxComparePair strong{font-size:14px}}
+</style>
+<script id="px-practical-progress">
+function pxRecordedKey(day,name){return JSON.stringify([normWorkoutText(day),normWorkoutText(name)])}
+function pxRecordedDate(row){return !!row&&/^\d{4}-\d{2}-\d{2}$/.test(String(row.date))&&shiftDateKey(row.date,0)===row.date&&row.date<=localDateKey()}
+function pxRecordedSets(row){
+ const sets=parsePerformanceSets(row?.performance||'');
+ if(!sets.length||sets.length>30||sets.some(s=>s.raw||!Number.isFinite(Number(s.weight))||Number(s.weight)<=0||!Number.isInteger(Number(s.reps))||Number(s.reps)<1||Number(s.reps)>100))return null;
+ const load=Number(sets[0].weight);if(sets.some(s=>Number(s.weight)!==load))return null;
+ return {load,reps:sets.map(s=>Number(s.reps)),total:sets.reduce((n,s)=>n+Number(s.reps),0),count:sets.length};
+}
+function pxRecordedDeload(week){const w=Number(week);return Number.isInteger(w)&&w>=26&&(w-26)%10<5}
+function pxCompareRecordedSessions(row,prior){
+ const result={row,prior,category:'review',kind:'missing',cur:null,prev:null};
+ if(!row||!prior)return result;
+ if(pxRecordedKey(row.day,row.exercise)!==pxRecordedKey(prior.day,prior.exercise)){result.kind='identity';return result}
+ if(![row.week,prior.week].every(w=>Number.isInteger(Number(w))&&Number(w)>=1&&Number(w)<=999)){result.kind='weeks';return result}
+ if(!pxRecordedDate(row)||!pxRecordedDate(prior)||row.date<=prior.date){result.kind='dates';return result}
+ const cur=pxRecordedSets(row),prev=pxRecordedSets(prior);result.cur=cur;result.prev=prev;
+ if(!cur||!prev){result.kind='sets';return result}
+ if(cur.count!==prev.count){result.kind='count';return result}
+ if(pxRecordedDeload(row.week)||pxRecordedDeload(prior.week)){result.kind='deload';return result}
+ result.loadDelta=Number((cur.load-prev.load).toFixed(4));result.repDelta=cur.total-prev.total;
+ if(cur.load===prev.load){result.kind=cur.total>prev.total?'reps_up':cur.total<prev.total?'reps_down':'same';result.category=cur.total>prev.total?'improved':cur.total===prev.total?'same':'review';return result}
+ if(cur.load>prev.load&&cur.reps.every((n,i)=>n>=prev.reps[i])){result.kind='load_up';result.category='improved';return result}
+ if(cur.load<prev.load&&cur.reps.every((n,i)=>n<=prev.reps[i])){result.kind='lower';return result}
+ result.kind='tradeoff';return result;
+}
+function pxRecordedCopy(kind){const texts={
+ weeks:['Check the week numbers','راجع أرقام الأسابيع','A saved week number is invalid. Use whole week numbers from 1 to 999.','رقم أسبوع مسجل غير صالح. استخدم أرقام أسابيع صحيحة من ١ إلى ٩٩٩.'],
+ missing:['A previous entry is needed','محتاجين سجل سابق','A completed entry for the same exercise and training day in an earlier week is missing.','مفيش سجل مكتمل لنفس التمرين ويوم التدريب في أسبوع سابق.'],
+ identity:['Different exercise or day','التمرين أو يوم التدريب مختلف','These entries cannot be treated as the same exercise. Renamed exercises stay separate.','مينفعش نعامل السجلين كنفس التمرين. الأسماء المختلفة تفضل منفصلة.'],
+ dates:['Check the dates','راجع التواريخ','Use valid, distinct dates in the right order, without future entries.','المقارنة محتاجة تواريخ صحيحة ومختلفة وبالترتيب، ومن غير سجلات مستقبلية.'],
+ sets:['Working sets need context','مجموعات العمل محتاجة توضيح','Text, bodyweight, incomplete sets or mixed loads cannot be compared here. Warm-up and working sets are not identified.','النصوص ووزن الجسم والمجموعات الناقصة أو الأوزان المختلطة مش قابلة للمقارنة هنا. مجموعات الإحماء والعمل مش محددة.'],
+ count:['Different number of sets','عدد المجموعات مختلف','More or fewer sets change the totals. Compare the same planned work before judging progress.','زيادة أو نقص المجموعات بيغيّر الإجمالي. قارن نفس حجم العمل المخطط قبل الحكم على التقدم.'],
+ deload:['Deload context','سياق تخفيف الحمل','One of these weeks is in the app’s configured deload block. A lighter record is not automatically a setback.','أحد الأسبوعين ضمن فترة تخفيف الحمل المحددة في التطبيق. الوزن الأخف مش معناه تلقائيًا تراجع.'],
+ reps_up:['More reps at the same load','عدّات أكتر بنفس الوزن','The same number of sets used the same load and recorded more total reps. This describes the log, not technique or effort.','نفس عدد المجموعات وبنفس الوزن، مع عدّات إجمالية أكتر. ده وصف للسجل، مش تقييم للتكنيك أو المجهود.'],
+ reps_down:['Fewer reps at the same load','عدّات أقل بنفس الوزن','Fewer total reps were recorded at the same load and set count. Check fatigue, effort and logging before changing your plan.','اتسجلت عدّات إجمالية أقل بنفس الوزن وعدد المجموعات. راجع التعب والمجهود ودقة التسجيل قبل تغيير خطتك.'],
+ same:['Same load and total reps','نفس الوزن وإجمالي العدّات','The recorded load, set count and total reps are unchanged. Individual-set reps may be distributed differently; this alone does not prove a plateau.','الوزن وعدد المجموعات وإجمالي العدّات زي ما هم. توزيع العدّات بين المجموعات ممكن يختلف؛ ده لوحده مش دليل على ثبات المستوى.'],
+ load_up:['More load, reps maintained','وزن أعلى مع الحفاظ على العدّات','The load increased and every corresponding set kept at least its previous reps. This is a recorded improvement, not a strength estimate.','الوزن زاد وكل مجموعة حافظت على عدّاتها السابقة على الأقل. ده تحسن مسجل، مش تقدير للقوة.'],
+ lower:['Lighter recorded performance','أداء مسجل أخف','The load fell without a rep increase in any corresponding set. The log alone cannot explain why.','الوزن قل من غير زيادة عدّات في أي مجموعة مقابلة. السجل لوحده ميوضحش السبب.'],
+ tradeoff:['Load and reps changed together','الوزن والعدّات اتغيروا مع بعض','A heavier load with fewer reps, or a lighter load with more reps, is not a clear win or loss. No estimated strength score is used to force a verdict.','وزن أعلى بعدّات أقل، أو وزن أخف بعدّات أكتر، مش مكسب أو خسارة واضحة. مش بنستخدم تقدير قوة عشان نفرض حكم.']
+ };const x=texts[kind]||texts.missing;return {title:pxExplain(x[0],x[1]),reason:pxExplain(x[2],x[3])};}
+function pxRecordedGroups(week){
+ const groups=new Map();for(const row of data){if(row.status!=='Completed'||!(Number(row.week)<=Number(week))||!String(row.day||'').trim()||!String(row.exercise||'').trim())continue;const key=pxRecordedKey(row.day,row.exercise);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(row)}
+ const out=[];for(const [key,rows] of groups){rows.sort(pxWorkoutChronological);const current=rows.find(r=>Number(r.week)===Number(week));if(!current)continue;const prior=rows.find(r=>Number(r.week)<Number(week));out.push({key,day:current.day,name:current.exercise,rows,current,prior,result:pxCompareRecordedSessions(current,prior)})}
+ return out.sort((a,b)=>String(a.day).localeCompare(String(b.day))||String(a.name).localeCompare(String(b.name)));
+}
+function pxRecordedEvidence(row,label){const sets=pxRecordedSets(row),value=sets?sets.load+' kg\n'+sets.reps.join(' + ')+' '+pxExplain('reps','عدّة'):String(row?.performance||pxExplain('No entry','لا يوجد سجل'));return '<div><small>'+esc(label)+'</small><strong dir="auto">'+esc(value)+'</strong><small>'+esc(row?'W'+row.week+' • '+(row.date||pxExplain('No date','بدون تاريخ')):'—')+'</small></div>'}
+function pxRecordedTrendMarkup(group){
+ if(!group)return '<p class="pxWeekEmpty">'+pxExplain('No completed entry is available for this exercise and week.','لا يوجد سجل مكتمل للتمرين والأسبوع ده.')+'</p>';
+ const r=group.result,copy=pxRecordedCopy(r.kind),delta=r.loadDelta!==undefined?'<p>'+esc(pxExplain('Load: ','الوزن: '))+'<b dir="ltr">'+(r.loadDelta>0?'+':'')+r.loadDelta+' kg</b> • '+pxExplain('Total reps: ','إجمالي العدّات: ')+'<b dir="ltr">'+(r.repDelta>0?'+':'')+r.repDelta+'</b></p>':'';
+ return '<article class="pxRecordedTrend" data-px-user="1"><h4>'+esc(copy.title)+'</h4><div class="pxComparePair">'+pxRecordedEvidence(group.prior,pxExplain('Previous available week','الأسبوع السابق المتاح'))+pxRecordedEvidence(group.current,pxExplain('Selected week','الأسبوع المختار'))+'</div>'+delta+'<p>'+esc(copy.reason)+'</p></article><details class="pxProgressHistory" data-px-user="1"><summary>'+pxExplain('Recent records · up to 6','آخر السجلات · حتى ٦')+'</summary><ol role="list">'+group.rows.slice(0,6).map(row=>'<li><small>'+esc('W'+row.week+' • '+(row.date||pxExplain('No date','بدون تاريخ')))+(!pxRecordedDate(row)?' • '+pxExplain('Date needs review','التاريخ محتاج مراجعة'):'')+'</small><p dir="auto">'+esc(row.performance||'—')+'</p></li>').join('')+'</ol></details>';
+}
+function pxProgressDecisionCard(group,week){
+ if(group.result.kind!=='deload')return pxDecisionCard(group.day,group.name,week);
+ return '<article class="pxDecisionCard" data-px-user="1"><div class="pxDecisionTop"><b>'+esc(group.name)+'</b><span class="pill">'+pxExplain('Review deload context first','راجع سياق تخفيف الحمل الأول')+'</span></div><p>'+esc(pxRecordedCopy('deload').reason)+'</p><strong>'+pxExplain('Check your planned working sets and recent normal weeks before deciding on an increase.','راجع مجموعات العمل المخططة والأسابيع العادية الأخيرة قبل اتخاذ قرار الزيادة.')+'</strong></article>';
+}
+function pxRecordedDecisionFor(day,name,week){const group=pxRecordedGroups(week).find(g=>g.key===pxRecordedKey(day,name));return group?pxProgressDecisionCard(group,week):pxDecisionCard(day,name,week)}
+function pxExerciseRecordedView(day,name,week){return pxRecordedTrendMarkup(pxRecordedGroups(week).find(g=>g.key===pxRecordedKey(day,name)))}
+function pxRenderProgressSelection(groups){
+ const select=$('pxProgressExercise'),group=groups.find(g=>g.key===select?.value);if(!group){$('pxProgressDetail').innerHTML='<p class="pxWeekEmpty">'+pxExplain('No exercises match this filter. Choose All exercises.','مفيش تمارين في الفلتر ده. اختار كل التمارين.')+'</p>';return}
+ $('pxProgressDetail').innerHTML=pxRecordedTrendMarkup(group)+'<h4>'+pxExplain('One useful next step','خطوة مفيدة للجلسة الجاية')+'</h4>'+pxProgressDecisionCard(group,Number($('pxWeeklyCoach').dataset.week));
+}
+function pxRenderPracticalWeek(week){
+ const host=$('pxWeeklyCoach');if(!host)return;const groups=pxRecordedGroups(week),sameWeek=host.dataset.week===String(week),selected=sameWeek?$('pxProgressExercise')?.value:'',filter=sameWeek?host.dataset.filter||'all':'all';host.dataset.week=String(week);host.dataset.filter=filter;host.setAttribute('data-px-user','1');
+ const counts={improved:0,same:0,review:0};groups.forEach(g=>counts[g.result.category]++);const comparable=groups.filter(g=>['reps_up','reps_down','same','load_up','lower','tradeoff'].includes(g.result.kind)).length;
+ host.innerHTML='<h3>'+pxExplain('Your week in plain language','أسبوعك بشكل بسيط')+'</h3><p class="pxProgressNote">W'+esc(week)+' • '+groups.length+' '+pxExplain('logged exercise/day pairs; ','تمرين/يوم مسجل؛ ')+comparable+' '+pxExplain('have comparable numeric entries. Compared with the previous available week, which may not be consecutive.','لهم سجلات رقمية قابلة للمقارنة. المقارنة مع الأسبوع السابق المتاح، ومش شرط يكون الأسبوع اللي قبله مباشرة.')+'</p><div class="pxWeekDigest">'+[['improved','Improved records','سجلات اتحسنت'],['same','Same recorded result','نفس النتيجة المسجلة'],['review','Needs context','محتاج سياق']].map(([key,en,ar])=>'<button class="'+(key==='improved'?'pxImproved':'')+'" type="button" data-progress-filter="'+key+'" aria-pressed="'+(filter===key)+'"><b>'+counts[key]+'</b><span>'+pxExplain(en,ar)+'</span></button>').join('')+'</div><button type="button" class="btn soft" data-progress-filter="all" aria-pressed="'+(filter==='all')+'">'+pxExplain('All exercises','كل التمارين')+'</button><p class="pxProgressNote">'+pxExplain('Needs context includes missing data, changed work and deloads; it does not mean you failed. These are recorded changes, not a recovery or strength assessment.','محتاج سياق يشمل نقص البيانات واختلاف العمل وتخفيف الحمل؛ مش معناه إنك فشلت. دي تغيّرات مسجلة، مش تقييم للتعافي أو القوة.')+'</p><div class="pxProgressPicker"><label for="pxProgressExercise">'+pxExplain('Compare an exercise','قارن تمرين')+'</label><select id="pxProgressExercise"></select></div><div id="pxProgressDetail"></div>';
+ const visible=groups.filter(g=>filter==='all'||g.result.category===filter),select=$('pxProgressExercise');select.replaceChildren(...visible.map(g=>new Option(g.day+' • '+g.name,g.key)));select.disabled=!visible.length;if(visible.some(g=>g.key===selected))select.value=selected;else{const focus=visible.find(g=>g.result.category==='review')||visible[0];if(focus)select.value=focus.key}select.onchange=()=>pxRenderProgressSelection(groups);pxRenderProgressSelection(groups);
+ host.querySelectorAll('[data-progress-filter]').forEach(button=>button.onclick=()=>{const key=button.dataset.progressFilter;host.dataset.filter=key;pxRenderPracticalWeek(week);requestAnimationFrame(()=>host.querySelector('[data-progress-filter="'+key+'"]').focus())});
+ if(!groups.length){$('pxProgressDetail').textContent=pxExplain('Log a completed exercise in this week to start. Skipped entries and drafts are not counted.','سجل تمرين مكتمل في الأسبوع ده عشان نبدأ. السجلات المتخطاة والمسودات مش محسوبة.')}
+ $('weeklyReviewWeek')?.setAttribute('aria-label',pxExplain('Week to review','الأسبوع المراد مراجعته'));
 }
 </script>
 
