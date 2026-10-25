@@ -15,7 +15,7 @@ assert.equal(await p.locator('#pxCaloriesRemaining').textContent(),'1600');asser
 for(const meal of ['Breakfast','Lunch','Dinner','Snack']){
  const group=p.locator('.foodMealGroup').filter({hasText:meal==='Snack'?'Snacks':meal});await group.getByRole('button',{name:'＋ Add food',exact:true}).click();assert.equal(await p.locator('#foodQuickMeal').inputValue(),meal);assert.equal(await p.locator('#foodQuickProduct').evaluate(e=>e===document.activeElement),true);
 }
-await p.getByRole('button',{name:'Search food library',exact:true}).click();assert.equal(await p.locator('#foodSearch').evaluate(e=>e===document.activeElement),true);
+await p.locator('#pxFoodDayTools > summary').click();await p.getByRole('button',{name:'Search food library',exact:true}).click();assert.equal(await p.locator('#foodSearch').evaluate(e=>e===document.activeElement),true);
 await p.evaluate(()=>{nutritionTargets.calories=100;renderNutrition()});assert.equal(await p.locator('#pxCaloriesRemaining').textContent(),'-300');
 await p.evaluate(()=>{nutritionTargets.calories=0;renderNutrition()});assert.equal(await p.locator('#pxCaloriesRemaining').textContent(),'—');
 await p.evaluate(()=>{nutritionTargets.calories=2000;renderNutrition();go('daily');renderDaily()});

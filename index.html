@@ -6914,7 +6914,7 @@ function pxQuickMeal(meal){
  $('foodQuickMeal').value=meal==='Other'?'Snack':meal;
  const usual=$('pxUsualFoodGrid')?.querySelector('button');const field=usual||$('foodQuickProduct');field.scrollIntoView({behavior:pxScrollBehavior(),block:'center'});field.focus({preventScroll:true});
 }
-function pxFocusFoodSearch(){const field=$('foodSearch');field.scrollIntoView({behavior:pxScrollBehavior(),block:'center'});field.focus({preventScroll:true});}
+function pxFocusFoodSearch(){if($('pxFoodLibraryDetails'))$('pxFoodLibraryDetails').open=true;const field=$('foodSearch');field.scrollIntoView({behavior:pxScrollBehavior(),block:'center'});field.focus({preventScroll:true});}
 function pxRenderDailyWeek(){
  const box=$('pxDailyWeek');if(!box)return;box.replaceChildren();
  const today=new Date(),start=new Date(today.getFullYear(),today.getMonth(),today.getDate());start.setDate(start.getDate()-((start.getDay()+6)%7));
@@ -6950,7 +6950,7 @@ function renderNutrition(){
     if(!rows.length&&meal==='Other')return '';
     const mealCals=Math.round(rows.reduce((s,x)=>s+(Number(x.calories)||0),0));
     const mealIcon={Breakfast:'🌅',Lunch:'☀️',Dinner:'🌙',Snack:'🍎'}[meal]||'🍽️';
-    return `<div class="foodMealGroup">
+    return `<div class="foodMealGroup${rows.length?'':' pxFoodMealEmpty'}">
       <div class="foodMealTitle">
         <span>${mealIcon} ${meal==='Snack'?'Snacks':meal}</span>
         <span class="foodMealMeta"><span class="tiny muted">${rows.length} item${rows.length===1?'':'s'}</span><span class="pill">${mealCals} kcal</span><button type="button" class="btn soft" onclick="pxQuickMeal('${meal}')">＋ Add food</button></span>
@@ -7299,6 +7299,7 @@ function updateFoodQuickPreview(){
   $('foodQuickPreview').innerHTML=`<div class="pxFoodPreviewHead"><div><strong data-px-user="1" dir="auto">${esc(p.name)}</strong><div class="tiny muted">${pnum(amount)} ${esc(p.servingUnit)}</div></div><span dir="ltr">${Math.round(p.calories*factor)} kcal</span></div><div class="pxFoodPreviewMacros"><span><b>${pnum(p.protein*factor)}g</b><small>Protein</small></span><span><b>${pnum(p.carbs*factor)}g</b><small>Carbs</small></span><span><b>${pnum(p.fat*factor)}g</b><small>Fat</small></span></div>`;
 }
 function toggleFoodProductForm(open=true){
+  if(open&&$('pxFoodLibraryDetails'))$('pxFoodLibraryDetails').open=true;
   $('foodProductForm')?.classList.toggle('open',!!open);
   if(!open){
     $('foodEditId').value='';
@@ -7943,6 +7944,7 @@ function toggleNutritionTargets(open){
   const next=typeof open==='boolean'?open:!f.classList.contains('open');
   f.classList.toggle('open',next);
   if(next){
+    if($('pxFoodDayTools'))$('pxFoodDayTools').open=true;
     $('targetCalories').value=nutritionTargets.calories;$('targetProtein').value=nutritionTargets.protein;
     $('targetCarbs').value=nutritionTargets.carbs;$('targetFat').value=nutritionTargets.fat;
   }
@@ -10695,6 +10697,7 @@ function pxSetUILanguage(language,persist=true){
  if(typeof pxRenderInsightSummary==='function')pxRenderInsightSummary();if(typeof pxRenderWeeklyCoach==='function')pxRenderWeeklyCoach(Number($('weeklyReviewWeek')?.value)||activeWeek());
  renderProgressPhotos();pxRenderQuickFoods();if(typeof pxUpdateMobilePage==='function')pxUpdateMobilePage(document.querySelector('.bottomNav .navbtn.active')?.dataset.page||'home');
  if(typeof pxRenderUsualFoods==='function'){pxRenderUsualFoods();renderFavoriteFoods();renderRecentFoods()}
+ if(typeof pxFoodCalmLabels==='function')pxFoodCalmLabels();
  if(typeof pxRenderSavePanel==='function')pxRenderSavePanel();if(typeof pxRenderFoodUndo==='function')pxRenderFoodUndo();
  pxTranslateUiTree(document.body);
 }
@@ -11015,7 +11018,7 @@ function pxRepeatMealGroups(){
 }
 function pxRepeatMealValid(group){return group&&group.rows.length&&group.rows.every(x=>String(x.name||'').trim()&&Number.isFinite(Number(x.amount))&&Number(x.amount)>0&&['calories','protein','carbs','fat'].every(k=>x[k]!==null&&x[k]!==''&&x[k]!==undefined&&Number.isFinite(Number(x[k]))&&Number(x[k])>=0))}
 function pxRenderRepeatMeals(){
- let box=$('pxRepeatMeals');if(!box){box=document.createElement('details');box.id='pxRepeatMeals';box.className='pxRepeatMeals';box.setAttribute('data-px-user','1');box.innerHTML='<summary></summary><label for="pxRepeatMealSelect"></label><select id="pxRepeatMealSelect"></select><div id="pxRepeatMealPreview"></div><button id="pxRepeatMealAdd" class="btn soft" type="button"></button><p id="pxRepeatMealStatus" role="status" aria-live="polite"></p>';$('nutrition').querySelector('.pxFoodShortcuts').after(box);$('pxRepeatMealSelect').onchange=pxRenderRepeatMealPreview;$('pxRepeatMealAdd').onclick=pxAddRepeatMeal;}
+ let box=$('pxRepeatMeals');if(!box){box=document.createElement('details');box.id='pxRepeatMeals';box.className='pxRepeatMeals';box.setAttribute('data-px-user','1');box.innerHTML='<summary></summary><label for="pxRepeatMealSelect"></label><select id="pxRepeatMealSelect"></select><div id="pxRepeatMealPreview"></div><button id="pxRepeatMealAdd" class="btn soft" type="button"></button><p id="pxRepeatMealStatus" role="status" aria-live="polite"></p>';$('nutrition').querySelector('.nutritionOrderQuick').append(box);$('pxRepeatMealSelect').onchange=pxRenderRepeatMealPreview;$('pxRepeatMealAdd').onclick=pxAddRepeatMeal;}
  const t=pxExplain;box.querySelector('summary').textContent=t('Repeat a previous meal','كرر وجبة سابقة');box.querySelector('label').textContent=t('Choose from earlier diary days','اختار من أيام السجل السابقة');
  const sel=$('pxRepeatMealSelect'),prior=sel.value,groups=pxRepeatMealGroups();sel.replaceChildren(...groups.map(g=>new Option(g.date+' • '+t(g.meal,PX_UI_AR[g.meal]||g.meal)+' • '+g.rows.length+' '+t('items','أصناف'),g.key)));if(groups.some(g=>g.key===prior))sel.value=prior;sel.disabled=!groups.length;pxRenderRepeatMealPreview();pxRenderRepeatMealStatus();
 }
@@ -11279,10 +11282,64 @@ function pxChooseUsualFood(id){
 function pxSearchUsualFood(){const browse=$('pxFoodBrowse');browse.open=true;pxFilterQuickFoods('all');const input=$('pxQuickFoodSearch');input.scrollIntoView({behavior:pxScrollBehavior(),block:'center'});input.focus({preventScroll:true})}
 function pxRenderUsualFoods(){
  const quick=document.querySelector('#nutrition .nutritionOrderQuick');if(!quick)return;let root=$('pxUsualFoods');if(!root){root=document.createElement('div');root.id='pxUsualFoods';root.className='pxUsualFoods';root.setAttribute('data-px-user','1');root.innerHTML='<div class="pxUsualFoodsHead"><h4></h4><button class="btn soft" type="button"></button></div><p></p><div id="pxUsualFoodGrid" class="pxUsualFoodGrid"></div>';quick.querySelector('.panelHead').after(root);root.querySelector('button').onclick=pxSearchUsualFood;$('foodQuickProduct').addEventListener('change',pxRenderUsualFoods)}
- root.querySelector('h4').textContent=pxExplain('Your usual foods','أكلك المعتاد');root.querySelector('button').textContent=pxExplain('Search all foods','ابحث في كل الأطعمة');root.querySelector('p').textContent=pxExplain('Foods logged on the most days in the last 30 days of loaded history. Choose to preview the last matching quantity before adding.','الأكثر تسجيلًا في أيام مختلفة خلال آخر ٣٠ يوم من السجل المحمل. اختار لمراجعة آخر كمية مطابقة للوحدة قبل الإضافة.');
+ root.querySelector('h4').textContent=pxExplain('Your usual foods','أكلك المعتاد');root.querySelector('button').textContent=pxExplain('Search all foods','ابحث في كل الأطعمة');root.querySelector('p').textContent=pxExplain('Choose a food. Review the amount, then Add.','اختار أكلة، راجع الكمية، واضغط إضافة.');
  const items=pxUsualFoodRows();$('pxUsualFoodGrid').replaceChildren(...items.map(item=>{const button=document.createElement('button');button.type='button';button.className='pxUsualFood';button.dataset.usualFood=String(item.product.id);button.title=String(item.product.name);button.setAttribute('aria-pressed',String(String($('foodQuickProduct').value)===String(item.product.id)));const name=document.createElement('b');name.dir='auto';name.textContent=item.product.name;const portion=document.createElement('span');portion.dir='ltr';portion.textContent=String(Number(item.last.amount))+' '+item.product.servingUnit;const days=document.createElement('small');days.textContent=item.days+' '+pxExplain('days logged in 30 days','يوم تسجيل خلال ٣٠ يوم');button.append(name,portion,days);button.onclick=()=>pxChooseUsualFood(item.product.id);return button}));
  if(!items.length){const empty=document.createElement('div');empty.className='pxUsualFoodEmpty';empty.textContent=pxExplain('No compatible recent portions yet. Use Search all foods to start.','مفيش كميات حديثة مطابقة للوحدة لسه. ابدأ بالبحث في كل الأطعمة.');$('pxUsualFoodGrid').append(empty)}
 }
+</script>
+
+
+<style id="px-food-calm-style">
+#nutrition>.panel{margin-bottom:12px!important;padding:16px!important}
+#nutrition .nutritionOrderDiary>.panelHead .tiny,#nutrition .nutritionOrderQuick>.panelHead .tiny,#nutrition .nutritionOrderToday>.panelHead .tiny{display:none!important}
+#nutrition .pxCalorieDashboard{gap:14px;margin:12px 0}
+#nutrition .pxCalorieEquation p{display:none}
+#nutrition .nutritionHero{gap:8px;margin:12px 0}
+#nutrition .macroCard{padding:10px 8px;border-radius:12px;box-shadow:none}
+#nutrition .macroCard span{font-size:11px}
+#nutrition .pxFoodShortcuts{display:none}
+#nutrition .pxFoodMealEmpty .foodMealMeta>.tiny,#nutrition .pxFoodMealEmpty .foodMealMeta>.pill{display:none}
+#nutrition .pxFoodMealEmpty .foodMealTitle{margin:0}
+#nutrition .pxFoodMealEmpty{background:transparent;padding:8px 10px;border-style:dashed}
+#nutrition .pxFoodDateRow{margin:12px 0 4px}
+#nutrition .pxFoodDateRow input{width:100%;min-width:0;min-height:44px}
+#nutrition .pxFoodCalmDetails{border-top:1px solid var(--line);margin-top:12px;padding-top:4px}
+#nutrition .pxFoodCalmDetails>summary,#nutrition>.nutritionOrderLibrary>summary{display:flex;align-items:center;gap:10px;min-height:48px;cursor:pointer;font-size:13px;font-weight:800;list-style:none}
+#nutrition .pxFoodCalmDetails>summary:after,#nutrition>.nutritionOrderLibrary>summary:after{content:'+';margin-inline-start:auto;font-size:21px;color:var(--muted)}
+#nutrition .pxFoodCalmDetails[open]>summary:after,#nutrition>.nutritionOrderLibrary[open]>summary:after{content:'−'}
+#nutrition .pxFoodCalmDetails>summary::-webkit-details-marker,#nutrition>.nutritionOrderLibrary>summary::-webkit-details-marker{display:none}
+#nutrition .pxUsualFoods:has(.pxUsualFoodEmpty)>p,#nutrition .pxUsualFoodEmpty{display:none}
+#nutrition .pxUsualFoods{margin:4px 0 14px}
+#nutrition .pxUsualFoodsHead h4{font-size:13px;color:var(--muted)}
+#nutrition .pxUsualFoodsHead .btn{font-size:12px;padding:8px 10px;min-height:44px}
+#nutrition .pxUsualFood{min-height:68px;padding:9px 11px;gap:3px;border-radius:12px}
+#nutrition .pxUsualFood small{display:none}
+#nutrition .pxUsualFood span{font-size:11px;color:var(--muted)}
+#nutrition .foodQuickGrid{gap:10px}
+#nutrition .foodQuickGrid>button{grid-column:1/-1;min-height:48px}
+#nutrition #foodQuickPreview{box-shadow:none;border-radius:12px;font-size:12px;line-height:1.7;padding:12px}
+#nutrition .nutritionOrderQuick>.panelHead{margin-bottom:8px}
+#nutrition>.nutritionOrderLibrary:not([open]){padding-block:8px!important}
+#nutrition>.nutritionOrderLibrary>summary{font-size:15px}
+#nutrition>.nutritionOrderLibrary>.panelHead h3{display:none}
+#nutrition .pxFoodCalmDetails .pxFoodShortcuts{display:flex;margin:8px 0;gap:8px}
+#nutrition .pxFoodCalmDetails .pxFoodShortcuts>button:first-child{display:none}
+#nutrition .pxFoodCalmDetails .pxFoodShortcuts>button{flex:1;min-height:44px}
+@media(max-width:600px){#nutrition .foodQuickGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}#nutrition .foodQuickGrid>.foodSelect{grid-column:1/-1}#nutrition .pxCalorieDashboard{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}#nutrition .pxCalorieRing{width:130px!important;height:130px!important;max-width:100%;margin:auto}#nutrition .pxCalorieEquation{min-width:0}#nutrition .pxCalorieEquation b{font-size:20px}#nutrition .pxCalorieRing b{font-size:28px}#nutrition .pxCalorieRing span{font-size:10px}}
+</style>
+<script id="px-food-calm">
+function pxFoodCalmDetails(id,en,ar){const d=document.createElement('details');d.id=id;d.className='pxFoodCalmDetails';const summary=document.createElement('summary');summary.dataset.pxUser='1';summary.dataset.foodCalmEn=en;summary.dataset.foodCalmAr=ar;d.append(summary);return d}
+function pxFoodCalmLabels(){document.querySelectorAll('[data-food-calm-en]').forEach(el=>el.textContent=pxExplain(el.dataset.foodCalmEn,el.dataset.foodCalmAr))}
+function pxInitFoodCalm(){
+ const diary=document.querySelector('#nutrition .nutritionOrderDiary'),quick=document.querySelector('#nutrition .nutritionOrderQuick'),library=document.querySelector('#nutrition .nutritionOrderLibrary');if(!diary||$('pxFoodDayTools'))return;
+ const filters=diary.querySelector('.progressFilters'),date=$('nutritionDate').parentElement;date.classList.add('pxFoodDateRow');diary.querySelector('.panelHead').after(date);
+ const dayTools=pxFoodCalmDetails('pxFoodDayTools','Day options & targets','خيارات اليوم والأهداف');filters.before(dayTools);dayTools.append(filters,$('nutritionTargetsForm'),diary.querySelector('.pxFoodShortcuts'),$('proteinSuggestionBox'));if($('pxRepeatMeals'))quick.append($('pxRepeatMeals'));
+ $('pxFoodBrowse').querySelector('.pxFoodBrowseBody').append($('favoriteFoodsWrap'),$('recentFoodsWrap'));
+ const time=$('foodQuickTime').parentElement;const timeDetails=pxFoodCalmDetails('pxFoodTimeDetails','Recording time (automatic)','وقت التسجيل (تلقائي)');dayTools.append(timeDetails);timeDetails.append(time);
+ const managed=document.createElement('details');managed.id='pxFoodLibraryDetails';managed.className=library.className;const summary=document.createElement('summary');summary.dataset.pxUser='1';summary.dataset.foodCalmEn='Manage food library';summary.dataset.foodCalmAr='إدارة مكتبة الأكل';managed.append(summary,...library.childNodes);library.replaceWith(managed);
+ pxFoodCalmLabels();
+}
+pxInitFoodCalm();
 </script>
 
 </body></html>
