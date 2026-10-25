@@ -126,7 +126,7 @@ The capture script is a **local development tool** that injects demonstration fi
 
 ## Validation and release status
 
-The last verified runtime release is [`74eacf1`](https://github.com/3bHussein/ProgressXX-Web/commit/74eacf1e2ea5d10de0d84bfe1e0814ddbe31bdfc). Its [Full UI](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40240795126), [Fast safety](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40240795129), [Firefox/WebKit](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40240795198) and [Pages](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40240795176) runs succeeded. The deployed root was downloaded and compared byte-for-byte with the tested source. The development log records the initial failures and successful reruns.
+The verified runtime release is [`27ac5e8`](https://github.com/3bHussein/ProgressXX-Web/commit/27ac5e8b109bd7cfd06b7d12330c5e06c341c759). Its [Full UI](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40244869456), [Fast safety](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40244869452), [Firefox/WebKit](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40244869474) and [Pages](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40244869527) runs succeeded. The deployed root was downloaded and compared byte-for-byte with the tested source. The development log records the initial failures and successful reruns.
 
 Coverage includes synthetic workout/food actions, portions, Undo, reload, drafts, offline retry, backup/import, mocked-account save/reload/logout, keyboard controls and EN/AR mobile layouts. **Automated fixtures do not certify every real-account or physical-device scenario.**
 
@@ -147,7 +147,7 @@ Coverage includes synthetic workout/food actions, portions, Undo, reload, drafts
 - **Weekly report:** open Progress → Weekly report / share. Choose a week, print/save PDF, or share/download its text. Nutrition averages use days with valid logged entries; missing days remain unknown. Old weeks are not judged against current targets.
 - **Visible sections:** in Settings → Preferences & tools, choose optional Food/Insights sections. Core logging and save/recovery controls remain available; direct library search can reveal a hidden library for the current task.
 
-Saved portions, archive choices and section visibility are **device-local, separated by account**. They are not sent to cloud snapshots or included in the JSON backup. Core diary changes retain the existing persistence path. See [Food workflow tools](docs/FOOD-WORKFLOW-TOOLS.md) for boundaries and validation. The portions/workflow release is verified. The new linked Insights view is awaiting its required same-commit CI and Pages checks; the evidence above remains the deployed baseline until publication is recorded.
+Saved portions, archive choices and section visibility are **device-local, separated by account**. They are not sent to cloud snapshots or included in the JSON backup. Core diary changes retain the existing persistence path. See [Food workflow tools](docs/FOOD-WORKFLOW-TOOLS.md) for boundaries and validation. The workflow additions and linked Insights view are verified in the runtime above. Physical-device and real-account acceptance remain separate from automated fixtures.
 
 ## Engineering and data-preservation rules
 
