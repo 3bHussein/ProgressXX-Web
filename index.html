@@ -3055,7 +3055,7 @@ function rebuild(){
  if(currentPage==='intelligence')safeProgressXXRender('Insights',renderIntelligence);
 }
 function save(changedRecord=null){PXStore.setItem(KEY,JSON.stringify(data));rebuild();scheduleAutoBackup()}
-function buildFilters(){const ds=['All',...days()];$('dayTabs').innerHTML=ds.map(d=>`<button data-px-user="${d==='All'?'0':'1'}" class="chip ${d===activeDay?'active':''}" onclick='activeDay=${JSON.stringify(d)};buildFilters();renderLog(true)'>${esc(d)}</button>`).join('');const ws=[...new Set(data.map(x=>x.week).filter(Boolean))].sort((a,b)=>b-a);$('weekFilter').innerHTML='<option value="">All weeks</option>'+ws.map(w=>`<option value="${w}">W${w}</option>`).join('');buildProgressFilters()}
+function buildFilters(){const ds=['All',...days()];$('dayTabs').innerHTML=ds.map(d=>`<button data-px-user="${d==='All'?'0':'1'}" class="chip ${d===activeDay?'active':''}" onclick="activeDay=${esc(JSON.stringify(d))};buildFilters();renderLog(true)">${esc(d)}</button>`).join('');const ws=[...new Set(data.map(x=>x.week).filter(Boolean))].sort((a,b)=>b-a);$('weekFilter').innerHTML='<option value="">All weeks</option>'+ws.map(w=>`<option value="${w}">W${w}</option>`).join('');buildProgressFilters()}
 function editorTrainingDays(){
  const history=days(),templates=workoutTemplates();
  const named=templates.map(t=>String(t.day||'').trim()).filter(Boolean);
@@ -3369,7 +3369,7 @@ function todayScoreData(){
 }
 function launchScheduledWorkout(){
   const day=scheduledTrainingForDate();
-  if(!day||day==='REST')return;
+  if(!day||day==='REST'||isRestDay())return;
   openWorkoutSession();
   if($('sessionDaySelect')){
     $('sessionDaySelect').value=day;
@@ -3394,7 +3394,7 @@ function renderTodayPlan(){
     '<div class="todayPlanCard"><b>💧 '+pnum(water.current)+' / '+pnum(water.target)+' L</b><span>'+Math.round(food.calories||0)+' kcal logged today</span></div>';
   if($('todayPlanBadge'))$('todayPlanBadge').textContent=rest?'Recovery':scheduled?'Training':'Plan';
   const act=$('todayPlanAction');
-  if(act)act.innerHTML=scheduled&&scheduled!=='REST'?'<button class="btn primary" onclick="launchScheduledWorkout()">▶ Start today workout</button>':'<button class="btn soft" onclick="go(\'settings\')">Set workout schedule</button>';
+  if(act)act.innerHTML=!rest&&scheduled&&scheduled!=='REST'?'<button class="btn primary" onclick="launchScheduledWorkout()">▶ Start today workout</button>':'<button class="btn soft" onclick="go(\'settings\')">Set workout schedule</button>';
 }
 function renderHomeScore(){
   if(!$('homeScoreValue'))return;
@@ -3424,6 +3424,7 @@ function renderHomeScore(){
   parts.push('Daily '+s.done+'/'+s.totalDaily);
   parts.push('Water '+s.water+'%');
   $('homeScoreSummary').textContent=parts.join(' • ');
+  if(typeof pxRenderHomeHub==='function')pxRenderHomeHub();
 }
 function renderHome(){
   const aw=activeWeek(), prog=weekProgress();
@@ -3438,7 +3439,7 @@ function renderHome(){
 
   $('quickDays').innerHTML=days().slice(0,4).map(d=>{
     const done=prog.closed.has(d);
-    return `<button class="dayBtn" onclick='quickAdd(${JSON.stringify(d)})'>${done?'✓ ':''}${esc(d.replace(/^\d+\s*[—-]\s*/,''))}</button>`
+    return `<button class="dayBtn" onclick="quickAdd(${esc(JSON.stringify(d))})">${done?'✓ ':''}${esc(d.replace(/^\d+\s*[—-]\s*/,''))}</button>`
   }).join('');
 
   if($('weekProgressLabel'))$('weekProgressLabel').textContent=`W${aw} • ${prog.done}/${prog.total||0} days`;
@@ -10980,5 +10981,40 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 #intelligence>.hero .eyebrow{display:none}#intelligence>.hero p{font-size:12px}#intelligence>.hero h2{font-size:23px;margin:0 0 8px}
 .pxInsightGroup>summary,.pxWeeklyNumbers>summary{font-size:16px;font-weight:800;cursor:pointer;min-height:48px;display:flex;align-items:center;justify-content:space-between;gap:12px;list-style:none}.pxInsightGroup>summary:after,.pxWeeklyNumbers>summary:after{content:'+';font-size:23px;color:var(--muted)}.pxInsightGroup[open]>summary:after,.pxWeeklyNumbers[open]>summary:after{content:'−'}.pxInsightGroup>.panel{border:0!important;box-shadow:none!important;background:transparent!important;padding:12px 0!important}.pxInsightSummaryGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}.pxInsightSummaryGrid article,.pxDecisionCard{border:1px solid var(--line);background:var(--card2);padding:15px;border-radius:16px;min-width:0}.pxInsightSummaryGrid article>b{display:block;font-size:21px;margin:8px 0}.pxInsightSummaryGrid p,.pxDecisionCard p{font-size:13px;line-height:1.7;color:var(--muted);overflow-wrap:anywhere}.pxInsightSummaryGrid small{color:var(--muted);font-size:12px}.pxInsightSummaryGrid button{width:100%}.pxDecisionCard{margin:10px 0}.pxDecisionTop{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}.pxDecisionTop b{min-width:0;overflow-wrap:anywhere}.pxDecisionCard>strong{display:block;font-size:14px;line-height:1.7}.pxDecisionEvidence{background:var(--soft);border-radius:10px;padding:10px;font-variant-numeric:tabular-nums}.pxWeeklyNumbers{margin:16px 0;border-top:1px solid var(--line);padding-top:8px}#v2MuscleCards .v2MuscleTrack{display:none}@media(max-width:820px){#intelligence>.hero{padding:14px!important}#intelligence>.hero p{display:none}#intelligence>.hero h2{font-size:20px;margin:0 0 12px}.pxInsightSummaryGrid{grid-template-columns:1fr}.pxInsightGroup.panel{padding:10px 15px!important}.pxInsightGroup>.panel{padding:12px 0!important}.pxInsightGroup>summary{font-size:15px}.pxDecisionCard{padding:13px}}
 </style>
+
+
+<style id="px-home-hub-style">
+#home .hero .actions{display:none}#home .hero p{max-width:55ch}
+.pxHomeHub{order:0;margin:0 0 14px}.pxHomeHubHead{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.pxHomeHubHead h3{margin:0}.pxHomeHubGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pxHomeAction{min-width:0;padding:16px;border:1px solid var(--line);border-radius:18px;background:var(--card);display:flex;flex-direction:column;gap:9px}.pxHomeAction h4{margin:0;font-size:15px}.pxHomeAction b{font-size:21px;overflow-wrap:anywhere}.pxHomeAction p{margin:0;font-size:12px;color:var(--muted);line-height:1.6}.pxHomeAction .btn{margin-top:auto;min-height:46px;white-space:normal}.pxHomeAction .btn+.btn{margin-top:0}.pxHomeAction progress{width:100%;height:8px;accent-color:var(--cyan)}.pxHomeMore{order:6;border:1px solid var(--line);border-radius:18px;padding:14px;margin:0 0 14px;background:var(--card)}.pxHomeMore>summary{cursor:pointer;font-weight:800;min-height:28px}.pxHomeMore[open]>summary{margin-bottom:14px}.pxHomeMore .panel{margin-bottom:10px}.pxHomeHint{font-size:12px;color:var(--muted);line-height:1.7;margin:10px 0 0}
+@media(max-width:380px){.pxHomeAction{padding:12px;gap:8px}.pxHomeAction b{font-size:18px}.pxHomeHubHead{align-items:flex-start}}@media(min-width:1000px){.pxHomeHubGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+</style>
+<script id="px-home-hub">
+function pxHomeJump(page,id){go(page);requestAnimationFrame(()=>{const el=document.getElementById(id);if(!el)return;el.scrollIntoView({block:'center',behavior:pxScrollBehavior()});if(el.matches('input,select,button'))el.focus({preventScroll:true})})}
+function pxRenderHomeHub(){
+ const home=$('home');if(!home)return;
+ let hub=$('pxHomeHub');if(!hub){hub=document.createElement('div');hub.id='pxHomeHub';hub.className='pxHomeHub';hub.setAttribute('data-px-user','1');home.querySelector('.hero').after(hub);
+ const nutrition=document.createElement('details');nutrition.className='pxHomeMore';nutrition.id='pxHomeNutrition';nutrition.style.order='2';nutrition.setAttribute('data-px-user','1');nutrition.innerHTML='<summary></summary>';home.append(nutrition);nutrition.append(home.querySelector('.homeOrderNutrition'));
+ const more=document.createElement('details');more.className='pxHomeMore';more.id='pxHomeMore';more.innerHTML='<summary></summary>';home.append(more);['.homeOrderPlan','.homeOrderScore','.homeOrderWeekly','.homeOrderRecent','.homeOrderStats'].forEach(q=>{const node=home.querySelector(q);if(node)more.append(node)});
+ }
+ const t=(en,ar)=>pxExplain(en,ar),date=localDateKey(),rest=isRestDay(date),scheduled=scheduledTrainingForDate(date),rows=data.filter(x=>x.date===date&&x.status==='Completed'),food=nutritionTotals(date),logs=foodLog.filter(x=>x.date===date),water=getWaterState(),active=activeDailyReminders(),doneMap=dailyDoneMap()[date]||{},done=active.filter(x=>normalizeDailyDoneValue(doneMap[x.id])).length;
+ const target=Number(nutritionTargets.calories)||0,used=Math.round(Number(food.calories)||0),left=Math.round(Math.abs(target-used));
+ const training=rest?t('Rest day','يوم راحة'):rows.length?t('Training logged','تم تسجيل تمرين'):scheduled&&scheduled!=='REST'?scheduled:t('Choose a workout','اختار تمرينك');
+ const card=(title,value,note,action,label,progress='')=>'<article class="pxHomeAction"><h4>'+esc(title)+'</h4><b>'+esc(value)+'</b><p>'+esc(note)+'</p>'+progress+'<button type="button" class="btn soft" onclick="'+action+'">'+esc(label)+'</button></article>';
+ const meter=(value,max,label)=>'<progress aria-label="'+esc(label)+'" value="'+Math.max(0,Math.min(value,max))+'" max="'+Math.max(1,max)+'"></progress>';
+ hub.innerHTML='<div class="pxHomeHubHead"><h3>'+t('Your next step','خطوتك الجاية')+'</h3><span class="pill">'+esc(new Date().toLocaleDateString(document.documentElement.lang==='ar'?'ar-EG':'en-GB',{weekday:'short',day:'numeric',month:'short'}))+'</span></div><div class="pxHomeHubGrid">'+
+ card(t('Training','التمرين'),training,rest?t('Your plan allows rest. Review your history whenever you need.','خطتك تسمح بالراحة. تقدر تراجع سجلك في أي وقت.'):rows.length?rows.length+' '+t('completed exercise entries today; this may be a partial session.','سجل تمرين مكتمل النهارده؛ ممكن تكون الجلسة لسه مستمرة.'):t('Start a session and record each set as you go.','ابدأ جلسة وسجل كل مجموعة أثناء التمرين.'),rest?"go('log')":scheduled&&scheduled!=='REST'&&!rows.length?'launchScheduledWorkout()':"openWorkoutSession()",rest?t('View workouts','عرض التمارين'):rows.length?t('Open session','افتح جلسة التمرين'):t('Start workout','ابدأ التمرين'))+
+ card(t('Food today','أكل النهارده'),used+' kcal',target>0?left+' kcal '+(used>target?t('above your saved target.','فوق هدفك المحفوظ.'):t('to your saved target.','متبقية لهدفك المحفوظ.')):t('Set a calorie target in Food when ready.','حدد هدف السعرات في صفحة الأكل لما تكون جاهز.'),"pxHomeJump('nutrition','foodQuickProduct')",t('Add food','سجل أكل'),target>0?meter(used,target,t('Logged calories against saved target','السعرات المسجلة من الهدف المحفوظ')):'')+
+ card(t('Water','الماء'),Number(water.current).toLocaleString(document.documentElement.lang==='ar'?'ar-EG':'en-GB',{maximumFractionDigits:2})+' / '+Number(water.target).toLocaleString(document.documentElement.lang==='ar'?'ar-EG':'en-GB',{maximumFractionDigits:2})+' L',t('Recorded today. Adjust the amount in Daily.','المسجل النهارده. تقدر تعدل الكمية من صفحة اليوم.'),"pxHomeJump('daily','waterCurrentInput')",t('Update water','حدّث الماء'),meter(water.current,water.target,t('Recorded water','الماء المسجل')))+
+ card(t('Daily habits','عاداتك اليومية'),done+' / '+active.length,active.length?t('Completed reminders today. Open Daily to check off the rest.','عادات مكتملة النهارده. افتح صفحة اليوم لتسجيل الباقي.'):t('Add your own reminders to build a useful routine.','أضف تذكيراتك عشان تبني روتين مناسب ليك.'),"go('daily')",active.length?t('Review habits','راجع عاداتك'):t('Set up habits','أضف عاداتك'),active.length?meter(done,active.length,t('Completed habits','العادات المكتملة')):'')+'</div><p class="pxHomeHint">'+t('These are your saved records, not a health or recovery assessment. Food totals include only what you logged.','ده ملخص سجلاتك، مش تقييم لصحتك أو تعافيك. إجمالي الأكل يشمل اللي سجلته فقط.')+'</p>';
+ const hero=home.querySelector('.hero');hero.setAttribute('data-px-user','1');hero.querySelector('h2').textContent=t('Make today count.','خلي ليومك خطوة مفيدة.');hero.querySelector('p').textContent=t('Choose your next step below. Your records stay together, and details are here when you need them.','اختار خطوتك الجاية من تحت. سجلاتك في مكان واحد والتفاصيل متاحة وقت ما تحتاجها.');
+ const trainingCard=hub.querySelector('article');const restButton=document.createElement('button');restButton.type='button';restButton.className='btn soft';restButton.textContent=scheduled==='REST'?t('Edit rest schedule','عدل جدول الراحة'):rest?t('Unmark rest day','إلغاء تحديد يوم راحة'):t('Mark today as rest','حدد النهارده راحة');restButton.setAttribute('aria-pressed',String(rest));restButton.onclick=()=>scheduled==='REST'?go('settings'):toggleRestDay();trainingCard.append(restButton);
+ $('pxHomeNutrition').querySelector('summary').textContent=t('Calories & macro details','تفاصيل السعرات والماكروز');
+ const summary=$('pxHomeMore').querySelector('summary');summary.setAttribute('data-px-user','1');summary.textContent=t('Weekly progress, history & activity score','التقدم الأسبوعي والسجل ومؤشر النشاط');
+ const description=home.querySelector('.homeOrderScore .tiny');if(description){description.setAttribute('data-px-user','1');description.textContent=t('A custom logging score. Missing entries lower it; it does not measure health or training quality.','مؤشر خاص بالتسجيل. السجلات الناقصة بتقلله؛ مش مقياس للصحة أو جودة التمرين.')}
+ // Keep the original plan consistent after a rest-day change.
+ renderTodayPlan();
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&currentPage==='home')renderNutritionHome()});
+</script>
 
 </body></html>
