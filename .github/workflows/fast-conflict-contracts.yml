@@ -3,6 +3,9 @@ on:
   push:
     branches: [main]
     paths:
+      - tests/food-weight-browsing-browser.cjs
+      - tests/food-priority-collapse-browser.cjs
+      - tests/v3-mobile-diary-browser.cjs
       - tests/release-ci-workflow-contract.cjs
       - 'tests/login-imported-archive-regression.cjs'
       - 'tests/login-optional-render-recovery.cjs'

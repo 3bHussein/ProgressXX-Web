@@ -1136,3 +1136,8 @@ Initial runtime `f4b30fce2636d33798fce75b4f70d8e17a5bdfb5` passed Fast https://g
 ### 2026-10-26 — Food search acceptance follow-up
 
 - Initial runtime 3e2e187 cross-browser check caught an outdated broad `#pxFoodBrowse summary` test selector after Favorites/Recent moved inside Browse. It now targets `#pxFoodBrowse > summary`, the intended outer native control. Search/filter/paging/quantity/RTL checks remain unchanged. Release gate blocked publication as intended. Final same-runtime validation and Pages pending.
+
+
+### 2026-10-26 — Food acceptance changes trigger gated deployment
+
+- Search/portions, weekly/usual foods, V3 and actual backup/import regression tests passed locally after the outer-summary selector fix. Added the three changed Food presentation acceptance files to the Pages and Fast workflow push paths and the missing V3 trigger to Cross-browser (the other two are already covered). This ensures presentation-only acceptance updates trigger all three exact-commit validators and publication; required same-SHA success gate is unchanged and no failures are bypassed. Final checks/Pages remain pending.
