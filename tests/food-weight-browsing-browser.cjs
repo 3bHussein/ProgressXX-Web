@@ -14,7 +14,7 @@ const {browserType,engine}=require('./helpers/browser-engine.cjs');
   scheduleCloudProfileSync=()=>{};scheduleAutoBackup=()=>{};$('pxCommercialGate').hidden=true;
   wire();go('nutrition');renderNutrition();window.qaBefore=JSON.stringify([...m]);window.qaFoods=JSON.stringify(foodProducts);
  });
- await p.locator('#pxFoodBrowse summary').click();
+ await p.locator('#pxFoodBrowse > summary').click();
  assert.equal(await p.locator('.pxQuickFood').count(),8);
  await p.locator('#pxQuickFoodMore').click();assert.equal(await p.locator('.pxQuickFood').count(),16);
  await p.locator('#pxQuickFoodSearch').fill('Food 21');assert.equal(await p.locator('.pxQuickFood').count(),1);assert.equal(await p.locator('#pxQuickFoodMore').isVisible(),false);
@@ -31,7 +31,7 @@ const {browserType,engine}=require('./helpers/browser-engine.cjs');
  assert.equal(await p.evaluate(()=>JSON.stringify([...qaStore])===qaBefore),true,'Browsing must never mutate stored data');
  await p.evaluate(()=>pxSetUILanguage('ar'));assert.equal(await p.locator('html').getAttribute('dir'),'rtl');assert.match(await p.locator('.pxWeightHistoryHead h3').textContent(),/سجل/);
  await p.locator('#pxWeightMonth').selectOption('');
- for(const width of [320,390,768,1280]){await p.setViewportSize({width,height:900});await p.evaluate(()=>go('nutrition'));await p.evaluate(()=>$('pxFoodBrowse').open=false);await p.locator('#pxFoodBrowse summary').click();await p.locator('[data-quick-filter="all"]').click();assert.equal(await p.locator('.pxQuickFoodName').filter({hasText:'Completed'}).textContent(),'Completed');assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Food RTL overflow '+width);await p.evaluate(()=>go('analytics'));assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Weight RTL overflow '+width);}
+ for(const width of [320,390,768,1280]){await p.setViewportSize({width,height:900});await p.evaluate(()=>go('nutrition'));await p.evaluate(()=>$('pxFoodBrowse').open=false);await p.locator('#pxFoodBrowse > summary').click();await p.locator('[data-quick-filter="all"]').click();assert.equal(await p.locator('.pxQuickFoodName').filter({hasText:'Completed'}).textContent(),'Completed');assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Food RTL overflow '+width);await p.evaluate(()=>go('analytics'));assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Weight RTL overflow '+width);}
  await p.evaluate(()=>{pxSetUILanguage('en');go('analytics');renderProgressPhotos()});
  p.once('dialog',d=>d.dismiss());await p.locator('[data-weight-delete]').first().click();assert.equal(await p.evaluate(()=>progressPhotos().length),28);
  p.once('dialog',d=>d.accept());await p.locator('[data-weight-delete]').first().click();assert.equal(await p.evaluate(()=>progressPhotos().length),27);

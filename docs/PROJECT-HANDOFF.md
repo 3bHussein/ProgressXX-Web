@@ -1393,3 +1393,8 @@ Initial runtime `f4b30fce2636d33798fce75b4f70d8e17a5bdfb5` passed Fast https://g
 - Compact usual-food cards and shorter guidance, simplified empty-meal rows, smaller calorie summary, less repeated descriptive copy. Native keyboard controls and bilingual labels preserved. No history/storage/schema/API/auth/account changes; UI-only reparenting with original IDs/handlers.
 - Extended existing Food priority fixture: EN/AR 320/390/768/1280, closed library/day options, 44px native keyboard toggles, expanded zero horizontal overflow, visible primary controls and source immutability. Existing V3 search-focus fixture now opens Day options first; online-search fixture targets nearest native disclosure. Local Chromium Food priority, V3, usual-food/weekly arithmetic, browse, portions, Undo, mobile and mocked auth save/reload/logout PASS. Repeat-meal acceptance initially found reparented shortcut could hide its lazy insertion; moved the existing repeat disclosure explicitly to Quick add. Final local repeat-meal, Undo, all-page mobile, language, release-workflow and paused-database regressions PASS. Exact-runtime CI/Pages pending.
 - Next verify required same-runtime checks, deployed root byte equality and update this evidence. Real-account/physical-device and commercial/security gates remain separate and open.
+
+
+### 2026-10-26 — Food search acceptance follow-up
+
+- Initial runtime 3e2e187 cross-browser check caught an outdated broad `#pxFoodBrowse summary` test selector after Favorites/Recent moved inside Browse. It now targets `#pxFoodBrowse > summary`, the intended outer native control. Search/filter/paging/quantity/RTL checks remain unchanged. Release gate blocked publication as intended. Final same-runtime validation and Pages pending.
