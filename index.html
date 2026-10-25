@@ -3982,8 +3982,8 @@ function saveWeightGoal(){
   renderWeightTrend();
 }
 function renderWeightTrend(){
-  const rows=migrateLegacyProgressCheckins(progressPhotos())
-    .filter(x=>Number(x.weight)>0)
+  if(typeof pxRenderWeeklyWeight==='function')pxRenderWeeklyWeight();
+  const rows=(typeof pxValidWeightRows==='function'?pxValidWeightRows(progressPhotos(),localDateKey()).rows:migrateLegacyProgressCheckins(progressPhotos()).filter(x=>Number(x.weight)>0))
     .sort((a,b)=>String(a.date||'').localeCompare(String(b.date||''))||String(a.createdAt||'').localeCompare(String(b.createdAt||'')));
 
   const latest=rows.at(-1)||null;
@@ -6912,7 +6912,7 @@ function pxRenderCalorieDashboard(totals){
 }
 function pxQuickMeal(meal){
  $('foodQuickMeal').value=meal==='Other'?'Snack':meal;
- const field=$('foodQuickProduct');field.scrollIntoView({behavior:pxScrollBehavior(),block:'center'});field.focus({preventScroll:true});
+ const usual=$('pxUsualFoodGrid')?.querySelector('button');const field=usual||$('foodQuickProduct');field.scrollIntoView({behavior:pxScrollBehavior(),block:'center'});field.focus({preventScroll:true});
 }
 function pxFocusFoodSearch(){const field=$('foodSearch');field.scrollIntoView({behavior:pxScrollBehavior(),block:'center'});field.focus({preventScroll:true});}
 function pxRenderDailyWeek(){
@@ -6964,6 +6964,7 @@ function renderNutrition(){
   updateFoodQuickPreview();
   renderFavoriteFoods();
   renderRecentFoods();
+  if(typeof pxRenderUsualFoods==='function')pxRenderUsualFoods();
   if(typeof pxRenderRepeatMeals==='function')pxRenderRepeatMeals();
   renderProteinSuggestions();
   renderNutritionAnalytics();
@@ -7266,72 +7267,31 @@ function toggleFoodFavorite(id){
   renderNutrition();
 }
 function favoriteFoodEntries(){
-  const ids=foodFavoriteIds();
-  return ids.map(id=>{
-    const product=foodProducts.find(p=>String(p.id)===String(id));
-    if(!product)return null;
-    const last=[...foodLog]
-      .filter(x=>String(x.productId)===String(id)||String(x.name||'').trim().toLowerCase()===String(product.name||'').trim().toLowerCase())
-      .sort((a,b)=>(String(b.date||'')+' '+String(foodEntryTime(b)||'')).localeCompare(String(a.date||'')+' '+String(foodEntryTime(a)||'')))[0];
-    return {
-      productId:product.id,
-      name:product.name,
-      servingUnit:product.servingUnit,
-      amount:last?Number(last.amount)||product.servingQty:product.servingQty,
-      meal:last?.meal||'Snack'
-    };
-  }).filter(Boolean);
+ const index=pxFoodPortionIndex();return foodFavoriteIds().map(id=>{const product=foodProducts.find(p=>String(p.id)===String(id));if(!product)return null;const last=pxLastCompatiblePortion(product,index);return {productId:product.id,name:product.name,servingUnit:product.servingUnit,amount:last?Number(last.amount):Number(product.servingQty),meal:last?.meal||'Snack'}}).filter(Boolean);
 }
 function renderFavoriteFoods(){
-  const wrap=$('favoriteFoodsWrap'),el=$('favoriteFoods');
-  if(!wrap||!el)return;
-  const rows=favoriteFoodEntries();
-  wrap.style.display=rows.length?'block':'none';
-  el.innerHTML=rows.map(x=>`<button class="btn soft favoriteFoodBtn" onclick="quickReAddFood('${esc(x.productId)}','${esc(x.meal)}','${esc(x.amount)}')"><span class="favoriteStar">★</span><span class="recentFoodName">${esc(x.name)}</span><span class="recentFoodMeta">${pnum(x.amount)} ${esc(x.servingUnit||'')} · ${esc(x.meal)}</span></button>`).join('');
+ const wrap=$('favoriteFoodsWrap'),el=$('favoriteFoods');if(!wrap||!el)return;const rows=favoriteFoodEntries();wrap.style.display=rows.length?'block':'none';pxRenderPortionButtons(el,rows,'favoriteFoodBtn');
 }
 function recentFoodEntries(limit=6){
-  const ranked=[...foodLog].sort((a,b)=>{
-    const ad=String(a.date||'')+' '+String(foodEntryTime(a)||'');
-    const bd=String(b.date||'')+' '+String(foodEntryTime(b)||'');
-    return bd.localeCompare(ad);
-  });
-  const seen=new Set(),out=[];
-  for(const x of ranked){
-    const key=String(x.productId||'').trim()||String(x.name||'').trim().toLowerCase();
-    if(!key||seen.has(key))continue;
-    const product=foodProducts.find(p=>String(p.id)===String(x.productId))
-      ||foodProducts.find(p=>String(p.name).trim().toLowerCase()===String(x.name||'').trim().toLowerCase());
-    if(!product)continue;
-    seen.add(key);
-    out.push({...x,_productId:product.id});
-    if(out.length>=limit)break;
-  }
-  return out;
+ const index=pxFoodPortionIndex();return foodProducts.map(product=>{const last=pxLastCompatiblePortion(product,index);return last?{...last,_productId:product.id,name:product.name}:null}).filter(Boolean).sort((a,b)=>pxFoodHistoryOrder(a,b)).slice(0,limit);
 }
 function renderRecentFoods(){
-  const wrap=$('recentFoodsWrap'),el=$('recentFoods');
-  if(!wrap||!el)return;
-  const rows=recentFoodEntries(6);
-  wrap.style.display=rows.length?'block':'none';
-  el.innerHTML=rows.map(x=>`<button class="btn soft recentFoodBtn" onclick="quickReAddFood('${esc(x._productId)}','${esc(x.meal||'Snack')}','${esc(x.amount)}')"><span class="recentFoodName">${esc(x.name)}</span><span class="recentFoodMeta">${pnum(x.amount)} ${esc(x.servingUnit||'')} · ${esc(x.meal||'Snack')}</span></button>`).join('');
+ const wrap=$('recentFoodsWrap'),el=$('recentFoods');if(!wrap||!el)return;const rows=recentFoodEntries(6);wrap.style.display=rows.length?'block':'none';pxRenderPortionButtons(el,rows.map(x=>({...x,productId:x._productId})),'recentFoodBtn');
 }
-async function quickReAddFood(productId,meal,amount){
-  const sel=$('foodQuickProduct');
-  if(!sel)return;
-  sel.value=String(productId);
-  $('foodQuickMeal').value=meal||'Snack';
-  $('foodQuickAmount').dataset.changed='1';
-  $('foodQuickAmount').value=Number(amount)||1;
-  if($('foodQuickTime'))$('foodQuickTime').value=currentTimeHHMM();
-  updateFoodQuickPreview();
-  await addFoodToDiary();
+async function quickReAddFood(productId,meal,amount,sourceUnit){
+ const sel=$('foodQuickProduct'),product=foodProducts.find(p=>String(p.id)===String(productId));if(!sel||!product)return;
+ if(sourceUnit!==undefined&&String(sourceUnit)!==String(product.servingUnit))return;
+ const quantity=Number(amount);if(!Number.isFinite(quantity)||quantity<=0)return;
+ sel.value=String(productId);const mealSelect=$('foodQuickMeal');if([...mealSelect.options].some(o=>o.value===meal))mealSelect.value=meal;
+ $('foodQuickAmount').dataset.changed='1';$('foodQuickAmount').value=quantity;
+ if($('foodQuickTime'))$('foodQuickTime').value=currentTimeHHMM();updateFoodQuickPreview();await addFoodToDiary();
 }
 function updateFoodQuickPreview(){
   const p=selectedFoodProduct();
   if(!p){if($('foodQuickPreview'))$('foodQuickPreview').textContent='Select a saved food to preview calories and macros.';return}
   if($('foodQuickAmountLabel'))$('foodQuickAmountLabel').textContent=`Amount (${p.servingUnit})`;
   if(!$('foodQuickAmount').dataset.changed){
-    const last=foodLog.map((x,i)=>({...x,_portionOrder:i})).filter(x=>String(x.productId)===String(p.id)&&String(x.servingUnit||'')===String(p.servingUnit)&&Number(x.amount)>0).sort((a,b)=>(String(b.date||'')+' '+String(foodEntryTime(b)||'')).localeCompare(String(a.date||'')+' '+String(foodEntryTime(a)||''))||b._portionOrder-a._portionOrder)[0];
+    const last=pxLastCompatiblePortion(p);
     $('foodQuickAmount').value=last?last.amount:p.servingQty;
   }
   const amount=Number($('foodQuickAmount').value)||0;
@@ -10734,6 +10694,7 @@ function pxSetUILanguage(language,persist=true){
  if($('pxLanguageStatus'))$('pxLanguageStatus').textContent=saved?'Language applied to all pages.':'Language applied. Browser storage is unavailable; selection will not survive reload.';
  if(typeof pxRenderInsightSummary==='function')pxRenderInsightSummary();if(typeof pxRenderWeeklyCoach==='function')pxRenderWeeklyCoach(Number($('weeklyReviewWeek')?.value)||activeWeek());
  renderProgressPhotos();pxRenderQuickFoods();if(typeof pxUpdateMobilePage==='function')pxUpdateMobilePage(document.querySelector('.bottomNav .navbtn.active')?.dataset.page||'home');
+ if(typeof pxRenderUsualFoods==='function'){pxRenderUsualFoods();renderFavoriteFoods();renderRecentFoods()}
  if(typeof pxRenderSavePanel==='function')pxRenderSavePanel();if(typeof pxRenderFoodUndo==='function')pxRenderFoodUndo();
  pxTranslateUiTree(document.body);
 }
@@ -10991,7 +10952,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 @media(max-width:380px){.pxHomeAction{padding:12px;gap:8px}.pxHomeAction b{font-size:18px}.pxHomeHubHead{align-items:flex-start}}@media(min-width:1000px){.pxHomeHubGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 </style>
 <script id="px-home-hub">
-function pxHomeJump(page,id){go(page);requestAnimationFrame(()=>{const el=document.getElementById(id);if(!el)return;el.scrollIntoView({block:'center',behavior:pxScrollBehavior()});if(el.matches('input,select,button'))el.focus({preventScroll:true})})}
+function pxHomeJump(page,id){go(page);requestAnimationFrame(()=>{const el=page==='nutrition'&&id==='foodQuickProduct'?document.querySelector('#pxUsualFoodGrid button')||document.getElementById(id):document.getElementById(id);if(!el)return;el.scrollIntoView({block:'center',behavior:pxScrollBehavior()});if(el.matches('input,select,button'))el.focus({preventScroll:true})})}
 function pxRenderHomeHub(){
  const home=$('home');if(!home)return;
  let hub=$('pxHomeHub');if(!hub){hub=document.createElement('div');hub.id='pxHomeHub';hub.className='pxHomeHub';hub.setAttribute('data-px-user','1');home.querySelector('.hero').after(hub);
@@ -11252,6 +11213,76 @@ window.addEventListener('online',()=>{pxFlushFoodDeletes().catch(console.warn);p
 window.addEventListener('offline',pxRenderSavePanel);
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{pxRenderSavePanel();pxRenderFoodUndo();if(navigator.onLine)pxFlushFoodDeletes().catch(console.warn)},{once:true});else{pxRenderSavePanel();pxRenderFoodUndo()}
 setInterval(()=>{if(!document.hidden){pxRenderSavePanel();pxRenderFoodUndo();if(window.__pxSaveState?.().ready&&navigator.onLine&&Date.now()>=pxFoodDeleteRetryAt&&pxFoodDeletes().length)pxFlushFoodDeletes().catch(console.warn)}},1500);
+</script>
+
+
+<style id="px-week-weight-usual-food-style">
+.pxWeeklyWeight{border:1px solid var(--line);border-radius:17px;background:var(--card2);padding:14px;margin:14px 0;min-width:0}.pxWeeklyWeight h3{margin:0 0 8px;font-size:18px}.pxWeeklyWeight p,.pxWeightReadings p{font-size:12px;line-height:1.7;color:var(--muted)}.pxWeightWeekPicker{min-width:0;max-width:100%;overflow:hidden;margin:12px 0}.pxWeightWeekPicker label{display:block;font-size:12px;margin-bottom:6px}.pxWeightWeekPicker select{display:block;width:100%;max-width:100%;min-width:0;min-height:46px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pxWeightWeekPicker select:focus-visible{outline-offset:-3px}.pxWeeklyWeightCards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.pxWeeklyWeightCards article{padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--soft);min-width:0}.pxWeeklyWeightCards strong{overflow-wrap:anywhere;display:block;font-size:24px;margin:8px 0;font-variant-numeric:tabular-nums}.pxWeeklyWeightCards small,.pxWeeklyWeightCards time{display:block;font-size:11px;color:var(--muted);line-height:1.7}.pxWeeklyWeightDelta{padding:12px;background:var(--soft);border-radius:12px;margin-top:12px;font-weight:800;font-size:14px}.pxWeeklyWeight details>summary,.pxWeightReadings>summary{display:flex;align-items:center;min-height:46px;font-weight:800;font-size:13px;cursor:pointer;gap:10px}.pxWeeklyWeight details>summary:after,.pxWeightReadings>summary:after{content:'+';margin-inline-start:auto;font-size:20px;color:var(--muted)}.pxWeeklyWeight details[open]>summary:after,.pxWeightReadings[open]>summary:after{content:'−'}.pxWeeklyWeight ol{list-style:none;padding:0;margin:0}.pxWeeklyWeight li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.75fr);gap:8px;padding:11px 0;border-top:1px solid var(--line);font-size:12px}.pxWeeklyWeight li b{overflow-wrap:anywhere;text-align:end;min-width:0}.pxWeeklyWeight li small{display:block;color:var(--muted);font-size:11px;margin-top:4px}.pxWeightReadings{margin:10px 0;border:1px solid var(--line);border-radius:14px;padding:10px 12px}.pxUsualFoods{margin:12px 0}.pxUsualFoodsHead{display:flex;justify-content:space-between;align-items:center;gap:9px;flex-wrap:wrap}.pxUsualFoodsHead h4{margin:0;font-size:15px}.pxUsualFoodsHead .btn{min-height:44px}.pxUsualFoods p{font-size:11px;color:var(--muted);line-height:1.6}.pxUsualFoodGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.pxUsualFood{display:flex;flex-direction:column;align-items:flex-start;text-align:start;gap:7px;padding:12px;background:var(--card2);color:var(--text);border:1px solid var(--line);border-radius:14px;cursor:pointer;min-width:0;min-height:94px}.pxUsualFood[aria-pressed="true"]{border-color:var(--cyan);box-shadow:inset 0 0 0 1px var(--cyan)}.pxUsualFood b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4;max-height:2.8em;font-size:13px;overflow-wrap:anywhere;max-width:100%}.pxUsualFood span{font-size:13px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;max-width:100%}.pxUsualFood small{font-size:10px;color:var(--muted);line-height:1.5}.pxUsualFoodEmpty{padding:10px 0;font-size:12px;color:var(--muted)}
+@media(max-width:360px){.pxWeeklyWeight{padding:11px}.pxWeeklyWeightCards article{padding:9px}.pxWeeklyWeightCards strong{font-size:21px}.pxUsualFood{padding:10px}}
+</style>
+<script id="px-week-weight-usual-food">
+function pxCalendarDate(value,today=localDateKey()){return typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value)&&shiftDateKey(value,0)===value&&value<=today}
+function pxCalendarWeekStart(date){const d=new Date(date+'T12:00:00Z');return shiftDateKey(date,-((d.getUTCDay()+6)%7))}
+function pxValidWeightRows(input,today){
+ const rows=new Map();let rejected=0;
+ for(const [i,row] of (Array.isArray(input)?input:[]).entries()){if(!row||!pxCalendarDate(row.date,today)||!Number.isFinite(Number(row.weight))||Number(row.weight)<=0){rejected++;continue}const id=row.id?'id:'+String(row.id):'row:'+i;if(rows.has(id))rejected++;rows.set(id,{...row,weight:Number(row.weight)})}
+ return {rows:[...rows.values()],rejected};
+}
+function pxStableMean(values){return values.reduce((mean,value,i)=>mean+(value-mean)/(i+1),0)}
+function pxWeightWindow(rows,start,end){
+ const days=new Map();let readings=0;
+ for(const row of rows){if(row.date<start||row.date>end)continue;if(!days.has(row.date))days.set(row.date,[]);days.get(row.date).push(row.weight);readings++}
+ const daily=[...days.values()].map(values=>pxStableMean(values));
+ // Average the daily means once; the number of readings never gives a day extra weight.
+ const average=daily.length?Number(pxStableMean(daily).toFixed(2)):null;
+ return {start,end,days:daily.length,readings,mean:average};
+}
+function pxWeeklyWeightModel(input,today=localDateKey(),selected){
+ const valid=pxValidWeightRows(input,today),currentStart=pxCalendarWeekStart(today),weeks=[...new Set([currentStart,...valid.rows.map(r=>pxCalendarWeekStart(r.date))])].sort().reverse().slice(0,8),start=weeks.includes(selected)?selected:currentStart;
+ const elapsed=start===currentStart?Math.round((Date.parse(today+'T12:00:00Z')-Date.parse(start+'T12:00:00Z'))/86400000):6,end=shiftDateKey(start,elapsed),priorStart=shiftDateKey(start,-7),priorEnd=shiftDateKey(priorStart,elapsed);
+ const current=pxWeightWindow(valid.rows,start,end),prior=pxWeightWindow(valid.rows,priorStart,priorEnd),delta=current.mean!==null&&prior.mean!==null?Number((current.mean-prior.mean).toFixed(2)):null,enough=current.days>=3&&prior.days>=3;
+ return {current,prior,delta,enough,partial:elapsed<6,expectedDays:elapsed+1,weeks,ignored:valid.rejected,history:weeks.map(w=>pxWeightWindow(valid.rows,w,w===currentStart?today:shiftDateKey(w,6)))};
+}
+function pxInitWeeklyWeight(){
+ if($('pxWeeklyWeight'))return;const anchor=$('weightTrendSummary');if(!anchor)return;
+ const box=document.createElement('div');box.id='pxWeeklyWeight';box.className='pxWeeklyWeight';box.setAttribute('data-px-user','1');box.innerHTML='<h3></h3><p class="pxWeeklyWeightIntro"></p><div class="pxWeightWeekPicker"><label for="pxWeightWeek"></label><select id="pxWeightWeek"></select></div><div id="pxWeeklyWeightContent"></div>';anchor.before(box);
+ const details=document.createElement('details');details.id='pxWeightReadings';details.className='pxWeightReadings';const summary=document.createElement('summary');summary.setAttribute('data-px-user','1');details.append(summary);box.after(details);const root=box.closest('.panel');[root.querySelector('.weightGoalRow'),root.querySelector('.weightStatsGrid'),anchor,$('weightTrendChart')].forEach(node=>{if(node)details.append(node)});
+ $('pxWeightWeek').onchange=pxRenderWeeklyWeight;
+}
+function pxRenderWeeklyWeight(){
+ pxInitWeeklyWeight();const root=$('pxWeeklyWeight');if(!root)return;const t=pxExplain,select=$('pxWeightWeek'),model=pxWeeklyWeightModel(progressPhotos(),localDateKey(),select.value),opened=$('pxWeeklyWeightHistory')?.open;
+ root.querySelector('h3').textContent=t('Your weekly weight trend','اتجاه وزنك الأسبوعي');root.querySelector('.pxWeeklyWeightIntro').textContent=t('Each measured day counts once. Multiple readings on one day are averaged first.','كل يوم قياس له نفس التأثير. لو فيه قراءات متعددة في اليوم، بنحسب متوسطها الأول.');root.querySelector('label').textContent=t('Week starting Monday','الأسبوع اللي بيبدأ يوم الاثنين');select.replaceChildren(...model.weeks.map(w=>new Option(w,w)));select.value=model.current.start;
+ const card=(period,label)=>'<article><small>'+label+'</small><strong dir="ltr">'+(period.mean===null?'—':period.mean.toFixed(2)+' kg')+'</strong><time dir="ltr">'+period.start+'</time><time dir="ltr">'+period.end+'</time><small>'+'<span dir="ltr">'+period.days+' / '+model.expectedDays+'</span> '+t('measured days','أيام قياس')+' • <span dir="ltr">'+period.readings+'</span> '+t('readings','قراءات')+'</small></article>';
+ const headline=model.delta===null?t('More data is needed for a comparison','محتاجين بيانات أكتر للمقارنة'):!model.enough?t('Limited comparison • few measured days','مقارنة محدودة • أيام القياس قليلة'):model.delta>0?t('Recorded average is higher','المتوسط المسجل أعلى'):model.delta<0?t('Recorded average is lower','المتوسط المسجل أقل'):t('Recorded averages are equal','المتوسطين المسجلين متساويين');
+ const change=model.delta===null?'—':(model.delta>0?'+':'')+model.delta.toFixed(2)+' kg';
+ $('pxWeeklyWeightContent').innerHTML='<div class="pxWeeklyWeightCards">'+card(model.prior,t('Previous week','الأسبوع السابق'))+card(model.current,t('Selected week','الأسبوع المختار'))+'</div><div class="pxWeeklyWeightDelta">'+headline+' <span dir="ltr">'+change+'</span></div><p>'+t('A direction is labelled only when both periods have at least 3 measured days. This is a display rule, not a health assessment. The numbers describe logged readings, not body-fat change or a diet recommendation.','بنسمّي الاتجاه فقط لما كل فترة فيها ٣ أيام قياس على الأقل. دي قاعدة للعرض، مش تقييم صحي. الأرقام بتوصف القياسات المسجلة، مش تغيّر الدهون ولا توصية لتعديل الأكل.')+'</p>'+(model.partial?'<p>'+t('This week is incomplete. The previous week is limited to the same weekdays for comparison.','الأسبوع ده لسه ما خلصش. بنقارن بنفس أيام الأسبوع السابق.')+'</p>':'')+(model.ignored?'<p>'+model.ignored+' '+t('invalid, future or duplicate-ID entries were not used. Your source records were not changed.','سجل بتاريخ أو وزن غير صالح، أو مستقبلي، أو بمعرّف مكرر، لم يُستخدم. السجلات الأصلية لم تتغير.')+'</p>':'')+'<details id="pxWeeklyWeightHistory"><summary>'+t('Weekly averages • up to 8 weeks','متوسطات أسبوعية • حتى ٨ أسابيع')+'</summary><ol role="list">'+model.history.map(w=>'<li><div><time dir="ltr">'+w.start+'</time><small>'+w.days+' '+t('measured days','أيام قياس')+' • '+w.readings+' '+t('readings','قراءات')+'</small></div><b dir="ltr">'+(w.mean===null?'—':w.mean.toFixed(2)+' kg')+'</b></li>').join('')+'</ol></details>';
+ $('pxWeeklyWeightHistory').open=!!opened;$('pxWeightReadings').querySelector('summary').textContent=t('Individual readings & weight goal','القراءات الفردية وهدف الوزن');
+}
+function pxFoodHistoryOrder(a,b){return (b._historyStamp||String(b.date)+' '+String(foodEntryTime(b)||'')).localeCompare(a._historyStamp||String(a.date)+' '+String(foodEntryTime(a)||''))||(b._portionOrder||0)-(a._portionOrder||0)}
+function pxFoodPortionIndex(today=localDateKey()){
+ const unique=new Map(),meta=foodTimeMeta();for(const [i,row] of foodLog.entries()){if(!row||row.productId===undefined||row.productId===null||!pxCalendarDate(row.date,today)||!Number.isFinite(Number(row.amount))||Number(row.amount)<=0)continue;const recordedTime=String(row.time||meta.byId[String(row.id||'')]||meta.byKey[foodEntryStableKey(row)]||timestampToHHMM(row.createdAt||row.created_at||row.created||row.timestamp||''));const time=/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(recordedTime)?recordedTime:'';unique.set(row.id?'id:'+String(row.id):'row:'+i,{...row,_portionOrder:i,_historyStamp:row.date+' '+time})}
+ const index=new Map();for(const row of unique.values()){const key=JSON.stringify([String(row.productId),String(row.servingUnit||'')]);if(!index.has(key))index.set(key,[]);index.get(key).push(row)}for(const rows of index.values())rows.sort(pxFoodHistoryOrder);return index;
+}
+function pxCompatibleFoodHistory(product,today=localDateKey(),index){if(!product||product.id===undefined||product.id===null||String(product.id)==='')return [];return (index||pxFoodPortionIndex(today)).get(JSON.stringify([String(product.id),String(product.servingUnit)]))||[]}
+function pxLastCompatiblePortion(product,index){return pxCompatibleFoodHistory(product,localDateKey(),index)[0]||null}
+function pxUsualFoodRows(today=localDateKey(),limit=6){
+ const start=shiftDateKey(today,-29),seen=new Set(),out=[],index=pxFoodPortionIndex(today);
+ for(const product of foodProducts){const id=String(product.id);if(seen.has(id)||!Number.isFinite(Number(product.servingQty))||Number(product.servingQty)<=0)continue;seen.add(id);const history=pxCompatibleFoodHistory(product,today,index).filter(row=>row.date>=start);if(!history.length)continue;out.push({product,last:history[0],days:new Set(history.map(row=>row.date)).size,entries:history.length})}
+ return out.sort((a,b)=>b.days-a.days||b.entries-a.entries||pxFoodHistoryOrder(a.last,b.last)||String(a.product.name).localeCompare(String(b.product.name))).slice(0,limit);
+}
+function pxRenderPortionButtons(host,rows,cls){
+ host.setAttribute('data-px-user','1');host.replaceChildren(...rows.map(row=>{const button=document.createElement('button');button.type='button';button.className='btn soft '+cls;const name=document.createElement('span');name.className='recentFoodName';name.dir='auto';name.textContent=row.name;const meta=document.createElement('span');meta.className='recentFoodMeta';meta.textContent=String(Number(row.amount))+' '+row.servingUnit+' • '+pxExplain(row.meal,PX_UI_AR[row.meal]||row.meal);button.append(name,meta);button.onclick=()=>quickReAddFood(row.productId,row.meal,row.amount,row.servingUnit);return button}));
+}
+function pxChooseUsualFood(id){
+ const item=pxUsualFoodRows(localDateKey(),foodProducts.length).find(x=>String(x.product.id)===String(id));if(!item)return;const select=$('foodQuickProduct');select.value=String(id);$('foodQuickAmount').dataset.changed='1';$('foodQuickAmount').value=Number(item.last.amount);updateFoodQuickPreview();pxRenderUsualFoods();$('foodQuickAmount').scrollIntoView({behavior:pxScrollBehavior(),block:'center'});$('foodQuickAmount').focus({preventScroll:true});
+}
+function pxSearchUsualFood(){const browse=$('pxFoodBrowse');browse.open=true;pxFilterQuickFoods('all');const input=$('pxQuickFoodSearch');input.scrollIntoView({behavior:pxScrollBehavior(),block:'center'});input.focus({preventScroll:true})}
+function pxRenderUsualFoods(){
+ const quick=document.querySelector('#nutrition .nutritionOrderQuick');if(!quick)return;let root=$('pxUsualFoods');if(!root){root=document.createElement('div');root.id='pxUsualFoods';root.className='pxUsualFoods';root.setAttribute('data-px-user','1');root.innerHTML='<div class="pxUsualFoodsHead"><h4></h4><button class="btn soft" type="button"></button></div><p></p><div id="pxUsualFoodGrid" class="pxUsualFoodGrid"></div>';quick.querySelector('.panelHead').after(root);root.querySelector('button').onclick=pxSearchUsualFood;$('foodQuickProduct').addEventListener('change',pxRenderUsualFoods)}
+ root.querySelector('h4').textContent=pxExplain('Your usual foods','أكلك المعتاد');root.querySelector('button').textContent=pxExplain('Search all foods','ابحث في كل الأطعمة');root.querySelector('p').textContent=pxExplain('Foods logged on the most days in the last 30 days of loaded history. Choose to preview the last matching quantity before adding.','الأكثر تسجيلًا في أيام مختلفة خلال آخر ٣٠ يوم من السجل المحمل. اختار لمراجعة آخر كمية مطابقة للوحدة قبل الإضافة.');
+ const items=pxUsualFoodRows();$('pxUsualFoodGrid').replaceChildren(...items.map(item=>{const button=document.createElement('button');button.type='button';button.className='pxUsualFood';button.dataset.usualFood=String(item.product.id);button.title=String(item.product.name);button.setAttribute('aria-pressed',String(String($('foodQuickProduct').value)===String(item.product.id)));const name=document.createElement('b');name.dir='auto';name.textContent=item.product.name;const portion=document.createElement('span');portion.dir='ltr';portion.textContent=String(Number(item.last.amount))+' '+item.product.servingUnit;const days=document.createElement('small');days.textContent=item.days+' '+pxExplain('days logged in 30 days','يوم تسجيل خلال ٣٠ يوم');button.append(name,portion,days);button.onclick=()=>pxChooseUsualFood(item.product.id);return button}));
+ if(!items.length){const empty=document.createElement('div');empty.className='pxUsualFoodEmpty';empty.textContent=pxExplain('No compatible recent portions yet. Use Search all foods to start.','مفيش كميات حديثة مطابقة للوحدة لسه. ابدأ بالبحث في كل الأطعمة.');$('pxUsualFoodGrid').append(empty)}
+}
 </script>
 
 </body></html>

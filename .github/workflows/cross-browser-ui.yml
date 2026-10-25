@@ -16,6 +16,7 @@ on:
       - tests/insights-anatomy-controls-browser.cjs
       - tests/insights-panel-recovery-browser.cjs
       - tests/diagnostics-redaction-browser.cjs
+      - tests/weekly-weight-usual-foods-browser.cjs
       - tests/food-undo-save-status-browser.cjs
       - tests/practical-weekly-progress-browser.cjs
       - tests/session-drafts-repeat-meals-browser.cjs
@@ -65,6 +66,7 @@ on:
       - tests/insights-anatomy-controls-browser.cjs
       - tests/insights-panel-recovery-browser.cjs
       - tests/diagnostics-redaction-browser.cjs
+      - tests/weekly-weight-usual-foods-browser.cjs
       - tests/food-undo-save-status-browser.cjs
       - tests/practical-weekly-progress-browser.cjs
       - tests/session-drafts-repeat-meals-browser.cjs
@@ -136,6 +138,7 @@ jobs:
           node tests/food-priority-collapse-browser.cjs
           node tests/food-weight-browsing-browser.cjs
           node tests/mobile-all-pages-design-browser.cjs
+          node tests/weekly-weight-usual-foods-browser.cjs
           node tests/food-undo-save-status-browser.cjs
           node tests/practical-weekly-progress-browser.cjs
           node tests/session-drafts-repeat-meals-browser.cjs
