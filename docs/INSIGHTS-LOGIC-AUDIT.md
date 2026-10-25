@@ -1,5 +1,7 @@
 # Insights and weekly coaching audit — 24 October 2026
 
+> Update 26 October: the primary overview now uses linked result/evidence/action cards. See [Insights evidence and actions](INSIGHTS-EVIDENCE-ACTIONS.md) for current date/source/comparison/navigation rules. The load-decision audit below remains the existing conservative heuristic.
+
 ## Scope and factual corrections
 
 | Area | Reviewed behavior |

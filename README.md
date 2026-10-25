@@ -46,6 +46,17 @@ Screenshots use a disposable in-memory store, no login and blocked external requ
 
 </details>
 
+<details>
+<summary><strong>Insights: results, evidence and direct actions</strong></summary>
+
+| English | العربية |
+| :---: | :---: |
+| <img src="docs/screenshots/insights-decisions.jpg" width="300" alt="Insights showing a recorded training improvement, matching food and weight evidence, and today's routine actions"> | <img src="docs/screenshots/insights-decisions-ar.jpg" width="300" alt="Arabic Insights with readable date ranges, recorded progress and evidence linked to the other pages"> |
+
+Choose a calendar period. See what changed, inspect the underlying records, and open the precise workout comparison, diary date, weight field or daily check-in. Unknown data stays unknown; the app does not infer the cause of a weight change or physiological recovery. [Rules and validation](docs/INSIGHTS-EVIDENCE-ACTIONS.md).
+
+</details>
+
 ## What you can do
 
 | Area | Everyday use |
@@ -56,7 +67,7 @@ Screenshots use a disposable in-memory store, no login and blocked external requ
 | **Progress** | Compare an exercise's recorded sets with an earlier available week. See a plain-language review and an explainable next step, with deload and missing-data context. |
 | **Weight** | Log check-ins and compare calendar-week averages, with date ranges, measured days and reading counts. Individual readings and the weight goal remain accessible. |
 | **Daily** | Track reminders, completion and water in a mobile-friendly view. |
-| **Insights & anatomy** | Start with concise summaries, then open detailed evidence, exercise links or the muscle reference when needed. |
+| **Insights & anatomy** | Read a prioritized next step, recorded training changes, matching food/weight evidence and today’s routine. Open the underlying records or the existing detailed/anatomy references when needed. |
 | **Settings** | Manage interface language, appearance, account/sync, backups, diagnostics and the workout schedule. |
 
 ### Recent improvements
@@ -65,6 +76,7 @@ Screenshots use a disposable in-memory store, no login and blocked external requ
 - **Faster meal logging:** usual foods from the last 30 days of loaded history, exact product/unit matching, remembered portions and previous-meal previews.
 - **Food Undo:** a two-minute window for supported additions, repeated-meal batches and diary deletions, with guards against undoing a later edit.
 - **Clearer save state:** distinguish local records, unfinished drafts, known pending changes and acknowledged cloud saves. Conflicts use the existing review path.
+- **Linked Insights:** a calendar-period result with the reason, exact source records and a useful action; loaded data, missing entries and pending sync are explicit.
 - **Readable progress:** recorded comparisons explain what changed; mixed/free-text work and deload weeks do not force an increase verdict.
 - **Weekly weight:** daily means contribute equally to the weekly mean. Incomplete weeks compare matching weekdays, and limited data is labelled.
 - **Mobile and language:** eight destinations, touch-sized controls, responsive layouts, English/Arabic and RTL support.
@@ -114,7 +126,7 @@ The capture script is a **local development tool** that injects demonstration fi
 
 ## Validation and release status
 
-The current runtime release is [`8160cff`](https://github.com/3bHussein/ProgressXX-Web/commit/8160cffa3033978aef8020a3cca57e4f12b4833d). Its [Full UI](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40234495193), [Fast safety](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40234495194), [Firefox/WebKit](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40234495200) and [Pages](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40234495328) runs succeeded. The deployed root was downloaded and compared byte-for-byte with the tested source. The development log records the initial failures and successful reruns.
+The last verified runtime release is [`74eacf1`](https://github.com/3bHussein/ProgressXX-Web/commit/74eacf1e2ea5d10de0d84bfe1e0814ddbe31bdfc). Its [Full UI](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40240795126), [Fast safety](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40240795129), [Firefox/WebKit](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40240795198) and [Pages](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40240795176) runs succeeded. The deployed root was downloaded and compared byte-for-byte with the tested source. The development log records the initial failures and successful reruns.
 
 Coverage includes synthetic workout/food actions, portions, Undo, reload, drafts, offline retry, backup/import, mocked-account save/reload/logout, keyboard controls and EN/AR mobile layouts. **Automated fixtures do not certify every real-account or physical-device scenario.**
 
@@ -135,7 +147,7 @@ Coverage includes synthetic workout/food actions, portions, Undo, reload, drafts
 - **Weekly report:** open Progress → Weekly report / share. Choose a week, print/save PDF, or share/download its text. Nutrition averages use days with valid logged entries; missing days remain unknown. Old weeks are not judged against current targets.
 - **Visible sections:** in Settings → Preferences & tools, choose optional Food/Insights sections. Core logging and save/recovery controls remain available; direct library search can reveal a hidden library for the current task.
 
-Saved portions, archive choices and section visibility are **device-local, separated by account**. They are not sent to cloud snapshots or included in the JSON backup. Core diary changes retain the existing persistence path. See [Food workflow tools](docs/FOOD-WORKFLOW-TOOLS.md) for boundaries and validation. The updated runtime is awaiting its required same-commit CI and Pages checks; the runtime evidence above remains the previously deployed baseline until the development log records publication.
+Saved portions, archive choices and section visibility are **device-local, separated by account**. They are not sent to cloud snapshots or included in the JSON backup. Core diary changes retain the existing persistence path. See [Food workflow tools](docs/FOOD-WORKFLOW-TOOLS.md) for boundaries and validation. The portions/workflow release is verified. The new linked Insights view is awaiting its required same-commit CI and Pages checks; the evidence above remains the deployed baseline until publication is recorded.
 
 ## Engineering and data-preservation rules
 
