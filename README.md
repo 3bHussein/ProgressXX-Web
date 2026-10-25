@@ -35,6 +35,17 @@ Screenshots use a disposable in-memory store, no login and blocked external requ
 
 </details>
 
+<details>
+<summary><strong>New: portions, batch moves and shareable reports</strong></summary>
+
+| Saved portion conversion | Weekly report |
+| :---: | :---: |
+| <img src="docs/screenshots/saved-portions.jpg" width="300" alt="Saved scoop conversion with a portion count and explicit preview action"> | <img src="docs/screenshots/weekly-share-report.jpg" width="300" alt="Weekly summary with logged-day nutrition means, training counts, weight coverage, PDF print and text sharing"> |
+
+<img src="docs/screenshots/food-batch-move.jpg" width="300" alt="Select multiple diary items and move them to a meal or date without changing their nutrition">
+
+</details>
+
 ## What you can do
 
 | Area | Everyday use |
@@ -116,7 +127,15 @@ Coverage includes synthetic workout/food actions, portions, Undo, reload, drafts
 | **Product clarity** | Validate the simpler daily flow with actual use before adding more controls; improve terminology and empty states where users get stuck. |
 | **Operations & commercial readiness** | Privacy, account/data deletion, recovery procedures, monitoring, support and commercial release gates. |
 
-Potential next product additions, **not implemented in this documentation update**: a compact shareable weekly report; explicit per-product portions such as grams/pieces/packs with saved conversions; and tools to identify duplicate library products without losing historical entries. See [ROADMAP.md](ROADMAP.md) for tracked work and acceptance limits.
+### Portions, organization and fewer repeated steps
+
+- **Saved portions:** in Food → Manage food library → Portions & library organization, define a name and its quantity in the product's existing base unit. In Quick add, choose that portion and its count, then apply it to the preview. Press **Add** separately to log it. There are no guessed gram/piece/pack conversions; a changed base unit invalidates incompatible saved portions.
+- **Library organization:** review possible duplicates by barcode or normalized name, and archive/restore products from quick choices. No automatic merge, deletion or rewrite of past diary entries.
+- **Batch move:** open Today's food → Select & move foods together. Select entries and a destination meal/date. Quantities, nutrients, IDs and recorded times stay unchanged. Known pending, in-flight or conflicting writes are guarded; successful local moves enter the existing durable upload queue.
+- **Weekly report:** open Progress → Weekly report / share. Choose a week, print/save PDF, or share/download its text. Nutrition averages use days with valid logged entries; missing days remain unknown. Old weeks are not judged against current targets.
+- **Visible sections:** in Settings → Preferences & tools, choose optional Food/Insights sections. Core logging and save/recovery controls remain available; direct library search can reveal a hidden library for the current task.
+
+Saved portions, archive choices and section visibility are **device-local, separated by account**. They are not sent to cloud snapshots or included in the JSON backup. Core diary changes retain the existing persistence path. See [Food workflow tools](docs/FOOD-WORKFLOW-TOOLS.md) for boundaries and validation. The updated runtime is awaiting its required same-commit CI and Pages checks; the runtime evidence above remains the previously deployed baseline until the development log records publication.
 
 ## Engineering and data-preservation rules
 

@@ -3,6 +3,7 @@ on:
   push:
     branches: [main]
     paths:
+      - tests/food-workflow-tools-browser.cjs
       - tests/food-weight-browsing-browser.cjs
       - tests/food-priority-collapse-browser.cjs
       - tests/v3-mobile-diary-browser.cjs

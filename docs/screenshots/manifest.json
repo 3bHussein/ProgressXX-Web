@@ -1,6 +1,6 @@
 {
   "source": "index.html",
-  "sourceSha256": "053f74d4bd29f5f2b35954b6ba4f37f2df1efd3785e5c140b0a513e1e944d429",
+  "sourceSha256": "13fe32bcac0bcec0a4ccfc4f292989bb5a3ca97123a1fd270b4f3bdd39c815ff",
   "fixtureDate": "2026-10-25",
   "viewport": {
     "width": 430,
@@ -77,6 +77,36 @@
         "height": 2200
       },
       "language": "ar"
+    },
+    {
+      "file": "saved-portions.jpg",
+      "route": "nutrition",
+      "region": "#pxPortionTools",
+      "viewport": {
+        "width": 430,
+        "height": 2200
+      },
+      "language": "en"
+    },
+    {
+      "file": "food-batch-move.jpg",
+      "route": "nutrition",
+      "region": "#nutrition .nutritionOrderToday",
+      "viewport": {
+        "width": 430,
+        "height": 2200
+      },
+      "language": "en"
+    },
+    {
+      "file": "weekly-share-report.jpg",
+      "route": "analytics",
+      "region": "#pxWeeklyReportDialog",
+      "viewport": {
+        "width": 430,
+        "height": 2200
+      },
+      "language": "en"
     }
   ]
 }

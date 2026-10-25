@@ -10,7 +10,7 @@ const assert=require('node:assert/strict');
  const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});await page.locator('#pxEmail').waitFor();
  await page.evaluate(()=>{
-  const store=new Map();window.__pxActiveStore={getItem:k=>store.get(k)??null,setItem:(k,v)=>store.set(k,String(v)),removeItem:k=>store.delete(k)};
+  window.__pxSaveState=()=>({scope:'documentation-demo',ready:false,busy:false,conflict:false,dirty:false,confirmedAt:0});const store=new Map();window.__pxActiveStore={getItem:k=>store.get(k)??null,setItem:(k,v)=>store.set(k,String(v)),removeItem:k=>store.delete(k)};
   scheduleAutoBackup=()=>{};scheduleCloudProfileSync=()=>{};scheduleDailyStateSync=()=>{};processWorkoutQueue=()=>{};
   syncNutritionFromSheet=async()=>{};syncRemindersFromSheet=async()=>{};syncWeightCheckinsFromSheet=async()=>{};
   apiCall=async()=>{throw Error('Network writes disabled for documentation')};
@@ -33,6 +33,9 @@ const assert=require('node:assert/strict');
  await capture('weight-weekly-trend','analytics','#pxWeeklyWeight');
  await capture('settings-mobile','settings',null,async()=>page.evaluate(()=>pxShowSettingsHome(false)));
  await page.evaluate(()=>pxSetUILanguage('ar',false));await capture('food-quick-add-ar','nutrition','#nutrition .nutritionOrderQuick');
+ await page.evaluate(()=>{pxSetUILanguage('en',false);pxSaveFoodPortion('demo-oats','One scoop',30)});await capture('saved-portions','nutrition','#pxPortionTools',async()=>page.evaluate(()=>{$('foodQuickProduct').value='demo-oats';updateFoodQuickPreview();$('pxPortionTools').open=true}));
+ await capture('food-batch-move','nutrition','#nutrition .nutritionOrderToday',async()=>page.evaluate(()=>{$('pxFoodBatch').open=true;pxBatchSelection=new Set(['demo-food-0-2026-10-25','demo-food-1-2026-10-25']);pxRenderFoodBatch()}));
+ await capture('weekly-share-report','analytics','#pxWeeklyReportDialog',async()=>page.evaluate(()=>pxOpenWeeklyReport()));await page.evaluate(()=>$('pxWeeklyReportDialog').close());
  assert.deepEqual(errors,[]);fs.writeFileSync(path.join(out,'manifest.json'),JSON.stringify({source:'index.html',sourceSha256:crypto.createHash('sha256').update(fs.readFileSync(path.resolve(__dirname,'../index.html'))).digest('hex'),fixtureDate:'2026-10-25',viewport:{width:430,height:1000},data:'Synthetic in-memory demonstration. No login or production data. External requests blocked.',screenshots:shots},null,2)+'\n');
  console.log('Captured '+shots.length+' actual root UI screenshots with synthetic in-memory fixtures; no account login or production writes.');
  }finally{await browser.close()}})().catch(e=>{console.error(e);process.exitCode=1});

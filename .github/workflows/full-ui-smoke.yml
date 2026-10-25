@@ -44,6 +44,7 @@ jobs:
             tests/food-weight-browsing-browser.cjs \
             tests/mobile-all-pages-design-browser.cjs \
             tests/weekly-weight-usual-foods-browser.cjs \
+            tests/food-workflow-tools-browser.cjs \
             tests/food-undo-save-status-browser.cjs \
             tests/practical-weekly-progress-browser.cjs \
             tests/session-drafts-repeat-meals-browser.cjs \

@@ -3,6 +3,7 @@ on:
   push:
     branches: [main]
     paths:
+      - tests/food-workflow-tools-browser.cjs
       - tests/v3-mobile-diary-browser.cjs
       - docs/UI-LANGUAGE-CATALOGUE.json
       - scripts/update-ui-catalogue.cjs
@@ -54,6 +55,7 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - tests/food-workflow-tools-browser.cjs
       - tests/v3-mobile-diary-browser.cjs
       - docs/UI-LANGUAGE-CATALOGUE.json
       - scripts/update-ui-catalogue.cjs
@@ -141,6 +143,7 @@ jobs:
           node tests/food-weight-browsing-browser.cjs
           node tests/mobile-all-pages-design-browser.cjs
           node tests/weekly-weight-usual-foods-browser.cjs
+          node tests/food-workflow-tools-browser.cjs
           node tests/food-undo-save-status-browser.cjs
           node tests/practical-weekly-progress-browser.cjs
           node tests/session-drafts-repeat-meals-browser.cjs
