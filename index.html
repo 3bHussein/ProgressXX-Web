@@ -2978,7 +2978,7 @@ if($('foodQuickProduct'))$('foodQuickProduct').addEventListener('change',()=>{
   updateFoodQuickPreview()
 });if($('foodQuickAmount'))$('foodQuickAmount').addEventListener('input',()=>{$('foodQuickAmount').dataset.changed='1';updateFoodQuickPreview()});bindLogFilters();$('exerciseSelect').addEventListener('change',renderExercise);$('progressDaySelect').addEventListener('change',()=>{buildProgressFilters();renderExercise()});$('importFile').addEventListener('change',importJSON);if($('restoreFullBackupFile'))$('restoreFullBackupFile').addEventListener('change',restoreFullBackup);$('fDay').addEventListener('change',()=>{buildExerciseOptions($('fDay').value);if(editingId===null){$('fExercise').value='';$('fPerformance').value='';$('lastPerfHint').textContent=''}});$('fExercise').addEventListener('change',prefillLastPerformance);$('fExercise').addEventListener('input',()=>{const name=$('fExercise').value.trim();if(exercisesForDay($('fDay').value).some(x=>x.toLowerCase()===name.toLowerCase()))prefillLastPerformance()});}
 function pxScrollBehavior(){return window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?'auto':'smooth'}
-function go(p){currentPage=p;if(typeof pxUpdateMobilePage==='function')pxUpdateMobilePage(p);document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===p));document.querySelectorAll('.navbtn').forEach(b=>{const active=b.dataset.page===p;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});const activeNav=document.querySelector('.navbtn.active');if(activeNav&&window.innerWidth<=820){setTimeout(()=>activeNav.scrollIntoView({behavior:pxScrollBehavior(),block:'nearest',inline:'center'}),0)}if(p==='intelligence'){renderIntelligence()}if(p==='analytics'){renderAnalytics();if($('progressPhotoDate')&&!$('progressPhotoDate').value)$('progressPhotoDate').value=localDateKey();syncWeightCheckinsFromSheet(true);}if(p==='daily'){renderDaily();syncRemindersFromSheet()}if(p==='nutrition'){renderNutrition();syncNutritionFromSheet(null,true)}if(p==='home'){renderNutritionHome();syncNutritionFromSheet(localDateKey(),true)}if(p==='settings'){pxShowSettingsHome(false);requestAnimationFrame(()=>{window.scrollTo(0,0)});renderSyncCenter();renderWorkoutSchedule();renderDataHealth(false);renderAutoBackupList();previewDataRepairs();updatePwaInstallUI();}scrollTo(0,0)}
+function go(p){currentPage=p;if(typeof pxRenderFoodUndo==='function')pxRenderFoodUndo();if(typeof pxUpdateMobilePage==='function')pxUpdateMobilePage(p);document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===p));document.querySelectorAll('.navbtn').forEach(b=>{const active=b.dataset.page===p;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});const activeNav=document.querySelector('.navbtn.active');if(activeNav&&window.innerWidth<=820){setTimeout(()=>activeNav.scrollIntoView({behavior:pxScrollBehavior(),block:'nearest',inline:'center'}),0)}if(p==='intelligence'){renderIntelligence()}if(p==='analytics'){renderAnalytics();if($('progressPhotoDate')&&!$('progressPhotoDate').value)$('progressPhotoDate').value=localDateKey();syncWeightCheckinsFromSheet(true);}if(p==='daily'){renderDaily();syncRemindersFromSheet()}if(p==='nutrition'){renderNutrition();syncNutritionFromSheet(null,true)}if(p==='home'){renderNutritionHome();syncNutritionFromSheet(localDateKey(),true)}if(p==='settings'){pxShowSettingsHome(false);requestAnimationFrame(()=>{window.scrollTo(0,0)});renderSyncCenter();renderWorkoutSchedule();renderDataHealth(false);renderAutoBackupList();previewDataRepairs();updatePwaInstallUI();}scrollTo(0,0)}
 function handleAndroidBack(){
   if($('pxAnatomyZoom')){pxCloseAnatomyZoom();return true}
   if($('workoutSessionOverlay')?.classList.contains('show')){closeWorkoutSession();return true}
@@ -5730,6 +5730,8 @@ async function restoreFullBackup(e){
     // Never restore pending network queues from a backup. Re-sync cleanly.
     PXStore.removeItem(WORKOUT_QUEUE_KEY);
     PXStore.removeItem(FOOD_LOG_PENDING_KEY);
+    PXStore.removeItem('progressxx-food-delete-outbox-v1');
+    PXStore.removeItem('progressxx-food-last-undo-v1');
 
     alert('Full backup restored successfully. ProgressX will reload now.');
     location.reload();
@@ -5762,7 +5764,7 @@ function formatSyncAge(ts){
 }
 let connectionBannerHideTimer=null;
 function connectionPendingCount(){
-  return pendingWorkoutCount()+foodPendingIds().length+(dailyStateDirty||dailyStateSyncInFlight?1:0);
+  return pendingWorkoutCount()+foodPendingIds().length+(typeof pxFoodDeletes==='function'?pxFoodDeletes().length:0)+(dailyStateDirty||dailyStateSyncInFlight?1:0);
 }
 function updateConnectionBanner(mode=null){
   const el=$('connectionBanner');
@@ -5877,6 +5879,8 @@ function openSheet(){
 */
 function getApiUrl(){throw Error('Google Sheets integration disabled in commercial build.');}
 async function apiCall(action,params={}){
+ const trackedWrite=typeof pxBeginTrackedWrite==='function'?pxBeginTrackedWrite(action):null;
+ try{
  const simpleRead=(key,field)=>{try{return {ok:true,[field]:JSON.parse(PXStore.getItem(key)||'[]')}}catch{return {ok:true,[field]:[]}}};
  
  if(action==='food_log_list'){const data=simpleRead('progressx-food-log','entries');data.entries=data.entries.filter(x=>!params.date||String(x.date)===String(params.date));return data}
@@ -5947,6 +5951,7 @@ async function apiCall(action,params={}){
   }catch(e){return {ok:false,error:'Supabase food delete: '+e.message}}
  }
  return {ok:false,error:'Legacy Google Sheets action '+action+' is not yet supported by Supabase'};
+ }finally{if(trackedWrite)pxEndTrackedWrite(trackedWrite)}
 }
 
 /* ===========================
@@ -6747,8 +6752,9 @@ function setNutritionSyncState(text,ok=null){
     el.textContent=text;
     el.style.color=ok===true?'var(--green)':ok===false?'var(--red)':'var(--muted)';
   }
-  if(ok===true)markSyncSuccess('nutrition');
+  if(ok===true&&!/local|device|pending|waiting|محلي|الجهاز|معلق|المعلقة|انتظار/i.test(text))markSyncSuccess('nutrition');
   renderSyncCenter();
+  if(typeof pxRenderSavePanel==='function')pxRenderSavePanel();
 }
 function selectedNutritionDate(){return $('nutritionDate')?.value||localDateKey()}
 function shiftDateKey(dateKey,days){
@@ -6808,7 +6814,8 @@ async function copyYesterdayMeal(meal,btn=null){
       };
     });
 
-    optimistic.forEach(entry=>{
+    if(typeof pxDismissFoodUndo==='function'&&!pxDismissFoodUndo())return;
+  optimistic.forEach(entry=>{
       markFoodPending(entry.id,true);
       if(entry.time)saveFoodEntryTime(entry,entry.time);
     });
@@ -6926,6 +6933,7 @@ function pxRenderScheduleDeload(){
 }
 
 function renderNutrition(){
+  if(typeof pxRenderFoodUndo==='function')pxRenderFoodUndo();
   if(!$('nutritionDate'))return;
   const totals=nutritionTotals();
   setMacroUI('n',totals);
@@ -7357,6 +7365,7 @@ let pxFoodFlushing=false;
 async function pxFlushFoodOutbox(){
  if(pxFoodFlushing||!navigator.onLine||!pxFoodOutbox().length)return;
  pxFoodFlushing=true;
+ const safetyScope=typeof pxSafetyScope==='function'?pxSafetyScope():null;
  try{
   for(const item of pxFoodOutbox().slice().sort((a,b)=>(a.type==='product'?0:1)-(b.type==='product'?0:1)||a.createdAt-b.createdAt)){
    const isProduct=item.type==='product';
@@ -7383,9 +7392,12 @@ async function pxFlushFoodOutbox(){
     const action=isProduct?'food_product_upsert':'food_log_upsert';
     const payload={...row,id:String(row.id)};
     const r=await apiCall(action,payload);
+    if(safetyScope!==null&&safetyScope!==pxSafetyScope())return;
     if(!r?.ok||!r.id)throw Error(r?.error||'Sync failed');
     const oldId=row.id;
     row.id=String(r.id);
+    if(!isProduct&&typeof pxFoodRemapSafety==='function')pxFoodRemapSafety(String(oldId),String(r.id));
+    const liveRow=(isProduct?foodProducts:foodLog).find(x=>String(x.id)===String(oldId));if(liveRow)liveRow.id=String(r.id);
     if(!isProduct){
      transferFoodEntryTime({...row,id:oldId},row);
      markFoodPending(oldId,false);
@@ -7394,7 +7406,7 @@ async function pxFlushFoodOutbox(){
      foodLog.forEach(x=>{if(String(x.productId)===String(oldId))x.productId=String(r.id)});
      PXStore.setItem(FOOD_LOG_KEY,JSON.stringify(foodLog));
     }
-    PXStore.setItem(isProduct?FOOD_PRODUCTS_KEY:FOOD_LOG_KEY,JSON.stringify(rows));
+    PXStore.setItem(isProduct?FOOD_PRODUCTS_KEY:FOOD_LOG_KEY,JSON.stringify(isProduct?foodProducts:foodLog));
     PXStore.setItem(PX_FOOD_OUTBOX_KEY,JSON.stringify(pxFoodOutbox().filter(x=>!(x.id===item.id&&x.type===item.type))));
    }catch(e){
     setNutritionSyncState('Food was NOT saved to food_entries. Kept locally: '+String(e.message||e),false);
@@ -7402,7 +7414,7 @@ async function pxFlushFoodOutbox(){
    }
   }
   renderNutrition();
- }finally{pxFoodFlushing=false}
+ }finally{pxFoodFlushing=false;if(typeof pxFlushFoodDeletes==='function')pxFlushFoodDeletes().catch(console.warn);if(typeof pxRenderSavePanel==='function')pxRenderSavePanel()}
 }
 function pxOfflineFoodStatus(){
  const pending=pxFoodOutbox().length;
@@ -7798,6 +7810,7 @@ async function addMealTemplateToDiary(encodedId){
     fat:Number(x.fat)||0
   }));
 
+  if(typeof pxDismissFoodUndo==='function'&&!pxDismissFoodUndo())return;
   optimistic.forEach(entry=>{
     markFoodPending(entry.id,true);
     saveFoodEntryTime(entry,entry.time||currentTimeHHMM());
@@ -7855,7 +7868,7 @@ async function addFoodToDiary(){
   if(amount<=0){alert('Enter an amount greater than 0.');return}
 
   const factor=amount/(Number(p.servingQty)||1);
-  const tempId='temp_food_'+Date.now();
+  const tempId='temp_food_'+crypto.randomUUID();
 
   const entry={
     id:tempId,
@@ -7873,48 +7886,14 @@ async function addFoodToDiary(){
     fat:p.fat*factor
   };
 
-  // Optimistic UI: show immediately. Keep this row protected from a
-  // concurrent cloud refresh until its real Google Sheet id is confirmed.
-  markFoodPending(entry.id,true);
-  saveFoodEntryTime(entry,entry.time||currentTimeHHMM());
-  foodLog.push(entry);
-  PXStore.setItem(FOOD_LOG_KEY,JSON.stringify(foodLog));
+  if(!pxCommitFoodAddition([entry]))return;
   renderNutrition();
-  pxFoodQueue('log',tempId);
   setNutritionSyncState('Food saved locally • syncing…');
   pxFlushFoodOutbox().catch(console.warn);
   return;
 
-  try{
-    const payload={...entry,id:''};
-    const r=await apiCall('food_log_upsert',payload);
-    if(!r.ok)throw new Error(r.error||'Could not add food');
-
-    const i=foodLog.findIndex(x=>String(x.id)===String(tempId));
-    if(i>=0){
-      const oldEntry=clone(foodLog[i]);
-      foodLog[i].id=String(r.id);
-      transferFoodEntryTime(oldEntry,foodLog[i]);
-    }else{
-      transferFoodEntryTime(entry,{...entry,id:String(r.id)});
-    }
-    markFoodPending(tempId,false);
-
-    PXStore.setItem(FOOD_LOG_KEY,JSON.stringify(foodLog));
-    if($('foodQuickTime')){
-      $('foodQuickTime').dataset.changed='';
-      $('foodQuickTime').value=currentTimeHHMM();
-    }
-    renderNutrition();
-    PXStore.setItem(PX_FOOD_OUTBOX_KEY,JSON.stringify(pxFoodOutbox().filter(x=>!(x.type==='log'&&x.id===String(tempId)))));
-    setNutritionSyncState('Food diary synced',true);
-  }catch(e){
-    // Keep pending diary entries visible and protected from cloud refresh.
-    PXStore.setItem(FOOD_LOG_KEY,JSON.stringify(foodLog));
-    setNutritionSyncState('Food saved on device • sync will retry when online',false);
-    pxFlushFoodOutbox().catch(console.warn);
-  }
 }
+
 function closeFoodEntryEdit(){
   $('foodEntryEditForm')?.classList.remove('open');
   if($('foodEntryEditId'))$('foodEntryEditId').value='';
@@ -7955,6 +7934,7 @@ async function saveFoodEntryEdit(){
   const amount=Number($('foodEntryEditAmount')?.value)||0;
   if(amount<=0){alert('Enter an amount greater than 0.');return}
 
+  if(typeof pxDismissFoodUndo==='function'&&!pxDismissFoodUndo())return;
   const backup=clone(foodLog[i]);
   const oldAmount=Number(backup.amount)||0;
   const scale=oldAmount>0?amount/oldAmount:0;
@@ -7994,17 +7974,8 @@ async function saveFoodEntryEdit(){
 }
 
 async function deleteFoodLogEntry(id){
- id=String(id);
  if(!confirm('Delete this logged food entry?'))return;
- const tombstoneKey='pxx-food-deleted-log-ids';
- const deleted=new Set(JSON.parse(PXStore.getItem(tombstoneKey)||'[]'));
- deleted.add(id);PXStore.setItem(tombstoneKey,JSON.stringify([...deleted]));
- foodLog=foodLog.filter(x=>String(x.id)!==id);
- PXStore.setItem(FOOD_LOG_KEY,JSON.stringify(foodLog));
- markFoodPending(id,false);renderNutrition();
- setNutritionSyncState('Deleting food entry from Supabase…');
- const r=await apiCall('food_log_delete',{id});
- setNutritionSyncState(r.ok?'✓ Food entry deleted from database':'Food delete pending: '+r.error,r.ok);
+ if(pxDeleteFoodRows([String(id)],true))await pxFlushFoodDeletes();
 }
 
 function toggleNutritionTargets(open){
@@ -10132,7 +10103,9 @@ window.__legacyBoot=init;
  const gate=document.getElementById('pxCommercialGate'),status=document.getElementById('pxLoginMessage'),pill=document.getElementById('pxSyncPill');
  const browserStorage=window.localStorage;
  let auth=null,account=null,values={},revision=0,savedRevision=0,timer=null,uploading=false,ready=false;
- let snapshotBaseline=null,syncConflictHold=false;
+ let snapshotBaseline=null,syncConflictHold=false,lastSnapshotAck=0,lastSnapshotOwner=null;
+ window.__pxSaveState=()=>({ready,scope:account,dirty:revision!==savedRevision,busy:uploading,conflict:syncConflictHold,confirmedAt:lastSnapshotOwner===account?lastSnapshotAck:0});
+ window.__pxRetrySnapshot=async()=>{if(!ready||syncConflictHold)return false;await flush();return revision===savedRevision};
  const snapshotDigest=payload=>JSON.stringify(Object.entries(payload||{}).sort(([a],[b])=>a.localeCompare(b)));
  const storagePrefix=id=>'pxx:full:'+id+':';
  const pendingKey=id=>'pxx:pending:'+id;
@@ -10485,7 +10458,7 @@ window.__legacyBoot=init;
  function scheduleCloudSync(){if(!ready||syncConflictHold)return;clearTimeout(timer);timer=setTimeout(()=>{void flush()},syncRetryFailures?Math.min(30000,1200*Math.pow(2,Math.min(syncRetryFailures,5))):1200)}
  async function flush(){
   if(!ready||uploading||syncConflictHold||!navigator.onLine||revision===savedRevision)return;
-  uploading=true;const writing=revision;tell('↻ Syncing to Supabase…');
+  uploading=true;const writing=revision,writingOwner=account;tell('↻ Syncing to Supabase…');
   try{
    // Safety preflight is NOT atomic CAS; it only catches already-visible remote changes.
    const current=await cloud('user_app_snapshots?select=payload&user_id=eq.'+encodeURIComponent(account)+'&limit=1');
@@ -10501,7 +10474,7 @@ window.__legacyBoot=init;
    // Preserve a reload-safe draft until the table mirror also succeeds.
    markPending();
    await mirrorWorkoutScheduleToTable({...values});
-   savedRevision=writing;syncRetryFailures=0;if(revision===writing){clearPending();tell('✓ Synced to Supabase · '+new Date().toLocaleTimeString())}else tell('◷ New changes saved locally · waiting to sync');
+   savedRevision=writing;lastSnapshotAck=Date.now();lastSnapshotOwner=writingOwner;syncRetryFailures=0;if(revision===writing){clearPending();tell('✓ Synced to Supabase · '+new Date().toLocaleTimeString())}else tell('◷ New changes saved locally · waiting to sync');
   }catch(e){syncRetryFailures++;tell('◷ Saved locally · sync pending: '+e.message,true)}
   finally{uploading=false;if(!syncConflictHold&&revision!==savedRevision)scheduleCloudSync()}
  }
@@ -10761,6 +10734,7 @@ function pxSetUILanguage(language,persist=true){
  if($('pxLanguageStatus'))$('pxLanguageStatus').textContent=saved?'Language applied to all pages.':'Language applied. Browser storage is unavailable; selection will not survive reload.';
  if(typeof pxRenderInsightSummary==='function')pxRenderInsightSummary();if(typeof pxRenderWeeklyCoach==='function')pxRenderWeeklyCoach(Number($('weeklyReviewWeek')?.value)||activeWeek());
  renderProgressPhotos();pxRenderQuickFoods();if(typeof pxUpdateMobilePage==='function')pxUpdateMobilePage(document.querySelector('.bottomNav .navbtn.active')?.dataset.page||'home');
+ if(typeof pxRenderSavePanel==='function')pxRenderSavePanel();if(typeof pxRenderFoodUndo==='function')pxRenderFoodUndo();
  pxTranslateUiTree(document.body);
 }
 function pxInitUILanguage(){
@@ -11065,7 +11039,8 @@ function pxCaptureSessionDraft(){
  Object.defineProperty(workoutSession.drafts,currentSessionExercise(),{value:draft,writable:true,enumerable:true,configurable:true});
  try{saveWorkoutSessionState();if(PXStore.getItem(WORKOUT_SESSION_KEY)!==JSON.stringify(workoutSession))throw Error('Draft storage unavailable');pxDraftStatus(true)}catch{pxDraftStatus(false)}
 }
-function pxDraftStatus(ok){let el=$('pxSessionDraftNotice');if(!el){el=document.createElement('p');el.id='pxSessionDraftNotice';el.className='pxDraftNotice';el.setAttribute('role','status');el.setAttribute('data-px-user','1');$('sessionSavedState').after(el)}el.hidden=false;const message=ok?pxExplain('Draft saved on this device. Use Save & Next to record it.','المسودة محفوظة على الجهاز ده. استخدم حفظ والتالي لتسجيلها.'):pxExplain('Could not save the draft on this device. Keep this page open and retry.','تعذر حفظ المسودة على الجهاز ده. خلي الصفحة مفتوحة وحاول تاني.');if(el.textContent!==message)el.textContent=message}
+function pxDraftStatus(ok){
+ if(typeof pxSaveLocalWarning==='function')pxSaveLocalWarning(ok?'':'draft',ok?'':'Draft could not be saved');let el=$('pxSessionDraftNotice');if(!el){el=document.createElement('p');el.id='pxSessionDraftNotice';el.className='pxDraftNotice';el.setAttribute('role','status');el.setAttribute('data-px-user','1');$('sessionSavedState').after(el)}el.hidden=false;const message=ok?pxExplain('Draft saved on this device. Use Save & Next to record it.','المسودة محفوظة على الجهاز ده. استخدم حفظ والتالي لتسجيلها.'):pxExplain('Could not save the draft on this device. Keep this page open and retry.','تعذر حفظ المسودة على الجهاز ده. خلي الصفحة مفتوحة وحاول تاني.');if(el.textContent!==message)el.textContent=message}
 function pxRestoreDraftFocus(){const focus=pxSessionDraft()?.focus;if(!focus||(!['sessionNotes','sessionTime'].includes(focus.id)&&(!Number.isInteger(focus.row)||!['weight','reps','raw'].includes(focus.kind))))return;requestAnimationFrame(()=>{const target=focus.id?$(focus.id):$('pxSessionSetEditor').querySelectorAll('.pxSessionSetRow')[focus.row]?.querySelector('[data-set-'+focus.kind+']');target?.focus()})}
 document.addEventListener('input',event=>{if(event.target.closest('#pxSessionSetEditor')||['sessionPerformance','sessionNotes','sessionTime'].includes(event.target.id))pxCaptureSessionDraft()});
 document.addEventListener('focusin',event=>{if(event.target.closest('#pxSessionSetEditor')||['sessionPerformance','sessionNotes','sessionTime'].includes(event.target.id))pxCaptureSessionDraft()});
@@ -11099,9 +11074,8 @@ async function pxAddRepeatMeal(){
  try{
  const stamp=Date.now(),nonce=crypto.randomUUID(),time=currentTimeHHMM();
  const rows=g.rows.map((x,i)=>({id:'temp_food_repeat_'+nonce+'_'+i,date,meal:g.meal,time,productId:x.productId||'',name:x.name,amount:Number(x.amount),servingQty:Number(x.servingQty)>0?Number(x.servingQty):1,servingUnit:x.servingUnit||'g',...Object.fromEntries(['calories','protein','carbs','fat'].map(k=>[k,Number(x[k])]))}));
- const next=[...foodLog,...rows],pending=[...new Set([...foodPendingIds(),...rows.map(x=>x.id)])],queue=[...pxFoodOutbox(),...rows.map(x=>({type:'log',id:x.id,createdAt:stamp}))];
- pxPersistDayChanges([[FOOD_LOG_KEY,JSON.stringify(next)],[FOOD_LOG_PENDING_KEY,JSON.stringify(pending)],[PX_FOOD_OUTBOX_KEY,JSON.stringify(queue)]]);
- foodLog=next;renderNutrition();if(!navigator.onLine)updateConnectionBanner('offline');status.dataset.state='added';status.dataset.date=date;pxRenderRepeatMealStatus();setNutritionSyncState(status.textContent,true);pxFlushFoodOutbox().catch(console.warn);
+ if(!pxCommitFoodAddition(rows)){status.dataset.state='error';status.dataset.date=date;pxRenderRepeatMealStatus();return}
+ renderNutrition();if(!navigator.onLine)updateConnectionBanner('offline');status.dataset.state='added';status.dataset.date=date;pxRenderRepeatMealStatus();setNutritionSyncState(status.textContent,true);pxFlushFoodOutbox().catch(console.warn);
  }catch{status.dataset.state='error';status.dataset.date=date;pxRenderRepeatMealStatus()}
  finally{pxRepeatMealBusy=false;pxRenderRepeatMealPreview()}
 }
@@ -11183,6 +11157,100 @@ function pxRenderPracticalWeek(week){
  if(!groups.length){$('pxProgressDetail').textContent=pxExplain('Log a completed exercise in this week to start. Skipped entries and drafts are not counted.','سجل تمرين مكتمل في الأسبوع ده عشان نبدأ. السجلات المتخطاة والمسودات مش محسوبة.')}
  $('weeklyReviewWeek')?.setAttribute('aria-label',pxExplain('Week to review','الأسبوع المراد مراجعته'));
 }
+</script>
+
+
+<style id="px-save-safety-style">
+.pxSavePanel{margin:0 0 14px;border:1px solid var(--line);border-radius:15px;background:var(--card2);padding:10px 13px;min-width:0}.pxSavePanel>summary{min-height:44px;cursor:pointer;display:flex;align-items:center;gap:9px;font-size:13px;font-weight:800;list-style:none}.pxSavePanel>summary:before{content:'';width:9px;height:9px;border-radius:50%;background:var(--muted);flex-shrink:0}.pxSavePanel[data-state="synced"]>summary:before{background:var(--cyan)}.pxSavePanel[data-state="pending"]>summary:before,.pxSavePanel[data-state="offline"]>summary:before{background:#fbbf24}.pxSavePanel[data-state="error"]>summary:before,.pxSavePanel[data-state="conflict"]>summary:before{background:var(--bad)}.pxSavePanel>summary:after{content:'+';margin-inline-start:auto;font-size:20px}.pxSavePanel[open]>summary:after{content:'−'}.pxSavePanel p{font-size:12px;line-height:1.7;color:var(--muted);overflow-wrap:anywhere}.pxSavePanel dl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;font-size:12px}.pxSavePanel dd{margin:0;font-variant-numeric:tabular-nums}.pxSavePanel .btn{min-height:44px;white-space:normal}.pxFoodUndo{position:sticky;top:8px;z-index:30;order:-1;margin:12px 0;padding:12px;border:1px solid var(--line);border-radius:15px;background:var(--card2);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.pxFoodUndo[hidden]{display:none}.pxFoodUndo p{margin:0;font-size:12px;line-height:1.6;flex:1;min-width:150px;overflow-wrap:anywhere}.pxFoodUndo .btn{min-height:44px}.pxFoodUndo small{display:block;color:var(--muted);font-size:11px}
+</style>
+<script id="px-save-safety">
+const PX_FOOD_UNDO_KEY='progressxx-food-last-undo-v1',PX_FOOD_DELETES_KEY='progressxx-food-delete-outbox-v1';
+const pxTrackedWrites=new Map();
+function pxBeginTrackedWrite(action){if(!['food_log_upsert','food_product_upsert','food_log_delete','food_product_delete','weight_upsert','weight_delete','upsert','delete'].includes(action))return null;const token={scope:pxSafetyScope()};pxTrackedWrites.set(token,true);pxRenderSavePanel();return token}
+function pxEndTrackedWrite(token){pxTrackedWrites.delete(token);pxRenderSavePanel()}
+let pxFoodDeleteBusy=false,pxSaveRetryBusy=false,pxSaveWarning=null,pxFoodDeleteTimer=null,pxFoodDeleteRetryAt=0;
+function pxSafetyScope(){return window.__pxSaveState?.().scope||window.__pxActiveStore||PXStore}
+function pxFoodDeletes(){return loadLocalArray(PX_FOOD_DELETES_KEY,[])}
+function pxFoodUndo(){try{const x=JSON.parse(PXStore.getItem(PX_FOOD_UNDO_KEY)||'null');if(x&&x.expiresAt<=Date.now()){try{PXStore.removeItem(PX_FOOD_UNDO_KEY)}catch{}return null}return x&&['add','delete'].includes(x.op)&&Array.isArray(x.rows)&&x.rows.length&&x.expiresAt>Date.now()?x:null}catch{return null}}
+function pxSaveLocalWarning(kind,message){if(!kind){if(pxSaveWarning?.kind==='draft')pxSaveWarning=null}else pxSaveWarning={kind,message,scope:pxSafetyScope()};pxRenderSavePanel()}
+function pxFoodFingerprint(row){return JSON.stringify(['date','meal','name','productId','servingUnit','amount','servingQty','calories','protein','carbs','fat','time'].map(k=>row[k]??''))}
+function pxDismissFoodUndo(){try{if(PXStore.getItem(PX_FOOD_UNDO_KEY)!==null){PXStore.removeItem(PX_FOOD_UNDO_KEY);if(PXStore.getItem(PX_FOOD_UNDO_KEY)!==null)throw Error('Could not clear previous Undo')}pxRenderFoodUndo();return true}catch{pxSaveLocalWarning('food','Previous Undo could not be cleared');return false}}
+function pxCommitFoodAddition(entries,offer=true){
+ const next=[...foodLog,...entries],pending=[...new Set([...foodPendingIds(),...entries.map(x=>String(x.id))])],queue=[...pxFoodOutbox(),...entries.map(x=>({type:'log',id:String(x.id),createdAt:Date.now()}))];
+ const changes=[[FOOD_LOG_KEY,JSON.stringify(next)],[FOOD_LOG_PENDING_KEY,JSON.stringify(pending)],[PX_FOOD_OUTBOX_KEY,JSON.stringify(queue)]];
+ if(offer)changes.push([PX_FOOD_UNDO_KEY,JSON.stringify({op:'add',rows:clone(entries),expiresAt:Date.now()+120000})]);else changes.push([PX_FOOD_UNDO_KEY,'null']);
+ try{pxPersistDayChanges(changes);foodLog=next;pxSaveWarning=null;pxRenderFoodUndo();pxRenderSavePanel();return true}catch{pxSaveLocalWarning('food','Food addition could not be confirmed');setNutritionSyncState(pxExplain('Could not confirm local save. Check the diary before retrying.','تعذر تأكيد الحفظ على الجهاز. راجع السجل قبل إعادة المحاولة.'),false);return false}
+}
+function pxDeleteFoodRows(ids,offer){
+ const selected=new Set(ids.map(String)),rows=foodLog.filter(x=>selected.has(String(x.id)));if(rows.length!==selected.size)return false;
+ const tombstones=new Set(loadLocalArray('pxx-food-deleted-log-ids',[]).map(String));rows.forEach(x=>tombstones.add(String(x.id)));
+ const next=foodLog.filter(x=>!selected.has(String(x.id))),queue=pxFoodOutbox().filter(x=>!(x.type==='log'&&selected.has(String(x.id)))),pending=foodPendingIds().filter(id=>!selected.has(String(id))),deletes=pxFoodDeletes();
+ rows.forEach(x=>{if(!deletes.some(d=>String(d.id)===String(x.id)))deletes.push({id:String(x.id),createdAt:Date.now()})});
+ const undo=offer?{op:'delete',rows:clone(rows),expiresAt:Date.now()+120000}:null;
+ try{pxPersistDayChanges([['pxx-food-deleted-log-ids',JSON.stringify([...tombstones])],[FOOD_LOG_KEY,JSON.stringify(next)],[PX_FOOD_OUTBOX_KEY,JSON.stringify(queue)],[FOOD_LOG_PENDING_KEY,JSON.stringify(pending)],[PX_FOOD_DELETES_KEY,JSON.stringify(deletes)],[PX_FOOD_UNDO_KEY,JSON.stringify(undo)]]);foodLog=next;pxSaveWarning=null;renderNutrition();pxRenderFoodUndo();setNutritionSyncState(pxExplain('Deleted locally • cloud deletion pending','اتحذف على الجهاز • حذف السحابة معلق'));return true}catch{pxSaveLocalWarning('food','Food deletion could not be confirmed');setNutritionSyncState(pxExplain('Could not confirm deletion. Check the diary before retrying.','تعذر تأكيد الحذف. راجع السجل قبل إعادة المحاولة.'),false);return false}
+}
+function pxFoodRemapSafety(oldId,newId){
+ if(oldId===newId)return;const changes=[],undo=pxFoodUndo(),deletes=pxFoodDeletes(),tombstones=new Set(loadLocalArray('pxx-food-deleted-log-ids',[]).map(String));
+ if(undo?.rows.some(x=>String(x.id)===oldId)){undo.rows.forEach(x=>{if(String(x.id)===oldId)x.id=newId});changes.push([PX_FOOD_UNDO_KEY,JSON.stringify(undo)])}
+ if(deletes.some(x=>String(x.id)===oldId)){deletes.forEach(x=>{if(String(x.id)===oldId)x.id=newId});changes.push([PX_FOOD_DELETES_KEY,JSON.stringify(deletes)])}
+ if(tombstones.has(oldId)){tombstones.add(newId);changes.push(['pxx-food-deleted-log-ids',JSON.stringify([...tombstones])])}
+ if(changes.length)pxPersistDayChanges(changes);
+}
+async function pxFlushFoodDeletes(){
+ const accountState=window.__pxSaveState?.();
+ if(pxFoodDeleteBusy||!navigator.onLine||accountState?.conflict||(accountState&&!accountState.ready)||!pxFoodDeletes().length)return;
+ if(pxFoodFlushing){clearTimeout(pxFoodDeleteTimer);pxFoodDeleteTimer=setTimeout(()=>pxFlushFoodDeletes().catch(console.warn),400);return}
+ const scope=pxSafetyScope();pxFoodDeleteBusy=true;pxRenderSavePanel();
+ try{for(const item of pxFoodDeletes().slice()){
+  if(scope!==pxSafetyScope())return;
+  try{const result=await apiCall('food_log_delete',{id:String(item.id)});if(scope!==pxSafetyScope())return;if(!result?.ok)throw Error('Delete not confirmed');PXStore.setItem(PX_FOOD_DELETES_KEY,JSON.stringify(pxFoodDeletes().filter(x=>String(x.id)!==String(item.id))))}catch{setNutritionSyncState(pxExplain('Deletion saved on device • retry when connected','الحذف محفوظ على الجهاز • أعد المحاولة عند الاتصال'),false);break}
+ }}finally{pxFoodDeleteBusy=false;pxFoodDeleteRetryAt=pxFoodDeletes().length?Date.now()+15000:0;pxRenderSavePanel()}
+}
+async function pxUndoFoodAction(){
+ const action=pxFoodUndo();if(!action)return pxRenderFoodUndo();
+ if(action.op==='add'){
+  const live=action.rows.map(row=>foodLog.find(x=>String(x.id)===String(row.id)));
+  if(live.some((row,i)=>!row||pxFoodFingerprint(row)!==pxFoodFingerprint(action.rows[i]))){$('pxFoodUndoText').textContent=pxExplain('This entry changed after adding. Review it in the diary before undoing.','السجل اتغير بعد الإضافة. راجعه في اليوميات قبل التراجع.');return}
+  if(!pxDeleteFoodRows(action.rows.map(x=>String(x.id)),false))return;await pxFlushFoodDeletes();
+ }else{
+  // An explicit new copy never clears a tombstone or resurrects an old ID.
+  const stamp=crypto.randomUUID(),rows=action.rows.map((x,i)=>({...clone(x),id:'temp_food_restore_'+stamp+'_'+i}));
+  if(!pxCommitFoodAddition(rows,false))return;renderNutrition();setNutritionSyncState(pxExplain('Restored as a new entry • syncing','اترجع كسجل جديد • جاري المزامنة'));pxFlushFoodOutbox().catch(console.warn);
+ }
+ pxRenderFoodUndo();pxRenderSavePanel();
+}
+function pxRenderFoodUndo(){
+ const root=$('nutrition');if(!root)return;let el=$('pxFoodUndo');if(!el){el=document.createElement('div');el.id='pxFoodUndo';el.className='pxFoodUndo';el.setAttribute('data-px-user','1');el.innerHTML='<p id="pxFoodUndoText" role="status"></p><button id="pxFoodUndoButton" type="button" class="btn soft"></button>';root.prepend(el);$('pxFoodUndoButton').onclick=pxUndoFoodAction}
+ const action=pxFoodUndo();el.hidden=!action||currentPage!=='nutrition';if(!action)return;
+ const blocked=action.op==='add'&&action.rows.some(row=>{const current=foodLog.find(x=>String(x.id)===String(row.id));return !current||pxFoodFingerprint(current)!==pxFoodFingerprint(row)});
+ const message=blocked?pxExplain('This entry changed after adding. Review it in the diary before undoing.','السجل اتغير بعد الإضافة. راجعه في اليوميات قبل التراجع.'):action.rows.length+' '+pxExplain(action.op==='add'?'food item(s) added. Undo is available for 2 minutes.':'food item(s) deleted. Undo restores a new copy and keeps the original deletion. Available for 2 minutes.',action.op==='add'?'صنف اتضاف. التراجع متاح لمدة دقيقتين.':'صنف اتحذف. التراجع بيرجع نسخة جديدة وبيحافظ على الحذف الأصلي. متاح لدقيقتين.');
+ if($('pxFoodUndoText').textContent!==message)$('pxFoodUndoText').textContent=message;$('pxFoodUndoButton').textContent=pxExplain('Undo','تراجع');$('pxFoodUndoButton').disabled=blocked;
+}
+function pxSaveStatusModel(){
+ const snapshot=window.__pxSaveState?.()||{},counts={food:pxFoodOutbox().length+pxFoodDeletes().length,workout:pendingWorkoutCount(),weight:progressPhotos().filter(x=>x._pending).length,daily:dailyStateDirty?1:0};
+ const session=pxSavedSessionInfo(),drafts=session?.drafts?Object.keys(session.drafts).length:0;
+ const direct=[...pxTrackedWrites.keys()].filter(x=>x.scope===pxSafetyScope()).length;
+ const pending=Object.values(counts).reduce((n,x)=>n+x,0),busy=!!(direct||snapshot.busy||pxFoodFlushing||pxFoodDeleteBusy||workoutSyncBusy||dailyStateSyncInFlight||pxSaveRetryBusy),warning=pxSaveWarning?.scope===pxSafetyScope()?pxSaveWarning:null;
+ const state=warning?'error':snapshot.conflict?'conflict':!navigator.onLine?'offline':busy?'saving':pending||snapshot.dirty?'pending':drafts?'draft':snapshot.ready&&snapshot.confirmedAt?'synced':'local';
+ return {state,counts,pending,busy,drafts,snapshot};
+}
+function pxRenderSavePanel(){
+ const header=document.querySelector('.pxMobilePageHeader');if(!header)return;let el=$('pxSavePanel');if(!el){el=document.createElement('details');el.id='pxSavePanel';el.className='pxSavePanel';el.setAttribute('data-px-user','1');el.innerHTML='<summary><span id="pxSaveLabel" role="status" aria-live="polite"></span></summary><p id="pxSaveExplanation"></p><dl id="pxSaveCounts"></dl><p id="pxSaveDrafts"></p><button id="pxSaveRetry" class="btn soft" type="button"></button>';header.after(el);$('pxSaveRetry').onclick=pxRetryVisibleSave}
+ const model=pxSaveStatusModel(),labels={draft:['Exercise draft • not recorded yet','مسودة تمرين • لسه مش مسجلة'],error:['Local save needs attention','الحفظ على الجهاز محتاج مراجعة'],conflict:['Sync paused • review changes','المزامنة متوقفة • راجع التغييرات'],offline:['Offline • check local changes','غير متصل • راجع التغييرات المحلية'],saving:['Saving changes…','جاري حفظ التغييرات…'],pending:['Saved on device • sync pending','محفوظ على الجهاز • المزامنة معلقة'],synced:['Cloud save confirmed','تم تأكيد الحفظ في السحابة'],local:['On this device • cloud not confirmed','على الجهاز ده • السحابة غير مؤكدة']};el.dataset.state=model.state;
+ const label=pxExplain(...labels[model.state]);if($('pxSaveLabel').textContent!==label)$('pxSaveLabel').textContent=label;$('pxSaveExplanation').textContent=pxExplain('Local and cloud saves are different. Pending changes need sync; conflicts need review before retrying.','الحفظ على الجهاز والحفظ في السحابة حالتين مختلفتين. التغييرات المعلقة محتاجة مزامنة، وأي تعارض محتاج مراجعة قبل المحاولة.');
+ $('pxSaveCounts').innerHTML=[['food','Pending food changes','تغييرات أكل معلقة'],['workout','Pending workout changes','تغييرات تمرين معلقة'],['weight','Pending weight check-ins','قياسات وزن معلقة'],['daily','Pending daily changes','تغييرات يوم معلقة']].map(([key,en,ar])=>'<dt>'+pxExplain(en,ar)+'</dt><dd>'+model.counts[key]+'</dd>').join('');
+ $('pxSaveDrafts').textContent=model.drafts?model.drafts+' '+pxExplain('exercise draft(s) on this device. Use Save & Next to record them.','مسودة تمرين على الجهاز ده. استخدم حفظ والتالي لتسجيلها.'):pxExplain('Exercise drafts are separate from completed workout records.','مسودات التمرين منفصلة عن سجلات الأداء المكتمل.');
+ const retry=$('pxSaveRetry');retry.textContent=model.state==='conflict'?pxExplain('Review conflict','راجع التعارض'):pxExplain('Retry pending saves','أعد محاولة الحفظ المعلق');retry.disabled=model.busy||!navigator.onLine||(model.state!=='conflict'&&!model.pending&&!model.snapshot.dirty);
+}
+async function pxRetryVisibleSave(){
+ if(pxSaveRetryBusy)return;const model=pxSaveStatusModel();if(model.state==='conflict'){go('settings');$('pxReviewConflict')?.click();return}if(!navigator.onLine)return;
+ const retryScope=pxSafetyScope();pxSaveRetryBusy=true;pxRenderSavePanel();
+ try{const jobs=[];if(pxFoodOutbox().length)jobs.push(pxFlushFoodOutbox());if(pxFoodDeletes().length)jobs.push(pxFlushFoodDeletes());if(pendingWorkoutCount())jobs.push(processWorkoutQueue());if(dailyStateDirty)jobs.push(syncDailyStateToSheet());if(progressPhotos().some(x=>x._pending))jobs.push(syncWeightCheckinsFromSheet(false));await Promise.allSettled(jobs);if(retryScope!==pxSafetyScope())return;if(window.__pxSaveState?.().dirty&&!window.__pxSaveState?.().conflict)await window.__pxRetrySnapshot?.()}finally{pxSaveRetryBusy=false;pxRenderSavePanel()}
+}
+window.addEventListener('online',()=>{pxFlushFoodDeletes().catch(console.warn);pxRenderSavePanel()});
+window.addEventListener('offline',pxRenderSavePanel);
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{pxRenderSavePanel();pxRenderFoodUndo();if(navigator.onLine)pxFlushFoodDeletes().catch(console.warn)},{once:true});else{pxRenderSavePanel();pxRenderFoodUndo()}
+setInterval(()=>{if(!document.hidden){pxRenderSavePanel();pxRenderFoodUndo();if(window.__pxSaveState?.().ready&&navigator.onLine&&Date.now()>=pxFoodDeleteRetryAt&&pxFoodDeletes().length)pxFlushFoodDeletes().catch(console.warn)}},1500);
 </script>
 
 </body></html>

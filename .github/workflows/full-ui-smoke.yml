@@ -43,6 +43,7 @@ jobs:
             tests/food-priority-collapse-browser.cjs \
             tests/food-weight-browsing-browser.cjs \
             tests/mobile-all-pages-design-browser.cjs \
+            tests/food-undo-save-status-browser.cjs \
             tests/practical-weekly-progress-browser.cjs \
             tests/session-drafts-repeat-meals-browser.cjs \
             tests/home-action-hub-browser.cjs \
