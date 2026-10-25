@@ -4642,6 +4642,7 @@ function startWorkoutTemplate(id){
   workoutSession={day:t.day||t.name,week:activeWeek(),date:localDateKey(),exercises:[...t.exercises],index:0,startedAt:new Date().toISOString(),templateId:t.id,templateName:t.name};
   saveWorkoutSessionState();
   overlay.classList.add('show');
+  $('sessionSummary')?.classList.remove('show');
   document.body.style.overflow='hidden';
   $('sessionDayPickerWrap')?.classList.add('hide');
   $('sessionResumePrompt')?.classList.add('hide');
@@ -4870,6 +4871,7 @@ function openWorkoutSession(){
   const saved=(()=>{try{return JSON.parse(PXStore.getItem(WORKOUT_SESSION_KEY))}catch{return null}})();
 
   overlay.classList.add('show');
+  $('sessionSummary')?.classList.remove('show');
   document.body.style.overflow='hidden';
 
   $('sessionDayPickerWrap').classList.add('hide');
