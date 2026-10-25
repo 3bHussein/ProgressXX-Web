@@ -1,0 +1,82 @@
+{
+  "source": "index.html",
+  "sourceSha256": "053f74d4bd29f5f2b35954b6ba4f37f2df1efd3785e5c140b0a513e1e944d429",
+  "fixtureDate": "2026-10-25",
+  "viewport": {
+    "width": 430,
+    "height": 1000
+  },
+  "data": "Synthetic in-memory demonstration. No login or production data. External requests blocked.",
+  "screenshots": [
+    {
+      "file": "home-mobile.jpg",
+      "route": "home",
+      "region": "viewport",
+      "viewport": {
+        "width": 430,
+        "height": 1000
+      },
+      "language": "en"
+    },
+    {
+      "file": "food-mobile.jpg",
+      "route": "nutrition",
+      "region": "viewport",
+      "viewport": {
+        "width": 430,
+        "height": 1000
+      },
+      "language": "en"
+    },
+    {
+      "file": "food-quick-add.jpg",
+      "route": "nutrition",
+      "region": "#nutrition .nutritionOrderQuick",
+      "viewport": {
+        "width": 430,
+        "height": 2200
+      },
+      "language": "en"
+    },
+    {
+      "file": "progress-weekly-review.jpg",
+      "route": "analytics",
+      "region": "#pxWeeklyCoach",
+      "viewport": {
+        "width": 430,
+        "height": 2200
+      },
+      "language": "en"
+    },
+    {
+      "file": "weight-weekly-trend.jpg",
+      "route": "analytics",
+      "region": "#pxWeeklyWeight",
+      "viewport": {
+        "width": 430,
+        "height": 2200
+      },
+      "language": "en"
+    },
+    {
+      "file": "settings-mobile.jpg",
+      "route": "settings",
+      "region": "viewport",
+      "viewport": {
+        "width": 430,
+        "height": 1000
+      },
+      "language": "en"
+    },
+    {
+      "file": "food-quick-add-ar.jpg",
+      "route": "nutrition",
+      "region": "#nutrition .nutritionOrderQuick",
+      "viewport": {
+        "width": 430,
+        "height": 2200
+      },
+      "language": "ar"
+    }
+  ]
+}

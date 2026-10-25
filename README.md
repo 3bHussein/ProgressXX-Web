@@ -1,76 +1,140 @@
-# ProgressX — Workout, Nutrition & Progress Tracker
+<div align="center">
 
-> **Status (2026-10-11): Pre-release / production readiness audit. NOT certified for public paid launch.**
+# ProgressXX
 
-**Live application:** https://3bhussein.github.io/ProgressXX-Web/  
-**Source:** https://github.com/3bHussein/ProgressXX-Web  
-**Roadmap:** [ROADMAP.md](ROADMAP.md) · **Latest work log:** [docs/DEVELOPMENT-LOG.md](docs/DEVELOPMENT-LOG.md) · **Continuity / AI handoff:** [docs/PROJECT-HANDOFF.md](docs/PROJECT-HANDOFF.md)
+### Train. Log. Understand your progress.
 
-## What is ProgressX?
+A mobile-first workspace for workouts, meals, body-weight check-ins and daily habits — with English and Arabic interfaces.
 
-Mobile-first fitness companion for workouts, training schedules, body-weight check-ins, nutrition tracking, a food library, daily summaries, body anatomy, statistics and progress insights. The goal is to evolve the working personal application into a safe multi-user product suitable for private beta and eventually paid subscriptions.
+**تمارينك وأكلك وقياساتك في مكان واحد، بواجهة مناسبة للموبايل بالعربي والإنجليزي.**
 
-### Available or under active refinement
-- Workout log, exercise library, workout templates and active workout sessions
-- Weight check-ins, schedule, personal records and insights
-- Today's Food, Food Library, saved meals, daily history, nutrition and barcode workflows
-- Human muscular anatomy with exercise associations
-- PWA/offline support, backup/restore and diagnostics
-- Login and account-oriented data synchronization
+[**Open ProgressXX**](https://3bhussein.github.io/ProgressXX-Web/) · [Roadmap](ROADMAP.md) · [Development log](docs/DEVELOPMENT-LOG.md) · [Project handoff](docs/PROJECT-HANDOFF.md)
 
-**Important:** Visible UI/features do **not** prove correct persistence, cross-device sync, per-user authorization or commercial readiness. Track verification separately.
+</div>
 
-## Repository map
+> **Project status · 26 October 2026:** personal-use application under active development. The current frontend has passed automated Chromium, Firefox and WebKit checks. Production security, complete real-account/device acceptance and commercial readiness remain separate, open milestones.
+
+## A look inside
+
+These are screenshots of the actual `index.html` interface, captured locally with **synthetic demonstration data**. They contain no personal workout history or account information. The example clock is fixed to 25 October 2026; cloud status is intentionally unconfirmed in the local fixture.
+
+| Home — your next action | Food — your day at a glance |
+| :---: | :---: |
+| <img src="docs/screenshots/home-mobile.jpg" width="300" alt="ProgressXX mobile Home with training, food, water and daily habit actions"> | <img src="docs/screenshots/food-mobile.jpg" width="300" alt="Food diary showing date, calorie balance, macros and collapsed day options"> |
+| **Quick add — review the portion first** | **Arabic — the same flow in RTL** |
+| <img src="docs/screenshots/food-quick-add.jpg" width="300" alt="Quick add with usual foods, a saved product, meal, quantity and macro preview"> | <img src="docs/screenshots/food-quick-add-ar.jpg" width="300" alt="Arabic right-to-left Quick add with usual foods and an editable last quantity"> |
+| **Progress — compare recorded work** | **Weight — compare weekly averages** |
+| <img src="docs/screenshots/progress-weekly-review.jpg" width="300" alt="Weekly exercise review with improved and unchanged records, matched sets and a next step"> | <img src="docs/screenshots/weight-weekly-trend.jpg" width="300" alt="Weekly weight comparison with mean values, date ranges and measurement coverage"> |
+
+<details>
+<summary><strong>Settings and screenshot provenance</strong></summary>
+
+<img src="docs/screenshots/settings-mobile.jpg" width="300" alt="Mobile Settings directory with account, language, preferences, backup and schedule categories">
+
+Screenshots use a disposable in-memory store, no login and blocked external requests. The capture script does not alter production data or the app source. The [manifest](docs/screenshots/manifest.json) records the source checksum, example date, viewport and captured region for each image.
+
+</details>
+
+## What you can do
+
+| Area | Everyday use |
+| --- | --- |
+| **Home** | Start or resume training, log food, update water and check daily habits. Extra summaries stay behind disclosures. |
+| **Workout log & sessions** | Organize training days, launch templates and record sets. Numeric sets and free text are supported; partial entries are guarded. Unfinished session drafts can be resumed. |
+| **Food** | See daily calories/macros, choose a saved product and review its quantity before adding. Usual-food shortcuts recall the last compatible portion; search, barcode, saved meals and repeat-meal tools remain available. |
+| **Progress** | Compare an exercise's recorded sets with an earlier available week. See a plain-language review and an explainable next step, with deload and missing-data context. |
+| **Weight** | Log check-ins and compare calendar-week averages, with date ranges, measured days and reading counts. Individual readings and the weight goal remain accessible. |
+| **Daily** | Track reminders, completion and water in a mobile-friendly view. |
+| **Insights & anatomy** | Start with concise summaries, then open detailed evidence, exercise links or the muscle reference when needed. |
+| **Settings** | Manage interface language, appearance, account/sync, backups, diagnostics and the workout schedule. |
+
+### Recent improvements
+
+- **Quieter Food page:** summary, Quick add and meals are expanded; the library and secondary tools open on demand. Empty meal rows and usual-food cards take less space.
+- **Faster meal logging:** usual foods from the last 30 days of loaded history, exact product/unit matching, remembered portions and previous-meal previews.
+- **Food Undo:** a two-minute window for supported additions, repeated-meal batches and diary deletions, with guards against undoing a later edit.
+- **Clearer save state:** distinguish local records, unfinished drafts, known pending changes and acknowledged cloud saves. Conflicts use the existing review path.
+- **Readable progress:** recorded comparisons explain what changed; mixed/free-text work and deload weeks do not force an increase verdict.
+- **Weekly weight:** daily means contribute equally to the weekly mean. Incomplete weeks compare matching weekdays, and limited data is labelled.
+- **Mobile and language:** eight destinations, touch-sized controls, responsive layouts, English/Arabic and RTL support.
+
+## A simple daily flow
+
+1. Open **Home** and choose the next useful action.
+2. Start a workout, or open **Food** to choose a product, check the amount and press **Add**.
+3. Use **Daily** for habits and water; add a weight check-in in **Progress** when needed.
+4. Review the recorded weekly comparison and its explanation. Open detailed history only when it helps.
+5. Check save status and keep a JSON backup through **Settings → Backup & recovery**.
+
+Weight trends describe recorded measurements, not body-fat changes or a diet prescription. Exercise comparisons describe recorded work, not a recovery or medical assessment. Calculation rules and limits are documented in [Recorded progress](docs/RECORDED-PROGRESS.md), [Weekly weight & usual foods](docs/WEEKLY-WEIGHT-USUAL-FOODS.md) and [Insights logic](docs/INSIGHTS-LOGIC-AUDIT.md).
+
+## How it works
+
+The production application is the root **`index.html`**, served through GitHub Pages. Browser-local storage supports local state and drafts; account-oriented data synchronization uses the existing backend integration. JSON export/import, offline queues and conflict review have dedicated regression coverage. Local-only drafts and queue status must not be confused with a confirmed cloud backup.
 
 | Path | Purpose |
 | --- | --- |
-| `index.html` | **Production GitHub Pages entrypoint** — prioritize this URL |
-| `full-app.html` | Another large app HTML; inspect usage before changing |
-| `commercial-v1.html` | Legacy/experimental page; **do not deploy/test as the production target** |
-| `sw.js`, `manifest.webmanifest` | PWA/service worker |
-| `supabase/migrations/` | Database migrations; review live schema and RLS before relying on them |
-| `tests/` | JavaScript regression tests for account pages, login, workout, nutrition and sync |
-| `.github/workflows/` | GitHub Actions smoke/regression checks and Pages deployment |
-| `docs/FULL-LEGACY-CUTOVER.md` | Existing data cutover documentation |
-| `ROADMAP.md` | Prioritized product plan and release gates |
-| `docs/PROJECT-HANDOFF.md` | Project memory and exact instructions for a future chat/developer |
+| `index.html` | Production application; the target for frontend changes |
+| `sw.js`, `manifest.webmanifest` | PWA/service-worker configuration |
+| `tests/`, `scripts/` | Regression checks, release helpers and documentation capture |
+| `.github/workflows/` | Full UI, cross-browser, safety and gated Pages workflows |
+| `docs/screenshots/` | Current documentation images and capture manifest |
+| `docs/` | Feature rules, audits, acceptance evidence and handoff |
+| `supabase/migrations/` | Database migration sources; review safety and authorization before use |
+| `full-app.html`, `commercial-v1.html` | Alternate/legacy sources; **not the production entry point** |
 
-## Deployment and engineering rules
+### Run locally
 
-1. **Only target** https://3bhussein.github.io/ProgressXX-Web/ and its `index.html`. Do not accidentally promote `commercial-v1.html`.
-2. Preserve existing features, user history and production data; do not reset any Supabase tables, Apps Script records, or browser storage without an explicit approved backup/migration plan.
-3. Changes to Food, Daily, Workout, saved meals, schedules, weights or login require tests for add/edit/delete, refresh, logout/login, multi-user isolation, and device sync.
-4. Run the appropriate repository regression tests and GitHub Actions. Don't call a change deployed/verified until the actual run/deployment outcome is confirmed.
-5. Use PRs and review for risky changes; do not bypass required checks. Never commit service-role keys, passwords, tokens, personal workout exports, or real user records.
-6. Track bug reproduction, root cause, regression test, deployed commit and verification result for each fix.
-7. Make offline-to-online conflict behavior deterministic, including deletion tombstones and idempotent sync. Don't silently overwrite user changes.
-8. Treat Supabase RLS and server-side authorization as mandatory. Public GitHub Pages frontend code cannot securely store secrets or independently enforce paid plans.
+```bash
+python3 -m http.server 8765 --bind 127.0.0.1
+```
 
-## Current risks / pending verification
+Open `http://127.0.0.1:8765/`. The normal app still uses its sign-in flow. Do not put credentials or personal exports into the repository.
 
-- Recent reported login exception: `Cannot read properties of undefined (reading 'filter')`, particularly with restored Food/Daily histories. A regression-fix commit is present; **retest a real restored account, not just fixtures**.
-- Verify Food, Daily, Food Library, Workout Log, Workout Schedule and Weight Check-ins each map to correct persistent tables and user IDs.
-- Check historical data imported from the W1–W19 workout spreadsheets is preserved and isolated from new users.
-- Validate offline queues, sync latency, deduplication and two-device conflict scenarios.
-- Validate Supabase row-level security for every table/storage bucket and all operations.
-- Establish privacy, account/data deletion, monitoring, backup restoration, billing and support before commercialization.
+To reproduce the documentation screenshots in a disposable local browser, install the pinned browser tooling and run the capture script while the local server is running:
 
-## Mandatory end-of-task tracking
+```bash
+npm install --no-save playwright@1.55.0
+npx playwright install chromium --only-shell
+node scripts/capture-readme-screenshots.cjs
+```
 
-After every change, append a dated entry to [DEVELOPMENT-LOG](docs/DEVELOPMENT-LOG.md) with changed files, commit, tests, deploy, risks and next step; refresh handoff snapshot and roadmap. Never mark an untested change as verified. This repository file is the durable record between chat sessions, **not an automatic background process**.
+The capture script is a **local development tool** that injects demonstration fixtures into a new browser context. It is not a guest mode or an authentication feature of the published application.
 
-## How to resume this project in a new ChatGPT conversation
+## Validation and release status
 
-Share this GitHub repository and say:
+The current runtime release is [`8160cff`](https://github.com/3bHussein/ProgressXX-Web/commit/8160cffa3033978aef8020a3cca57e4f12b4833d). Its [Full UI](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40234495193), [Fast safety](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40234495194), [Firefox/WebKit](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40234495200) and [Pages](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40234495328) runs succeeded. The deployed root was downloaded and compared byte-for-byte with the tested source. The development log records the initial failures and successful reruns.
 
-> **Continue ProgressX from the repository documentation. Read README.md, ROADMAP.md, docs/DEVELOPMENT-LOG.md and docs/PROJECT-HANDOFF.md first. Check main branch, open PRs and recent GitHub Actions before making edits. Work only on the root index.html production site, preserve all user data, implement the highest-priority unverified item, add regression tests, verify CI and update the handoff files. Do not assume previously described issues are resolved without checking current code and deployment.**
+Coverage includes synthetic workout/food actions, portions, Undo, reload, drafts, offline retry, backup/import, mocked-account save/reload/logout, keyboard controls and EN/AR mobile layouts. **Automated fixtures do not certify every real-account or physical-device scenario.**
 
-See [PROJECT-HANDOFF](docs/PROJECT-HANDOFF.md) for detailed historical context.
+### Remaining milestones
 
-## Commercial release policy
+| Priority | Remaining work |
+| --- | --- |
+| **Account & data safety** | Independently verify server-side authorization/account isolation and complete recovery/conflict acceptance in an explicitly isolated environment. |
+| **Real devices** | Complete Android/PWA, camera/barcode, keyboard, lifecycle and screen-reader checks with a controlled checklist. |
+| **Product clarity** | Validate the simpler daily flow with actual use before adding more controls; improve terminology and empty states where users get stuck. |
+| **Operations & commercial readiness** | Privacy, account/data deletion, recovery procedures, monitoring, support and commercial release gates. |
 
-No public paid launch until **P0 release gates** pass: login/recovery, independent account isolation and RLS, full data lifecycle and multi-device sync, offline recovery, verified backups, deployment gates, privacy and data deletion. Private beta must use voluntary test users and safe test data.
+Potential next product additions, **not implemented in this documentation update**: a compact shareable weekly report; explicit per-product portions such as grams/pieces/packs with saved conversions; and tools to identify duplicate library products without losing historical entries. See [ROADMAP.md](ROADMAP.md) for tracked work and acceptance limits.
 
-## License
+## Engineering and data-preservation rules
 
-**No license has been declared in this README.** Public repository visibility does not automatically grant permission to reuse or resell the code. Choose a license deliberately before distributing source code.
+1. Target the root production app and preserve existing features and user history. Never reset tables or browser records without an explicit backup/migration plan.
+2. Changes to Food, Daily, Workout, schedules, weight or login need appropriate add/edit/delete, reload, account-isolation and synchronization coverage. Report the scope of the evidence precisely.
+3. Run relevant checks and honor the exact-commit deployment gate. A successful edit or visible feature is not proof of deployment.
+4. Use PR review for risky changes. Never commit credentials, service-role keys or real user records.
+5. Record the problem, change, validation, deployed commit and remaining limits. Offline replay, deletion tombstones and conflicts must preserve user changes.
+6. Enforce ownership and authorization on the server. Public frontend code cannot secure secrets or enforce paid plans independently.
+7. Database experiments remain paused unless separately authorized under the project's existing controls. Do not execute migrations as part of normal frontend work.
+8. After each change, update [DEVELOPMENT-LOG](docs/DEVELOPMENT-LOG.md), [PROJECT-HANDOFF](docs/PROJECT-HANDOFF.md) and [ROADMAP](ROADMAP.md). Do not mark unverified work complete.
+
+### Resume development
+
+> Read README.md, ROADMAP.md, docs/DEVELOPMENT-LOG.md and docs/PROJECT-HANDOFF.md on main. Check the current source, relevant open PRs and recent Actions. Work on the root production index.html, preserve all data, implement the requested scope, run appropriate regression checks and update the handoff. Distinguish local fixtures, automated checks, live deployment and real-device acceptance.
+
+## Commercial release and license
+
+Public paid launch remains blocked on the project's account/security, persistence, real-device, recovery, privacy and operations gates. A functioning UI does not close those milestones.
+
+No license has been declared. Public repository visibility does not automatically grant permission to reuse or resell the code.
