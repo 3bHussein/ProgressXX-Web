@@ -11674,4 +11674,94 @@ function pxRoutineSessionTargets(){let box=$('pxRoutineSessionTargets');if(!box)
 pxRoutineLauncher();
 </script>
 
+
+<style id="px-choice-picker-style">
+:is(#fExerciseSelect,#sessionExerciseSelect,#exerciseSelect,#pxProgressExercise,#v2Exercise,#foodQuickProduct){cursor:pointer;min-height:48px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+#pxChoiceDialog{transition:none!important;box-sizing:border-box;width:min(600px,100%);max-width:100%;height:min(720px,var(--px-choice-height,88dvh));max-height:var(--px-choice-height,88dvh);top:auto;bottom:var(--px-choice-offset,0px);margin:0 auto;padding:0;border:1px solid var(--line);border-radius:24px 24px 0 0;background:var(--card);color:var(--text);box-shadow:var(--shadow);overflow:hidden}
+#pxChoiceDialog[open]{display:flex;flex-direction:column}#pxChoiceDialog::backdrop{background:rgba(0,0,0,.68)}
+.pxChoiceHead{padding:12px 18px 8px;flex-shrink:0}.pxChoiceHandle{width:42px;height:4px;border-radius:4px;background:var(--muted);opacity:.4;margin:0 auto 12px}.pxChoiceTitleRow{display:flex;align-items:center;justify-content:space-between;gap:12px}.pxChoiceTitleRow h2{margin:0;font-size:21px;line-height:1.4}.pxChoiceTitleRow button{min-height:44px;min-width:44px;padding:8px 12px}.pxChoiceContext{font-size:12px;color:var(--muted);margin:4px 0 12px;overflow-wrap:anywhere;line-height:1.6}.pxChoiceSearchWrap{position:relative}.pxChoiceSearchWrap>span{position:absolute;inset-inline-start:13px;top:13px;color:var(--muted);pointer-events:none}#pxChoiceSearch{box-sizing:border-box;width:100%;min-height:48px;padding-inline-start:40px;border-radius:14px;font-size:16px;background:var(--card2);color:var(--text);border:1px solid var(--line)}
+#pxChoiceCount{font-size:12px;color:var(--muted);min-height:20px;padding-top:9px}#pxChoiceList{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:0 12px 12px;scrollbar-width:thin}
+.pxChoiceOption{box-sizing:border-box;width:100%;min-height:64px;border:1px solid var(--line);border-radius:15px;background:var(--card2);color:var(--text);display:flex;align-items:center;gap:12px;padding:12px;margin:7px 0;text-align:start;cursor:pointer;font:inherit}.pxChoiceOption:hover{border-color:var(--cyan)}.pxChoiceOption[aria-pressed="true"]{border-color:var(--accent2);background:color-mix(in srgb,var(--accent2) 9%,var(--card2))}.pxChoiceOption:focus-visible{outline:2px solid var(--cyan);outline-offset:-3px}.pxChoiceBadge{width:36px;height:36px;border-radius:11px;background:var(--soft);display:grid;place-items:center;flex-shrink:0;font-size:18px}.pxChoiceCopy{flex:1;min-width:0}.pxChoiceCopy strong{display:block;font-size:15px;font-weight:650;line-height:1.45;overflow-wrap:anywhere}.pxChoiceCopy small{display:block;font-size:12px;color:var(--muted);line-height:1.5;margin-top:3px;overflow-wrap:anywhere}.pxChoiceMark{width:23px;height:23px;display:grid;place-items:center;flex-shrink:0;border-radius:50%;border:1.5px solid var(--muted);font-size:14px}.pxChoiceOption[aria-pressed="true"] .pxChoiceMark{background:var(--accent2);border-color:var(--accent2);color:#08120a}.pxChoiceEmpty{text-align:center;padding:28px 14px;line-height:1.7;color:var(--muted)}.pxChoiceMore{width:100%;min-height:44px;margin-top:8px}.pxChoiceFooter{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 18px max(12px,env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--card);font-size:12px;color:var(--muted);flex-shrink:0}.pxChoiceFooter button{min-height:44px}.pxChoiceFooter [hidden]{display:none!important}
+@media(min-width:821px){#pxChoiceDialog{inset:0;margin:auto;border-radius:24px;height:min(720px,var(--px-choice-height,84dvh));max-height:84dvh}}
+@media(prefers-reduced-motion:no-preference){#pxChoiceDialog[open]{animation:pxChoiceAppear .16s ease-out}@keyframes pxChoiceAppear{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}}
+</style>
+<script id="px-choice-picker">
+// Progressive enhancement: native selects and their existing change handlers remain authoritative.
+const PX_CHOICE_IDS=new Set(['fExerciseSelect','sessionExerciseSelect','exerciseSelect','pxProgressExercise','v2Exercise','foodQuickProduct']);
+let pxChoiceState=null;
+function pxChoiceText(en,ar){return pxExplain(en,ar)}
+function pxChoiceNormalize(text){return String(text||'').normalize('NFKD').replace(/\p{M}/gu,'').toLocaleLowerCase().trim()}
+function pxChoiceElement(tag,text,className){const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(className)el.className=className;return el}
+function pxChoiceClose(restore=true){
+ const state=pxChoiceState;pxChoiceState=null;state?.observer?.disconnect();state?.source?.setAttribute('aria-expanded','false');const dialog=$('pxChoiceDialog');if(dialog?.open)dialog.close();
+ if(restore&&state?.source?.isConnected&&!state.source.disabled)state.source.focus({preventScroll:true});
+}
+function pxChoiceEnsure(){
+ let dialog=$('pxChoiceDialog');if(dialog)return dialog;
+ dialog=pxChoiceElement('dialog');dialog.id='pxChoiceDialog';dialog.setAttribute('aria-labelledby','pxChoiceTitle');dialog.setAttribute('aria-describedby','pxChoiceContext');dialog.setAttribute('data-px-user','1');
+ const head=pxChoiceElement('header',undefined,'pxChoiceHead');head.append(pxChoiceElement('div',undefined,'pxChoiceHandle'));
+ const titleRow=pxChoiceElement('div',undefined,'pxChoiceTitleRow'),title=pxChoiceElement('h2');title.id='pxChoiceTitle';
+ const close=pxChoiceElement('button');close.type='button';close.id='pxChoiceClose';close.className='btn soft';close.onclick=()=>pxChoiceClose();titleRow.append(title,close);
+ const context=pxChoiceElement('p',undefined,'pxChoiceContext');context.id='pxChoiceContext';
+ const searchWrap=pxChoiceElement('div',undefined,'pxChoiceSearchWrap');const icon=pxChoiceElement('span','⌕');icon.setAttribute('aria-hidden','true');const search=pxChoiceElement('input');search.id='pxChoiceSearch';search.type='search';search.autocomplete='off';search.oninput=()=>{if(pxChoiceState){pxChoiceState.limit=40;pxChoiceRender()}};
+ searchWrap.append(icon,search);const count=pxChoiceElement('div');count.id='pxChoiceCount';count.setAttribute('role','status');count.setAttribute('aria-live','polite');head.append(titleRow,context,searchWrap,count);
+ const list=pxChoiceElement('div');list.id='pxChoiceList';list.setAttribute('role','group');
+ const footer=pxChoiceElement('footer',undefined,'pxChoiceFooter'),hint=pxChoiceElement('span');hint.id='pxChoiceHint';const clear=pxChoiceElement('button');clear.id='pxChoiceClear';clear.type='button';clear.className='btn soft';clear.onclick=()=>{const s=pxChoiceState;const option=s&&Array.from(s.source.options).find(o=>!o.value&&!o.disabled);if(option)pxChoiceApply(option.index,option.value)};footer.append(hint,clear);
+ dialog.append(head,list,footer);dialog.addEventListener('cancel',event=>{event.preventDefault();pxChoiceClose()});dialog.addEventListener('click',event=>{if(event.target===dialog){const rect=dialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)pxChoiceClose()}});
+ dialog.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();pxChoiceClose();return}if(event.target.id==='pxChoiceSearch'&&event.key==='ArrowDown'){event.preventDefault();$('pxChoiceList').querySelector('.pxChoiceOption')?.focus()}});
+ list.addEventListener('keydown',event=>{const buttons=Array.from(list.querySelectorAll('.pxChoiceOption')),index=buttons.indexOf(document.activeElement);if(index<0)return;let next=index;if(event.key==='ArrowDown')next=Math.min(index+1,buttons.length-1);else if(event.key==='ArrowUp')next=Math.max(index-1,0);else if(event.key==='Home')next=0;else if(event.key==='End')next=buttons.length-1;else return;event.preventDefault();buttons[next]?.focus()});
+ document.body.append(dialog);return dialog;
+}
+function pxChoiceOpen(source){
+ if(!source?.isConnected||source.disabled||!PX_CHOICE_IDS.has(source.id)||typeof HTMLDialogElement==='undefined')return;
+ if(pxChoiceState)pxChoiceClose(false);const dialog=pxChoiceEnsure();
+ source.setAttribute('aria-haspopup','dialog');source.setAttribute('aria-controls','pxChoiceDialog');source.setAttribute('aria-expanded','true');pxChoiceState={source,scope:window.__pxActiveStore,limit:40,observer:null};$('pxChoiceSearch').value='';pxChoiceRender();dialog.showModal();pxChoiceViewport();$('pxChoiceSearch').focus({preventScroll:true});
+ const state=pxChoiceState;state.observer=new MutationObserver(()=>{if(pxChoiceState!==state)return;if(!source.isConnected||source.disabled||window.__pxActiveStore!==state.scope){pxChoiceClose();return}pxChoiceRender()});state.observer.observe(source,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['disabled','label','value','selected']});
+}
+function pxChoiceViewport(viewport=window.visualViewport){
+ if(!pxChoiceState)return;const dialog=$('pxChoiceDialog'),height=viewport?.height||innerHeight,offset=Math.max(0,innerHeight-height-(viewport?.offsetTop||0));
+ const count=Array.from(pxChoiceState.source.options).filter(o=>o.value!==''&&!o.disabled&&!o.parentElement?.disabled).length;const fit=count?300+Math.min(count,6)*80:360;dialog.style.setProperty('--px-choice-height',Math.floor(Math.min(height*.88,fit))+'px');dialog.style.setProperty('--px-choice-offset',offset+'px');
+}
+window.visualViewport?.addEventListener('resize',()=>pxChoiceViewport());
+window.visualViewport?.addEventListener('scroll',()=>pxChoiceViewport());
+window.addEventListener('resize',()=>pxChoiceViewport());
+function pxChoiceFoodMeta(id){
+ const product=foodProducts.find(p=>String(p.id)===String(id));if(!product)return '';
+ const serving=Number(product.servingQty),unit=String(product.servingUnit||'');if(!(serving>0)||!unit)return '';
+ const kcal=product.calories;return pxChoiceText('Per ','لكل ')+pxInsightLtr(serving+' '+unit)+(kcal!==null&&kcal!==undefined&&String(kcal).trim()!==''&&Number.isFinite(Number(kcal))&&Number(kcal)>=0?' · '+pxInsightLtr(Number(kcal)+' kcal'):'');
+}
+function pxChoiceRender(){
+ const s=pxChoiceState;if(!s)return;const food=s.source.id==='foodQuickProduct',ar=document.documentElement.dir==='rtl',dialog=$('pxChoiceDialog');dialog.dir=ar?'rtl':'ltr';
+ $('pxChoiceTitle').textContent=food?pxChoiceText('Choose food','اختار أكلة'):pxChoiceText('Choose exercise','اختار تمرين');$('pxChoiceClose').textContent=pxChoiceText('Close','إغلاق');
+ let context='';if(food)context=pxChoiceText('Saved foods · choose one to review the quantity','الأكلات المحفوظة · اختار أكلة لمراجعة الكمية');else if(s.source.id==='fExerciseSelect')context=$('fDay')?.value||'';else if(s.source.id==='sessionExerciseSelect')context=workoutSession?.day||'';else context=pxChoiceText('Your saved exercises','تمارينك المحفوظة');$('pxChoiceContext').textContent=context;
+ const search=$('pxChoiceSearch');search.placeholder=food?pxChoiceText('Search foods…','ابحث عن أكلة…'):pxChoiceText('Search exercises…','ابحث عن تمرين…');search.setAttribute('aria-label',food?pxChoiceText('Search food choices','ابحث في اختيارات الأكل'):pxChoiceText('Search exercise choices','ابحث في اختيارات التمارين'));
+ const query=pxChoiceNormalize(search.value),options=Array.from(s.source.options).filter(o=>o.value!==''&&!o.disabled&&!o.parentElement?.disabled),matches=options.filter(o=>pxChoiceNormalize(o.textContent).includes(query));
+ const list=$('pxChoiceList');list.setAttribute('aria-label',food?pxChoiceText('Food choices','اختيارات الأكل'):pxChoiceText('Exercise choices','اختيارات التمارين'));list.replaceChildren();
+ for(const option of matches.slice(0,s.limit)){
+  const row=pxChoiceElement('button',undefined,'pxChoiceOption');row.type='button';row.dataset.choiceIndex=String(option.index);row.setAttribute('aria-pressed',String(option.selected));
+  const badge=pxChoiceElement('span',food?'◉':'↗','pxChoiceBadge');badge.setAttribute('aria-hidden','true');
+  const copy=pxChoiceElement('span',undefined,'pxChoiceCopy'),name=pxChoiceElement('strong',option.textContent);name.dir='auto';copy.append(name);
+  const meta=food?pxChoiceFoodMeta(option.value):'';if(meta)copy.append(pxChoiceElement('small',meta));
+  const mark=pxChoiceElement('span',option.selected?'✓':'','pxChoiceMark');mark.setAttribute('aria-hidden','true');row.append(badge,copy,mark);row.onclick=()=>pxChoiceApply(option.index,option.value);list.append(row);
+ }
+ if(!matches.length)list.append(pxChoiceElement('p',query?pxChoiceText('No matches. Try another name.','مفيش نتيجة مطابقة. جرّب اسم تاني.'):pxChoiceText('No saved choices here yet.','مفيش اختيارات محفوظة هنا لسه.'),'pxChoiceEmpty'));
+ if(matches.length>s.limit){const more=pxChoiceElement('button',pxChoiceText('Show more','عرض المزيد'),'btn soft pxChoiceMore');more.type='button';more.onclick=()=>{s.limit+=40;pxChoiceRender();$('pxChoiceList').querySelector('[data-choice-index="'+matches[s.limit-40]?.index+'"]')?.focus()};list.append(more)}
+ $('pxChoiceCount').textContent=Math.min(matches.length,s.limit)+' / '+matches.length+' '+pxChoiceText('choices','اختيارات');$('pxChoiceHint').textContent=pxChoiceText('Choose one item','اختار عنصر واحد');const clear=$('pxChoiceClear');clear.textContent=pxChoiceText('Clear selection','إلغاء الاختيار');clear.hidden=!Array.from(s.source.options).some(o=>o.value===''&&!o.disabled)||s.source.value==='';
+}
+function pxChoiceApply(index,value){
+ const s=pxChoiceState;if(!s)return;
+ if(!s.source.isConnected||s.source.disabled||window.__pxActiveStore!==s.scope){pxChoiceClose();return}
+ const option=s.source.options[index];if(!option||option.value!==value||option.disabled||option.parentElement?.disabled){pxChoiceRender();return}
+ const source=s.source,changed=source.value!==value;source.selectedIndex=index;pxChoiceClose(false);
+ if(changed){source.dispatchEvent(new Event('input',{bubbles:true}));source.dispatchEvent(new Event('change',{bubbles:true}))}
+ const next=source.isConnected?source:$(source.id);if(next instanceof HTMLSelectElement&&!next.disabled)next.focus({preventScroll:true});
+}
+function pxChoiceTarget(event){const target=event.target;return target instanceof HTMLSelectElement&&PX_CHOICE_IDS.has(target.id)&&!target.disabled&&typeof HTMLDialogElement!=='undefined'?target:null}
+// Cancel native pointer activation while preserving native selectOption and arrow-key behavior.
+document.addEventListener('pointerdown',event=>{if(pxChoiceTarget(event)&&event.button===0)event.preventDefault()},true);
+document.addEventListener('mousedown',event=>{if(pxChoiceTarget(event)&&event.button===0)event.preventDefault()},true);
+document.addEventListener('click',event=>{const source=pxChoiceTarget(event);if(!source)return;event.preventDefault();pxChoiceOpen(source)},true);
+document.addEventListener('keydown',event=>{const source=pxChoiceTarget(event);if(source&&(event.key==='Enter'||event.key===' '||event.altKey&&event.key==='ArrowDown')){event.preventDefault();pxChoiceOpen(source)}},true);
+</script>
+
 </body></html>
