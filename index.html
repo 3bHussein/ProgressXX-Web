@@ -9206,6 +9206,7 @@ function loadDailyReminders(){
 }
 function saveDailyReminders(){
   PXStore.setItem(DAILY_REMINDERS_KEY,JSON.stringify(dailyReminders));
+  snapshotDailyHistory(localDateKey());
   renderDaily();
   scheduleReminderConfigSync();
   scheduleDailyStateSync();
@@ -9465,7 +9466,6 @@ function renderDaily(){
   }).join('');
 
   renderWater();
-  snapshotDailyHistory(localDateKey());
   renderDailyHistory();
   renderDailyStats();
   updateNotificationState();

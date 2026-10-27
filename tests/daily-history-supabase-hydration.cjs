@@ -130,3 +130,6 @@ assert.doesNotMatch(s.slice(syncStart,syncEnd),/appScriptUrl|reminders_get|Googl
  assert.equal(metaScope.syncMeta().daily,undefined,'Device sync timestamps stay account scoped');
  console.log('PASS: sync success metadata stays device/account local and never queues a snapshot');
 }
+
+assert.doesNotMatch(s.slice(s.indexOf('function renderDaily(){'),s.indexOf('function getWaterState(){')),/snapshotDailyHistory|PXStore\.setItem/,'Daily rendering must not persist a checkpoint');
+assert.doesNotMatch(s.slice(s.indexOf('function renderDailyHistory(){'),s.indexOf('function dailyIsDone(')),/PXStore\.setItem/,'History browsing must be read-only');
