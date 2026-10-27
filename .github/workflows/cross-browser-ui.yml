@@ -13,6 +13,7 @@ on:
       - tests/ui-language-catalogue.cjs
       - tests/backup-download-import-browser.cjs
       - tests/settings-language-pages-browser.cjs
+      - tests/daily-sync-paint-browser.cjs
       - tests/graphite-mint-browser.cjs
       - tests/searchable-choice-picker-browser.cjs
       - tests/routine-builder-browser.cjs
@@ -71,6 +72,7 @@ on:
       - tests/ui-language-catalogue.cjs
       - tests/backup-download-import-browser.cjs
       - tests/settings-language-pages-browser.cjs
+      - tests/daily-sync-paint-browser.cjs
       - tests/graphite-mint-browser.cjs
       - tests/searchable-choice-picker-browser.cjs
       - tests/routine-builder-browser.cjs
@@ -167,6 +169,7 @@ jobs:
           node tests/backup-download-import-browser.cjs
           node tests/v3-mobile-diary-browser.cjs
           node tests/settings-language-pages-browser.cjs
+          node tests/daily-sync-paint-browser.cjs
           node tests/graphite-mint-browser.cjs
           node tests/searchable-choice-picker-browser.cjs
           node tests/routine-builder-browser.cjs

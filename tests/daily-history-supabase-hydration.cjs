@@ -75,10 +75,10 @@ assert.doesNotMatch(s.slice(syncStart,syncEnd),/appScriptUrl|reminders_get|Googl
  let rows=[{payload:{'progressx-reminders':JSON.stringify([{id:'qa-one',name:'QA one'}])}}];
  let calls=0,renders=0,dirty=false;
  const cache={};
- const state={window:{},ready:true,account:'qa-account',navigator:{onLine:true},uploading:false,revision:0,savedRevision:0,
+ const state={window:{},syncConflictHold:false,snapshotBaseline:'[]',snapshotDigest:payload=>JSON.stringify(Object.entries(payload||{}).sort(([a],[b])=>a.localeCompare(b))),renderNutritionHome:()=>{},DAILY_REMINDERS_KEY:'progressx-reminders',DAILY_DONE_KEY:'progressx-reminder-done',DAILY_DONE_TIME_KEY:'progressx-daily-done-times-v1',DAILY_WATER_KEY:'progressx-water',DAILY_HISTORY_KEY:'progressx-daily-history-v1',DAILY_LAST_DATE_KEY:'progressx-daily-last-date-v1',ready:true,account:'qa-account',navigator:{onLine:true},uploading:false,revision:0,savedRevision:0,
   JSON,Array,Object,String,Error,encodeURIComponent,readPending:()=>dirty,
   cloud:async()=>{calls++;return rows},
-  browserStorage:{setItem:(k,v)=>{cache[k]=v}},storagePrefix:()=> 'user:',
+  browserStorage:{setItem:(k,v)=>{cache[k]=v},removeItem:k=>delete cache[k]},storagePrefix:()=> 'user:',
   values:{},dailyReminders:[],loadDailyReminders:()=>JSON.parse(state.values['progressx-reminders']||'[]'),renderDaily:()=>{renders++}
  };
  vm.createContext(state);
@@ -99,5 +99,23 @@ assert.doesNotMatch(s.slice(syncStart,syncEnd),/appScriptUrl|reminders_get|Googl
  assert.equal(await state.window.__pxRefreshAccountDailyReminders(),'pending','Unsynced local revision must not be overwritten');
  assert.equal(state.dailyReminders.length,0);
  assert.ok(calls>=3&&renders===2);
+ state.revision=state.savedRevision=0;
+ state.snapshotBaseline=state.snapshotDigest({'unrelated':'old','progressx-reminders':'[]'});
+ rows=[{payload:{'unrelated':'new','progressx-reminders':'[]','progressx-reminder-done':'{"2026-10-27":{"qa":true}}','progressx-water':'{"date":"2026-10-27","current":2,"target":3}','progressx-daily-done-times-v1':'{}','progressx-daily-history-v1':'{}','progressx-daily-last-date-v1':'2026-10-27'}}];
+ assert.equal(await state.window.__pxRefreshAccountDailyReminders(),'updated');
+ assert.equal(JSON.parse(state.values['progressx-water']).current,2);
+ assert.equal(JSON.parse(state.values['progressx-reminder-done'])['2026-10-27'].qa,true);
+ assert.equal(Object.fromEntries(JSON.parse(state.snapshotBaseline)).unrelated,'old','Never acknowledge unrelated remote fields that were not adopted');
+ assert.equal(state.revision,0,'Read adoption must not queue another write');
+ const retained=JSON.stringify(state.values);
+ rows=[{payload:{'progressx-reminders':'[]','progressx-water':'invalid'}}];
+ await assert.rejects(state.window.__pxRefreshAccountDailyReminders(),/Invalid cloud Daily/);
+ assert.equal(JSON.stringify(state.values),retained,'Validate whole Daily group before adopting any field');
+ rows=[{payload:{'progressx-reminders':'[]'}}];
+ assert.equal(await state.window.__pxRefreshAccountDailyReminders(),'updated');
+ assert.equal(state.values['progressx-water'],undefined,'Missing remote Daily fields clear stale cached fields');
+ state.cloud=async()=>{state.account='other-account';return [{payload:{'progressx-reminders':'[{"id":"wrong-owner"}]'}}]};
+ assert.equal(await state.window.__pxRefreshAccountDailyReminders(),'unavailable');
+ assert.equal(state.values['progressx-reminders'],'[]','Reject response after account switch');
  console.log('PASS: Supabase Daily list refresh applies deletions and protects unsynced edits');
 })().catch(e=>{console.error(e);process.exitCode=1});
