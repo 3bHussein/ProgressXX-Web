@@ -38,6 +38,7 @@ const {browserType,engine}=require('./helpers/browser-engine.cjs');
  }
  try{
   const a=await device(390),b=await device(1280);
+  const differs=await a.page.evaluate(remote=>Object.entries(remote).filter(([key,value])=>PXStore.getItem(key)!==value).map(([key,value])=>({key,local:PXStore.getItem(key),remote:value})),snapshot);console.log('Initial device differences',differs);
   // Both start from the same settled snapshot; only one changes at a time.
   await a.page.evaluate(()=>{go('daily');toggleDailyDone('qa-daily');setWaterCurrent(1.25)});
   await a.page.waitForFunction(()=>!__pxSaveState().dirty&&!__pxSaveState().busy,null,{timeout:25000}).catch(async error=>{console.log('Daily A save diagnostic',await a.page.evaluate(()=>({state:__pxSaveState(),message:$('pxSyncPill').textContent})));throw error});

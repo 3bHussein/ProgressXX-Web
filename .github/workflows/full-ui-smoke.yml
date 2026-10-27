@@ -20,6 +20,13 @@ jobs:
         run: node tests/security-migration-safety.cjs
       - run: npm install --no-save playwright@1.55.0
       - run: npx playwright install --with-deps chromium
+      - name: Daily transport and first-paint regression
+        run: |
+          python3 -m http.server 8765 > /tmp/daily-ui-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          sleep 2
+          node tests/daily-sync-paint-browser.cjs
       - name: Full UI browser smoke
         run: |
           python3 -m http.server 8765 > /tmp/full-ui-server.log 2>&1 &
@@ -32,7 +39,6 @@ jobs:
             tests/backup-download-import-browser.cjs \
             tests/ui-language-catalogue.cjs \
             tests/settings-language-pages-browser.cjs \
-            tests/daily-sync-paint-browser.cjs \
             tests/graphite-mint-browser.cjs \
             tests/searchable-choice-picker-browser.cjs \
             tests/routine-builder-browser.cjs \
