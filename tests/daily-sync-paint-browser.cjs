@@ -60,6 +60,7 @@ const {browserType,engine}=require('./helpers/browser-engine.cjs');
    assert.match(await a.page.locator('#pxSavePanel>summary').getAttribute('aria-label'),/sync|مزامنة/);
    await a.page.locator('#pxSavePanel>summary').click();assert((await a.page.locator('#pxMintSyncDialog').boundingBox()).height<=630);
    await a.page.keyboard.press('Escape');
+   if(!await a.page.locator('#dailyHistoryDate').isVisible())await a.page.locator('#daily details.dailyOrderHistory>summary').click();
    await a.page.locator('#dailyHistoryDate').click();assert.equal(await a.page.locator('#pxChoiceDialog').isVisible(),true);
    await a.page.keyboard.press('Escape');assert(await a.page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   }
