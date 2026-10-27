@@ -32,6 +32,7 @@ jobs:
             tests/backup-download-import-browser.cjs \
             tests/ui-language-catalogue.cjs \
             tests/settings-language-pages-browser.cjs \
+            tests/graphite-mint-browser.cjs \
             tests/searchable-choice-picker-browser.cjs \
             tests/routine-builder-browser.cjs \
             tests/training-day-manager-browser.cjs \
