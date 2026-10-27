@@ -11746,14 +11746,14 @@ function pxChoiceRender(){
  }
  if(!matches.length)list.append(pxChoiceElement('p',query?pxChoiceText('No matches. Try another name.','مفيش نتيجة مطابقة. جرّب اسم تاني.'):pxChoiceText('No saved choices here yet.','مفيش اختيارات محفوظة هنا لسه.'),'pxChoiceEmpty'));
  if(matches.length>s.limit){const more=pxChoiceElement('button',pxChoiceText('Show more','عرض المزيد'),'btn soft pxChoiceMore');more.type='button';more.onclick=()=>{s.limit+=40;pxChoiceRender();$('pxChoiceList').querySelector('[data-choice-index="'+matches[s.limit-40]?.index+'"]')?.focus()};list.append(more)}
- $('pxChoiceCount').textContent=Math.min(matches.length,s.limit)+' / '+matches.length+' '+pxChoiceText('choices','اختيارات');$('pxChoiceHint').textContent=pxChoiceText('Choose one item','اختار عنصر واحد');const clear=$('pxChoiceClear');clear.textContent=pxChoiceText('Clear selection','إلغاء الاختيار');clear.hidden=!Array.from(s.source.options).some(o=>o.value===''&&!o.disabled)||s.source.value==='';
+ $('pxChoiceCount').textContent=Math.min(matches.length,s.limit)+' / '+matches.length+' '+pxChoiceText('choices','اختيارات');$('pxChoiceHint').textContent=pxChoiceText('Choose one item','اختار عنصر واحد');const clear=$('pxChoiceClear');clear.textContent=pxChoiceText('Clear selection','إلغاء الاختيار');clear.hidden=s.source.id!=='foodQuickProduct'||!Array.from(s.source.options).some(o=>o.value===''&&!o.disabled)||s.source.value==='';
 }
 function pxChoiceApply(index,value){
  const s=pxChoiceState;if(!s)return;
  if(!s.source.isConnected||s.source.disabled||window.__pxActiveStore!==s.scope){pxChoiceClose();return}
  const option=s.source.options[index];if(!option||option.value!==value||option.disabled||option.parentElement?.disabled){pxChoiceRender();return}
  const source=s.source,changed=source.value!==value;source.selectedIndex=index;pxChoiceClose(false);
- if(changed){source.dispatchEvent(new Event('input',{bubbles:true}));source.dispatchEvent(new Event('change',{bubbles:true}))}
+ if(changed||source.id==='fExerciseSelect'&&$('fExercise')?.value!==value){source.dispatchEvent(new Event('input',{bubbles:true}));source.dispatchEvent(new Event('change',{bubbles:true}))}
  const next=source.isConnected?source:$(source.id);if(next instanceof HTMLSelectElement&&!next.disabled)next.focus({preventScroll:true});
 }
 function pxChoiceTarget(event){const target=event.target;return target instanceof HTMLSelectElement&&PX_CHOICE_IDS.has(target.id)&&!target.disabled&&typeof HTMLDialogElement!=='undefined'?target:null}
