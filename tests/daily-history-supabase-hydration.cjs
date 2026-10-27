@@ -119,3 +119,14 @@ assert.doesNotMatch(s.slice(syncStart,syncEnd),/appScriptUrl|reminders_get|Googl
  assert.equal(state.values['progressx-reminders'],'[]','Reject response after account switch');
  console.log('PASS: Supabase Daily list refresh applies deletions and protects unsynced edits');
 })().catch(e=>{console.error(e);process.exitCode=1});
+
+// Recording a successful read must not itself queue another cloud write.
+{
+ const code=s.slice(s.indexOf('const pxDeviceSyncTimes=new Map();'),s.indexOf('function formatSyncAge'));
+ const local=new Map(),metaScope={window:{__pxSaveState:()=>({scope:'owner-A'})},PXStore:{setItem:()=>{throw Error('Sync status must not write account snapshot')}},localStorage:{getItem:k=>local.get(k)||null,setItem:(k,v)=>local.set(k,v)},renderSyncCenter:()=>{}};
+ vm.createContext(metaScope);vm.runInContext(code,metaScope);metaScope.markSyncSuccess('daily');
+ assert(metaScope.syncMeta().daily>0);
+ metaScope.window.__pxSaveState=()=>({scope:'owner-B'});
+ assert.equal(metaScope.syncMeta().daily,undefined,'Device sync timestamps stay account scoped');
+ console.log('PASS: sync success metadata stays device/account local and never queues a snapshot');
+}

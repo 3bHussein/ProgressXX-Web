@@ -6083,13 +6083,18 @@ async function restoreFullBackup(e){
 }
 function resetData(){data=clone(bundled);save()}
 
+const pxDeviceSyncTimes=new Map();
+function pxDeviceSyncScope(){return window.__pxSaveState?.().scope||window.__pxActiveStore||PXStore}
 function syncMeta(){
-  try{return JSON.parse(PXStore.getItem(SYNC_META_KEY))||{}}catch{return {}}
+  const scope=pxDeviceSyncScope();
+  if(typeof scope==='string')try{return JSON.parse(localStorage.getItem('pxx:device-sync:'+encodeURIComponent(scope)))||{}}catch{}
+  return {...(pxDeviceSyncTimes.get(scope)||{})};
 }
 function markSyncSuccess(type){
   const m=syncMeta();
   m[type]=Date.now();
-  PXStore.setItem(SYNC_META_KEY,JSON.stringify(m));
+  const scope=pxDeviceSyncScope();pxDeviceSyncTimes.set(scope,m);
+  if(typeof scope==='string')try{localStorage.setItem('pxx:device-sync:'+encodeURIComponent(scope),JSON.stringify(m))}catch{}
   renderSyncCenter();
 }
 function formatSyncAge(ts){
@@ -11908,7 +11913,7 @@ function pxMintSyncRender(model){
  }
  if(dialog.open&&pxMintSyncScope!==pxSafetyScope())pxMintCloseSync(false);
  dialog.dir=document.documentElement.dir||'ltr';$('pxMintSyncTitle').textContent=pxExplain('Save & sync','الحفظ والمزامنة');$('pxMintSyncClose').textContent=pxExplain('Close','إغلاق');$('pxMintSaveAction').textContent='•••';$('pxMintSaveAction').setAttribute('aria-hidden','true');const summary=panel.querySelector('summary');summary.setAttribute('aria-label',$('pxSaveLabel').textContent+' — '+pxExplain('Save & sync details','تفاصيل الحفظ والمزامنة'));panel.title=$('pxSaveLabel').textContent;
- $('pxSaveDrafts').hidden=!model.drafts;$('pxMintSyncEmpty').hidden=!!model.pending;$('pxMintSyncEmpty').textContent=pxExplain('No queued items. Check cloud confirmation and any conflict above.','مفيش عناصر معلقة. راجع تأكيد السحابة وأي تعارض فوق.');
+ $('pxSaveDrafts').hidden=!model.drafts;$('pxMintSyncEmpty').hidden=!!model.pending;$('pxMintSyncEmpty').textContent=pxExplain('No queued items in these categories. Check cloud status above.','مفيش عناصر معلقة في الأقسام دي. راجع حالة السحابة فوق.');
 }
 function pxMintAuthLabels(){
  const welcome=$('pxMintWelcome');if(!welcome)return;welcome.textContent=pxExplain('Welcome back','أهلًا برجوعك');$('pxMintAuthIntro').textContent=pxExplain('Your next step starts here.','خطوتك الجاية بتبدأ هنا.');$('pxMintAuthTagline').textContent=pxExplain('Train. Track. Understand.','اتمرّن. سجّل. افهم تقدمك.');
