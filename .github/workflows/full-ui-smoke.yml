@@ -32,6 +32,7 @@ jobs:
             tests/backup-download-import-browser.cjs \
             tests/ui-language-catalogue.cjs \
             tests/settings-language-pages-browser.cjs \
+            tests/routine-builder-browser.cjs \
             tests/training-day-manager-browser.cjs \
             tests/food-portions-after-refresh-browser.cjs \
             tests/logout-dialog-policy-browser.cjs \
