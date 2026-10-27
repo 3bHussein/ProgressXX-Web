@@ -46,7 +46,7 @@ const assert=require('node:assert/strict');
    'Weight Check-ins':'[]',
    'Daily Reminders':'[]',
    'Anatomy links':'{}',
-   'Workout Templates':'[]',
+   'Workout Templates':JSON.stringify([{id:'qa-routine',name:'Coach routine',day:'Push',exercises:['Bench'],progression:'double',exerciseConfig:{'exercise:bench':{exerciseId:'exercise:bench',sets:'3',reps:'8',weight:'40',rest:'90',rir:'2',rpe:'8',warmup:'1',superset:'A',drops:'1',notes:'Synthetic plan'}}}]),
    'Goal Center':'[]',
    'Body Measurements':'[]'
   };
