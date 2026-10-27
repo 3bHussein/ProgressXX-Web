@@ -22,7 +22,7 @@ const assert=require('node:assert/strict');
   await page.fill('#pxPassword','mock-pass');
   await page.click('#pxSignin');
   await page.waitForFunction(()=>document.querySelector('#pxCommercialGate')?.hidden===true,null,{timeout:15000});
-  await page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Synced to Supabase'),null,{timeout:20000});
+  await page.waitForFunction(()=>{const state=window.__pxSaveState?.();return document.querySelector('#pxCommercialGate')?.hidden&&state?.ready&&!state.dirty&&!state.busy&&!state.conflict},null,{timeout:20000});
   return {context,page};
  }
  try{

@@ -68,7 +68,7 @@ let revision=2,savedRevision=1,uploading=false,remoteReads=0,rendered=0;
 const refreshValues={'progressx-reminders':'[]'};
 const refreshStorage=new Map();
 const refreshScope={
- window:{},ready:true,account:'qa-account',navigator:{onLine:true},
+ window:{},syncConflictHold:false,snapshotBaseline:'[]',snapshotDigest:payload=>JSON.stringify(Object.entries(payload||{}).sort(([a],[b])=>a.localeCompare(b))),renderNutritionHome:()=>{},DAILY_REMINDERS_KEY:'progressx-reminders',DAILY_DONE_KEY:'progressx-reminder-done',DAILY_DONE_TIME_KEY:'progressx-daily-done-times-v1',DAILY_WATER_KEY:'progressx-water',DAILY_HISTORY_KEY:'progressx-daily-history-v1',DAILY_LAST_DATE_KEY:'progressx-daily-last-date-v1',ready:true,account:'qa-account',navigator:{onLine:true},
  uploading,revision,savedRevision,
  readPending:()=>false,
  cloud:async()=>{remoteReads++;return [{payload:{'progressx-reminders':JSON.stringify([{id:'remote'}])}}]},

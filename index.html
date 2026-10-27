@@ -2,7 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0a0e17"><meta name="description" content="Google Sheet synced workout tracker with direct add/edit/delete, progressive overload, analytics, nutrition and gym calculators, JSON/CSV backup.">
+<meta name="theme-color" content="#101515"><meta name="description" content="Google Sheet synced workout tracker with direct add/edit/delete, progressive overload, analytics, nutrition and gym calculators, JSON/CSV backup.">
 <meta name="application-name" content="ProgressX">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -10,6 +10,109 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icon-192.svg" type="image/svg+xml">
 <title>ProgressX — Train. Track. Progress.</title>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Camera decoder loads on demand when the barcode dialog opens. -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- px-mobile-settings-refresh-20261016 -->
+
+
+
+
+
+
+
+
+
+
+
 <style>
 :root{--bg:#070a11;--bg2:#0d1320;--card:rgba(17,24,39,.78);--card2:#111827;--soft:#182234;--text:#f7fafc;--muted:#93a4bb;--line:#263449;--accent:#7c3aed;--accent2:#22c55e;--cyan:#22d3ee;--warn:#f59e0b;--bad:#fb7185;--shadow:0 18px 60px rgba(0,0,0,.28);--radius:22px}
 html[data-theme="light"]{--bg:#f4f7fb;--bg2:#eaf0f8;--card:rgba(255,255,255,.9);--card2:#fff;--soft:#edf2f7;--text:#101828;--muted:#667085;--line:#dbe3ee;--shadow:0 16px 50px rgba(15,23,42,.08)}
@@ -31,7 +134,6 @@ html[data-theme="light"]{--bg:#f4f7fb;--bg2:#eaf0f8;--card:rgba(255,255,255,.9);
 @media(max-width:840px){.two,.calcGrid,.settingsGrid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr 1fr}.filters .search{grid-column:1/-1}.logGrid{grid-template-columns:1fr}.quickDays{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){.app{padding:10px 10px 100px}.topbar{margin-top:0}.brand small{display:none}.hero{padding:19px;border-radius:23px}.hero h2{font-size:28px}.kpis{gap:8px}.kpi{padding:13px}.kpi .v{font-size:22px}.panel{padding:13px;border-radius:19px}.filters{grid-template-columns:1fr}.filters .search{grid-column:auto}.formGrid{grid-template-columns:1fr}.full{grid-column:auto}.resultRows{grid-template-columns:1fr 1fr}.navbtn{min-width:57px;padding:8px 8px}.navbtn .label{font-size:10px}.modalWrap{padding:0}.modal{border-radius:24px 24px 0 0;max-height:94vh}}
 </style>
-
 <style id="v21-row-layout">
 /* V21 — one exercise per row, with each parsed set on its own line */
 .logGrid{display:block!important}
@@ -74,8 +176,6 @@ html[data-theme="light"]{--bg:#f4f7fb;--bg2:#eaf0f8;--card:rgba(255,255,255,.9);
   .setWeight,.setReps{font-size:13px}
 }
 </style>
-
-
 <style id="v22-daily-reminders">
 .reminderGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .reminderCard{border:1px solid var(--line);background:var(--card2);border-radius:16px;padding:13px}
@@ -92,8 +192,6 @@ html[data-theme="light"]{--bg:#f4f7fb;--bg2:#eaf0f8;--card:rgba(255,255,255,.9);
 .dailyActions{display:flex;gap:7px;flex-wrap:wrap}
 @media(max-width:760px){.reminderGrid{grid-template-columns:1fr}.reminderControls{grid-template-columns:1fr 108px}}
 </style>
-
-
 <style id="v24-daily-ui">
 .dailyToolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .dailyForm{
@@ -164,8 +262,6 @@ html[data-theme="light"]{--bg:#f4f7fb;--bg2:#eaf0f8;--card:rgba(255,255,255,.9);
   .notifyBanner{align-items:flex-start;flex-direction:column}
 }
 </style>
-
-
 <style id="v25-alarm-popup">
 .alarmOverlay{
   position:fixed;z-index:120;inset:0;
@@ -198,8 +294,6 @@ html[data-theme="light"]{--bg:#f4f7fb;--bg2:#eaf0f8;--card:rgba(255,255,255,.9);
 @keyframes alarmPulse{0%,100%{box-shadow:0 0 0 0 #8b5cf655}50%{box-shadow:0 0 0 16px #8b5cf600}}
 @media(max-width:420px){.alarmActions{grid-template-columns:1fr}.alarmBox{padding:18px}}
 </style>
-
-
 <style id="v26-progress">
 .progressFilters{display:grid;grid-template-columns:1fr 1.4fr;gap:9px;margin-top:10px}
 .progressStats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
@@ -254,8 +348,6 @@ html[data-theme="light"]{--bg:#f4f7fb;--bg2:#eaf0f8;--card:rgba(255,255,255,.9);
 @media(max-width:480px){.progressPhotoGrid{grid-template-columns:1fr}}
 @media(max-width:520px){.calendarDay{min-height:62px;padding:6px}.calendarGrid{gap:4px}}
 </style>
-
-
 <style id="progressx-food-daily-polish-v1">
 #nutrition.active{display:flex;flex-direction:column}
 #nutrition .nutritionOrderDiary{order:1}
@@ -297,7 +389,6 @@ html[data-theme="light"]{--bg:#f4f7fb;--bg2:#eaf0f8;--card:rgba(255,255,255,.9);
   #nutrition .nutritionHero{grid-template-columns:1fr 1fr!important}
 }
 </style>
-
 <style id="progressx-body-measurements-v1">
 .bodyMeasureForm{display:grid;grid-template-columns:140px repeat(4,minmax(100px,1fr)) auto;gap:8px;align-items:end}
 .bodyMeasureStats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:12px}
@@ -309,7 +400,6 @@ html[data-theme="light"]{--bg:#f4f7fb;--bg2:#eaf0f8;--card:rgba(255,255,255,.9);
 @media(max-width:900px){.bodyMeasureForm{grid-template-columns:repeat(2,1fr)}.bodyMeasureForm .btn{grid-column:1/-1}.bodyMeasurementRow{grid-template-columns:1fr 1fr}.bodyMeasurementRow>.bodyMeasurementCell:first-child{grid-column:1/-1}}
 @media(max-width:600px){.bodyMeasureStats{grid-template-columns:repeat(2,1fr)}}
 </style>
-
 <style id="progressx-pr-dashboard-v1">
 .prDashboardStats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:12px}
 .prDashboardStat{padding:12px;border:1px solid var(--line);background:var(--soft);border-radius:15px}
@@ -320,7 +410,6 @@ html[data-theme="light"]{--bg:#f4f7fb;--bg2:#eaf0f8;--card:rgba(255,255,255,.9);
 .prDashboardMetric b{display:block;font-size:14px}.prDashboardMetric span{font-size:9px;color:var(--muted);text-transform:uppercase}
 @media(max-width:760px){.prDashboardStats{grid-template-columns:repeat(2,1fr)}.prDashboardRow{grid-template-columns:1fr 1fr}.prDashboardName{grid-column:1/-1}}
 </style>
-
 <style id="progressx-layout-polish-v1">
 #home.active,#analytics.active{display:flex;flex-direction:column}
 #home .hero{order:0}
@@ -354,7 +443,6 @@ html[data-theme="light"]{--bg:#f4f7fb;--bg2:#eaf0f8;--card:rgba(255,255,255,.9);
   #analytics .panelHead h3{font-size:17px}
 }
 </style>
-
 <style id="progressx-mobile-v27">
 html{-webkit-text-size-adjust:100%}
 body{overflow-x:hidden}
@@ -530,8 +618,6 @@ textarea{resize:vertical}
   }
 }
 </style>
-
-
 <style id="progressx-v28-nav-fix">
 @media(max-width:820px){
   nav,.bottomNav,.nav{
@@ -596,8 +682,6 @@ textarea{resize:vertical}
   }
 }
 </style>
-
-
 <style id="progressx-v29-fullwidth-nav">
 @media(max-width:820px){
   nav,.bottomNav,.nav{
@@ -660,8 +744,6 @@ textarea{resize:vertical}
   }
 }
 </style>
-
-
 <style id="progressx-v30-nav-real-fix">
 @media(max-width:820px){
   .bottomNav{
@@ -690,8 +772,6 @@ textarea{resize:vertical}
   }
 }
 </style>
-
-
 <style id="progressx-v31-mobile-modal-reminders">
 @media(max-width:820px){
   body.workout-editor-open .bottomNav{
@@ -722,8 +802,6 @@ textarea{resize:vertical}
   }
 }
 </style>
-
-
 <style id="progressx-v35-nutrition">
 .nutritionHero{
   display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px
@@ -877,9 +955,6 @@ textarea{resize:vertical}
   .macroRingLeft{font-size:18px}
 }
 </style>
-
-<!-- Camera decoder loads on demand when the barcode dialog opens. -->
-
 <style id="progressx-v36-barcode">
 .barcodeActions{display:flex;gap:8px;flex-wrap:wrap}
 .barcodeModal{
@@ -912,8 +987,6 @@ textarea{resize:vertical}
   .barcodeManual{grid-template-columns:1fr}
 }
 </style>
-
-
 <style id="progressx-v47-online-food-search">
 .internetFoodSearch{display:grid;grid-template-columns:1fr auto;gap:8px;margin:10px 0 14px}
 .onlineFoodResults{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:10px}
@@ -928,16 +1001,12 @@ textarea{resize:vertical}
 @media(max-width:760px){.onlineFoodResults{grid-template-columns:1fr}}
 @media(max-width:480px){.internetFoodSearch{grid-template-columns:1fr}}
 </style>
-
-
 <style id="progressx-v49-smart-food-search">
 .sourceBadge{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:999px;font-size:10px;font-weight:900;border:1px solid var(--line);background:var(--soft)}
 .sourceBadge.common{border-color:#22c55e55;background:#22c55e10}
 .sourceBadge.packaged{border-color:#38bdf855;background:#38bdf810}
 .commonHint{font-size:10px;color:var(--muted);margin-top:5px;line-height:1.4}
 </style>
-
-
 <style id="progressx-daily-history-v1">
 .dailyHistoryList{display:grid;gap:9px;margin-top:10px}
 .dailyHistoryCard{border:1px solid var(--line);background:var(--card2);border-radius:16px;padding:12px}
@@ -947,7 +1016,6 @@ textarea{resize:vertical}
 .dailyHistoryMeta{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.45}
 .dailyHistoryDone{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 </style>
-
 <style id="progressx-log-lite-v1">
 .logSearchBar{display:grid;grid-template-columns:minmax(240px,1fr) 130px 135px 145px auto;gap:8px;margin-top:10px}
 .logSearchInputWrap{position:relative}.logSearchInputWrap .search{width:100%;padding-left:34px}.logSearchIcon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:18px;pointer-events:none}
@@ -965,7 +1033,6 @@ textarea{resize:vertical}
   .compactLogRow{grid-template-columns:1fr auto}.compactLogPerf{grid-column:1/-1;grid-row:2}.compactLogRight{grid-column:2;grid-row:1}
 }
 </style>
-
 <style id="progressx-goals-repair-v1">
 .goalForm{display:grid;grid-template-columns:180px minmax(0,1fr) 140px auto;gap:8px;align-items:end}
 .goalList{display:grid;gap:9px;margin-top:12px}
@@ -977,7 +1044,6 @@ textarea{resize:vertical}
 .workoutSuggestion{margin-top:12px;padding:12px 13px;border:1px solid var(--line);border-radius:15px;background:linear-gradient(135deg,#7c3aed10,#22d3ee0d),var(--card2);font-size:12px;line-height:1.5}
 @media(max-width:760px){.goalForm{grid-template-columns:1fr}.goalForm .btn{width:100%}}
 </style>
-
 <style id="progressx-smart-suite-v1">
 .todayPlanGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:10px}
 .todayPlanCard{padding:12px;border:1px solid var(--line);background:var(--card2);border-radius:15px}
@@ -991,7 +1057,6 @@ textarea{resize:vertical}
 .nutritionCoachBox .coachPoint{display:block;margin-top:5px}.nutritionCoachBox .coachPoint:first-child{margin-top:0}
 @media(max-width:760px){.todayPlanGrid{grid-template-columns:repeat(2,1fr)}.scheduleGrid{grid-template-columns:1fr}}
 </style>
-
 <style id="progressx-version-v1">
 .versionMetaGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:10px}
 .versionMetaCard{padding:12px;border:1px solid var(--line);background:var(--card2);border-radius:14px}
@@ -1001,7 +1066,6 @@ textarea{resize:vertical}
 .changelogItem b{display:block;font-size:13px}.changelogItem span{display:block;margin-top:3px;font-size:11px;color:var(--muted);line-height:1.45}
 @media(max-width:600px){.versionMetaGrid{grid-template-columns:1fr 1fr}.versionMetaCard:last-child{grid-column:1/-1}}
 </style>
-
 <style id="progressx-workout-templates-v1">
 .workoutTemplatesPanel{display:none;margin:0 0 14px;padding:13px;border:1px solid var(--line);border-radius:16px;background:var(--soft)}
 .workoutTemplatesPanel.open{display:block}
@@ -1012,7 +1076,6 @@ textarea{resize:vertical}
 .workoutTemplateExercises{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5}
 @media(max-width:700px){.workoutTemplateSave{grid-template-columns:1fr}.workoutTemplateList{grid-template-columns:1fr}}
 </style>
-
 <style id="progressx-session-v1">
 .sessionOverlay{position:fixed;z-index:140;inset:0;background:#020617e8;backdrop-filter:blur(10px);display:none;overflow:auto;padding:18px}
 .sessionOverlay.show{display:block}
@@ -1035,7 +1098,6 @@ textarea{resize:vertical}
   .sessionExercise{font-size:23px}
 }
 </style>
-
 <style id="progressx-rest-timer-v1">
 .restTimerBox{margin:14px 0;padding:14px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(135deg,#22d3ee0d,#8b5cf612),var(--card2)}
 .restTimerTop{display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -1045,7 +1107,6 @@ textarea{resize:vertical}
 .restTimerBox.done{border-color:#22c55e66;background:#22c55e0d}
 @media(max-width:520px){.restTimerTime{font-size:28px}}
 </style>
-
 <style id="progressx-session-summary-v1">
 .sessionSummary{display:none;margin-top:14px}
 .sessionSummary.show{display:block}
@@ -1057,7 +1118,6 @@ textarea{resize:vertical}
 .sessionSummaryRow{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 11px;border:1px solid var(--line);border-radius:13px;background:var(--card2)}
 @media(max-width:600px){.sessionSummaryGrid{grid-template-columns:repeat(2,1fr)}}
 </style>
-
 <style id="progressx-pr-v1">
 .prBadges{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
 .prToast{position:fixed;z-index:180;left:50%;top:18px;transform:translateX(-50%) translateY(-20px);width:min(440px,calc(100vw - 24px));padding:15px 16px;border-radius:18px;border:1px solid #f59e0b66;background:var(--card2);box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.22s ease}
@@ -1065,7 +1125,6 @@ textarea{resize:vertical}
 .prToastTitle{font-weight:950;font-size:18px}
 .prToastText{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.45}
 </style>
-
 <style id="progressx-weekly-review-v1">
 .weeklyReviewGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:12px}
 .weeklyReviewStat{padding:13px 10px;border:1px solid var(--line);border-radius:15px;background:var(--soft);text-align:center}
@@ -1082,7 +1141,6 @@ textarea{resize:vertical}
 .smartWeeklyReview .smartPoint:first-child{margin-top:0}
 @media(max-width:760px){.weeklyReviewGrid{grid-template-columns:repeat(2,1fr)}.weeklyReviewDetails{grid-template-columns:1fr}}
 </style>
-
 <style id="progressx-meal-planner-v1">
 .mealPlannerControls{display:grid;grid-template-columns:160px minmax(0,1fr) auto;gap:8px;align-items:end}
 .mealPlannerStats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:12px}
@@ -1093,7 +1151,6 @@ textarea{resize:vertical}
 .mealPlannerName{font-weight:900}.mealPlannerName small{display:block;color:var(--muted);font-weight:600;margin-top:2px}
 @media(max-width:700px){.mealPlannerControls{grid-template-columns:1fr}.mealPlannerControls .btn{width:100%}.mealPlannerStats{grid-template-columns:repeat(2,1fr)}.mealPlannerRow{grid-template-columns:1fr}.mealPlannerRow .btn{width:100%}}
 </style>
-
 <style id="progressx-meal-templates-v1">
 .mealTemplateGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .mealTemplateCard{border:1px solid var(--line);background:var(--card2);border-radius:16px;padding:13px}
@@ -1142,7 +1199,9 @@ textarea{resize:vertical}
 :root[data-px-accent="emerald"]{--cyan:#34d399;--accent2:#34d399}
 :root[data-px-accent="rose"]{--cyan:#fb7185;--accent2:#fb7185}
 #pxAnatomyDetail p{margin:8px 0;line-height:1.5}
-</style><style id="px-settings-hub-style">#pxSettingsHub{grid-column:1/-1}#pxSettingsHub details{border-top:1px solid var(--line);padding:12px 0}#pxSettingsHub summary{cursor:pointer;font-weight:750;padding:7px 0}#pxSettingsHub details>label{display:block;margin:10px 0 5px}#pxSettingsHub .actions{margin:10px 0;flex-wrap:wrap}html[data-px-density="compact"] .panel{padding:12px}html[data-px-density="compact"] .settingsListRow{padding:6px 0}</style><style id="px-anatomy-atlas-style">
+</style>
+<style id="px-settings-hub-style">#pxSettingsHub{grid-column:1/-1}#pxSettingsHub details{border-top:1px solid var(--line);padding:12px 0}#pxSettingsHub summary{cursor:pointer;font-weight:750;padding:7px 0}#pxSettingsHub details>label{display:block;margin:10px 0 5px}#pxSettingsHub .actions{margin:10px 0;flex-wrap:wrap}html[data-px-density="compact"] .panel{padding:12px}html[data-px-density="compact"] .settingsListRow{padding:6px 0}</style>
+<style id="px-anatomy-atlas-style">
 .pxAnatomyControls{display:grid;grid-template-columns:2fr 1fr;gap:10px;margin:14px 0}
 .pxAnatomyPanel>.panelHead select{width:auto;min-width:100px}
 .pxAnatomyLayout{display:grid;grid-template-columns:minmax(190px,265px) minmax(0,1fr);gap:14px}
@@ -1160,7 +1219,10 @@ textarea{resize:vertical}
 .pxAtlasMatches{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
 .pxAtlasMatches span{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:5px 9px;font-size:12px}
 @media(max-width:650px){.pxAnatomyLayout{grid-template-columns:1fr}.pxAnatomyList{display:flex;overflow:auto;max-height:none;padding:0 0 7px}.pxAnatomyList button{min-width:175px}.pxAnatomyControls{grid-template-columns:1fr}.pxAtlasGrid{grid-template-columns:100px 1fr;gap:10px}}
-</style><style id="px-atlas-illustrations-v2">.pxAtlasPlate{display:flex;justify-content:center;align-items:center;min-height:280px;margin:12px 0;padding:12px;border-radius:16px;background:#f4f2ed;border:1px solid #cbd5e1;overflow:hidden}.pxAtlasPlate img{height:370px;max-width:100%;object-fit:contain}.pxAtlasViewBtns{display:flex;gap:8px;flex-wrap:wrap}.pxAtlasViewBtns .btn{padding:9px 14px}.pxAtlasFacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;margin-top:15px}.pxAtlasFacts .pxAtlasBlock{padding:12px;border:1px solid var(--line);background:var(--soft);border-radius:12px}.pxAtlasImgFallback{color:#334155}@media(max-width:600px){.pxAtlasPlate img{height:310px}.pxAtlasFacts{grid-template-columns:1fr}}</style><style>.pxExerciseManage{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:5px 0;border-bottom:1px solid var(--line)}.pxExerciseManage span{flex:1;min-width:140px}.pxExerciseManage button{font-size:11px;padding:6px 9px}</style><style id="px-anatomy-zoom-style">.pxAtlasPlate img{cursor:zoom-in}.pxAnatomyZoom{position:fixed;inset:0;z-index:100000;background:rgba(5,8,15,.96);display:flex;flex-direction:column;padding:env(safe-area-inset-top) 10px env(safe-area-inset-bottom);align-items:center;justify-content:center}.pxAnatomyZoomToolbar{display:flex;gap:9px;align-items:center;justify-content:center;flex-wrap:wrap;margin:8px}.pxAnatomyZoomViewport{height:min(78dvh,820px);width:100%;overflow:auto;touch-action:pan-x pan-y;display:flex;align-items:center;justify-content:center}.pxAnatomyZoomViewport img{max-width:none;width:auto;height:auto;max-height:72dvh;object-fit:contain;transform-origin:center;display:block}.pxAnatomyZoom button{min-width:44px;min-height:44px}.pxAnatomyZoomNote{color:white;font-size:12px;text-align:center;margin:5px}</style>
+</style>
+<style id="px-atlas-illustrations-v2">.pxAtlasPlate{display:flex;justify-content:center;align-items:center;min-height:280px;margin:12px 0;padding:12px;border-radius:16px;background:#f4f2ed;border:1px solid #cbd5e1;overflow:hidden}.pxAtlasPlate img{height:370px;max-width:100%;object-fit:contain}.pxAtlasViewBtns{display:flex;gap:8px;flex-wrap:wrap}.pxAtlasViewBtns .btn{padding:9px 14px}.pxAtlasFacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;margin-top:15px}.pxAtlasFacts .pxAtlasBlock{padding:12px;border:1px solid var(--line);background:var(--soft);border-radius:12px}.pxAtlasImgFallback{color:#334155}@media(max-width:600px){.pxAtlasPlate img{height:310px}.pxAtlasFacts{grid-template-columns:1fr}}</style>
+<style>.pxExerciseManage{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:5px 0;border-bottom:1px solid var(--line)}.pxExerciseManage span{flex:1;min-width:140px}.pxExerciseManage button{font-size:11px;padding:6px 9px}</style>
+<style id="px-anatomy-zoom-style">.pxAtlasPlate img{cursor:zoom-in}.pxAnatomyZoom{position:fixed;inset:0;z-index:100000;background:rgba(5,8,15,.96);display:flex;flex-direction:column;padding:env(safe-area-inset-top) 10px env(safe-area-inset-bottom);align-items:center;justify-content:center}.pxAnatomyZoomToolbar{display:flex;gap:9px;align-items:center;justify-content:center;flex-wrap:wrap;margin:8px}.pxAnatomyZoomViewport{height:min(78dvh,820px);width:100%;overflow:auto;touch-action:pan-x pan-y;display:flex;align-items:center;justify-content:center}.pxAnatomyZoomViewport img{max-width:none;width:auto;height:auto;max-height:72dvh;object-fit:contain;transform-origin:center;display:block}.pxAnatomyZoom button{min-width:44px;min-height:44px}.pxAnatomyZoomNote{color:white;font-size:12px;text-align:center;margin:5px}</style>
 <style id="px-coverage-mobile-v1">
 .pxCoverage,.pxAnatomyPanel,.pxAnatomyDetail{min-width:0;max-width:100%;overflow-wrap:anywhere}
 .pxCoverage .panelHead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between}
@@ -1369,7 +1431,6 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
 @media(max-width:560px){#nutrition .nutritionOrderDiary>.panelHead,#daily .dailyShell>.panelHead{flex-wrap:wrap}#nutrition .nutritionOrderDiary>.panelHead>div:first-child,#daily .dailyShell>.panelHead>div:first-child{flex-basis:100%}#nutrition .nutritionOrderDiary>.panelHead>.actions,#daily .dailyToolbar{width:100%}#nutrition .nutritionOrderDiary>.panelHead>.actions .btn{flex:1;white-space:normal}#settings .pxSettingsQuickNav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}#settings .pxSettingsQuickNav button{min-width:0;width:100%}.pxDayExerciseRow{flex-wrap:wrap}.pxLanguageRow select{width:100%}}
 
 </style>
-<!-- px-mobile-settings-refresh-20261016 -->
 <style id="px-mobile-settings-refresh-20261016">
 #settings .pxSettingsHero{padding:18px 16px;margin-bottom:10px}
 #settings .pxSettingsHero h2{font-size:clamp(23px,5vw,30px)}
@@ -1475,7 +1536,6 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
 .pxSessionWeekPicker input{width:85px;min-height:44px;font-size:16px}
 @media(max-width:480px){#sessionDayPickerWrap{flex-wrap:wrap}.pxSessionWeekPicker{flex:1 1 100%}.pxSessionWeekPicker input{flex:1}}
 </style>
-
 <style id="px-v3-mobile-diary">
 .pxCalorieDashboard{display:grid;grid-template-columns:minmax(150px,1fr) minmax(0,1fr);align-items:center;gap:20px;margin:18px 0}
 .pxCalorieRing{--progress:0%;width:min(220px,100%);aspect-ratio:1;border-radius:50%;padding:12px;background:conic-gradient(var(--accent) var(--progress),var(--line) 0);margin:auto}
@@ -1504,7 +1564,6 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
  #daily,#nutrition,#settings{padding-bottom:calc(90px + env(safe-area-inset-bottom))}
 }
 </style>
-
 <style id="px-food-weight-browsing">
 .pxFoodBrowse{margin:14px 0;border:1px solid var(--line);border-radius:18px;background:var(--card2);overflow:hidden}
 .pxFoodBrowse>summary{padding:15px;font-weight:850;cursor:pointer;min-height:48px;color:var(--text)}
@@ -1526,7 +1585,337 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
 .pxWeightValue{font-size:23px;font-weight:900;line-height:1.2;font-variant-numeric:tabular-nums}.pxWeightValue small{font-size:12px;color:var(--muted);font-weight:600}.pxWeightDelta{font-size:11px;color:var(--muted);margin-top:6px}.pxWeightNote{font-size:13px;line-height:1.5;overflow-wrap:anywhere;margin-top:9px;color:var(--muted);white-space:pre-wrap}.pxWeightEntry .pill{display:inline-block;margin-top:6px}.pxWeightDelete{width:44px;height:44px;padding:0;font-size:17px}.pxWeightHistoryStatus{color:var(--muted);font-size:12px;margin:10px 0}
 @media(max-width:620px){.pxQuickFoodList{grid-template-columns:1fr}.pxFoodPreviewHead{align-items:flex-start}.pxFoodPreviewHead strong{overflow-wrap:anywhere}.pxWeightEntry{gap:9px;padding:11px}.pxWeightValue{font-size:22px}}
 </style>
+<style id="px-settings-mobile-clean-20261017">
+@media(max-width:820px){
+ #settings .pxSettingsHero{padding:16px;margin-bottom:10px}
+ #settings .pxSettingsHero p{font-size:13px}
+ #settings .pxSettingsQuickNav{position:static;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:0;border:0;background:transparent;overflow:visible;margin:0 0 14px}
+ #settings .pxSettingsQuickNav button{min-width:0;min-height:60px;white-space:normal;padding:9px 5px;font-size:12px;line-height:1.3;border-radius:14px}
+ #settings .settingsGrid{display:block}
+ #settings .settingsGrid>.panel{margin-bottom:12px}
+ #settings #pxSettingsHub details{padding:10px 0}
+ #settings #pxSettingsHub details>summary{min-height:42px;display:list-item}
+ #settings .pxRealAccountPanel .actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ #settings .pxRealAccountPanel .actions .btn{min-width:0;white-space:normal}
+}
+</style>
+<style id="px-settings-directory-20261017">
+#settings .pxSettingsDirectory{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0 20px}
+#settings .pxSettingsTile{display:flex;align-items:flex-start;gap:13px;text-align:left;padding:19px 15px;min-height:104px;border:1px solid var(--line);border-radius:16px;background:var(--card);color:var(--text);cursor:pointer;width:100%;transition:border-color .15s,transform .15s}
+#settings .pxSettingsTile:hover{border-color:var(--cyan);transform:translateY(-2px)}
+#settings .pxSettingsTile:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+#settings .pxSettingsTileIcon{width:44px;height:44px;flex:none;display:grid;place-items:center;border-radius:12px;background:var(--card2);font-size:23px}
+#settings .pxSettingsTileText{display:grid;gap:5px;min-width:0}
+#settings .pxSettingsTileText b{font-size:15px;color:var(--cyan)}
+#settings .pxSettingsTileText small{font-size:12px;line-height:1.45;color:var(--muted)}
+#settings .pxSettingsDetailBar{display:none;align-items:center;gap:12px;margin:10px 0 18px}
+#settings .pxSettingsDetailBar button{min-height:44px}
+#settings.pxSettingsDetailMode .pxSettingsDirectory,#settings.pxSettingsDetailMode .pxSettingsHero,#settings.pxSettingsDetailMode .pxSettingsQuickNav{display:none!important}
+#settings.pxSettingsDetailMode .pxSettingsDetailBar{display:flex}
+#settings.pxSettingsDetailMode #pxLanguagePanel,#settings.pxSettingsDetailMode #pxSettingsAccount,#settings.pxSettingsDetailMode .settingsGrid>.panel,#settings.pxSettingsDetailMode .settingsGrid #pxSettingsHub,#settings.pxSettingsDetailMode .settingsGrid .pxLegacySettingsPanel{display:none!important}
+#settings.pxSettingsDetailMode .settingsGrid>.panel.pxSettingsSelected,#settings.pxSettingsDetailMode #pxSettingsHub.pxSettingsSelected,#settings.pxSettingsDetailMode #pxLanguagePanel.pxSettingsSelected,#settings.pxSettingsDetailMode #pxSettingsAccount.pxSettingsSelected{display:block!important}
+#settings.pxSettingsDetailMode .settingsGrid{display:block}
+#settings.pxSettingsDetailMode .pxSettingsSelected{max-width:100%}
+@media(max-width:900px){#settings .pxSettingsDirectory{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:540px){#settings .pxSettingsDirectory{grid-template-columns:1fr;gap:9px}#settings .pxSettingsTile{min-height:76px;padding:13px}#settings .pxSettingsTileIcon{width:42px;height:42px}#settings .pxSettingsTileText b{font-size:14px}}
+</style>
+<style id="px-settings-directory-enforce-20261017">
+/* The directory is the only default Settings view; legacy cards stay mounted for their handlers. */
+#settings:not(.pxSettingsDetailMode)>.pxSettingsHero,
+#settings:not(.pxSettingsDetailMode)>.pxSettingsQuickNav,
+#settings:not(.pxSettingsDetailMode)>#pxLanguagePanel,
+#settings:not(.pxSettingsDetailMode)>#pxSettingsAccount,
+#settings:not(.pxSettingsDetailMode)>.settingsGrid{display:none!important}
+#settings:not(.pxSettingsDetailMode)>.pxSettingsDirectory{display:grid!important}
+#settings.pxSettingsDetailMode>.pxSettingsDirectory{display:none!important}
+#settings.pxSettingsDetailMode>.settingsGrid{display:block!important}
+#settings.pxSettingsDetailMode>.settingsGrid>.panel{display:none!important}
+#settings.pxSettingsDetailMode>.settingsGrid>.panel.pxSettingsSelected{display:block!important}
+#settings.pxSettingsDetailMode>.pxSettingsDetailBar{display:flex!important}
 
+#daily .statGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+#daily .stat{padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--card2)}
+#daily .stat b{display:block;font-size:22px}#daily .stat span{font-size:11px;color:var(--muted)}
+#nutrition .nutritionHero{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+#nutrition .nutritionHero>.macroCard:first-child{display:none}
+.pxLogDeload{border-inline-start:3px solid #f59e0b;padding:8px;margin-top:8px;color:var(--text);font-size:12px;line-height:1.5}
+#nutrition .nutritionOrderDiary>.panelHead .tiny{font-size:12px}
+@media(max-width:600px){#daily .statGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}#nutrition .macroCard b{font-size:14px}}
+@media(max-width:820px){.bottomNav{overflow-x:auto!important;justify-content:flex-start!important;scrollbar-width:none}.bottomNav .navbtn{flex:1 0 60px!important;min-height:48px!important}}
+</style>
+<style id="px-mobile-design-system-20261024">
+/* One mobile presentation system for all eight routes. Account/data handlers stay intact. */
+.pxMobilePageHeader,.pxCalculatorShortcuts{display:none}
+.pxAuthField{display:block;font-size:13px;font-weight:650;margin-top:12px}
+.pxCalcField{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;min-width:0}.pxCalcField>span{display:none}.pxCalcField[hidden]{display:none!important}
+@media(max-width:820px){
+ html{--px-mobile-clearance:144px;scroll-padding-bottom:calc(var(--px-mobile-clearance) + env(safe-area-inset-bottom,0px))}
+ html[data-theme="dark"]{--bg:#090f1a;--bg2:#0d1625;--card:#111e30;--card2:#142238;--soft:#1a2b43;--line:#293d56;--text:#f5f8ff;--muted:#a8b8ce;--shadow:0 8px 24px #02061715}
+ html[data-theme="light"]{--bg:#f3f6fb;--bg2:#edf3fa;--card:#fff;--card2:#fff;--soft:#f2f6fb;--line:#dae4f0;--text:#172a43;--muted:#586d86;--shadow:0 6px 24px #182b4310}
+ body{padding-bottom:0!important;font-size:15px;line-height:1.5;background:linear-gradient(180deg,var(--bg),var(--bg2));-webkit-font-smoothing:antialiased}
+ .app{padding:12px 12px calc(var(--px-mobile-clearance) + env(safe-area-inset-bottom,0px))!important;max-width:760px}
+ .topbar{margin:0 0 18px!important;padding:4px 0 10px;border-bottom:1px solid var(--line);min-height:58px}
+ .brand{gap:10px}.brand .logo{width:36px;height:36px;min-width:36px;border-radius:12px;font-size:19px;box-shadow:none}
+ .brand h1{font-size:16px;line-height:1.3;letter-spacing:.03em}.brand small{display:block!important;font-size:10px;line-height:1.4;max-width:220px}
+ .topbar>.iconbtn{border-radius:50%;min-width:44px;min-height:44px;background:var(--card)}
+ .pxMobilePageHeader{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin:0 0 20px;padding:0 3px}
+ .pxMobilePageHeader h2{font-size:28px;font-weight:850;line-height:1.2;letter-spacing:-.035em;margin:0 0 7px}
+ .pxMobilePageHeader p{font-size:13px;color:var(--muted);line-height:1.5;margin:0;max-width:270px}
+ .pxMobilePageDate{flex-shrink:0;font-size:10px;color:var(--muted);border:1px solid var(--line);background:var(--card);padding:8px 9px;border-radius:10px;max-width:100px;text-align:center}
+ .section{min-width:0}.section.active{scroll-margin-top:12px}
+ .section .panel,.section .hero{border:1px solid var(--line);border-radius:22px!important;box-shadow:var(--shadow);padding:16px!important;margin-top:14px;background-color:var(--card)}
+ .section .panelHead{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:16px;min-width:0}
+ .section .panelHead>div:first-child{min-width:0;flex:1 1 160px}
+ .section .panelHead h3{font-size:17px!important;font-weight:800;line-height:1.4;letter-spacing:-.015em;margin-bottom:2px;overflow-wrap:anywhere}
+ .section .panelHead .tiny{font-size:12px;line-height:1.55;margin-top:3px;color:var(--muted)}
+ .section .panel>.panel{box-shadow:none;border-radius:17px!important;background:var(--card2);padding:13px!important}
+ .section .actions,.section .dailyActions{gap:8px}.section .actions>.btn{white-space:normal;overflow-wrap:anywhere}
+ .btn{border-radius:13px;font-size:13px;min-height:44px;padding:11px 14px;font-weight:750;line-height:1.35;touch-action:manipulation}
+ .btn.primary{box-shadow:0 4px 14px #7c3aed18}.btn.soft{background:var(--soft);border-color:var(--line)}
+ .iconbtn{min-height:44px;min-width:44px;touch-action:manipulation}
+ .section :is(input,select,textarea),.modal :is(input,select,textarea),.sessionShell :is(input,select,textarea){font-size:16px;line-height:1.4;border-radius:13px;background-color:var(--soft);border-color:var(--line);min-height:48px;padding:12px;max-width:100%;min-width:0}
+ .section label.tiny{display:block;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--muted);font-weight:650}
+ .section input[type="checkbox"],.section input[type="radio"]{min-height:0;padding:0}
+ .section .chip{min-height:44px;padding:10px 13px;font-size:12px;line-height:1.35;border-radius:13px}
+ .section .pill{font-size:11px;line-height:1.4;padding:5px 9px;border-radius:9px}
+ .section .callout{padding:13px;border-radius:15px;font-size:13px;line-height:1.65;overflow-wrap:anywhere}
+ .section .empty{padding:28px 14px;font-size:13px;line-height:1.65}
+ .section .resultBox{border-radius:15px;padding:14px;line-height:1.6;overflow-wrap:anywhere}
+ .section :is(.kpi,.weightStat,.stat,.progressStat,.weeklyReviewStat,.mini){border-radius:15px;background:var(--card2);border-color:var(--line);padding:13px;min-width:0}
+ .section :is(.kpi .v,.weightStat b,.stat b,.progressStat b){font-size:24px;font-weight:850;line-height:1.25;font-variant-numeric:tabular-nums}
+ .section :is(.weightStat span,.stat span,.progressStat span,.kpi .l){font-size:11px;line-height:1.4;margin-top:5px;color:var(--muted)}
+ .section .formGrid{gap:12px}.section .two{gap:0}
+ :is(button,input,select,textarea,summary):focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+ /* Every destination is visible: two rows, four thumb-sized tabs per row. */
+ body .bottomNav{pointer-events:auto!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(2,48px);gap:4px!important;align-items:stretch!important;align-content:normal!important;justify-content:normal!important;position:fixed!important;inset:auto 0 0!important;transform:none!important;width:100%!important;max-width:none!important;max-height:none!important;overflow:visible!important;border-radius:20px 20px 0 0!important;border:1px solid var(--line)!important;background:var(--card)!important;box-shadow:0 -8px 30px #02061715;padding:7px max(8px,env(safe-area-inset-left,0px)) calc(7px + env(safe-area-inset-bottom,0px))!important;z-index:35}
+ body .bottomNav .navbtn{display:flex!important;flex-direction:column!important;align-items:center;justify-content:center;gap:3px!important;flex:none!important;width:100%!important;min-width:0!important;max-width:none!important;min-height:48px!important;height:48px!important;padding:7px 4px!important;border-radius:12px;font-size:11px!important;line-height:1.3;white-space:normal!important;color:var(--muted);border:0;box-shadow:none}
+ body .bottomNav .navbtn>span{margin:0!important;display:block;font-size:18px;line-height:1;flex:none}
+ body .bottomNav .navbtn .label{font-size:10px!important;font-weight:750;line-height:1.3!important;min-width:0;overflow-wrap:normal}
+ .bottomNav svg{width:18px;height:18px;display:block;stroke:currentColor}
+ body .bottomNav .navbtn.active{background:color-mix(in srgb,var(--accent) 20%,var(--card));color:var(--text);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 55%,var(--line))!important}
+ body.workout-editor-open .bottomNav{display:none!important}
+ #home .hero{margin-top:0;padding:17px!important;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 13%,var(--card)),var(--card));}
+ #home .hero h2{font-size:24px;line-height:1.25;letter-spacing:-.03em}#home .hero p{font-size:12px;line-height:1.6}
+ #home .hero .eyebrow{font-size:10px;letter-spacing:.09em;margin-bottom:12px}
+ #home .weekCircle{width:54px;height:64px;min-width:54px;font-size:17px;border-radius:16px;box-shadow:none}
+ #home .hero .actions{margin-top:16px!important}#home .quickDays{gap:8px}#home .dayBtn{min-height:52px;font-size:12px;border-radius:13px}
+ #home .homeScoreWrap{gap:14px}#home .homeScoreRing{width:140px;height:140px;flex-shrink:0}
+ #home .homeNutritionRings{gap:10px}#home .homeMacroRingCard{border-radius:16px;padding:12px 8px;background:var(--card2);border:1px solid var(--line)}
+ #home .homeStreakRow{gap:8px}#home .homeStreakCard{border-radius:14px;padding:12px 8px}#home .homeStreakCard b{font-size:22px}
+ #home .homeScoreBreakdown{gap:7px}#home .homeScoreItem{border-radius:11px;padding:9px}
+ #log>.panel{margin-top:0;display:flex;flex-direction:column}#log>.panel>*{order:1}#log>.panel>#pxDayManager{order:3;padding:4px 12px}#log>.panel>#logPager{order:2}#log .panelHead>.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}#log .panelHead>.actions>.btn:first-child{grid-column:1/-1;min-height:50px;font-size:15px}
+ #log .logSearchBar{gap:9px;padding:12px;border:1px solid var(--line);background:var(--card2);border-radius:16px}
+ #log .logQuickFilters{gap:7px;margin-top:12px}#log .compactLogList{gap:10px}
+ #log .compactLogRow{padding:14px!important;border-radius:17px;background:var(--card2);gap:9px!important}
+ #log .compactLogTitle{font-size:15px;line-height:1.45}#log .compactLogMeta{gap:5px}
+ #log .compactLogPerf{font-size:14px;line-height:1.65;white-space:normal;overflow-wrap:anywhere}
+ #log .compactLogNote{font-size:12px;line-height:1.55;white-space:normal;overflow-wrap:anywhere}
+ #log .compactLogRight{justify-content:flex-end}#log .compactLogRight .btn{min-width:62px;min-height:44px}
+ #analytics>.panel:first-child{margin-top:0}#analytics .progressPhotoForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px}
+ #analytics .progressPhotoForm>div:nth-child(3),#analytics .progressPhotoForm>.btn{grid-column:1/-1!important}
+ #analytics .weightStatsGrid,#analytics .progressStats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ #analytics .calendarGrid{gap:4px}#analytics .calendarDay{min-height:52px;border-radius:10px;padding:6px}
+ #analytics .calendarLegend{font-size:11px;gap:10px;margin-top:12px}#analytics .pxWeightHistoryHead select{font-size:14px;max-width:52%}
+ #nutrition>.panel{border-radius:22px!important}#nutrition .nutritionOrderDiary{margin-top:0}
+ #nutrition .pxCalorieDashboard{gap:14px;margin:14px 0}#nutrition .pxCalorieRing{width:140px;height:140px}
+ #nutrition .foodQuickGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}#nutrition .foodQuickGrid>.foodSelect{grid-column:1/-1}#nutrition .foodQuickGrid>.btn{min-height:48px}
+ #nutrition .foodLogCard,#nutrition .foodProductCard{border-radius:16px;padding:13px;background:var(--card2)}
+ #nutrition .foodLogTop,#nutrition .foodProductTop{gap:10px}#nutrition .foodLogTop .actions,#nutrition .foodProductTop .actions{gap:6px}
+ #nutrition .foodMacros{gap:6px}#nutrition .macroCard{border-radius:14px;padding:12px 9px}
+ #nutrition .pxMealDiaryItem{padding:13px 0}#nutrition .pxMealDiaryTitle{font-size:15px}
+ #daily .dailyShell{margin-top:0}#daily .dailyToolbar{width:100%}#daily .dailyToolbar .btn{width:100%;min-height:48px}
+ #daily .pxDailyWeek{gap:5px}#daily .pxDailyDay{border-radius:12px;min-height:58px}
+ #daily .dailyOrderWater{border-inline-start:3px solid var(--cyan)}#daily .dailyActions{width:100%;display:flex;flex-wrap:wrap}#daily .dailyActions>.btn{flex:1 1 85px}
+ #daily .reminderGrid{gap:10px}#daily .reminderCard{border-radius:16px;padding:14px;background:var(--card)}
+ #daily .reminderName{font-size:16px}#daily .reminderMeta{font-size:12px;line-height:1.5}#daily .reminderControls{gap:10px}
+ #daily .dailyForm{border-radius:17px;padding:13px}#daily .notifyBanner{border-radius:15px;font-size:13px;line-height:1.6}
+ #calculators>.panel{margin-top:0}#calculators .calcGrid{gap:14px;grid-template-columns:minmax(0,1fr)}
+ #calculators .calcCard{min-width:0;max-width:100%;border-radius:18px;background:var(--card2);padding:15px;scroll-margin-top:14px}
+ #calculators .calcCard h3{font-size:18px;line-height:1.45;margin:0 0 8px}#calculators .calcCard>p{font-size:13px;line-height:1.65;margin-bottom:16px}
+ #calculators .formGrid{min-width:0;max-width:100%;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px}#calculators .formGrid .full{grid-column:1/-1}
+ #calculators .pxCalcField>span{display:block;font-size:12px;color:var(--muted);line-height:1.4;font-weight:650}#calculators .pxCalcField:has(>.hide){display:none}
+ #calculators .formula{font-size:11px;line-height:1.6;margin-top:12px}
+ .pxCalculatorShortcuts{position:static!important;inset:auto!important;transform:none!important;display:flex!important;width:100%!important;max-width:100%!important;min-height:0;height:auto!important;max-height:none!important;overflow-x:auto!important;overflow-y:hidden!important;justify-content:flex-start!important;flex-wrap:nowrap!important;box-shadow:none!important;border:0!important;border-radius:0!important;background:transparent!important;padding:0 0 6px!important;gap:7px!important;margin:0 0 18px!important;scrollbar-width:thin;z-index:auto!important}
+ .pxCalculatorShortcuts>.chip{flex-shrink:0;white-space:nowrap;max-width:none}
+ body[data-px-page="intelligence"] .app{padding-bottom:0!important}
+ #intelligence{max-width:760px;margin:0 auto;padding:0 12px calc(var(--px-mobile-clearance) + env(safe-area-inset-bottom,0px))!important}
+ #intelligence>.hero{margin-top:0;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%,var(--card)),var(--card))}
+ #intelligence>.hero h2{font-size:24px;line-height:1.35;margin-bottom:8px}#intelligence>.hero p{font-size:13px;line-height:1.6}
+ #intelligence .pxAnatomyMobileTabs{display:none!important;position:static!important;inset:auto!important;transform:none!important;width:100%!important;max-width:100%!important;z-index:20!important;box-shadow:none!important;background:var(--card)!important;border-radius:14px!important;padding:6px!important;margin:12px 0!important;gap:6px!important}
+ #intelligence .pxAnatomyPanel>.panelHead select{width:100%;min-width:0}
+ #intelligence .pxAnatomyDetail{padding:14px;border-radius:16px;background:var(--card2)}#intelligence .pxAtlasFacts{gap:9px}
+ #intelligence .pxAtlasPlate{border-radius:17px;margin:10px 0}#intelligence .pxAnatomyList button{border-radius:14px;min-height:52px}
+ #settings{padding:0!important}#settings .pxSettingsDirectory{gap:10px;margin-top:0}
+ #settings .pxSettingsTile{border-radius:18px!important;padding:16px!important;min-height:88px!important;text-align:start;align-items:center;background:var(--card);box-shadow:var(--shadow)}
+ #settings .pxSettingsTileIcon{width:42px;height:42px;border-radius:14px;background:color-mix(in srgb,#ffe000 12%,var(--soft));font-size:21px}
+ #settings .pxSettingsTileText{gap:5px}#settings .pxSettingsTileText b{font-size:15px;color:var(--text)}#settings .pxSettingsTileText small{font-size:12px;line-height:1.5}
+ #settings .pxSettingsDetailBar{border:1px solid var(--line);border-radius:16px;padding:10px;background:var(--card);flex-wrap:wrap}
+ #settings .pxSettingsDetailBar h3{font-size:17px;margin:0}#settings .pxSettingsCategory>summary{font-size:16px}
+ .modalWrap.open{align-items:flex-end!important;padding:0!important;background:#020617b3}
+ .modalWrap .modal{width:100%!important;border-radius:24px 24px 0 0!important;max-height:94dvh!important;min-height:0!important;padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px))!important;overscroll-behavior:contain;scroll-padding-bottom:24px}
+ #editorWrap .modal{height:auto!important;max-height:100dvh!important}
+ .modalHead{position:sticky!important;top:-16px!important;padding:13px 0!important;background:var(--card2);z-index:3;border-bottom:1px solid var(--line);margin-bottom:16px}
+ .modalHead h2{font-size:22px;line-height:1.3}.modal .formGrid{gap:12px}.modal .actions{gap:9px}
+ .sessionShell{padding:16px 14px calc(24px + env(safe-area-inset-bottom,0px))!important;background:var(--bg);border-color:var(--line)}
+ .sessionHeader{padding-bottom:12px;border-bottom:1px solid var(--line)}.sessionHeader h2{font-size:21px}.sessionExercise{font-size:25px!important;line-height:1.3!important}
+ .sessionLast,.restTimerBox{border-radius:18px;background:var(--card);border:1px solid var(--line);padding:14px}
+ .restTimerTime{font-size:38px}.restTimerPresets,.restTimerControls{gap:8px}.restTimerControls .btn{padding-inline:10px}
+ .pxSessionSetRow{border-radius:15px;padding:11px;background:var(--card)}.pxSessionSetRow input{min-height:46px!important;padding:10px!important}
+ .sessionNav{gap:9px}.sessionNav .btn.primary{min-height:50px}.sessionSummary{border-radius:20px;padding:16px}
+ #pxAccountTools{width:calc(100% - 24px)!important;max-width:calc(100% - 24px)!important;margin:12px 12px calc(var(--px-mobile-clearance) + env(safe-area-inset-bottom,0px))!important;scroll-margin-bottom:calc(var(--px-mobile-clearance) + env(safe-area-inset-bottom,0px));border-radius:16px}
+ #pxAccountTools button{min-height:44px;border-radius:11px}#pxSyncPill{scroll-margin-bottom:calc(var(--px-mobile-clearance) + env(safe-area-inset-bottom,0px))}
+ #pxCommercialGate{padding:20px;background:var(--bg);color:var(--text);overflow-y:auto}
+ #pxCommercialGate .pxAuthBox{background:var(--card);border-color:var(--line);padding:24px 20px;border-radius:24px;box-shadow:var(--shadow)}
+ #pxCommercialGate h2{font-size:28px;line-height:1.3;margin-bottom:10px}#pxCommercialGate p{font-size:13px;line-height:1.65;color:var(--muted)}
+ #pxCommercialGate input{font-size:16px;min-height:50px;margin:7px 0 14px;padding:13px;border-radius:13px;background:var(--soft);color:var(--text);border-color:var(--line)}
+ #pxCommercialGate .pxAuthActions{display:grid;grid-template-columns:minmax(0,1fr);gap:9px;margin:20px 0 14px}#pxCommercialGate button{min-height:48px;font-size:14px;border-radius:13px}#pxCommercialGate .pxSoft{background:var(--soft);color:var(--text);border:1px solid var(--line)}
+ #pxCommercialGate #pxLoginMessage{border-top:1px solid var(--line);padding-top:14px;margin-bottom:0}
+ .connectionBanner{border-radius:13px;top:4px;font-size:12px}.versionBadge{font-size:10px}
+}
+@media(max-width:650px){#intelligence .pxAnatomyMobileTabs{display:flex!important;position:sticky!important;top:8px!important}}
+@media(max-width:360px){
+ #calculators .formGrid{grid-template-columns:minmax(0,1fr)!important}
+ .app{padding-inline:10px!important}.brand small{font-size:9px;max-width:190px}.pxMobilePageHeader h2{font-size:25px}
+ .pxMobilePageHeader p{font-size:12px}.pxMobilePageDate{max-width:82px;padding:7px}
+ body .bottomNav .navbtn{flex-direction:column;gap:3px;padding:4px!important}body .bottomNav .navbtn .label{font-size:9px!important}
+ .section .panel{padding:13px!important;border-radius:18px!important}#home .hero h2{font-size:22px}
+ #home .homeScoreRing{width:125px;height:125px}#nutrition .pxCalorieRing{width:124px;height:124px}#nutrition .pxCalorieDashboard{grid-template-columns:124px minmax(0,1fr)}
+ .pxSessionSetRow{padding:8px;gap:5px}#intelligence{padding-inline:10px!important}
+}
+</style>
+<style id="px-compact-food-selector">#nutrition .foodQuickGrid>*{min-width:0}#nutrition .foodSelect{min-width:0;max-width:100%;overflow:hidden}#foodQuickProduct{width:100%;min-width:0!important;max-width:100%;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}#foodQuickPreview strong,.foodLogCard b,.foodProductCard b,.recentFoodName{overflow-wrap:anywhere;min-width:0}@media(min-width:821px){#nutrition .foodQuickGrid{grid-template-columns:minmax(0,2fr) repeat(3,minmax(0,1fr)) auto}}@media(max-width:820px){#nutrition .foodQuickGrid>.foodSelect{min-width:0;max-width:100%;overflow:hidden}#foodQuickProduct{display:block;width:100%;min-width:0!important;max-width:100%;height:48px!important;min-height:48px!important;padding:10px 34px 10px 12px!important;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font-size:15px!important}html[dir="rtl"] #foodQuickProduct{padding:10px 12px 10px 34px!important}}</style>
+<style id="px-simple-insights-style">
+#intelligence>.hero .eyebrow{display:none}#intelligence>.hero p{font-size:12px}#intelligence>.hero h2{font-size:23px;margin:0 0 8px}
+.pxInsightGroup>summary,.pxWeeklyNumbers>summary{font-size:16px;font-weight:800;cursor:pointer;min-height:48px;display:flex;align-items:center;justify-content:space-between;gap:12px;list-style:none}.pxInsightGroup>summary:after,.pxWeeklyNumbers>summary:after{content:'+';font-size:23px;color:var(--muted)}.pxInsightGroup[open]>summary:after,.pxWeeklyNumbers[open]>summary:after{content:'−'}.pxInsightGroup>.panel{border:0!important;box-shadow:none!important;background:transparent!important;padding:12px 0!important}.pxInsightSummaryGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}.pxInsightSummaryGrid article,.pxDecisionCard{border:1px solid var(--line);background:var(--card2);padding:15px;border-radius:16px;min-width:0}.pxInsightSummaryGrid article>b{display:block;font-size:21px;margin:8px 0}.pxInsightSummaryGrid p,.pxDecisionCard p{font-size:13px;line-height:1.7;color:var(--muted);overflow-wrap:anywhere}.pxInsightSummaryGrid small{color:var(--muted);font-size:12px}.pxInsightSummaryGrid button{width:100%}.pxDecisionCard{margin:10px 0}.pxDecisionTop{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}.pxDecisionTop b{min-width:0;overflow-wrap:anywhere}.pxDecisionCard>strong{display:block;font-size:14px;line-height:1.7}.pxDecisionEvidence{background:var(--soft);border-radius:10px;padding:10px;font-variant-numeric:tabular-nums}.pxWeeklyNumbers{margin:16px 0;border-top:1px solid var(--line);padding-top:8px}#v2MuscleCards .v2MuscleTrack{display:none}@media(max-width:820px){#intelligence>.hero{padding:14px!important}#intelligence>.hero p{display:none}#intelligence>.hero h2{font-size:20px;margin:0 0 12px}.pxInsightSummaryGrid{grid-template-columns:1fr}.pxInsightGroup.panel{padding:10px 15px!important}.pxInsightGroup>.panel{padding:12px 0!important}.pxInsightGroup>summary{font-size:15px}.pxDecisionCard{padding:13px}}
+</style>
+<style id="px-home-hub-style">
+#home .hero .actions{display:none}#home .hero p{max-width:55ch}
+.pxHomeHub{order:0;margin:0 0 14px}.pxHomeHubHead{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.pxHomeHubHead h3{margin:0}.pxHomeHubGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pxHomeAction{min-width:0;padding:16px;border:1px solid var(--line);border-radius:18px;background:var(--card);display:flex;flex-direction:column;gap:9px}.pxHomeAction h4{margin:0;font-size:15px}.pxHomeAction b{font-size:21px;overflow-wrap:anywhere}.pxHomeAction p{margin:0;font-size:12px;color:var(--muted);line-height:1.6}.pxHomeAction .btn{margin-top:auto;min-height:46px;white-space:normal}.pxHomeAction .btn+.btn{margin-top:0}.pxHomeAction progress{width:100%;height:8px;accent-color:var(--cyan)}.pxHomeMore{order:6;border:1px solid var(--line);border-radius:18px;padding:14px;margin:0 0 14px;background:var(--card)}.pxHomeMore>summary{cursor:pointer;font-weight:800;min-height:28px}.pxHomeMore[open]>summary{margin-bottom:14px}.pxHomeMore .panel{margin-bottom:10px}.pxHomeHint{font-size:12px;color:var(--muted);line-height:1.7;margin:10px 0 0}
+@media(max-width:380px){.pxHomeAction{padding:12px;gap:8px}.pxHomeAction b{font-size:18px}.pxHomeHubHead{align-items:flex-start}}@media(min-width:1000px){.pxHomeHubGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+</style>
+<style id="px-daily-convenience-style">
+.pxRepeatMeals{margin:12px 0;border:1px solid var(--line);border-radius:16px;padding:13px;background:var(--card2)}.pxRepeatMeals>summary{cursor:pointer;font-weight:800;min-height:30px}.pxRepeatMeals label{display:block;margin:12px 0 5px;font-size:12px;color:var(--muted)}.pxRepeatMeals select{width:100%;min-width:0;max-width:100%;min-height:46px}.pxRepeatMeals ul{list-style:none;padding:0;font-size:13px;line-height:1.8;overflow-wrap:anywhere}.pxRepeatMeals li{padding:5px 0;border-bottom:1px solid var(--line)}.pxRepeatMeals .btn{min-height:46px;white-space:normal;width:100%}.pxRepeatMeals p{font-size:12px;line-height:1.6}.pxDraftNotice{font-size:12px;color:var(--muted);line-height:1.6;margin-top:9px}
+</style>
+<style id="px-practical-progress-style">
+.pxWeekDigest{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0}.pxWeekDigest button{border:1px solid var(--line);border-radius:15px;background:var(--card2);color:var(--text);padding:13px 8px;min-height:100px;cursor:pointer;min-width:0}.pxWeekDigest button[aria-pressed="true"]{outline:2px solid var(--cyan);outline-offset:-2px}.pxWeekDigest b{display:block;font-size:27px;font-variant-numeric:tabular-nums}.pxWeekDigest span{display:block;font-size:12px;line-height:1.6;margin-top:5px}.pxWeekDigest .pxImproved b{color:var(--cyan)}.pxProgressPicker{margin:15px 0;min-width:0;max-width:100%;overflow:hidden}.pxProgressPicker label{display:block;font-weight:800;margin:12px 0 7px}.pxProgressPicker select{display:block;white-space:nowrap;width:100%;min-width:0;max-width:100%;min-height:48px;overflow:hidden;text-overflow:ellipsis}.pxProgressPicker select:focus-visible{outline-offset:-3px}.pxRecordedTrend{background:var(--card2);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}.pxRecordedTrend h4{margin:0 0 10px;font-size:17px}.pxRecordedTrend p,.pxProgressNote{font-size:12px;color:var(--muted);line-height:1.7;overflow-wrap:anywhere}.pxComparePair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}.pxComparePair>div{border:1px solid var(--line);background:var(--soft);padding:11px;border-radius:12px;min-width:0}.pxComparePair small,.pxComparePair strong{display:block;overflow-wrap:anywhere}.pxComparePair small{font-size:11px;color:var(--muted);line-height:1.7}.pxComparePair strong{font-size:16px;margin:8px 0;white-space:pre-line}.pxProgressHistory{border-top:1px solid var(--line);padding-top:8px;margin:13px 0}.pxProgressHistory>summary{min-height:44px;font-weight:800;cursor:pointer;display:flex;align-items:center}.pxProgressHistory>summary:after{content:"+";margin-inline-start:auto;font-size:22px;color:var(--muted)}.pxProgressHistory[open]>summary:after{content:"−"}.pxProgressHistory ol{list-style:none;padding:0;margin:0}.pxProgressHistory li{border-bottom:1px solid var(--line);padding:11px 0}.pxProgressHistory small{display:block;color:var(--muted);font-size:11px}.pxProgressHistory p{margin:6px 0;font-size:13px;overflow-wrap:anywhere}.pxWeekEmpty{padding:16px;border-radius:14px;background:var(--soft);font-size:13px;line-height:1.7}
+@media(max-width:360px){.pxWeekDigest button{padding:10px 5px}.pxWeekDigest span{font-size:11px}.pxRecordedTrend{padding:11px}.pxComparePair>div{padding:9px}.pxComparePair strong{font-size:14px}}
+</style>
+<style id="px-save-safety-style">
+.pxSavePanel{margin:0 0 14px;border:1px solid var(--line);border-radius:15px;background:var(--card2);padding:10px 13px;min-width:0}.pxSavePanel>summary{min-height:44px;cursor:pointer;display:flex;align-items:center;gap:9px;font-size:13px;font-weight:800;list-style:none}.pxSavePanel>summary:before{content:'';width:9px;height:9px;border-radius:50%;background:var(--muted);flex-shrink:0}.pxSavePanel[data-state="synced"]>summary:before{background:var(--cyan)}.pxSavePanel[data-state="pending"]>summary:before,.pxSavePanel[data-state="offline"]>summary:before{background:#fbbf24}.pxSavePanel[data-state="error"]>summary:before,.pxSavePanel[data-state="conflict"]>summary:before{background:var(--bad)}.pxSavePanel>summary:after{content:'+';margin-inline-start:auto;font-size:20px}.pxSavePanel[open]>summary:after{content:'−'}.pxSavePanel p{font-size:12px;line-height:1.7;color:var(--muted);overflow-wrap:anywhere}.pxSavePanel dl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;font-size:12px}.pxSavePanel dd{margin:0;font-variant-numeric:tabular-nums}.pxSavePanel .btn{min-height:44px;white-space:normal}.pxFoodUndo{position:sticky;top:8px;z-index:30;order:-1;margin:12px 0;padding:12px;border:1px solid var(--line);border-radius:15px;background:var(--card2);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.pxFoodUndo[hidden]{display:none}.pxFoodUndo p{margin:0;font-size:12px;line-height:1.6;flex:1;min-width:150px;overflow-wrap:anywhere}.pxFoodUndo .btn{min-height:44px}.pxFoodUndo small{display:block;color:var(--muted);font-size:11px}
+</style>
+<style id="px-week-weight-usual-food-style">
+.pxWeeklyWeight{border:1px solid var(--line);border-radius:17px;background:var(--card2);padding:14px;margin:14px 0;min-width:0}.pxWeeklyWeight h3{margin:0 0 8px;font-size:18px}.pxWeeklyWeight p,.pxWeightReadings p{font-size:12px;line-height:1.7;color:var(--muted)}.pxWeightWeekPicker{min-width:0;max-width:100%;overflow:hidden;margin:12px 0}.pxWeightWeekPicker label{display:block;font-size:12px;margin-bottom:6px}.pxWeightWeekPicker select{display:block;width:100%;max-width:100%;min-width:0;min-height:46px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pxWeightWeekPicker select:focus-visible{outline-offset:-3px}.pxWeeklyWeightCards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.pxWeeklyWeightCards article{padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--soft);min-width:0}.pxWeeklyWeightCards strong{overflow-wrap:anywhere;display:block;font-size:24px;margin:8px 0;font-variant-numeric:tabular-nums}.pxWeeklyWeightCards small,.pxWeeklyWeightCards time{display:block;font-size:11px;color:var(--muted);line-height:1.7}.pxWeeklyWeightDelta{padding:12px;background:var(--soft);border-radius:12px;margin-top:12px;font-weight:800;font-size:14px}.pxWeeklyWeight details>summary,.pxWeightReadings>summary{display:flex;align-items:center;min-height:46px;font-weight:800;font-size:13px;cursor:pointer;gap:10px}.pxWeeklyWeight details>summary:after,.pxWeightReadings>summary:after{content:'+';margin-inline-start:auto;font-size:20px;color:var(--muted)}.pxWeeklyWeight details[open]>summary:after,.pxWeightReadings[open]>summary:after{content:'−'}.pxWeeklyWeight ol{list-style:none;padding:0;margin:0}.pxWeeklyWeight li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.75fr);gap:8px;padding:11px 0;border-top:1px solid var(--line);font-size:12px}.pxWeeklyWeight li b{overflow-wrap:anywhere;text-align:end;min-width:0}.pxWeeklyWeight li small{display:block;color:var(--muted);font-size:11px;margin-top:4px}.pxWeightReadings{margin:10px 0;border:1px solid var(--line);border-radius:14px;padding:10px 12px}.pxUsualFoods{margin:12px 0}.pxUsualFoodsHead{display:flex;justify-content:space-between;align-items:center;gap:9px;flex-wrap:wrap}.pxUsualFoodsHead h4{margin:0;font-size:15px}.pxUsualFoodsHead .btn{min-height:44px}.pxUsualFoods p{font-size:11px;color:var(--muted);line-height:1.6}.pxUsualFoodGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.pxUsualFood{display:flex;flex-direction:column;align-items:flex-start;text-align:start;gap:7px;padding:12px;background:var(--card2);color:var(--text);border:1px solid var(--line);border-radius:14px;cursor:pointer;min-width:0;min-height:94px}.pxUsualFood[aria-pressed="true"]{border-color:var(--cyan);box-shadow:inset 0 0 0 1px var(--cyan)}.pxUsualFood b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4;max-height:2.8em;font-size:13px;overflow-wrap:anywhere;max-width:100%}.pxUsualFood span{font-size:13px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;max-width:100%}.pxUsualFood small{font-size:10px;color:var(--muted);line-height:1.5}.pxUsualFoodEmpty{padding:10px 0;font-size:12px;color:var(--muted)}
+@media(max-width:360px){.pxWeeklyWeight{padding:11px}.pxWeeklyWeightCards article{padding:9px}.pxWeeklyWeightCards strong{font-size:21px}.pxUsualFood{padding:10px}}
+</style>
+<style id="px-food-calm-style">
+#nutrition>.panel{margin-bottom:12px!important;padding:16px!important}
+#nutrition .nutritionOrderDiary>.panelHead .tiny,#nutrition .nutritionOrderQuick>.panelHead .tiny,#nutrition .nutritionOrderToday>.panelHead .tiny{display:none!important}
+#nutrition .pxCalorieDashboard{gap:14px;margin:12px 0}
+#nutrition .pxCalorieEquation p{display:none}
+#nutrition .nutritionHero{gap:8px;margin:12px 0}
+#nutrition .macroCard{padding:10px 8px;border-radius:12px;box-shadow:none}
+#nutrition .macroCard span{font-size:11px}
+#nutrition .pxFoodShortcuts{display:none}
+#nutrition .pxFoodMealEmpty .foodMealMeta>.tiny,#nutrition .pxFoodMealEmpty .foodMealMeta>.pill{display:none}
+#nutrition .pxFoodMealEmpty .foodMealTitle{margin:0}
+#nutrition .pxFoodMealEmpty{background:transparent;padding:8px 10px;border-style:dashed}
+#nutrition .pxFoodDateRow{margin:12px 0 4px}
+#nutrition .pxFoodDateRow input{width:100%;min-width:0;min-height:44px}
+#nutrition .pxFoodCalmDetails{border-top:1px solid var(--line);margin-top:12px;padding-top:4px}
+#nutrition .pxFoodCalmDetails>summary,#nutrition>.nutritionOrderLibrary>summary{display:flex;align-items:center;gap:10px;min-height:48px;cursor:pointer;font-size:13px;font-weight:800;list-style:none}
+#nutrition .pxFoodCalmDetails>summary:after,#nutrition>.nutritionOrderLibrary>summary:after{content:'+';margin-inline-start:auto;font-size:21px;color:var(--muted)}
+#nutrition .pxFoodCalmDetails[open]>summary:after,#nutrition>.nutritionOrderLibrary[open]>summary:after{content:'−'}
+#nutrition .pxFoodCalmDetails>summary::-webkit-details-marker,#nutrition>.nutritionOrderLibrary>summary::-webkit-details-marker{display:none}
+#nutrition .pxUsualFoods:has(.pxUsualFoodEmpty)>p,#nutrition .pxUsualFoodEmpty{display:none}
+#nutrition .pxUsualFoods{margin:4px 0 14px}
+#nutrition .pxUsualFoodsHead h4{font-size:13px;color:var(--muted)}
+#nutrition .pxUsualFoodsHead .btn{font-size:12px;padding:8px 10px;min-height:44px}
+#nutrition .pxUsualFood{min-height:68px;padding:9px 11px;gap:3px;border-radius:12px}
+#nutrition .pxUsualFood small{display:none}
+#nutrition .pxUsualFood span{font-size:11px;color:var(--muted)}
+#nutrition .foodQuickGrid{gap:10px}
+#nutrition .foodQuickGrid>button{grid-column:1/-1;min-height:48px}
+#nutrition #foodQuickPreview{box-shadow:none;border-radius:12px;font-size:12px;line-height:1.7;padding:12px}
+#nutrition .nutritionOrderQuick>.panelHead{margin-bottom:8px}
+#nutrition>.nutritionOrderLibrary:not([open]){padding-block:8px!important}
+#nutrition>.nutritionOrderLibrary>summary{font-size:15px}
+#nutrition>.nutritionOrderLibrary>.panelHead h3{display:none}
+#nutrition .pxFoodCalmDetails .pxFoodShortcuts{display:flex;margin:8px 0;gap:8px}
+#nutrition .pxFoodCalmDetails .pxFoodShortcuts>button:first-child{display:none}
+#nutrition .pxFoodCalmDetails .pxFoodShortcuts>button{flex:1;min-height:44px}
+@media(max-width:600px){#nutrition .foodQuickGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}#nutrition .foodQuickGrid>.foodSelect{grid-column:1/-1}#nutrition .pxCalorieDashboard{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}#nutrition .pxCalorieRing{width:130px!important;height:130px!important;max-width:100%;margin:auto}#nutrition .pxCalorieEquation{min-width:0}#nutrition .pxCalorieEquation b{font-size:20px}#nutrition .pxCalorieRing b{font-size:28px}#nutrition .pxCalorieRing span{font-size:10px}}
+</style>
+<style id="px-food-workflow-style">
+.pxOptionalHidden{display:none!important}.pxWorkflow{margin:12px 0;border:1px solid var(--line);border-radius:14px;padding:12px;min-width:0;background:var(--card2)}.pxWorkflow>summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:800;font-size:13px}.pxWorkflow p{font-size:12px;line-height:1.7;color:var(--muted)}.pxWorkflow label{display:block;font-size:12px;margin:10px 0 5px}.pxWorkflow input,.pxWorkflow select{width:100%;min-width:0;max-width:100%;min-height:44px}.pxWorkflow .btn{min-height:44px;white-space:normal}.pxWorkflowGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pxWorkflowGrid>*{min-width:0}.pxWorkflow .wide{grid-column:1/-1}.pxWorkflowChecks label{display:flex;align-items:center;gap:9px;min-height:44px;margin:4px 0}.pxWorkflowChecks input{width:20px;min-height:20px;height:20px;flex:0 0 20px}.pxBatchChoice{display:flex;gap:8px;align-items:center;min-height:44px;font-size:12px}.pxBatchChoice input{width:20px;height:20px}.pxWorkflowRow{display:flex;align-items:center;gap:8px;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:12px;overflow-wrap:anywhere}.pxWorkflowRow>span{min-width:0}.pxWorkflow .pxWorkflowStatus{font-size:12px;line-height:1.7;overflow-wrap:anywhere}.pxReportDialog{box-sizing:border-box;width:min(640px,calc(100% - 24px));max-height:88dvh;overflow:auto;border:1px solid var(--line);border-radius:20px;background:var(--card);color:var(--text);padding:20px}.pxReportDialog::backdrop{background:#000b}.pxReportDialog h2{font-size:22px}.pxReportDialog table{width:100%;border-collapse:collapse;font-size:13px}.pxReportDialog td,.pxReportDialog th{padding:12px 8px;border-bottom:1px solid var(--line);text-align:start;overflow-wrap:anywhere}.pxReportDialog p{font-size:13px;line-height:1.8}.pxReportDialog .actions{flex-wrap:wrap}.pxReportDialog .btn{min-height:44px}.pxLibraryArchiveButton{min-height:44px!important}.pxReportOpener{margin-top:12px}
+@media(max-width:400px){.pxWorkflowGrid{grid-template-columns:minmax(0,1fr)}}
+@media print{body.pxPrintingReport>*{display:none!important}body.pxPrintingReport>#pxWeeklyReportDialog{display:block!important;position:static!important;max-height:none!important;width:100%!important;border:0;background:white;color:black}body.pxPrintingReport #pxWeeklyReportDialog .actions{display:none!important}}
+</style>
+<style id="px-insight-evidence-style">
+#pxInsightOverview{background:transparent!important;border:0!important;padding:0!important;box-shadow:none!important;min-width:0}.pxInsightPeriod{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin:0 0 12px}.pxInsightPeriod label{font-size:12px;font-weight:800;display:block;margin:0 0 6px}.pxInsightPeriod>div{flex:1;min-width:0}.pxInsightPeriod select{display:block;width:100%;min-width:0;max-width:100%;min-height:46px;white-space:nowrap;text-overflow:ellipsis}.pxInsightLead{border:1px solid var(--line);border-inline-start:4px solid var(--cyan);border-radius:18px;background:var(--card2);padding:17px;margin-bottom:12px}.pxInsightLead h3{font-size:20px;margin:7px 0 10px;line-height:1.5}.pxInsightLead h3,.pxInsightLead p{overflow-wrap:anywhere}.pxInsightLead p{font-size:13px;line-height:1.8;margin:8px 0;color:var(--muted)}.pxInsightLead small{font-size:11px;color:var(--muted)}.pxInsightLead .btn{min-height:46px;white-space:normal}.pxEvidenceGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.pxEvidenceGrid article{min-width:0;padding:16px;border:1px solid var(--line);border-radius:18px;background:var(--card)}.pxEvidenceGrid article h4{font-size:13px;color:var(--muted);margin:0 0 10px}.pxEvidenceResult{font-size:19px;font-weight:800;line-height:1.55;overflow-wrap:anywhere}.pxEvidenceGrid p{font-size:12px;line-height:1.8;color:var(--muted);margin:10px 0;overflow-wrap:anywhere}.pxEvidenceGrid .btn{min-height:44px;width:100%;white-space:normal}.pxInsightEvidence{margin-top:13px;border-top:1px solid var(--line)}.pxInsightEvidence>summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-size:12px;font-weight:800;gap:8px}.pxInsightEvidence>summary:after{content:'+';margin-inline-start:auto;font-size:20px;color:var(--muted)}.pxInsightEvidence[open]>summary:after{content:'−'}.pxInsightEvidenceRow{padding:11px 0;border-top:1px solid var(--line);font-size:12px;line-height:1.8;overflow-wrap:anywhere}.pxInsightEvidenceRow b{display:block}.pxInsightEvidenceRow small{display:block;color:var(--muted);white-space:pre-line}.pxInsightSourceNote{font-size:11px;line-height:1.8;color:var(--muted);margin:12px 0}.pxInsightLive{font-size:11px;color:var(--muted);margin:10px 0}.pxInsightFact{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.pxInsightSecondary{margin-top:8px}.pxInsightPeriod select:focus-visible{outline-offset:-3px}
+@media(max-width:900px){.pxEvidenceGrid{grid-template-columns:minmax(0,1fr)}}
+</style>
+<style id="px-daily-progress-workspace-style">
+.pxWorkspaceNav{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.pxWorkspaceNav button{flex:1 1 100px;min-height:46px;white-space:normal;line-height:1.4}.pxWorkspaceNav [aria-pressed=true]{background:var(--soft);color:var(--text);border-color:var(--accent2)}
+#pxLatestWeight{margin:12px 0 18px}#pxLatestWeight .pxLatestPair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pxLatestPair article{min-width:0;padding:15px;border:1px solid var(--line);border-radius:16px;background:var(--card2)}.pxLatestPair article:last-child{border-color:var(--accent2)}.pxLatestPair small,.pxLatestPair time{display:block;color:var(--muted);font-size:12px;line-height:1.6}.pxLatestPair strong{display:block;font-size:clamp(23px,6vw,34px);margin:8px 0;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.pxLatestDelta{margin:9px 0;font-size:14px;line-height:1.6}.pxWorkspaceDisclosure{padding:13px;border:1px solid var(--line);border-radius:16px;margin:12px 0;min-width:0}.pxWorkspaceDisclosure>summary{cursor:pointer;min-height:44px;font-size:15px;font-weight:750;align-content:center}.pxWorkspaceDisclosure>.panel{margin:10px 0!important}.pxWorkspaceDisclosure>summary:focus-visible,.pxWorkspaceNav button:focus-visible{outline:2px solid var(--accent2);outline-offset:3px}
+#analytics .progressOrderWeight{order:1}#analytics .progressOrderWeekly{order:2}#pxProgressJump{order:0}#pxProgressExtras{order:3}#analytics .progressPhotoForm{padding:14px;border-radius:16px;background:var(--card2);border:1px solid var(--line)}#analytics .progressPhotoForm label{display:block;margin-bottom:7px}#analytics .progressPhotoForm input{font-size:17px;min-height:48px}#analytics .progressPhotoForm .btn{min-height:48px}#analytics .pxComparePair strong{font-size:22px}#analytics .pxComparePair{gap:10px}
+#daily .dailyShell>.statGrid{order:3;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px}#daily .dailyShell>.statGrid .stat{padding:9px 6px!important}#daily .dailyShell>.statGrid .stat b{font-size:18px!important}#daily .dailyShell>.statGrid .stat span{font-size:10px;line-height:1.5;min-height:30px}#daily .dailyOrderWater .dailyActions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}#daily .dailyOrderWater .dailyActions>.btn{width:auto!important;min-width:0!important;padding:9px 5px;font-size:12px}#daily .dailyOrderWater .formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px}#daily .dailyOrderWater .formGrid input{min-width:0}#daily .dailyOrderReminders .dailyActions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}#daily .dailyOrderReminders .dailyActions>.btn{width:auto!important;min-width:0!important;padding:9px 5px;font-size:12px}#daily .dailyOrderWater{order:4}#daily .dailyOrderReminders{order:5}#daily .dailyOrderHistory{order:6}#daily .dailyOrderReminders .reminderCard{padding:12px;margin:0;background:var(--card2);border:1px solid var(--line);border-radius:14px}#daily .reminderGrid{display:grid;grid-template-columns:1fr;gap:8px}#daily .reminderTop{align-items:center;margin:0}#daily .reminderTop button{min-height:46px;flex-shrink:0}#daily .reminderName{font-size:15px;line-height:1.5}#daily .reminderMeta{font-size:12px}#daily .reminderTop .reminderMeta{color:var(--muted)}#daily .reminderName{overflow-wrap:anywhere}#daily .dailyOrderReminders>.panelHead{gap:9px}#daily .dailyOrderReminders>.panelHead h3{margin:0}#daily .dailyOrderHistory{border:1px solid var(--line);border-radius:16px}#daily .dailyShell>.statGrid .stat{padding:11px}#daily .dailyShell>.statGrid .stat b{font-size:21px}
+.pxDailyMove{display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--line);padding-top:9px;margin-top:9px}.pxDailyMove button{min-height:44px;min-width:44px}.pxDailyMove[hidden]{display:none}.pxDailyManageItem{padding:12px 0;border-bottom:1px solid var(--line)}.pxDailyManageItem>b{display:block;margin-bottom:6px;overflow-wrap:anywhere}.pxDailyManageItem .reminderControls{display:grid;grid-template-columns:1fr;gap:10px}.pxDailyManageItem input{max-width:100%;min-width:0}.pxDailyManageItem .pxReminderEdit{width:100%}#pxDailyManagement{scroll-margin-top:95px}#pxDailyManagement .dailyForm{display:none}#pxDailyManagement .notifyBanner{margin-top:12px}
+#pxInsightQuestions{margin:15px 0}#pxInsightOverview .pxEvidenceGrid{grid-template-columns:1fr}#pxInsightOverview .pxEvidenceGrid>article[hidden]{display:none}#pxInsightOverview .pxEvidenceResult{font-size:22px;line-height:1.5}#pxInsightOverview .pxInsightLead{margin-bottom:12px;padding:17px}#pxInsightOverview .pxInsightLead h3{font-size:20px;line-height:1.5}.pxInsightLead[hidden]{display:none!important}.pxInsightSnapshot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}.pxInsightSnapshot div{padding:12px;background:var(--soft);border-radius:12px;min-width:0}.pxInsightSnapshot b,.pxInsightSnapshot small{display:block;overflow-wrap:anywhere}.pxInsightSnapshot b{font-size:19px;margin:6px 0;font-variant-numeric:tabular-nums}.pxInsightSnapshot small{font-size:12px;color:var(--muted);line-height:1.6}.pxInsightQuickCompare{border-inline-start:3px solid var(--accent2);padding:10px 12px;margin:12px 0;border-radius:8px;background:var(--soft)}.pxInsightQuickCompare strong,.pxInsightQuickCompare small{display:block;line-height:1.6;overflow-wrap:anywhere}.pxInsightQuickCompare p{margin:6px 0;font-size:14px;line-height:1.6}.pxInsightTrainingList{margin:12px 0}.pxInsightTrainingList button{display:block;width:100%;text-align:start;white-space:normal;min-height:48px;margin:7px 0;overflow-wrap:anywhere}
+@media(min-width:700px){#pxInsightOverview .pxInsightSnapshot{grid-template-columns:repeat(2,minmax(0,1fr))}#daily .reminderGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<style id="px-compact-navigation-style">
+.pxMobilePageHeader{display:flex;align-items:center;gap:12px;min-width:0;margin:0 0 10px}.pxMobilePageHeader>div{min-width:0;flex:1}.pxMobilePageHeader h2{overflow-wrap:anywhere}.pxMobilePageHeader>.pxMobilePageDate,.pxMobilePageHeader>.pxPageSectionButton{flex-shrink:0}.pxPageSectionButton{min-width:44px;min-height:44px;border:1px solid var(--line);background:var(--card2);color:var(--text);border-radius:12px;padding:8px;font-size:12px;cursor:pointer;max-width:100px;line-height:1.5}.pxMobilePageHeader>.pxPageSectionButton{margin-inline-start:auto}#pxRepeatFoodMore[hidden],#pxFoodLibraryPager button[hidden],#pxPageSectionsButton[hidden]{display:none!important}.section h3[tabindex="-1"]:focus-visible{outline:2px solid var(--accent2);outline-offset:4px;border-radius:6px}.pxSectionHidden{display:none!important}#pxProgressExtras:not(:has(>.panel:not(.pxSectionHidden),>.two:not(.pxSectionHidden))){display:none}.pxFocusNotice{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--line);border-radius:14px;padding:9px 12px;margin:10px 0;background:var(--card2);order:-2;font-size:12px}.pxFocusNotice[hidden]{display:none}.pxFocusNotice button{min-height:44px;white-space:normal}.pxFoodSections{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;order:0;margin:0 0 12px}.pxFoodSections button{min-width:0;min-height:48px;white-space:normal;font-size:12px;line-height:1.4;padding:8px 4px;border-radius:13px;background:var(--card2);border:1px solid var(--line);color:var(--text);cursor:pointer}.pxFoodSections [aria-pressed=true]{border-color:var(--accent2);box-shadow:inset 0 0 0 1px var(--accent2)}
+#nutrition>.panel{padding:13px!important}#nutrition .nutritionOrderDiary>.panelHead{margin-bottom:7px}#nutrition .pxFoodDateRow{margin:5px 0 7px}#nutrition .pxFoodDateRow label{font-size:11px}#nutrition .pxFoodDateRow input{min-height:44px;font-size:14px}#nutrition .pxCalorieDashboard{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)!important;margin:8px 0;gap:10px}#nutrition .pxCalorieRing{width:auto!important;height:auto!important;aspect-ratio:auto!important;border-radius:14px!important;padding:2px;max-width:100%;margin:0;background:var(--line)}#nutrition .pxCalorieRing>div{min-height:82px;border-radius:12px;padding:9px}#nutrition .pxCalorieRing b{font-size:27px}#nutrition .pxCalorieEquation{display:flex;gap:12px;justify-content:space-between}#nutrition .pxCalorieEquation>div{margin:0;min-width:0}#nutrition .pxCalorieEquation span{font-size:10px}#nutrition .pxCalorieEquation b{font-size:19px;overflow-wrap:anywhere}#nutrition .nutritionHero{margin:8px 0;gap:6px}#nutrition .nutritionHero>.macroCard:first-child{display:none}#nutrition .nutritionHero .macroCard{padding:8px 6px}#nutrition .nutritionHero .macroCard b{font-size:13px}#nutrition .nutritionHero .macroCard span{font-size:10px}#nutrition .pxFoodCalmDetails{margin-top:6px;padding-top:0}#nutrition #pxFoodDayTools>summary{min-height:44px}
+#nutrition .pxUsualFoods{margin:6px 0 10px}#nutrition .pxUsualFoodsHead{gap:7px}#nutrition .pxUsualFoodsHead .btn{font-size:11px;min-height:44px;padding:6px 8px}#nutrition .pxUsualFoods>p{display:none}#nutrition .pxUsualFoodGrid{display:flex;overflow-x:auto;gap:7px;scroll-snap-type:x proximity;overscroll-behavior-x:contain;padding:3px 2px 8px;max-width:100%;scrollbar-width:thin}#nutrition .pxUsualFood{flex:0 0 140px;min-width:0;max-width:140px;min-height:62px;scroll-snap-align:start;padding:8px 10px}#nutrition .pxUsualFood b{font-size:12px}#nutrition .foodQuickGrid{gap:8px}#nutrition .foodQuickGrid label{font-size:11px}#nutrition #foodQuickPreview{padding:9px;margin-top:8px!important}#nutrition #foodQuickPreview:has(.pxFoodPreviewHead) .pxFoodPreviewMacros{gap:7px}#nutrition .pxFoodPreviewMacros b{font-size:13px}#nutrition .pxFoodPreviewMacros small{font-size:10px}#nutrition .pxMealDiaryItem{padding:9px 0}#nutrition .foodMealGroup{margin:8px 0;padding:10px;border-radius:14px}#nutrition .foodMealMeta{gap:5px}#nutrition .foodMealMeta>.tiny{display:none}#nutrition .foodMealTitle{font-size:14px;gap:6px}.pxQuickHeaderActions{display:flex;gap:7px;flex-wrap:wrap}.pxQuickHeaderActions .btn{min-height:44px;font-size:12px;padding:8px 10px}
+.pxNavDialog{width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 32px);border:1px solid var(--line);border-radius:22px;padding:17px;background:var(--card);color:var(--text);overflow:auto;overscroll-behavior:contain;box-sizing:border-box}.pxNavDialog::backdrop{background:#020617b8}.pxNavDialogHeader{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.pxNavDialogHeader h3{margin:0;font-size:18px}.pxNavDialogHeader button{min-width:44px;min-height:44px}.pxNavDialog p{font-size:12px;line-height:1.7;color:var(--muted)}.pxNavDialog input[type=search]{width:100%;min-height:46px;margin:8px 0 12px}.pxSectionOptions{display:grid;gap:8px}.pxSectionOptions>button{width:100%;min-height:48px;text-align:start;white-space:normal;overflow-wrap:anywhere}.pxFocusToggle{display:flex;align-items:center;gap:9px;font-size:13px;min-height:44px;margin-bottom:10px}.pxFocusToggle input{width:20px;height:20px;flex-shrink:0}.pxRepeatFoodRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.pxRepeatFoodRow b,.pxRepeatFoodRow small{display:block;overflow-wrap:anywhere}.pxRepeatFoodRow b{font-size:14px;line-height:1.5}.pxRepeatFoodRow small{font-size:12px;color:var(--muted);line-height:1.7}.pxRepeatFoodRow .btn{min-height:44px;font-size:12px;max-width:100px;white-space:normal}.pxRepeatFoodRow .pxRepeatUnavailable{color:var(--muted)}#pxBackToTop{position:fixed;bottom:calc(128px + env(safe-area-inset-bottom,0px));inset-inline-end:14px;z-index:60;width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:var(--card2);color:var(--text);box-shadow:var(--shadow);cursor:pointer}#pxBackToTop[hidden]{display:none}
+@media(max-width:820px){.topbar{margin-bottom:10px!important}.pxMobilePageHeader{align-items:center;margin-bottom:10px;min-height:44px}.pxMobilePageHeader h2{font-size:24px;margin:0}.pxMobilePageHeader p{display:none}.pxSavePanel{padding:2px 12px;margin-bottom:10px}.pxSavePanel[open]{padding:12px}.pxMobilePageDate{font-size:10px;padding:6px}.pxPageSectionButton{font-size:11px}}
+@media(min-width:821px){#pxBackToTop{bottom:22px}.pxFoodSections{grid-template-columns:repeat(4,minmax(0,1fr))}#nutrition .pxUsualFood{flex-basis:160px;max-width:160px}}
+</style>
+<style id="px-routine-style">
+#pxRoutineSessionTargets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}#pxRoutineSessionTargets[hidden]{display:none}#pxRoutineSessionTargets>b,#pxRoutineSessionTargets>small{grid-column:1/-1}#pxRoutineSessionTargets p{margin:0;font-size:12px;overflow-wrap:anywhere}
+#pxRoutineDialog{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:24px 24px 0 0;width:min(720px,100%);max-width:100%;max-height:90dvh;margin:auto auto 0;padding:18px;box-sizing:border-box}#pxRoutineDialog::backdrop{background:#000a}.pxRoutineHead{display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:-18px;background:var(--card);z-index:2;padding:8px 0}.pxRoutineFields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pxRoutineFields input,.pxRoutineFields select{width:100%;min-width:0;box-sizing:border-box}.pxRoutineRow{background:var(--card2);border:1px solid var(--line);border-radius:16px;padding:12px;margin:10px 0}.pxRoutineRow summary{cursor:pointer;min-height:44px;overflow-wrap:anywhere}.pxRoutineRow label{font-size:12px;display:grid;gap:5px}.pxRoutineRow .actions{flex-wrap:wrap}.pxRoutinePicker{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}.pxRoutinePicker input{box-sizing:border-box;width:100%}.pxRoutinePickerList{max-height:34dvh;overflow:auto}.pxRoutineChoice{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;background:var(--card2);border:1px solid var(--line);border-radius:14px;margin:7px 0}.pxRoutineChoice span{overflow-wrap:anywhere}.pxRoutineChoice button{flex-shrink:0}.pxRoutineFooter{position:sticky;bottom:-18px;background:var(--card);padding:12px 0;display:flex;gap:8px;flex-wrap:wrap;padding-bottom:max(12px,env(safe-area-inset-bottom))}
+</style>
+<style id="px-choice-picker-style">
+:is(#fExerciseSelect,#sessionExerciseSelect,#exerciseSelect,#pxProgressExercise,#v2Exercise,#foodQuickProduct){cursor:pointer;min-height:48px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+#pxChoiceDialog{transition:none!important;box-sizing:border-box;width:min(600px,100%);max-width:100%;height:min(720px,var(--px-choice-height,88dvh));max-height:var(--px-choice-height,88dvh);top:auto;bottom:var(--px-choice-offset,0px);margin:0 auto;padding:0;border:1px solid var(--line);border-radius:24px 24px 0 0;background:var(--card);color:var(--text);box-shadow:var(--shadow);overflow:hidden}
+#pxChoiceDialog[open]{display:flex;flex-direction:column}#pxChoiceDialog::backdrop{background:rgba(0,0,0,.68)}
+.pxChoiceHead{padding:12px 18px 8px;flex-shrink:0}.pxChoiceHandle{width:42px;height:4px;border-radius:4px;background:var(--muted);opacity:.4;margin:0 auto 12px}.pxChoiceTitleRow{display:flex;align-items:center;justify-content:space-between;gap:12px}.pxChoiceTitleRow h2{margin:0;font-size:21px;line-height:1.4}.pxChoiceTitleRow button{min-height:44px;min-width:44px;padding:8px 12px}.pxChoiceContext{font-size:12px;color:var(--muted);margin:4px 0 12px;overflow-wrap:anywhere;line-height:1.6}.pxChoiceSearchWrap{position:relative}.pxChoiceSearchWrap>span{position:absolute;inset-inline-start:13px;top:13px;color:var(--muted);pointer-events:none}#pxChoiceSearch{box-sizing:border-box;width:100%;min-height:48px;padding-inline-start:40px;border-radius:14px;font-size:16px;background:var(--card2);color:var(--text);border:1px solid var(--line)}
+#pxChoiceCount{font-size:12px;color:var(--muted);min-height:20px;padding-top:9px}#pxChoiceList{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:0 12px 12px;scrollbar-width:thin}
+.pxChoiceOption{box-sizing:border-box;width:100%;min-height:64px;border:1px solid var(--line);border-radius:15px;background:var(--card2);color:var(--text);display:flex;align-items:center;gap:12px;padding:12px;margin:7px 0;text-align:start;cursor:pointer;font:inherit}.pxChoiceOption:hover{border-color:var(--cyan)}.pxChoiceOption[aria-pressed="true"]{border-color:var(--accent2);background:color-mix(in srgb,var(--accent2) 9%,var(--card2))}.pxChoiceOption:focus-visible{outline:2px solid var(--cyan);outline-offset:-3px}.pxChoiceBadge{width:36px;height:36px;border-radius:11px;background:var(--soft);display:grid;place-items:center;flex-shrink:0;font-size:18px}.pxChoiceCopy{flex:1;min-width:0}.pxChoiceCopy strong{display:block;font-size:15px;font-weight:650;line-height:1.45;overflow-wrap:anywhere}.pxChoiceCopy small{display:block;font-size:12px;color:var(--muted);line-height:1.5;margin-top:3px;overflow-wrap:anywhere}.pxChoiceMark{width:23px;height:23px;display:grid;place-items:center;flex-shrink:0;border-radius:50%;border:1.5px solid var(--muted);font-size:14px}.pxChoiceOption[aria-pressed="true"] .pxChoiceMark{background:var(--accent2);border-color:var(--accent2);color:#08120a}.pxChoiceEmpty{text-align:center;padding:28px 14px;line-height:1.7;color:var(--muted)}.pxChoiceMore{width:100%;min-height:44px;margin-top:8px}.pxChoiceFooter{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 18px max(12px,env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--card);font-size:12px;color:var(--muted);flex-shrink:0}.pxChoiceFooter button{min-height:44px}.pxChoiceFooter [hidden]{display:none!important}
+@media(min-width:821px){#pxChoiceDialog{inset:0;margin:auto;border-radius:24px;height:min(720px,var(--px-choice-height,84dvh));max-height:84dvh}}
+@media(prefers-reduced-motion:no-preference){#pxChoiceDialog[open]{animation:pxChoiceAppear .16s ease-out}@keyframes pxChoiceAppear{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}}
+</style>
+<style id="px-graphite-mint">
+:root,:root[data-theme="dark"]{--bg:#101515;--bg2:#101515;--card:#18211e;--card2:#1d2823;--soft:#233029;--text:#eef6f2;--muted:#a1b5aa;--line:#33483e;--shadow:0 8px 28px #00000017;--radius:19px;--mint-on-accent:#092018}
+:root:not([data-px-accent]),:root[data-px-accent="default"]{--accent:#67e8b0;--accent2:#67e8b0;--cyan:#67e8b0}
+html[data-theme="light"]{--bg:#f2f6f3;--bg2:#f2f6f3;--card:#ffffff;--card2:#f9fcfa;--soft:#e9f1ec;--text:#142a20;--muted:#506c5c;--line:#ccddd2;--shadow:0 6px 24px #163d2410;--bad:#b4233a;--warn:#976000;--mint-on-accent:#ffffff}
+html[data-theme="light"]:not([data-px-accent]),html[data-theme="light"][data-px-accent="default"]{--accent:#087f5b;--accent2:#087f5b;--cyan:#087f5b}
+:root[data-px-accent="violet"],:root[data-px-accent="rose"],:root[data-px-accent="emerald"]{--mint-on-accent:#092018}
+body{background:var(--bg)!important;color:var(--text);letter-spacing:.005em}
+.topbar,.pxMobilePageHeader{background:var(--bg)!important}.brand small{color:var(--muted)}.brand .logo{background:var(--accent2)!important;color:var(--mint-on-accent);box-shadow:none;font-size:20px;font-weight:900;letter-spacing:-2px;font-style:italic;border-radius:13px}
+.hero{background:var(--card)!important;border-color:var(--line);box-shadow:none!important;border-radius:20px}.hero:after{display:none}.hero .eyebrow{color:var(--accent2)}
+:is(.panel,.kpi,.calcCard,.logCard,.foodLogCard,.foodProductCard,.workoutTemplateCard,.pxHomeAction,.pxInsightLead,.pxRecordedTrend,.pxComparePair>div,.pxLatestPair article,.pxSettingsTile,.pxRoutineRow,.pxChoiceOption){background:var(--card)!important;border-color:var(--line);box-shadow:none!important}
+:is(.modal,.sessionShell,.pxAnatomyDetail,.pxWeekDigest button,.pxWorkspaceDisclosure){background:var(--card2);border-color:var(--line)}
+:is(.btn.primary,.btn.green,#pxCommercialGate #pxSignin){background:var(--accent2)!important;color:var(--mint-on-accent)!important;border:1px solid transparent;box-shadow:none;font-weight:750}
+:is(.btn.soft,.chip,.pxFoodSections button,.pxPageSectionButton,.pxSettingsTile){background:var(--soft);color:var(--text);border-color:var(--line)}
+:is(.chip.active,.pxFoodSections [aria-pressed="true"],.pxWorkspaceNav [aria-pressed="true"]){background:color-mix(in srgb,var(--accent2) 14%,var(--card))!important;color:var(--accent2)!important;border-color:var(--accent2)!important}
+.btn.danger{background:color-mix(in srgb,var(--bad) 10%,var(--card));color:var(--bad);border-color:color-mix(in srgb,var(--bad) 40%,var(--line))}
+:is(input,select,textarea){background-color:var(--soft);color:var(--text);border-color:var(--line)}:is(input,select,textarea):focus{border-color:var(--accent2)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent2) 16%,transparent)!important}
+body .bottomNav{background:var(--card)!important;border-color:var(--line)!important;box-shadow:0 -4px 18px #00000012!important}body .bottomNav .navbtn.active{background:color-mix(in srgb,var(--accent2) 13%,var(--card))!important;color:var(--accent2)!important;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent2) 35%,var(--line))!important}
+#pxHomeHub .pxHomeHubGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px}#pxHomeHub .pxHomeAction:first-child,#pxHomeHub .pxHomeAction:last-child{grid-column:1/-1}#pxHomeHub .pxHomeAction{padding:16px;border-radius:18px}#pxHomeHub .pxHomeAction h4{color:var(--muted);font-size:12px;font-weight:650}#pxHomeHub .pxHomeAction>b{font-size:23px;font-weight:800;line-height:1.4}#pxHomeHub .pxHomeAction p{line-height:1.65}#pxHomeHub .pxHomeAction:first-child{border-color:color-mix(in srgb,var(--accent2) 45%,var(--line))}#pxHomeHub .pxHomeAction:first-child>.btn:first-of-type{background:var(--accent2);color:var(--mint-on-accent);border-color:transparent}#pxHomeHub progress{accent-color:var(--accent2)}
+.weekCircle{width:52px;height:52px;flex-shrink:0;background:var(--soft)!important;color:var(--accent2);border:1px solid var(--line);border-radius:14px;font-size:17px}.logo{box-shadow:none!important}#pxHomeHub .pxHomeAction{gap:6px;padding:12px}#pxHomeHub .pxHomeAction p{font-size:11px;line-height:1.5}#home>.hero{background:var(--card)!important;padding:16px!important}#home>.hero h2{font-size:28px!important;line-height:1.3}#home>.hero .eyebrow{display:none}#home>.hero p{font-size:13px;margin-bottom:0}
+#pxCommercialGate{background:var(--bg)!important;color:var(--text);padding:24px;overflow:auto}#pxCommercialGate .pxAuthBox{box-shadow:none;background:transparent;border:0;border-radius:0;padding:20px 0;width:min(380px,100%);max-width:100%}#pxCommercialGate h2{text-align:center;font-size:17px;letter-spacing:.2em;margin:12px 0 40px}#pxMintAuthMark{font-size:64px;letter-spacing:-9px;font-style:italic;font-weight:900;text-align:center;color:var(--accent2);line-height:1.1}#pxMintWelcome{font-size:30px;line-height:1.3;margin:0 0 8px;letter-spacing:-.025em}#pxMintAuthIntro{margin-bottom:26px!important}#pxCommercialGate .pxAuthField{font-size:13px;font-weight:650}#pxCommercialGate input{border-radius:12px;min-height:50px;background:var(--card)!important;color:var(--text);border-color:var(--line);font-size:16px}#pxCommercialGate .pxAuthActions{margin-top:24px;gap:10px}#pxCommercialGate button{min-height:50px;border-radius:12px}#pxCommercialGate #pxSignup{background:transparent!important;border:0!important;color:var(--accent2)!important;min-height:44px}#pxCommercialGate #pxLoginMessage{border-top:1px solid var(--line);font-size:12px;line-height:1.7}#pxMintAuthTagline{margin-top:28px;text-align:center;font-size:11px!important;letter-spacing:.12em;color:var(--muted)}
+.pxMintPassword{display:flex;align-items:stretch;background:var(--card);border:1px solid var(--line);border-radius:12px;margin:7px 0 14px;min-width:0}.pxMintPassword:focus-within{outline:2px solid var(--accent2);outline-offset:2px}#pxCommercialGate .pxMintPassword input{flex:1;min-width:0;margin:0!important;border:0!important;box-shadow:none!important;background:transparent!important}#pxCommercialGate #pxPasswordToggle{flex-shrink:0;width:66px;min-width:44px;background:transparent;color:var(--accent2);border:0;padding:8px;font-size:12px}
+#pxSavePanel{padding:0 12px!important;border-radius:12px;margin:0 0 12px;border-color:var(--line);background:var(--card);min-height:44px}#pxSavePanel>summary{min-height:44px;font-size:12px;font-weight:650;gap:8px;list-style:none}#pxSavePanel>summary::-webkit-details-marker{display:none}#pxSavePanel>summary:after{content:'›';font-size:21px;font-weight:500;margin-inline-start:0}html[dir="rtl"] #pxSavePanel>summary:after{transform:rotate(180deg)}#pxSaveLabel{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#pxMintSaveAction{font-size:11px;flex-shrink:0;color:var(--accent2)}#pxSavePanel[data-state="conflict"]{border-color:#b88937}#pxSavePanel[data-state="conflict"]>summary:before{background:#f5bd5b}#pxSavePanel[data-state="error"]{border-color:var(--bad)}
+#pxMintSyncDialog{width:min(560px,calc(100% - 20px));max-width:100%;max-height:85dvh;margin:auto auto 10px;box-sizing:border-box;border:1px solid var(--line);border-radius:23px;background:var(--card);color:var(--text);padding:18px;overflow:auto;box-shadow:var(--shadow)}#pxMintSyncDialog::backdrop{background:#000a}.pxMintSyncHead{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px}.pxMintSyncHead h2{font-size:20px;margin:0;line-height:1.4}.pxMintSyncHead button{min-height:44px}#pxMintSyncDialog p{font-size:13px;line-height:1.7;color:var(--muted);overflow-wrap:anywhere}#pxMintSyncDialog dl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;font-size:13px;border-block:1px solid var(--line);padding:14px 0}#pxMintSyncDialog dd{margin:0;font-weight:800}#pxMintSyncDialog dl:empty{display:none}#pxMintSyncDialog #pxSyncPill{position:static!important;inset:auto!important;transform:none!important;display:block;max-width:100%;width:auto;margin:8px 0 14px!important;border:1px solid var(--line);border-radius:12px;background:var(--soft)!important;color:var(--text)!important;box-shadow:none;text-align:start;padding:10px;white-space:normal;line-height:1.6}#pxMintSyncDialog [hidden]{display:none!important}#pxSaveRetry{width:100%;margin-top:8px;min-height:46px;padding-bottom:max(12px,env(safe-area-inset-bottom,0px))}
+@media(min-width:821px){#pxHomeHub .pxHomeHubGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}#pxHomeHub .pxHomeAction:first-child{grid-column:1/-1}#pxHomeHub .pxHomeAction:last-child{grid-column:auto}#pxMintSyncDialog{margin:auto}}
+@media(max-width:360px){#pxCommercialGate{padding:20px}#pxCommercialGate h2{margin-bottom:28px}#pxMintWelcome{font-size:26px}#pxMintAuthMark{font-size:54px}#pxHomeHub .pxHomeAction{padding:12px}#pxHomeHub .pxHomeAction>b{font-size:20px}}
+
+@media(max-width:820px){#pxSavePanel{width:44px;height:44px;padding:0!important;margin-inline-start:auto;margin-bottom:8px;border-radius:50%}#pxSavePanel>summary{width:44px;justify-content:center;gap:0;position:relative}#pxSavePanel>summary:before{position:absolute;width:7px;height:7px;top:5px;inset-inline-end:5px}#pxSavePanel>summary:after{display:none}#pxSaveLabel{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}#pxMintSaveAction{font-size:16px;letter-spacing:1px}#pxMintSyncDialog{padding:14px;max-height:70dvh;border-radius:18px}.pxMintSyncHead{margin-bottom:8px;padding-bottom:8px}.pxMintSyncHead h2{font-size:17px}#pxMintSyncDialog p{font-size:12px;line-height:1.5;margin:8px 0}#pxMintSyncDialog dl{padding:9px 0;gap:8px}#pxMintSyncDialog #pxSyncPill{font-size:12px;line-height:1.5;padding:8px;margin:8px 0!important}}
+</style>
+<style id="px-first-paint">html:not([data-px-interface-ready]) body{visibility:hidden}</style>
+<noscript><style>body{visibility:visible!important}</style></noscript>
+<script>document.addEventListener('DOMContentLoaded',()=>{document.documentElement.setAttribute('data-px-interface-ready','')},{once:true});</script>
 </head>
 <body>
 <div class="app">
@@ -2301,64 +2690,9 @@ input[type="number"],input[type="date"],input[type="time"],input[type="email"],i
 <div class="calcCard"><h3>🧍 Navy body-fat estimate</h3><p>Circumference-based estimate. Measure with a tape under consistent conditions.</p><div class="formGrid"><select id="bfSex" onchange="toggleHip()"><option value="male">Male</option><option value="female">Female</option></select><input id="bfHeight" type="number" step=".1" placeholder="Height cm"><input id="bfNeck" type="number" step=".1" placeholder="Neck cm"><input id="bfWaist" type="number" step=".1" placeholder="Waist cm"><input id="bfHip" class="hide" type="number" step=".1" placeholder="Hip cm"><button class="btn primary full" onclick="calcBF()">Estimate body fat</button></div><div id="bfResult" class="resultBox">Treat the result as a trend estimate, not a lab measurement.</div></div>
 </div></div></section>
 
-<style id="px-settings-mobile-clean-20261017">
-@media(max-width:820px){
- #settings .pxSettingsHero{padding:16px;margin-bottom:10px}
- #settings .pxSettingsHero p{font-size:13px}
- #settings .pxSettingsQuickNav{position:static;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:0;border:0;background:transparent;overflow:visible;margin:0 0 14px}
- #settings .pxSettingsQuickNav button{min-width:0;min-height:60px;white-space:normal;padding:9px 5px;font-size:12px;line-height:1.3;border-radius:14px}
- #settings .settingsGrid{display:block}
- #settings .settingsGrid>.panel{margin-bottom:12px}
- #settings #pxSettingsHub details{padding:10px 0}
- #settings #pxSettingsHub details>summary{min-height:42px;display:list-item}
- #settings .pxRealAccountPanel .actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
- #settings .pxRealAccountPanel .actions .btn{min-width:0;white-space:normal}
-}
-</style>
-<style id="px-settings-directory-20261017">
-#settings .pxSettingsDirectory{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0 20px}
-#settings .pxSettingsTile{display:flex;align-items:flex-start;gap:13px;text-align:left;padding:19px 15px;min-height:104px;border:1px solid var(--line);border-radius:16px;background:var(--card);color:var(--text);cursor:pointer;width:100%;transition:border-color .15s,transform .15s}
-#settings .pxSettingsTile:hover{border-color:var(--cyan);transform:translateY(-2px)}
-#settings .pxSettingsTile:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
-#settings .pxSettingsTileIcon{width:44px;height:44px;flex:none;display:grid;place-items:center;border-radius:12px;background:var(--card2);font-size:23px}
-#settings .pxSettingsTileText{display:grid;gap:5px;min-width:0}
-#settings .pxSettingsTileText b{font-size:15px;color:var(--cyan)}
-#settings .pxSettingsTileText small{font-size:12px;line-height:1.45;color:var(--muted)}
-#settings .pxSettingsDetailBar{display:none;align-items:center;gap:12px;margin:10px 0 18px}
-#settings .pxSettingsDetailBar button{min-height:44px}
-#settings.pxSettingsDetailMode .pxSettingsDirectory,#settings.pxSettingsDetailMode .pxSettingsHero,#settings.pxSettingsDetailMode .pxSettingsQuickNav{display:none!important}
-#settings.pxSettingsDetailMode .pxSettingsDetailBar{display:flex}
-#settings.pxSettingsDetailMode #pxLanguagePanel,#settings.pxSettingsDetailMode #pxSettingsAccount,#settings.pxSettingsDetailMode .settingsGrid>.panel,#settings.pxSettingsDetailMode .settingsGrid #pxSettingsHub,#settings.pxSettingsDetailMode .settingsGrid .pxLegacySettingsPanel{display:none!important}
-#settings.pxSettingsDetailMode .settingsGrid>.panel.pxSettingsSelected,#settings.pxSettingsDetailMode #pxSettingsHub.pxSettingsSelected,#settings.pxSettingsDetailMode #pxLanguagePanel.pxSettingsSelected,#settings.pxSettingsDetailMode #pxSettingsAccount.pxSettingsSelected{display:block!important}
-#settings.pxSettingsDetailMode .settingsGrid{display:block}
-#settings.pxSettingsDetailMode .pxSettingsSelected{max-width:100%}
-@media(max-width:900px){#settings .pxSettingsDirectory{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:540px){#settings .pxSettingsDirectory{grid-template-columns:1fr;gap:9px}#settings .pxSettingsTile{min-height:76px;padding:13px}#settings .pxSettingsTileIcon{width:42px;height:42px}#settings .pxSettingsTileText b{font-size:14px}}
-</style>
-<style id="px-settings-directory-enforce-20261017">
-/* The directory is the only default Settings view; legacy cards stay mounted for their handlers. */
-#settings:not(.pxSettingsDetailMode)>.pxSettingsHero,
-#settings:not(.pxSettingsDetailMode)>.pxSettingsQuickNav,
-#settings:not(.pxSettingsDetailMode)>#pxLanguagePanel,
-#settings:not(.pxSettingsDetailMode)>#pxSettingsAccount,
-#settings:not(.pxSettingsDetailMode)>.settingsGrid{display:none!important}
-#settings:not(.pxSettingsDetailMode)>.pxSettingsDirectory{display:grid!important}
-#settings.pxSettingsDetailMode>.pxSettingsDirectory{display:none!important}
-#settings.pxSettingsDetailMode>.settingsGrid{display:block!important}
-#settings.pxSettingsDetailMode>.settingsGrid>.panel{display:none!important}
-#settings.pxSettingsDetailMode>.settingsGrid>.panel.pxSettingsSelected{display:block!important}
-#settings.pxSettingsDetailMode>.pxSettingsDetailBar{display:flex!important}
 
-#daily .statGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
-#daily .stat{padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--card2)}
-#daily .stat b{display:block;font-size:22px}#daily .stat span{font-size:11px;color:var(--muted)}
-#nutrition .nutritionHero{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-#nutrition .nutritionHero>.macroCard:first-child{display:none}
-.pxLogDeload{border-inline-start:3px solid #f59e0b;padding:8px;margin-top:8px;color:var(--text);font-size:12px;line-height:1.5}
-#nutrition .nutritionOrderDiary>.panelHead .tiny{font-size:12px}
-@media(max-width:600px){#daily .statGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}#nutrition .macroCard b{font-size:14px}}
-@media(max-width:820px){.bottomNav{overflow-x:auto!important;justify-content:flex-start!important;scrollbar-width:none}.bottomNav .navbtn{flex:1 0 60px!important;min-height:48px!important}}
-</style>
+
+
 <section id="settings" class="section">
 <div class="pxSettingsDirectory" aria-label="Settings categories">
  <button type="button" class="pxSettingsTile" onclick="pxShowSettingsCategory('pxSettingsAccount','Account & sync')"><span class="pxSettingsTileIcon">👤</span><span class="pxSettingsTileText"><b>Account & sync</b><small>Account status, cloud connection and sign out</small></span></button>
@@ -5749,13 +6083,18 @@ async function restoreFullBackup(e){
 }
 function resetData(){data=clone(bundled);save()}
 
+const pxDeviceSyncTimes=new Map();
+function pxDeviceSyncScope(){return window.__pxSaveState?.().scope||window.__pxActiveStore||PXStore}
 function syncMeta(){
-  try{return JSON.parse(PXStore.getItem(SYNC_META_KEY))||{}}catch{return {}}
+  const scope=pxDeviceSyncScope();
+  if(typeof scope==='string')try{return JSON.parse(localStorage.getItem('pxx:device-sync:'+encodeURIComponent(scope)))||{}}catch{}
+  return {...(pxDeviceSyncTimes.get(scope)||{})};
 }
 function markSyncSuccess(type){
   const m=syncMeta();
   m[type]=Date.now();
-  PXStore.setItem(SYNC_META_KEY,JSON.stringify(m));
+  const scope=pxDeviceSyncScope();pxDeviceSyncTimes.set(scope,m);
+  if(typeof scope==='string')try{localStorage.setItem('pxx:device-sync:'+encodeURIComponent(scope),JSON.stringify(m))}catch{}
   renderSyncCenter();
 }
 function formatSyncAge(ts){
@@ -8867,6 +9206,7 @@ function loadDailyReminders(){
 }
 function saveDailyReminders(){
   PXStore.setItem(DAILY_REMINDERS_KEY,JSON.stringify(dailyReminders));
+  snapshotDailyHistory(localDateKey());
   renderDaily();
   scheduleReminderConfigSync();
   scheduleDailyStateSync();
@@ -8991,7 +9331,7 @@ function renderDailyHistory(){
       };
     }
   });
-  PXStore.setItem(DAILY_HISTORY_KEY,JSON.stringify(history));
+  // Rendering is read-only. Actual completion/water actions persist checkpoints.
 
   const dates=Object.keys(history)
     .filter(Boolean)
@@ -9126,7 +9466,6 @@ function renderDaily(){
   }).join('');
 
   renderWater();
-  snapshotDailyHistory(localDateKey());
   renderDailyHistory();
   renderDailyStats();
   updateNotificationState();
@@ -10102,34 +10441,49 @@ window.__legacyBoot=init;
  function readPending(id){try{const data=JSON.parse(browserStorage.getItem(pendingKey(id))||'null');return data&&data.payload&&typeof data.payload==='object'?data.payload:null}catch{return null}}
  const nodeStorage={
   getItem(key){if(!account)return null;return browserStorage.getItem(storagePrefix(account)+key)},
-  setItem(key,value){if(!account)throw Error('Not authenticated');const k=String(key),v=String(value);browserStorage.setItem(storagePrefix(account)+k,v);values[k]=v;revision++;markPending();tell('◷ Saved locally · waiting to sync');scheduleCloudSync()},
+  setItem(key,value){if(!account)throw Error('Not authenticated');const k=String(key),v=String(value);if(values[k]===v&&browserStorage.getItem(storagePrefix(account)+k)===v)return;browserStorage.setItem(storagePrefix(account)+k,v);values[k]=v;revision++;markPending();tell('◷ Saved locally · waiting to sync');scheduleCloudSync()},
   removeItem(key){if(!account)throw Error('Not authenticated');const k=String(key);browserStorage.removeItem(storagePrefix(account)+k);delete values[k];revision++;markPending();tell('◷ Saved locally · waiting to sync');scheduleCloudSync()},
   clear(){throw Error('This commercial app never permits clearing all local storage.')},
   key(i){return Object.keys(values)[i]??null},
   get length(){return Object.keys(values).length}
  };
  window.__pxActiveStore=nodeStorage;
- // Pull the authoritative reminder list (including deletions and saved empty lists).
- // Never overwrite this device's pending edits or write a stale copy back to cloud.
+ // Refresh all Daily fields together without touching pending local edits.
  window.__pxRefreshAccountDailyReminders=async()=>{
   if(!ready||!account||!navigator.onLine)return 'unavailable';
-  if(uploading||revision!==savedRevision||readPending(account))return 'pending';
-  const before=revision;
-  const rows=await cloud('user_app_snapshots?select=payload&user_id=eq.'+encodeURIComponent(account)+'&limit=1');
-  if(uploading||revision!==before||revision!==savedRevision||readPending(account))return 'pending';
+  if(syncConflictHold||uploading||revision!==savedRevision||readPending(account))return 'pending';
+  const owner=account,before=revision;
+  const rows=await cloud('user_app_snapshots?select=payload&user_id=eq.'+encodeURIComponent(owner)+'&limit=1');
+  if(account!==owner||!ready)return 'unavailable';
+  if(syncConflictHold||uploading||revision!==before||revision!==savedRevision||readPending(owner))return 'pending';
   if(!Array.isArray(rows))throw Error('Invalid Supabase snapshot response');
-  const key='progressx-reminders';
-  const remote=rows[0]?.payload?.[key];
-  if(typeof remote!=='string')return 'unavailable';
-  let parsed;
-  try{parsed=JSON.parse(remote)}catch{throw Error('Invalid cloud reminder list')}
-  if(!Array.isArray(parsed))throw Error('Invalid cloud reminder list');
-  if(values[key]===remote)return 'unchanged';
-  browserStorage.setItem(storagePrefix(account)+key,remote);
-  values[key]=remote;
-  dailyReminders=loadDailyReminders();
-  renderDaily();
-  return 'updated';
+  const remote=rows[0]?.payload;
+  if(!remote||typeof remote!=='object'||Array.isArray(remote))return 'unavailable';
+  const keys=[DAILY_REMINDERS_KEY,DAILY_DONE_KEY,DAILY_DONE_TIME_KEY,DAILY_WATER_KEY,DAILY_HISTORY_KEY,DAILY_LAST_DATE_KEY,'progressx-reminder-snooze'];
+  // Validate the entire Daily group before adopting any field.
+  for(const key of keys){
+   if(!(key in remote))continue;
+   if(typeof remote[key]!=='string')throw Error('Invalid cloud Daily field');
+   if(key===DAILY_LAST_DATE_KEY){if(!/^\d{4}-\d{2}-\d{2}$/.test(remote[key]))throw Error('Invalid cloud Daily date');continue}
+   let value;try{value=JSON.parse(remote[key])}catch{throw Error('Invalid cloud Daily data')}
+   if(key==='progressx-reminders'?!Array.isArray(value):!value||typeof value!=='object'||Array.isArray(value))throw Error('Invalid cloud Daily data');
+  }
+  let changed=false;
+  const baseline=Object.fromEntries(JSON.parse(snapshotBaseline||'[]'));
+  for(const key of keys){
+   const next=remote[key];
+   if(values[key]!==next){
+    if(next===undefined){browserStorage.removeItem(storagePrefix(owner)+key);delete values[key]}
+    else{browserStorage.setItem(storagePrefix(owner)+key,next);values[key]=next}
+    changed=true;
+   }
+   if(next===undefined)delete baseline[key];else baseline[key]=next;
+  }
+  // Advance only the fields actually adopted. Unrelated remote edits still
+  // trigger the existing stale-snapshot guard before a subsequent upload.
+  snapshotBaseline=snapshotDigest(baseline);
+  if(changed){dailyReminders=loadDailyReminders();renderDaily();renderNutritionHome()}
+  return changed?'updated':'unchanged';
  };
  window.__pxLoadProducts=async()=>{
   if(!ready||!account)throw Error('Sign in to load products');
@@ -10745,146 +11099,7 @@ function pxInitUILanguage(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',pxInitUILanguage,{once:true});else pxInitUILanguage();
 
 </script>
-<style id="px-mobile-design-system-20261024">
-/* One mobile presentation system for all eight routes. Account/data handlers stay intact. */
-.pxMobilePageHeader,.pxCalculatorShortcuts{display:none}
-.pxAuthField{display:block;font-size:13px;font-weight:650;margin-top:12px}
-.pxCalcField{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;min-width:0}.pxCalcField>span{display:none}.pxCalcField[hidden]{display:none!important}
-@media(max-width:820px){
- html{--px-mobile-clearance:144px;scroll-padding-bottom:calc(var(--px-mobile-clearance) + env(safe-area-inset-bottom,0px))}
- html[data-theme="dark"]{--bg:#090f1a;--bg2:#0d1625;--card:#111e30;--card2:#142238;--soft:#1a2b43;--line:#293d56;--text:#f5f8ff;--muted:#a8b8ce;--shadow:0 8px 24px #02061715}
- html[data-theme="light"]{--bg:#f3f6fb;--bg2:#edf3fa;--card:#fff;--card2:#fff;--soft:#f2f6fb;--line:#dae4f0;--text:#172a43;--muted:#586d86;--shadow:0 6px 24px #182b4310}
- body{padding-bottom:0!important;font-size:15px;line-height:1.5;background:linear-gradient(180deg,var(--bg),var(--bg2));-webkit-font-smoothing:antialiased}
- .app{padding:12px 12px calc(var(--px-mobile-clearance) + env(safe-area-inset-bottom,0px))!important;max-width:760px}
- .topbar{margin:0 0 18px!important;padding:4px 0 10px;border-bottom:1px solid var(--line);min-height:58px}
- .brand{gap:10px}.brand .logo{width:36px;height:36px;min-width:36px;border-radius:12px;font-size:19px;box-shadow:none}
- .brand h1{font-size:16px;line-height:1.3;letter-spacing:.03em}.brand small{display:block!important;font-size:10px;line-height:1.4;max-width:220px}
- .topbar>.iconbtn{border-radius:50%;min-width:44px;min-height:44px;background:var(--card)}
- .pxMobilePageHeader{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin:0 0 20px;padding:0 3px}
- .pxMobilePageHeader h2{font-size:28px;font-weight:850;line-height:1.2;letter-spacing:-.035em;margin:0 0 7px}
- .pxMobilePageHeader p{font-size:13px;color:var(--muted);line-height:1.5;margin:0;max-width:270px}
- .pxMobilePageDate{flex-shrink:0;font-size:10px;color:var(--muted);border:1px solid var(--line);background:var(--card);padding:8px 9px;border-radius:10px;max-width:100px;text-align:center}
- .section{min-width:0}.section.active{scroll-margin-top:12px}
- .section .panel,.section .hero{border:1px solid var(--line);border-radius:22px!important;box-shadow:var(--shadow);padding:16px!important;margin-top:14px;background-color:var(--card)}
- .section .panelHead{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:16px;min-width:0}
- .section .panelHead>div:first-child{min-width:0;flex:1 1 160px}
- .section .panelHead h3{font-size:17px!important;font-weight:800;line-height:1.4;letter-spacing:-.015em;margin-bottom:2px;overflow-wrap:anywhere}
- .section .panelHead .tiny{font-size:12px;line-height:1.55;margin-top:3px;color:var(--muted)}
- .section .panel>.panel{box-shadow:none;border-radius:17px!important;background:var(--card2);padding:13px!important}
- .section .actions,.section .dailyActions{gap:8px}.section .actions>.btn{white-space:normal;overflow-wrap:anywhere}
- .btn{border-radius:13px;font-size:13px;min-height:44px;padding:11px 14px;font-weight:750;line-height:1.35;touch-action:manipulation}
- .btn.primary{box-shadow:0 4px 14px #7c3aed18}.btn.soft{background:var(--soft);border-color:var(--line)}
- .iconbtn{min-height:44px;min-width:44px;touch-action:manipulation}
- .section :is(input,select,textarea),.modal :is(input,select,textarea),.sessionShell :is(input,select,textarea){font-size:16px;line-height:1.4;border-radius:13px;background-color:var(--soft);border-color:var(--line);min-height:48px;padding:12px;max-width:100%;min-width:0}
- .section label.tiny{display:block;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--muted);font-weight:650}
- .section input[type="checkbox"],.section input[type="radio"]{min-height:0;padding:0}
- .section .chip{min-height:44px;padding:10px 13px;font-size:12px;line-height:1.35;border-radius:13px}
- .section .pill{font-size:11px;line-height:1.4;padding:5px 9px;border-radius:9px}
- .section .callout{padding:13px;border-radius:15px;font-size:13px;line-height:1.65;overflow-wrap:anywhere}
- .section .empty{padding:28px 14px;font-size:13px;line-height:1.65}
- .section .resultBox{border-radius:15px;padding:14px;line-height:1.6;overflow-wrap:anywhere}
- .section :is(.kpi,.weightStat,.stat,.progressStat,.weeklyReviewStat,.mini){border-radius:15px;background:var(--card2);border-color:var(--line);padding:13px;min-width:0}
- .section :is(.kpi .v,.weightStat b,.stat b,.progressStat b){font-size:24px;font-weight:850;line-height:1.25;font-variant-numeric:tabular-nums}
- .section :is(.weightStat span,.stat span,.progressStat span,.kpi .l){font-size:11px;line-height:1.4;margin-top:5px;color:var(--muted)}
- .section .formGrid{gap:12px}.section .two{gap:0}
- :is(button,input,select,textarea,summary):focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
- /* Every destination is visible: two rows, four thumb-sized tabs per row. */
- body .bottomNav{pointer-events:auto!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(2,48px);gap:4px!important;align-items:stretch!important;align-content:normal!important;justify-content:normal!important;position:fixed!important;inset:auto 0 0!important;transform:none!important;width:100%!important;max-width:none!important;max-height:none!important;overflow:visible!important;border-radius:20px 20px 0 0!important;border:1px solid var(--line)!important;background:var(--card)!important;box-shadow:0 -8px 30px #02061715;padding:7px max(8px,env(safe-area-inset-left,0px)) calc(7px + env(safe-area-inset-bottom,0px))!important;z-index:35}
- body .bottomNav .navbtn{display:flex!important;flex-direction:column!important;align-items:center;justify-content:center;gap:3px!important;flex:none!important;width:100%!important;min-width:0!important;max-width:none!important;min-height:48px!important;height:48px!important;padding:7px 4px!important;border-radius:12px;font-size:11px!important;line-height:1.3;white-space:normal!important;color:var(--muted);border:0;box-shadow:none}
- body .bottomNav .navbtn>span{margin:0!important;display:block;font-size:18px;line-height:1;flex:none}
- body .bottomNav .navbtn .label{font-size:10px!important;font-weight:750;line-height:1.3!important;min-width:0;overflow-wrap:normal}
- .bottomNav svg{width:18px;height:18px;display:block;stroke:currentColor}
- body .bottomNav .navbtn.active{background:color-mix(in srgb,var(--accent) 20%,var(--card));color:var(--text);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 55%,var(--line))!important}
- body.workout-editor-open .bottomNav{display:none!important}
- #home .hero{margin-top:0;padding:17px!important;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 13%,var(--card)),var(--card));}
- #home .hero h2{font-size:24px;line-height:1.25;letter-spacing:-.03em}#home .hero p{font-size:12px;line-height:1.6}
- #home .hero .eyebrow{font-size:10px;letter-spacing:.09em;margin-bottom:12px}
- #home .weekCircle{width:54px;height:64px;min-width:54px;font-size:17px;border-radius:16px;box-shadow:none}
- #home .hero .actions{margin-top:16px!important}#home .quickDays{gap:8px}#home .dayBtn{min-height:52px;font-size:12px;border-radius:13px}
- #home .homeScoreWrap{gap:14px}#home .homeScoreRing{width:140px;height:140px;flex-shrink:0}
- #home .homeNutritionRings{gap:10px}#home .homeMacroRingCard{border-radius:16px;padding:12px 8px;background:var(--card2);border:1px solid var(--line)}
- #home .homeStreakRow{gap:8px}#home .homeStreakCard{border-radius:14px;padding:12px 8px}#home .homeStreakCard b{font-size:22px}
- #home .homeScoreBreakdown{gap:7px}#home .homeScoreItem{border-radius:11px;padding:9px}
- #log>.panel{margin-top:0;display:flex;flex-direction:column}#log>.panel>*{order:1}#log>.panel>#pxDayManager{order:3;padding:4px 12px}#log>.panel>#logPager{order:2}#log .panelHead>.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}#log .panelHead>.actions>.btn:first-child{grid-column:1/-1;min-height:50px;font-size:15px}
- #log .logSearchBar{gap:9px;padding:12px;border:1px solid var(--line);background:var(--card2);border-radius:16px}
- #log .logQuickFilters{gap:7px;margin-top:12px}#log .compactLogList{gap:10px}
- #log .compactLogRow{padding:14px!important;border-radius:17px;background:var(--card2);gap:9px!important}
- #log .compactLogTitle{font-size:15px;line-height:1.45}#log .compactLogMeta{gap:5px}
- #log .compactLogPerf{font-size:14px;line-height:1.65;white-space:normal;overflow-wrap:anywhere}
- #log .compactLogNote{font-size:12px;line-height:1.55;white-space:normal;overflow-wrap:anywhere}
- #log .compactLogRight{justify-content:flex-end}#log .compactLogRight .btn{min-width:62px;min-height:44px}
- #analytics>.panel:first-child{margin-top:0}#analytics .progressPhotoForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px}
- #analytics .progressPhotoForm>div:nth-child(3),#analytics .progressPhotoForm>.btn{grid-column:1/-1!important}
- #analytics .weightStatsGrid,#analytics .progressStats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
- #analytics .calendarGrid{gap:4px}#analytics .calendarDay{min-height:52px;border-radius:10px;padding:6px}
- #analytics .calendarLegend{font-size:11px;gap:10px;margin-top:12px}#analytics .pxWeightHistoryHead select{font-size:14px;max-width:52%}
- #nutrition>.panel{border-radius:22px!important}#nutrition .nutritionOrderDiary{margin-top:0}
- #nutrition .pxCalorieDashboard{gap:14px;margin:14px 0}#nutrition .pxCalorieRing{width:140px;height:140px}
- #nutrition .foodQuickGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}#nutrition .foodQuickGrid>.foodSelect{grid-column:1/-1}#nutrition .foodQuickGrid>.btn{min-height:48px}
- #nutrition .foodLogCard,#nutrition .foodProductCard{border-radius:16px;padding:13px;background:var(--card2)}
- #nutrition .foodLogTop,#nutrition .foodProductTop{gap:10px}#nutrition .foodLogTop .actions,#nutrition .foodProductTop .actions{gap:6px}
- #nutrition .foodMacros{gap:6px}#nutrition .macroCard{border-radius:14px;padding:12px 9px}
- #nutrition .pxMealDiaryItem{padding:13px 0}#nutrition .pxMealDiaryTitle{font-size:15px}
- #daily .dailyShell{margin-top:0}#daily .dailyToolbar{width:100%}#daily .dailyToolbar .btn{width:100%;min-height:48px}
- #daily .pxDailyWeek{gap:5px}#daily .pxDailyDay{border-radius:12px;min-height:58px}
- #daily .dailyOrderWater{border-inline-start:3px solid var(--cyan)}#daily .dailyActions{width:100%;display:flex;flex-wrap:wrap}#daily .dailyActions>.btn{flex:1 1 85px}
- #daily .reminderGrid{gap:10px}#daily .reminderCard{border-radius:16px;padding:14px;background:var(--card)}
- #daily .reminderName{font-size:16px}#daily .reminderMeta{font-size:12px;line-height:1.5}#daily .reminderControls{gap:10px}
- #daily .dailyForm{border-radius:17px;padding:13px}#daily .notifyBanner{border-radius:15px;font-size:13px;line-height:1.6}
- #calculators>.panel{margin-top:0}#calculators .calcGrid{gap:14px;grid-template-columns:minmax(0,1fr)}
- #calculators .calcCard{min-width:0;max-width:100%;border-radius:18px;background:var(--card2);padding:15px;scroll-margin-top:14px}
- #calculators .calcCard h3{font-size:18px;line-height:1.45;margin:0 0 8px}#calculators .calcCard>p{font-size:13px;line-height:1.65;margin-bottom:16px}
- #calculators .formGrid{min-width:0;max-width:100%;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px}#calculators .formGrid .full{grid-column:1/-1}
- #calculators .pxCalcField>span{display:block;font-size:12px;color:var(--muted);line-height:1.4;font-weight:650}#calculators .pxCalcField:has(>.hide){display:none}
- #calculators .formula{font-size:11px;line-height:1.6;margin-top:12px}
- .pxCalculatorShortcuts{position:static!important;inset:auto!important;transform:none!important;display:flex!important;width:100%!important;max-width:100%!important;min-height:0;height:auto!important;max-height:none!important;overflow-x:auto!important;overflow-y:hidden!important;justify-content:flex-start!important;flex-wrap:nowrap!important;box-shadow:none!important;border:0!important;border-radius:0!important;background:transparent!important;padding:0 0 6px!important;gap:7px!important;margin:0 0 18px!important;scrollbar-width:thin;z-index:auto!important}
- .pxCalculatorShortcuts>.chip{flex-shrink:0;white-space:nowrap;max-width:none}
- body[data-px-page="intelligence"] .app{padding-bottom:0!important}
- #intelligence{max-width:760px;margin:0 auto;padding:0 12px calc(var(--px-mobile-clearance) + env(safe-area-inset-bottom,0px))!important}
- #intelligence>.hero{margin-top:0;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%,var(--card)),var(--card))}
- #intelligence>.hero h2{font-size:24px;line-height:1.35;margin-bottom:8px}#intelligence>.hero p{font-size:13px;line-height:1.6}
- #intelligence .pxAnatomyMobileTabs{display:none!important;position:static!important;inset:auto!important;transform:none!important;width:100%!important;max-width:100%!important;z-index:20!important;box-shadow:none!important;background:var(--card)!important;border-radius:14px!important;padding:6px!important;margin:12px 0!important;gap:6px!important}
- #intelligence .pxAnatomyPanel>.panelHead select{width:100%;min-width:0}
- #intelligence .pxAnatomyDetail{padding:14px;border-radius:16px;background:var(--card2)}#intelligence .pxAtlasFacts{gap:9px}
- #intelligence .pxAtlasPlate{border-radius:17px;margin:10px 0}#intelligence .pxAnatomyList button{border-radius:14px;min-height:52px}
- #settings{padding:0!important}#settings .pxSettingsDirectory{gap:10px;margin-top:0}
- #settings .pxSettingsTile{border-radius:18px!important;padding:16px!important;min-height:88px!important;text-align:start;align-items:center;background:var(--card);box-shadow:var(--shadow)}
- #settings .pxSettingsTileIcon{width:42px;height:42px;border-radius:14px;background:color-mix(in srgb,#ffe000 12%,var(--soft));font-size:21px}
- #settings .pxSettingsTileText{gap:5px}#settings .pxSettingsTileText b{font-size:15px;color:var(--text)}#settings .pxSettingsTileText small{font-size:12px;line-height:1.5}
- #settings .pxSettingsDetailBar{border:1px solid var(--line);border-radius:16px;padding:10px;background:var(--card);flex-wrap:wrap}
- #settings .pxSettingsDetailBar h3{font-size:17px;margin:0}#settings .pxSettingsCategory>summary{font-size:16px}
- .modalWrap.open{align-items:flex-end!important;padding:0!important;background:#020617b3}
- .modalWrap .modal{width:100%!important;border-radius:24px 24px 0 0!important;max-height:94dvh!important;min-height:0!important;padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px))!important;overscroll-behavior:contain;scroll-padding-bottom:24px}
- #editorWrap .modal{height:auto!important;max-height:100dvh!important}
- .modalHead{position:sticky!important;top:-16px!important;padding:13px 0!important;background:var(--card2);z-index:3;border-bottom:1px solid var(--line);margin-bottom:16px}
- .modalHead h2{font-size:22px;line-height:1.3}.modal .formGrid{gap:12px}.modal .actions{gap:9px}
- .sessionShell{padding:16px 14px calc(24px + env(safe-area-inset-bottom,0px))!important;background:var(--bg);border-color:var(--line)}
- .sessionHeader{padding-bottom:12px;border-bottom:1px solid var(--line)}.sessionHeader h2{font-size:21px}.sessionExercise{font-size:25px!important;line-height:1.3!important}
- .sessionLast,.restTimerBox{border-radius:18px;background:var(--card);border:1px solid var(--line);padding:14px}
- .restTimerTime{font-size:38px}.restTimerPresets,.restTimerControls{gap:8px}.restTimerControls .btn{padding-inline:10px}
- .pxSessionSetRow{border-radius:15px;padding:11px;background:var(--card)}.pxSessionSetRow input{min-height:46px!important;padding:10px!important}
- .sessionNav{gap:9px}.sessionNav .btn.primary{min-height:50px}.sessionSummary{border-radius:20px;padding:16px}
- #pxAccountTools{width:calc(100% - 24px)!important;max-width:calc(100% - 24px)!important;margin:12px 12px calc(var(--px-mobile-clearance) + env(safe-area-inset-bottom,0px))!important;scroll-margin-bottom:calc(var(--px-mobile-clearance) + env(safe-area-inset-bottom,0px));border-radius:16px}
- #pxAccountTools button{min-height:44px;border-radius:11px}#pxSyncPill{scroll-margin-bottom:calc(var(--px-mobile-clearance) + env(safe-area-inset-bottom,0px))}
- #pxCommercialGate{padding:20px;background:var(--bg);color:var(--text);overflow-y:auto}
- #pxCommercialGate .pxAuthBox{background:var(--card);border-color:var(--line);padding:24px 20px;border-radius:24px;box-shadow:var(--shadow)}
- #pxCommercialGate h2{font-size:28px;line-height:1.3;margin-bottom:10px}#pxCommercialGate p{font-size:13px;line-height:1.65;color:var(--muted)}
- #pxCommercialGate input{font-size:16px;min-height:50px;margin:7px 0 14px;padding:13px;border-radius:13px;background:var(--soft);color:var(--text);border-color:var(--line)}
- #pxCommercialGate .pxAuthActions{display:grid;grid-template-columns:minmax(0,1fr);gap:9px;margin:20px 0 14px}#pxCommercialGate button{min-height:48px;font-size:14px;border-radius:13px}#pxCommercialGate .pxSoft{background:var(--soft);color:var(--text);border:1px solid var(--line)}
- #pxCommercialGate #pxLoginMessage{border-top:1px solid var(--line);padding-top:14px;margin-bottom:0}
- .connectionBanner{border-radius:13px;top:4px;font-size:12px}.versionBadge{font-size:10px}
-}
-@media(max-width:650px){#intelligence .pxAnatomyMobileTabs{display:flex!important;position:sticky!important;top:8px!important}}
-@media(max-width:360px){
- #calculators .formGrid{grid-template-columns:minmax(0,1fr)!important}
- .app{padding-inline:10px!important}.brand small{font-size:9px;max-width:190px}.pxMobilePageHeader h2{font-size:25px}
- .pxMobilePageHeader p{font-size:12px}.pxMobilePageDate{max-width:82px;padding:7px}
- body .bottomNav .navbtn{flex-direction:column;gap:3px;padding:4px!important}body .bottomNav .navbtn .label{font-size:9px!important}
- .section .panel{padding:13px!important;border-radius:18px!important}#home .hero h2{font-size:22px}
- #home .homeScoreRing{width:125px;height:125px}#nutrition .pxCalorieRing{width:124px;height:124px}#nutrition .pxCalorieDashboard{grid-template-columns:124px minmax(0,1fr)}
- .pxSessionSetRow{padding:8px;gap:5px}#intelligence{padding-inline:10px!important}
-}
-</style>
+
 
 <script id="px-mobile-design-init">
 function pxUpdateMobilePage(page){
@@ -10918,7 +11133,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </script>
 
 
-<style id="px-compact-food-selector">#nutrition .foodQuickGrid>*{min-width:0}#nutrition .foodSelect{min-width:0;max-width:100%;overflow:hidden}#foodQuickProduct{width:100%;min-width:0!important;max-width:100%;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}#foodQuickPreview strong,.foodLogCard b,.foodProductCard b,.recentFoodName{overflow-wrap:anywhere;min-width:0}@media(min-width:821px){#nutrition .foodQuickGrid{grid-template-columns:minmax(0,2fr) repeat(3,minmax(0,1fr)) auto}}@media(max-width:820px){#nutrition .foodQuickGrid>.foodSelect{min-width:0;max-width:100%;overflow:hidden}#foodQuickProduct{display:block;width:100%;min-width:0!important;max-width:100%;height:48px!important;min-height:48px!important;padding:10px 34px 10px 12px!important;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font-size:15px!important}html[dir="rtl"] #foodQuickProduct{padding:10px 12px 10px 34px!important}}</style>
+
 <script id="px-simple-insights">
 function pxExplain(en,ar){return document.documentElement.lang==='ar'?ar:en}
 function pxExerciseDecision(day,name,week){
@@ -10973,17 +11188,10 @@ function pxRenderExerciseExplanation(){
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{pxInitInsightLayout();pxRenderInsightSummary();},{once:true});else{pxInitInsightLayout();pxRenderInsightSummary();}
 </script>
-<style id="px-simple-insights-style">
-#intelligence>.hero .eyebrow{display:none}#intelligence>.hero p{font-size:12px}#intelligence>.hero h2{font-size:23px;margin:0 0 8px}
-.pxInsightGroup>summary,.pxWeeklyNumbers>summary{font-size:16px;font-weight:800;cursor:pointer;min-height:48px;display:flex;align-items:center;justify-content:space-between;gap:12px;list-style:none}.pxInsightGroup>summary:after,.pxWeeklyNumbers>summary:after{content:'+';font-size:23px;color:var(--muted)}.pxInsightGroup[open]>summary:after,.pxWeeklyNumbers[open]>summary:after{content:'−'}.pxInsightGroup>.panel{border:0!important;box-shadow:none!important;background:transparent!important;padding:12px 0!important}.pxInsightSummaryGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}.pxInsightSummaryGrid article,.pxDecisionCard{border:1px solid var(--line);background:var(--card2);padding:15px;border-radius:16px;min-width:0}.pxInsightSummaryGrid article>b{display:block;font-size:21px;margin:8px 0}.pxInsightSummaryGrid p,.pxDecisionCard p{font-size:13px;line-height:1.7;color:var(--muted);overflow-wrap:anywhere}.pxInsightSummaryGrid small{color:var(--muted);font-size:12px}.pxInsightSummaryGrid button{width:100%}.pxDecisionCard{margin:10px 0}.pxDecisionTop{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}.pxDecisionTop b{min-width:0;overflow-wrap:anywhere}.pxDecisionCard>strong{display:block;font-size:14px;line-height:1.7}.pxDecisionEvidence{background:var(--soft);border-radius:10px;padding:10px;font-variant-numeric:tabular-nums}.pxWeeklyNumbers{margin:16px 0;border-top:1px solid var(--line);padding-top:8px}#v2MuscleCards .v2MuscleTrack{display:none}@media(max-width:820px){#intelligence>.hero{padding:14px!important}#intelligence>.hero p{display:none}#intelligence>.hero h2{font-size:20px;margin:0 0 12px}.pxInsightSummaryGrid{grid-template-columns:1fr}.pxInsightGroup.panel{padding:10px 15px!important}.pxInsightGroup>.panel{padding:12px 0!important}.pxInsightGroup>summary{font-size:15px}.pxDecisionCard{padding:13px}}
-</style>
 
 
-<style id="px-home-hub-style">
-#home .hero .actions{display:none}#home .hero p{max-width:55ch}
-.pxHomeHub{order:0;margin:0 0 14px}.pxHomeHubHead{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.pxHomeHubHead h3{margin:0}.pxHomeHubGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pxHomeAction{min-width:0;padding:16px;border:1px solid var(--line);border-radius:18px;background:var(--card);display:flex;flex-direction:column;gap:9px}.pxHomeAction h4{margin:0;font-size:15px}.pxHomeAction b{font-size:21px;overflow-wrap:anywhere}.pxHomeAction p{margin:0;font-size:12px;color:var(--muted);line-height:1.6}.pxHomeAction .btn{margin-top:auto;min-height:46px;white-space:normal}.pxHomeAction .btn+.btn{margin-top:0}.pxHomeAction progress{width:100%;height:8px;accent-color:var(--cyan)}.pxHomeMore{order:6;border:1px solid var(--line);border-radius:18px;padding:14px;margin:0 0 14px;background:var(--card)}.pxHomeMore>summary{cursor:pointer;font-weight:800;min-height:28px}.pxHomeMore[open]>summary{margin-bottom:14px}.pxHomeMore .panel{margin-bottom:10px}.pxHomeHint{font-size:12px;color:var(--muted);line-height:1.7;margin:10px 0 0}
-@media(max-width:380px){.pxHomeAction{padding:12px;gap:8px}.pxHomeAction b{font-size:18px}.pxHomeHubHead{align-items:flex-start}}@media(min-width:1000px){.pxHomeHubGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-</style>
+
+
 <script id="px-home-hub">
 function pxHomeJump(page,id){go(page);if(typeof pxRevealNavigationTarget==='function')pxRevealNavigationTarget($(id));requestAnimationFrame(()=>{const el=page==='nutrition'&&id==='foodQuickProduct'?document.querySelector('#pxUsualFoodGrid button')||document.getElementById(id):document.getElementById(id);if(!el)return;el.scrollIntoView({block:'center',behavior:pxScrollBehavior()});if(el.matches('input,select,button'))el.focus({preventScroll:true})})}
 function pxRenderHomeHub(){
@@ -11015,9 +11223,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&currentPa
 </script>
 
 
-<style id="px-daily-convenience-style">
-.pxRepeatMeals{margin:12px 0;border:1px solid var(--line);border-radius:16px;padding:13px;background:var(--card2)}.pxRepeatMeals>summary{cursor:pointer;font-weight:800;min-height:30px}.pxRepeatMeals label{display:block;margin:12px 0 5px;font-size:12px;color:var(--muted)}.pxRepeatMeals select{width:100%;min-width:0;max-width:100%;min-height:46px}.pxRepeatMeals ul{list-style:none;padding:0;font-size:13px;line-height:1.8;overflow-wrap:anywhere}.pxRepeatMeals li{padding:5px 0;border-bottom:1px solid var(--line)}.pxRepeatMeals .btn{min-height:46px;white-space:normal;width:100%}.pxRepeatMeals p{font-size:12px;line-height:1.6}.pxDraftNotice{font-size:12px;color:var(--muted);line-height:1.6;margin-top:9px}
-</style>
+
 <script id="px-daily-convenience">
 function pxSessionDraft(){const map=workoutSession?.drafts,d=map&&Object.hasOwn(map,currentSessionExercise())?map[currentSessionExercise()]:null;return d&&typeof d.performance==='string'&&typeof d.notes==='string'&&typeof d.time==='string'&&Array.isArray(d.sets)&&d.sets.every(s=>s&&((typeof s.raw==='string')||(typeof s.weight==='string'&&typeof s.reps==='string')))?d:null}
 function pxSavedSessionInfo(){try{const s=JSON.parse(PXStore.getItem(WORKOUT_SESSION_KEY));return s&&typeof s.day==='string'&&Number.isInteger(s.week)&&s.week>0&&Array.isArray(s.exercises)&&s.exercises.length?s:null}catch{return null}}
@@ -11076,10 +11282,7 @@ async function pxAddRepeatMeal(){
 </script>
 
 
-<style id="px-practical-progress-style">
-.pxWeekDigest{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0}.pxWeekDigest button{border:1px solid var(--line);border-radius:15px;background:var(--card2);color:var(--text);padding:13px 8px;min-height:100px;cursor:pointer;min-width:0}.pxWeekDigest button[aria-pressed="true"]{outline:2px solid var(--cyan);outline-offset:-2px}.pxWeekDigest b{display:block;font-size:27px;font-variant-numeric:tabular-nums}.pxWeekDigest span{display:block;font-size:12px;line-height:1.6;margin-top:5px}.pxWeekDigest .pxImproved b{color:var(--cyan)}.pxProgressPicker{margin:15px 0;min-width:0;max-width:100%;overflow:hidden}.pxProgressPicker label{display:block;font-weight:800;margin:12px 0 7px}.pxProgressPicker select{display:block;white-space:nowrap;width:100%;min-width:0;max-width:100%;min-height:48px;overflow:hidden;text-overflow:ellipsis}.pxProgressPicker select:focus-visible{outline-offset:-3px}.pxRecordedTrend{background:var(--card2);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}.pxRecordedTrend h4{margin:0 0 10px;font-size:17px}.pxRecordedTrend p,.pxProgressNote{font-size:12px;color:var(--muted);line-height:1.7;overflow-wrap:anywhere}.pxComparePair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}.pxComparePair>div{border:1px solid var(--line);background:var(--soft);padding:11px;border-radius:12px;min-width:0}.pxComparePair small,.pxComparePair strong{display:block;overflow-wrap:anywhere}.pxComparePair small{font-size:11px;color:var(--muted);line-height:1.7}.pxComparePair strong{font-size:16px;margin:8px 0;white-space:pre-line}.pxProgressHistory{border-top:1px solid var(--line);padding-top:8px;margin:13px 0}.pxProgressHistory>summary{min-height:44px;font-weight:800;cursor:pointer;display:flex;align-items:center}.pxProgressHistory>summary:after{content:"+";margin-inline-start:auto;font-size:22px;color:var(--muted)}.pxProgressHistory[open]>summary:after{content:"−"}.pxProgressHistory ol{list-style:none;padding:0;margin:0}.pxProgressHistory li{border-bottom:1px solid var(--line);padding:11px 0}.pxProgressHistory small{display:block;color:var(--muted);font-size:11px}.pxProgressHistory p{margin:6px 0;font-size:13px;overflow-wrap:anywhere}.pxWeekEmpty{padding:16px;border-radius:14px;background:var(--soft);font-size:13px;line-height:1.7}
-@media(max-width:360px){.pxWeekDigest button{padding:10px 5px}.pxWeekDigest span{font-size:11px}.pxRecordedTrend{padding:11px}.pxComparePair>div{padding:9px}.pxComparePair strong{font-size:14px}}
-</style>
+
 <script id="px-practical-progress">
 function pxRecordedKey(day,name){return JSON.stringify([normWorkoutText(day),normWorkoutText(name)])}
 function pxRecordedDate(row){return !!row&&/^\d{4}-\d{2}-\d{2}$/.test(String(row.date))&&shiftDateKey(row.date,0)===row.date&&row.date<=localDateKey()}
@@ -11154,9 +11357,7 @@ function pxRenderPracticalWeek(week){
 </script>
 
 
-<style id="px-save-safety-style">
-.pxSavePanel{margin:0 0 14px;border:1px solid var(--line);border-radius:15px;background:var(--card2);padding:10px 13px;min-width:0}.pxSavePanel>summary{min-height:44px;cursor:pointer;display:flex;align-items:center;gap:9px;font-size:13px;font-weight:800;list-style:none}.pxSavePanel>summary:before{content:'';width:9px;height:9px;border-radius:50%;background:var(--muted);flex-shrink:0}.pxSavePanel[data-state="synced"]>summary:before{background:var(--cyan)}.pxSavePanel[data-state="pending"]>summary:before,.pxSavePanel[data-state="offline"]>summary:before{background:#fbbf24}.pxSavePanel[data-state="error"]>summary:before,.pxSavePanel[data-state="conflict"]>summary:before{background:var(--bad)}.pxSavePanel>summary:after{content:'+';margin-inline-start:auto;font-size:20px}.pxSavePanel[open]>summary:after{content:'−'}.pxSavePanel p{font-size:12px;line-height:1.7;color:var(--muted);overflow-wrap:anywhere}.pxSavePanel dl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;font-size:12px}.pxSavePanel dd{margin:0;font-variant-numeric:tabular-nums}.pxSavePanel .btn{min-height:44px;white-space:normal}.pxFoodUndo{position:sticky;top:8px;z-index:30;order:-1;margin:12px 0;padding:12px;border:1px solid var(--line);border-radius:15px;background:var(--card2);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.pxFoodUndo[hidden]{display:none}.pxFoodUndo p{margin:0;font-size:12px;line-height:1.6;flex:1;min-width:150px;overflow-wrap:anywhere}.pxFoodUndo .btn{min-height:44px}.pxFoodUndo small{display:block;color:var(--muted);font-size:11px}
-</style>
+
 <script id="px-save-safety">
 const PX_FOOD_UNDO_KEY='progressxx-food-last-undo-v1',PX_FOOD_DELETES_KEY='progressxx-food-delete-outbox-v1';
 const pxTrackedWrites=new Map();
@@ -11231,7 +11432,7 @@ function pxSaveStatusModel(){
 function pxRenderSavePanel(){
  const header=document.querySelector('.pxMobilePageHeader');if(!header)return;let el=$('pxSavePanel');if(!el){el=document.createElement('details');el.id='pxSavePanel';el.className='pxSavePanel';el.setAttribute('data-px-user','1');el.innerHTML='<summary><span id="pxSaveLabel" role="status" aria-live="polite"></span></summary><p id="pxSaveExplanation"></p><dl id="pxSaveCounts"></dl><p id="pxSaveDrafts"></p><button id="pxSaveRetry" class="btn soft" type="button"></button>';header.after(el);$('pxSaveRetry').onclick=pxRetryVisibleSave}
  const model=pxSaveStatusModel(),labels={draft:['Exercise draft • not recorded yet','مسودة تمرين • لسه مش مسجلة'],error:['Local save needs attention','الحفظ على الجهاز محتاج مراجعة'],conflict:['Sync paused • review changes','المزامنة متوقفة • راجع التغييرات'],offline:['Offline • check local changes','غير متصل • راجع التغييرات المحلية'],saving:['Saving changes…','جاري حفظ التغييرات…'],pending:['Saved on device • sync pending','محفوظ على الجهاز • المزامنة معلقة'],synced:['Cloud save confirmed','تم تأكيد الحفظ في السحابة'],local:['On this device • cloud not confirmed','على الجهاز ده • السحابة غير مؤكدة']};el.dataset.state=model.state;
- const label=pxExplain(...labels[model.state]);if($('pxSaveLabel').textContent!==label)$('pxSaveLabel').textContent=label;$('pxSaveExplanation').textContent=pxExplain('Local and cloud saves are different. Pending changes need sync; conflicts need review before retrying.','الحفظ على الجهاز والحفظ في السحابة حالتين مختلفتين. التغييرات المعلقة محتاجة مزامنة، وأي تعارض محتاج مراجعة قبل المحاولة.');
+ const label=pxExplain(...labels[model.state]);if($('pxSaveLabel').textContent!==label)$('pxSaveLabel').textContent=label;$('pxSaveExplanation').textContent=pxExplain('Pending changes need sync. Conflicts need review before retrying.','التغييرات المعلقة محتاجة مزامنة. التعارضات محتاجة مراجعة قبل المحاولة.');
  // Keep the pending-count list stable while someone is reading it.
  const countsMarkup=[['food','Pending food changes','تغييرات أكل معلقة'],['workout','Pending workout changes','تغييرات تمرين معلقة'],['weight','Pending weight check-ins','قياسات وزن معلقة'],['daily','Pending daily changes','تغييرات يوم معلقة']].filter(([key])=>model.counts[key]>0).map(([key,en,ar])=>'<dt>'+pxExplain(en,ar)+'</dt><dd>'+model.counts[key]+'</dd>').join('');if($('pxSaveCounts').innerHTML!==countsMarkup)$('pxSaveCounts').innerHTML=countsMarkup;
  $('pxSaveDrafts').textContent=model.drafts?model.drafts+' '+pxExplain('exercise draft(s) on this device. Use Save & Next to record them.','مسودة تمرين على الجهاز ده. استخدم حفظ والتالي لتسجيلها.'):pxExplain('Exercise drafts are separate from completed workout records.','مسودات التمرين منفصلة عن سجلات الأداء المكتمل.');
@@ -11250,10 +11451,7 @@ setInterval(()=>{if(!document.hidden){pxRenderSavePanel();pxRenderFoodUndo();if(
 </script>
 
 
-<style id="px-week-weight-usual-food-style">
-.pxWeeklyWeight{border:1px solid var(--line);border-radius:17px;background:var(--card2);padding:14px;margin:14px 0;min-width:0}.pxWeeklyWeight h3{margin:0 0 8px;font-size:18px}.pxWeeklyWeight p,.pxWeightReadings p{font-size:12px;line-height:1.7;color:var(--muted)}.pxWeightWeekPicker{min-width:0;max-width:100%;overflow:hidden;margin:12px 0}.pxWeightWeekPicker label{display:block;font-size:12px;margin-bottom:6px}.pxWeightWeekPicker select{display:block;width:100%;max-width:100%;min-width:0;min-height:46px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pxWeightWeekPicker select:focus-visible{outline-offset:-3px}.pxWeeklyWeightCards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.pxWeeklyWeightCards article{padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--soft);min-width:0}.pxWeeklyWeightCards strong{overflow-wrap:anywhere;display:block;font-size:24px;margin:8px 0;font-variant-numeric:tabular-nums}.pxWeeklyWeightCards small,.pxWeeklyWeightCards time{display:block;font-size:11px;color:var(--muted);line-height:1.7}.pxWeeklyWeightDelta{padding:12px;background:var(--soft);border-radius:12px;margin-top:12px;font-weight:800;font-size:14px}.pxWeeklyWeight details>summary,.pxWeightReadings>summary{display:flex;align-items:center;min-height:46px;font-weight:800;font-size:13px;cursor:pointer;gap:10px}.pxWeeklyWeight details>summary:after,.pxWeightReadings>summary:after{content:'+';margin-inline-start:auto;font-size:20px;color:var(--muted)}.pxWeeklyWeight details[open]>summary:after,.pxWeightReadings[open]>summary:after{content:'−'}.pxWeeklyWeight ol{list-style:none;padding:0;margin:0}.pxWeeklyWeight li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.75fr);gap:8px;padding:11px 0;border-top:1px solid var(--line);font-size:12px}.pxWeeklyWeight li b{overflow-wrap:anywhere;text-align:end;min-width:0}.pxWeeklyWeight li small{display:block;color:var(--muted);font-size:11px;margin-top:4px}.pxWeightReadings{margin:10px 0;border:1px solid var(--line);border-radius:14px;padding:10px 12px}.pxUsualFoods{margin:12px 0}.pxUsualFoodsHead{display:flex;justify-content:space-between;align-items:center;gap:9px;flex-wrap:wrap}.pxUsualFoodsHead h4{margin:0;font-size:15px}.pxUsualFoodsHead .btn{min-height:44px}.pxUsualFoods p{font-size:11px;color:var(--muted);line-height:1.6}.pxUsualFoodGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.pxUsualFood{display:flex;flex-direction:column;align-items:flex-start;text-align:start;gap:7px;padding:12px;background:var(--card2);color:var(--text);border:1px solid var(--line);border-radius:14px;cursor:pointer;min-width:0;min-height:94px}.pxUsualFood[aria-pressed="true"]{border-color:var(--cyan);box-shadow:inset 0 0 0 1px var(--cyan)}.pxUsualFood b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4;max-height:2.8em;font-size:13px;overflow-wrap:anywhere;max-width:100%}.pxUsualFood span{font-size:13px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;max-width:100%}.pxUsualFood small{font-size:10px;color:var(--muted);line-height:1.5}.pxUsualFoodEmpty{padding:10px 0;font-size:12px;color:var(--muted)}
-@media(max-width:360px){.pxWeeklyWeight{padding:11px}.pxWeeklyWeightCards article{padding:9px}.pxWeeklyWeightCards strong{font-size:21px}.pxUsualFood{padding:10px}}
-</style>
+
 <script id="px-week-weight-usual-food">
 function pxCalendarDate(value,today=localDateKey()){return typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value)&&shiftDateKey(value,0)===value&&value<=today}
 function pxCalendarWeekStart(date){const d=new Date(date+'T12:00:00Z');return shiftDateKey(date,-((d.getUTCDay()+6)%7))}
@@ -11320,44 +11518,7 @@ function pxRenderUsualFoods(){
 </script>
 
 
-<style id="px-food-calm-style">
-#nutrition>.panel{margin-bottom:12px!important;padding:16px!important}
-#nutrition .nutritionOrderDiary>.panelHead .tiny,#nutrition .nutritionOrderQuick>.panelHead .tiny,#nutrition .nutritionOrderToday>.panelHead .tiny{display:none!important}
-#nutrition .pxCalorieDashboard{gap:14px;margin:12px 0}
-#nutrition .pxCalorieEquation p{display:none}
-#nutrition .nutritionHero{gap:8px;margin:12px 0}
-#nutrition .macroCard{padding:10px 8px;border-radius:12px;box-shadow:none}
-#nutrition .macroCard span{font-size:11px}
-#nutrition .pxFoodShortcuts{display:none}
-#nutrition .pxFoodMealEmpty .foodMealMeta>.tiny,#nutrition .pxFoodMealEmpty .foodMealMeta>.pill{display:none}
-#nutrition .pxFoodMealEmpty .foodMealTitle{margin:0}
-#nutrition .pxFoodMealEmpty{background:transparent;padding:8px 10px;border-style:dashed}
-#nutrition .pxFoodDateRow{margin:12px 0 4px}
-#nutrition .pxFoodDateRow input{width:100%;min-width:0;min-height:44px}
-#nutrition .pxFoodCalmDetails{border-top:1px solid var(--line);margin-top:12px;padding-top:4px}
-#nutrition .pxFoodCalmDetails>summary,#nutrition>.nutritionOrderLibrary>summary{display:flex;align-items:center;gap:10px;min-height:48px;cursor:pointer;font-size:13px;font-weight:800;list-style:none}
-#nutrition .pxFoodCalmDetails>summary:after,#nutrition>.nutritionOrderLibrary>summary:after{content:'+';margin-inline-start:auto;font-size:21px;color:var(--muted)}
-#nutrition .pxFoodCalmDetails[open]>summary:after,#nutrition>.nutritionOrderLibrary[open]>summary:after{content:'−'}
-#nutrition .pxFoodCalmDetails>summary::-webkit-details-marker,#nutrition>.nutritionOrderLibrary>summary::-webkit-details-marker{display:none}
-#nutrition .pxUsualFoods:has(.pxUsualFoodEmpty)>p,#nutrition .pxUsualFoodEmpty{display:none}
-#nutrition .pxUsualFoods{margin:4px 0 14px}
-#nutrition .pxUsualFoodsHead h4{font-size:13px;color:var(--muted)}
-#nutrition .pxUsualFoodsHead .btn{font-size:12px;padding:8px 10px;min-height:44px}
-#nutrition .pxUsualFood{min-height:68px;padding:9px 11px;gap:3px;border-radius:12px}
-#nutrition .pxUsualFood small{display:none}
-#nutrition .pxUsualFood span{font-size:11px;color:var(--muted)}
-#nutrition .foodQuickGrid{gap:10px}
-#nutrition .foodQuickGrid>button{grid-column:1/-1;min-height:48px}
-#nutrition #foodQuickPreview{box-shadow:none;border-radius:12px;font-size:12px;line-height:1.7;padding:12px}
-#nutrition .nutritionOrderQuick>.panelHead{margin-bottom:8px}
-#nutrition>.nutritionOrderLibrary:not([open]){padding-block:8px!important}
-#nutrition>.nutritionOrderLibrary>summary{font-size:15px}
-#nutrition>.nutritionOrderLibrary>.panelHead h3{display:none}
-#nutrition .pxFoodCalmDetails .pxFoodShortcuts{display:flex;margin:8px 0;gap:8px}
-#nutrition .pxFoodCalmDetails .pxFoodShortcuts>button:first-child{display:none}
-#nutrition .pxFoodCalmDetails .pxFoodShortcuts>button{flex:1;min-height:44px}
-@media(max-width:600px){#nutrition .foodQuickGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}#nutrition .foodQuickGrid>.foodSelect{grid-column:1/-1}#nutrition .pxCalorieDashboard{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}#nutrition .pxCalorieRing{width:130px!important;height:130px!important;max-width:100%;margin:auto}#nutrition .pxCalorieEquation{min-width:0}#nutrition .pxCalorieEquation b{font-size:20px}#nutrition .pxCalorieRing b{font-size:28px}#nutrition .pxCalorieRing span{font-size:10px}}
-</style>
+
 <script id="px-food-calm">
 function pxFoodCalmDetails(id,en,ar){const d=document.createElement('details');d.id=id;d.className='pxFoodCalmDetails';const summary=document.createElement('summary');summary.dataset.pxUser='1';summary.dataset.foodCalmEn=en;summary.dataset.foodCalmAr=ar;d.append(summary);return d}
 function pxFoodCalmLabels(){document.querySelectorAll('[data-food-calm-en]').forEach(el=>el.textContent=pxExplain(el.dataset.foodCalmEn,el.dataset.foodCalmAr))}
@@ -11373,11 +11534,7 @@ function pxInitFoodCalm(){
 pxInitFoodCalm();
 </script>
 
-<style id="px-food-workflow-style">
-.pxOptionalHidden{display:none!important}.pxWorkflow{margin:12px 0;border:1px solid var(--line);border-radius:14px;padding:12px;min-width:0;background:var(--card2)}.pxWorkflow>summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:800;font-size:13px}.pxWorkflow p{font-size:12px;line-height:1.7;color:var(--muted)}.pxWorkflow label{display:block;font-size:12px;margin:10px 0 5px}.pxWorkflow input,.pxWorkflow select{width:100%;min-width:0;max-width:100%;min-height:44px}.pxWorkflow .btn{min-height:44px;white-space:normal}.pxWorkflowGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pxWorkflowGrid>*{min-width:0}.pxWorkflow .wide{grid-column:1/-1}.pxWorkflowChecks label{display:flex;align-items:center;gap:9px;min-height:44px;margin:4px 0}.pxWorkflowChecks input{width:20px;min-height:20px;height:20px;flex:0 0 20px}.pxBatchChoice{display:flex;gap:8px;align-items:center;min-height:44px;font-size:12px}.pxBatchChoice input{width:20px;height:20px}.pxWorkflowRow{display:flex;align-items:center;gap:8px;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:12px;overflow-wrap:anywhere}.pxWorkflowRow>span{min-width:0}.pxWorkflow .pxWorkflowStatus{font-size:12px;line-height:1.7;overflow-wrap:anywhere}.pxReportDialog{box-sizing:border-box;width:min(640px,calc(100% - 24px));max-height:88dvh;overflow:auto;border:1px solid var(--line);border-radius:20px;background:var(--card);color:var(--text);padding:20px}.pxReportDialog::backdrop{background:#000b}.pxReportDialog h2{font-size:22px}.pxReportDialog table{width:100%;border-collapse:collapse;font-size:13px}.pxReportDialog td,.pxReportDialog th{padding:12px 8px;border-bottom:1px solid var(--line);text-align:start;overflow-wrap:anywhere}.pxReportDialog p{font-size:13px;line-height:1.8}.pxReportDialog .actions{flex-wrap:wrap}.pxReportDialog .btn{min-height:44px}.pxLibraryArchiveButton{min-height:44px!important}.pxReportOpener{margin-top:12px}
-@media(max-width:400px){.pxWorkflowGrid{grid-template-columns:minmax(0,1fr)}}
-@media print{body.pxPrintingReport>*{display:none!important}body.pxPrintingReport>#pxWeeklyReportDialog{display:block!important;position:static!important;max-height:none!important;width:100%!important;border:0;background:white;color:black}body.pxPrintingReport #pxWeeklyReportDialog .actions{display:none!important}}
-</style>
+
 <script id="px-food-workflow">
 const PX_FOOD_WORKFLOW_KEY='progressxx-food-workflow-prefs-v1';
 let pxWorkflowCache=null,pxBatchSelection=new Set(),pxBatchScope=null,pxBatchDate='',pxReportReturn=null,pxWorkflowUIScope=null;
@@ -11428,10 +11585,7 @@ function pxRenderFoodWorkflow(){if(!$('pxPortionTools'))return;const scope=pxSaf
 pxInitFoodWorkflow();
 </script>
 
-<style id="px-insight-evidence-style">
-#pxInsightOverview{background:transparent!important;border:0!important;padding:0!important;box-shadow:none!important;min-width:0}.pxInsightPeriod{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin:0 0 12px}.pxInsightPeriod label{font-size:12px;font-weight:800;display:block;margin:0 0 6px}.pxInsightPeriod>div{flex:1;min-width:0}.pxInsightPeriod select{display:block;width:100%;min-width:0;max-width:100%;min-height:46px;white-space:nowrap;text-overflow:ellipsis}.pxInsightLead{border:1px solid var(--line);border-inline-start:4px solid var(--cyan);border-radius:18px;background:var(--card2);padding:17px;margin-bottom:12px}.pxInsightLead h3{font-size:20px;margin:7px 0 10px;line-height:1.5}.pxInsightLead h3,.pxInsightLead p{overflow-wrap:anywhere}.pxInsightLead p{font-size:13px;line-height:1.8;margin:8px 0;color:var(--muted)}.pxInsightLead small{font-size:11px;color:var(--muted)}.pxInsightLead .btn{min-height:46px;white-space:normal}.pxEvidenceGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.pxEvidenceGrid article{min-width:0;padding:16px;border:1px solid var(--line);border-radius:18px;background:var(--card)}.pxEvidenceGrid article h4{font-size:13px;color:var(--muted);margin:0 0 10px}.pxEvidenceResult{font-size:19px;font-weight:800;line-height:1.55;overflow-wrap:anywhere}.pxEvidenceGrid p{font-size:12px;line-height:1.8;color:var(--muted);margin:10px 0;overflow-wrap:anywhere}.pxEvidenceGrid .btn{min-height:44px;width:100%;white-space:normal}.pxInsightEvidence{margin-top:13px;border-top:1px solid var(--line)}.pxInsightEvidence>summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-size:12px;font-weight:800;gap:8px}.pxInsightEvidence>summary:after{content:'+';margin-inline-start:auto;font-size:20px;color:var(--muted)}.pxInsightEvidence[open]>summary:after{content:'−'}.pxInsightEvidenceRow{padding:11px 0;border-top:1px solid var(--line);font-size:12px;line-height:1.8;overflow-wrap:anywhere}.pxInsightEvidenceRow b{display:block}.pxInsightEvidenceRow small{display:block;color:var(--muted);white-space:pre-line}.pxInsightSourceNote{font-size:11px;line-height:1.8;color:var(--muted);margin:12px 0}.pxInsightLive{font-size:11px;color:var(--muted);margin:10px 0}.pxInsightFact{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.pxInsightSecondary{margin-top:8px}.pxInsightPeriod select:focus-visible{outline-offset:-3px}
-@media(max-width:900px){.pxEvidenceGrid{grid-template-columns:minmax(0,1fr)}}
-</style>
+
 <script id="px-insight-evidence">
 let pxInsightPeriodState={scope:null,start:null},pxInsightFrame=null,pxInsightRenderedDay=null;
 function pxInsightNumber(value){if(value===null||value===undefined||!['number','string'].includes(typeof value)||typeof value==='string'&&!value.trim())return null;const n=Number(value);return Number.isFinite(n)&&n>=0?n:null}
@@ -11504,15 +11658,7 @@ function pxRefreshInsightIfVisible(){if(!$('intelligence')?.classList.contains('
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)pxRefreshInsightIfVisible()});window.addEventListener('focus',pxRefreshInsightIfVisible);setInterval(()=>{if(!document.hidden&&pxInsightRenderedDay!==localDateKey())pxRefreshInsightIfVisible()},60000);
 </script>
 
-<style id="px-daily-progress-workspace-style">
-.pxWorkspaceNav{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.pxWorkspaceNav button{flex:1 1 100px;min-height:46px;white-space:normal;line-height:1.4}.pxWorkspaceNav [aria-pressed=true]{background:var(--soft);color:var(--text);border-color:var(--accent2)}
-#pxLatestWeight{margin:12px 0 18px}#pxLatestWeight .pxLatestPair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pxLatestPair article{min-width:0;padding:15px;border:1px solid var(--line);border-radius:16px;background:var(--card2)}.pxLatestPair article:last-child{border-color:var(--accent2)}.pxLatestPair small,.pxLatestPair time{display:block;color:var(--muted);font-size:12px;line-height:1.6}.pxLatestPair strong{display:block;font-size:clamp(23px,6vw,34px);margin:8px 0;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.pxLatestDelta{margin:9px 0;font-size:14px;line-height:1.6}.pxWorkspaceDisclosure{padding:13px;border:1px solid var(--line);border-radius:16px;margin:12px 0;min-width:0}.pxWorkspaceDisclosure>summary{cursor:pointer;min-height:44px;font-size:15px;font-weight:750;align-content:center}.pxWorkspaceDisclosure>.panel{margin:10px 0!important}.pxWorkspaceDisclosure>summary:focus-visible,.pxWorkspaceNav button:focus-visible{outline:2px solid var(--accent2);outline-offset:3px}
-#analytics .progressOrderWeight{order:1}#analytics .progressOrderWeekly{order:2}#pxProgressJump{order:0}#pxProgressExtras{order:3}#analytics .progressPhotoForm{padding:14px;border-radius:16px;background:var(--card2);border:1px solid var(--line)}#analytics .progressPhotoForm label{display:block;margin-bottom:7px}#analytics .progressPhotoForm input{font-size:17px;min-height:48px}#analytics .progressPhotoForm .btn{min-height:48px}#analytics .pxComparePair strong{font-size:22px}#analytics .pxComparePair{gap:10px}
-#daily .dailyShell>.statGrid{order:3;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px}#daily .dailyShell>.statGrid .stat{padding:9px 6px!important}#daily .dailyShell>.statGrid .stat b{font-size:18px!important}#daily .dailyShell>.statGrid .stat span{font-size:10px;line-height:1.5;min-height:30px}#daily .dailyOrderWater .dailyActions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}#daily .dailyOrderWater .dailyActions>.btn{width:auto!important;min-width:0!important;padding:9px 5px;font-size:12px}#daily .dailyOrderWater .formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px}#daily .dailyOrderWater .formGrid input{min-width:0}#daily .dailyOrderReminders .dailyActions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}#daily .dailyOrderReminders .dailyActions>.btn{width:auto!important;min-width:0!important;padding:9px 5px;font-size:12px}#daily .dailyOrderWater{order:4}#daily .dailyOrderReminders{order:5}#daily .dailyOrderHistory{order:6}#daily .dailyOrderReminders .reminderCard{padding:12px;margin:0;background:var(--card2);border:1px solid var(--line);border-radius:14px}#daily .reminderGrid{display:grid;grid-template-columns:1fr;gap:8px}#daily .reminderTop{align-items:center;margin:0}#daily .reminderTop button{min-height:46px;flex-shrink:0}#daily .reminderName{font-size:15px;line-height:1.5}#daily .reminderMeta{font-size:12px}#daily .reminderTop .reminderMeta{color:var(--muted)}#daily .reminderName{overflow-wrap:anywhere}#daily .dailyOrderReminders>.panelHead{gap:9px}#daily .dailyOrderReminders>.panelHead h3{margin:0}#daily .dailyOrderHistory{border:1px solid var(--line);border-radius:16px}#daily .dailyShell>.statGrid .stat{padding:11px}#daily .dailyShell>.statGrid .stat b{font-size:21px}
-.pxDailyMove{display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--line);padding-top:9px;margin-top:9px}.pxDailyMove button{min-height:44px;min-width:44px}.pxDailyMove[hidden]{display:none}.pxDailyManageItem{padding:12px 0;border-bottom:1px solid var(--line)}.pxDailyManageItem>b{display:block;margin-bottom:6px;overflow-wrap:anywhere}.pxDailyManageItem .reminderControls{display:grid;grid-template-columns:1fr;gap:10px}.pxDailyManageItem input{max-width:100%;min-width:0}.pxDailyManageItem .pxReminderEdit{width:100%}#pxDailyManagement{scroll-margin-top:95px}#pxDailyManagement .dailyForm{display:none}#pxDailyManagement .notifyBanner{margin-top:12px}
-#pxInsightQuestions{margin:15px 0}#pxInsightOverview .pxEvidenceGrid{grid-template-columns:1fr}#pxInsightOverview .pxEvidenceGrid>article[hidden]{display:none}#pxInsightOverview .pxEvidenceResult{font-size:22px;line-height:1.5}#pxInsightOverview .pxInsightLead{margin-bottom:12px;padding:17px}#pxInsightOverview .pxInsightLead h3{font-size:20px;line-height:1.5}.pxInsightLead[hidden]{display:none!important}.pxInsightSnapshot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}.pxInsightSnapshot div{padding:12px;background:var(--soft);border-radius:12px;min-width:0}.pxInsightSnapshot b,.pxInsightSnapshot small{display:block;overflow-wrap:anywhere}.pxInsightSnapshot b{font-size:19px;margin:6px 0;font-variant-numeric:tabular-nums}.pxInsightSnapshot small{font-size:12px;color:var(--muted);line-height:1.6}.pxInsightQuickCompare{border-inline-start:3px solid var(--accent2);padding:10px 12px;margin:12px 0;border-radius:8px;background:var(--soft)}.pxInsightQuickCompare strong,.pxInsightQuickCompare small{display:block;line-height:1.6;overflow-wrap:anywhere}.pxInsightQuickCompare p{margin:6px 0;font-size:14px;line-height:1.6}.pxInsightTrainingList{margin:12px 0}.pxInsightTrainingList button{display:block;width:100%;text-align:start;white-space:normal;min-height:48px;margin:7px 0;overflow-wrap:anywhere}
-@media(min-width:700px){#pxInsightOverview .pxInsightSnapshot{grid-template-columns:repeat(2,minmax(0,1fr))}#daily .reminderGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-</style>
+
 <script id="px-daily-progress-workspace">
 let pxDailyArrange=false,pxInsightQuestion='training',pxInsightQuestionScope=null;
 function pxWorkspaceNode(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;n.dataset.pxUser='1';return n}
@@ -11576,14 +11722,7 @@ function pxInitDailyProgressWorkspace(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',pxInitDailyProgressWorkspace,{once:true});else pxInitDailyProgressWorkspace();
 </script>
 
-<style id="px-compact-navigation-style">
-.pxMobilePageHeader{display:flex;align-items:center;gap:12px;min-width:0;margin:0 0 10px}.pxMobilePageHeader>div{min-width:0;flex:1}.pxMobilePageHeader h2{overflow-wrap:anywhere}.pxMobilePageHeader>.pxMobilePageDate,.pxMobilePageHeader>.pxPageSectionButton{flex-shrink:0}.pxPageSectionButton{min-width:44px;min-height:44px;border:1px solid var(--line);background:var(--card2);color:var(--text);border-radius:12px;padding:8px;font-size:12px;cursor:pointer;max-width:100px;line-height:1.5}.pxMobilePageHeader>.pxPageSectionButton{margin-inline-start:auto}#pxRepeatFoodMore[hidden],#pxFoodLibraryPager button[hidden],#pxPageSectionsButton[hidden]{display:none!important}.section h3[tabindex="-1"]:focus-visible{outline:2px solid var(--accent2);outline-offset:4px;border-radius:6px}.pxSectionHidden{display:none!important}#pxProgressExtras:not(:has(>.panel:not(.pxSectionHidden),>.two:not(.pxSectionHidden))){display:none}.pxFocusNotice{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--line);border-radius:14px;padding:9px 12px;margin:10px 0;background:var(--card2);order:-2;font-size:12px}.pxFocusNotice[hidden]{display:none}.pxFocusNotice button{min-height:44px;white-space:normal}.pxFoodSections{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;order:0;margin:0 0 12px}.pxFoodSections button{min-width:0;min-height:48px;white-space:normal;font-size:12px;line-height:1.4;padding:8px 4px;border-radius:13px;background:var(--card2);border:1px solid var(--line);color:var(--text);cursor:pointer}.pxFoodSections [aria-pressed=true]{border-color:var(--accent2);box-shadow:inset 0 0 0 1px var(--accent2)}
-#nutrition>.panel{padding:13px!important}#nutrition .nutritionOrderDiary>.panelHead{margin-bottom:7px}#nutrition .pxFoodDateRow{margin:5px 0 7px}#nutrition .pxFoodDateRow label{font-size:11px}#nutrition .pxFoodDateRow input{min-height:44px;font-size:14px}#nutrition .pxCalorieDashboard{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)!important;margin:8px 0;gap:10px}#nutrition .pxCalorieRing{width:auto!important;height:auto!important;aspect-ratio:auto!important;border-radius:14px!important;padding:2px;max-width:100%;margin:0;background:var(--line)}#nutrition .pxCalorieRing>div{min-height:82px;border-radius:12px;padding:9px}#nutrition .pxCalorieRing b{font-size:27px}#nutrition .pxCalorieEquation{display:flex;gap:12px;justify-content:space-between}#nutrition .pxCalorieEquation>div{margin:0;min-width:0}#nutrition .pxCalorieEquation span{font-size:10px}#nutrition .pxCalorieEquation b{font-size:19px;overflow-wrap:anywhere}#nutrition .nutritionHero{margin:8px 0;gap:6px}#nutrition .nutritionHero>.macroCard:first-child{display:none}#nutrition .nutritionHero .macroCard{padding:8px 6px}#nutrition .nutritionHero .macroCard b{font-size:13px}#nutrition .nutritionHero .macroCard span{font-size:10px}#nutrition .pxFoodCalmDetails{margin-top:6px;padding-top:0}#nutrition #pxFoodDayTools>summary{min-height:44px}
-#nutrition .pxUsualFoods{margin:6px 0 10px}#nutrition .pxUsualFoodsHead{gap:7px}#nutrition .pxUsualFoodsHead .btn{font-size:11px;min-height:44px;padding:6px 8px}#nutrition .pxUsualFoods>p{display:none}#nutrition .pxUsualFoodGrid{display:flex;overflow-x:auto;gap:7px;scroll-snap-type:x proximity;overscroll-behavior-x:contain;padding:3px 2px 8px;max-width:100%;scrollbar-width:thin}#nutrition .pxUsualFood{flex:0 0 140px;min-width:0;max-width:140px;min-height:62px;scroll-snap-align:start;padding:8px 10px}#nutrition .pxUsualFood b{font-size:12px}#nutrition .foodQuickGrid{gap:8px}#nutrition .foodQuickGrid label{font-size:11px}#nutrition #foodQuickPreview{padding:9px;margin-top:8px!important}#nutrition #foodQuickPreview:has(.pxFoodPreviewHead) .pxFoodPreviewMacros{gap:7px}#nutrition .pxFoodPreviewMacros b{font-size:13px}#nutrition .pxFoodPreviewMacros small{font-size:10px}#nutrition .pxMealDiaryItem{padding:9px 0}#nutrition .foodMealGroup{margin:8px 0;padding:10px;border-radius:14px}#nutrition .foodMealMeta{gap:5px}#nutrition .foodMealMeta>.tiny{display:none}#nutrition .foodMealTitle{font-size:14px;gap:6px}.pxQuickHeaderActions{display:flex;gap:7px;flex-wrap:wrap}.pxQuickHeaderActions .btn{min-height:44px;font-size:12px;padding:8px 10px}
-.pxNavDialog{width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 32px);border:1px solid var(--line);border-radius:22px;padding:17px;background:var(--card);color:var(--text);overflow:auto;overscroll-behavior:contain;box-sizing:border-box}.pxNavDialog::backdrop{background:#020617b8}.pxNavDialogHeader{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.pxNavDialogHeader h3{margin:0;font-size:18px}.pxNavDialogHeader button{min-width:44px;min-height:44px}.pxNavDialog p{font-size:12px;line-height:1.7;color:var(--muted)}.pxNavDialog input[type=search]{width:100%;min-height:46px;margin:8px 0 12px}.pxSectionOptions{display:grid;gap:8px}.pxSectionOptions>button{width:100%;min-height:48px;text-align:start;white-space:normal;overflow-wrap:anywhere}.pxFocusToggle{display:flex;align-items:center;gap:9px;font-size:13px;min-height:44px;margin-bottom:10px}.pxFocusToggle input{width:20px;height:20px;flex-shrink:0}.pxRepeatFoodRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.pxRepeatFoodRow b,.pxRepeatFoodRow small{display:block;overflow-wrap:anywhere}.pxRepeatFoodRow b{font-size:14px;line-height:1.5}.pxRepeatFoodRow small{font-size:12px;color:var(--muted);line-height:1.7}.pxRepeatFoodRow .btn{min-height:44px;font-size:12px;max-width:100px;white-space:normal}.pxRepeatFoodRow .pxRepeatUnavailable{color:var(--muted)}#pxBackToTop{position:fixed;bottom:calc(128px + env(safe-area-inset-bottom,0px));inset-inline-end:14px;z-index:60;width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:var(--card2);color:var(--text);box-shadow:var(--shadow);cursor:pointer}#pxBackToTop[hidden]{display:none}
-@media(max-width:820px){.topbar{margin-bottom:10px!important}.pxMobilePageHeader{align-items:center;margin-bottom:10px;min-height:44px}.pxMobilePageHeader h2{font-size:24px;margin:0}.pxMobilePageHeader p{display:none}.pxSavePanel{padding:2px 12px;margin-bottom:10px}.pxSavePanel[open]{padding:12px}.pxMobilePageDate{font-size:10px;padding:6px}.pxPageSectionButton{font-size:11px}}
-@media(min-width:821px){#pxBackToTop{bottom:22px}.pxFoodSections{grid-template-columns:repeat(4,minmax(0,1fr))}#nutrition .pxUsualFood{flex-basis:160px;max-width:160px}}
-</style>
+
 <script id="px-compact-navigation">
 let pxNavigationScope=null,pxNavigationFocus=new Map(),pxRepeatFoodLimit=8,pxRepeatFoodScope=null,pxNavigationOpener=null,pxRepeatFoodOpener=null;
 function pxCheckNavigationScope(){const scope=pxSafetyScope();if(pxNavigationScope!==scope){pxNavigationScope=scope;pxNavigationFocus.clear();document.querySelectorAll('.pxSectionHidden').forEach(n=>n.classList.remove('pxSectionHidden'));document.querySelectorAll('.pxFocusNotice').forEach(n=>n.hidden=true);for(const id of ['pxPageSectionsDialog','pxRepeatFoodDialog']){const d=$(id);if(d?.open)d.close()}$('pxRepeatFoodList')?.replaceChildren();if($('pxRepeatFoodSearch'))$('pxRepeatFoodSearch').value='';pxNavigationOpener=null;pxRepeatFoodOpener=null;pxRepeatFoodScope=null}}
@@ -11639,10 +11778,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </script>
 
 
-<style id="px-routine-style">
-#pxRoutineSessionTargets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}#pxRoutineSessionTargets[hidden]{display:none}#pxRoutineSessionTargets>b,#pxRoutineSessionTargets>small{grid-column:1/-1}#pxRoutineSessionTargets p{margin:0;font-size:12px;overflow-wrap:anywhere}
-#pxRoutineDialog{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:24px 24px 0 0;width:min(720px,100%);max-width:100%;max-height:90dvh;margin:auto auto 0;padding:18px;box-sizing:border-box}#pxRoutineDialog::backdrop{background:#000a}.pxRoutineHead{display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:-18px;background:var(--card);z-index:2;padding:8px 0}.pxRoutineFields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pxRoutineFields input,.pxRoutineFields select{width:100%;min-width:0;box-sizing:border-box}.pxRoutineRow{background:var(--card2);border:1px solid var(--line);border-radius:16px;padding:12px;margin:10px 0}.pxRoutineRow summary{cursor:pointer;min-height:44px;overflow-wrap:anywhere}.pxRoutineRow label{font-size:12px;display:grid;gap:5px}.pxRoutineRow .actions{flex-wrap:wrap}.pxRoutinePicker{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}.pxRoutinePicker input{box-sizing:border-box;width:100%}.pxRoutinePickerList{max-height:34dvh;overflow:auto}.pxRoutineChoice{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;background:var(--card2);border:1px solid var(--line);border-radius:14px;margin:7px 0}.pxRoutineChoice span{overflow-wrap:anywhere}.pxRoutineChoice button{flex-shrink:0}.pxRoutineFooter{position:sticky;bottom:-18px;background:var(--card);padding:12px 0;display:flex;gap:8px;flex-wrap:wrap;padding-bottom:max(12px,env(safe-area-inset-bottom))}
-</style>
+
 <script id="px-routine-builder">
 // Plans remain in the existing account-scoped, cloud-synchronized template envelope.
 // Exercise names remain immutable aliases for legacy session/history compatibility.
@@ -11676,19 +11812,10 @@ pxRoutineLauncher();
 </script>
 
 
-<style id="px-choice-picker-style">
-:is(#fExerciseSelect,#sessionExerciseSelect,#exerciseSelect,#pxProgressExercise,#v2Exercise,#foodQuickProduct){cursor:pointer;min-height:48px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
-#pxChoiceDialog{transition:none!important;box-sizing:border-box;width:min(600px,100%);max-width:100%;height:min(720px,var(--px-choice-height,88dvh));max-height:var(--px-choice-height,88dvh);top:auto;bottom:var(--px-choice-offset,0px);margin:0 auto;padding:0;border:1px solid var(--line);border-radius:24px 24px 0 0;background:var(--card);color:var(--text);box-shadow:var(--shadow);overflow:hidden}
-#pxChoiceDialog[open]{display:flex;flex-direction:column}#pxChoiceDialog::backdrop{background:rgba(0,0,0,.68)}
-.pxChoiceHead{padding:12px 18px 8px;flex-shrink:0}.pxChoiceHandle{width:42px;height:4px;border-radius:4px;background:var(--muted);opacity:.4;margin:0 auto 12px}.pxChoiceTitleRow{display:flex;align-items:center;justify-content:space-between;gap:12px}.pxChoiceTitleRow h2{margin:0;font-size:21px;line-height:1.4}.pxChoiceTitleRow button{min-height:44px;min-width:44px;padding:8px 12px}.pxChoiceContext{font-size:12px;color:var(--muted);margin:4px 0 12px;overflow-wrap:anywhere;line-height:1.6}.pxChoiceSearchWrap{position:relative}.pxChoiceSearchWrap>span{position:absolute;inset-inline-start:13px;top:13px;color:var(--muted);pointer-events:none}#pxChoiceSearch{box-sizing:border-box;width:100%;min-height:48px;padding-inline-start:40px;border-radius:14px;font-size:16px;background:var(--card2);color:var(--text);border:1px solid var(--line)}
-#pxChoiceCount{font-size:12px;color:var(--muted);min-height:20px;padding-top:9px}#pxChoiceList{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:0 12px 12px;scrollbar-width:thin}
-.pxChoiceOption{box-sizing:border-box;width:100%;min-height:64px;border:1px solid var(--line);border-radius:15px;background:var(--card2);color:var(--text);display:flex;align-items:center;gap:12px;padding:12px;margin:7px 0;text-align:start;cursor:pointer;font:inherit}.pxChoiceOption:hover{border-color:var(--cyan)}.pxChoiceOption[aria-pressed="true"]{border-color:var(--accent2);background:color-mix(in srgb,var(--accent2) 9%,var(--card2))}.pxChoiceOption:focus-visible{outline:2px solid var(--cyan);outline-offset:-3px}.pxChoiceBadge{width:36px;height:36px;border-radius:11px;background:var(--soft);display:grid;place-items:center;flex-shrink:0;font-size:18px}.pxChoiceCopy{flex:1;min-width:0}.pxChoiceCopy strong{display:block;font-size:15px;font-weight:650;line-height:1.45;overflow-wrap:anywhere}.pxChoiceCopy small{display:block;font-size:12px;color:var(--muted);line-height:1.5;margin-top:3px;overflow-wrap:anywhere}.pxChoiceMark{width:23px;height:23px;display:grid;place-items:center;flex-shrink:0;border-radius:50%;border:1.5px solid var(--muted);font-size:14px}.pxChoiceOption[aria-pressed="true"] .pxChoiceMark{background:var(--accent2);border-color:var(--accent2);color:#08120a}.pxChoiceEmpty{text-align:center;padding:28px 14px;line-height:1.7;color:var(--muted)}.pxChoiceMore{width:100%;min-height:44px;margin-top:8px}.pxChoiceFooter{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 18px max(12px,env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--card);font-size:12px;color:var(--muted);flex-shrink:0}.pxChoiceFooter button{min-height:44px}.pxChoiceFooter [hidden]{display:none!important}
-@media(min-width:821px){#pxChoiceDialog{inset:0;margin:auto;border-radius:24px;height:min(720px,var(--px-choice-height,84dvh));max-height:84dvh}}
-@media(prefers-reduced-motion:no-preference){#pxChoiceDialog[open]{animation:pxChoiceAppear .16s ease-out}@keyframes pxChoiceAppear{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}}
-</style>
+
 <script id="px-choice-picker">
 // Progressive enhancement: native selects and their existing change handlers remain authoritative.
-const PX_CHOICE_IDS=new Set(['fExerciseSelect','sessionExerciseSelect','exerciseSelect','pxProgressExercise','v2Exercise','foodQuickProduct']);
+const PX_CHOICE_IDS=new Set(['fExerciseSelect','sessionExerciseSelect','exerciseSelect','pxProgressExercise','v2Exercise','foodQuickProduct','dailyHistoryDate']);
 let pxChoiceState=null;
 function pxChoiceText(en,ar){return pxExplain(en,ar)}
 function pxChoiceNormalize(text){return String(text||'').normalize('NFKD').replace(/\p{M}/gu,'').toLocaleLowerCase().trim()}
@@ -11732,15 +11859,15 @@ function pxChoiceFoodMeta(id){
  const kcal=product.calories;return pxChoiceText('Per ','لكل ')+pxInsightLtr(serving+' '+unit)+(kcal!==null&&kcal!==undefined&&String(kcal).trim()!==''&&Number.isFinite(Number(kcal))&&Number(kcal)>=0?' · '+pxInsightLtr(Number(kcal)+' kcal'):'');
 }
 function pxChoiceRender(){
- const s=pxChoiceState;if(!s)return;const food=s.source.id==='foodQuickProduct',ar=document.documentElement.dir==='rtl',dialog=$('pxChoiceDialog');dialog.dir=ar?'rtl':'ltr';
- $('pxChoiceTitle').textContent=food?pxChoiceText('Choose food','اختار أكلة'):pxChoiceText('Choose exercise','اختار تمرين');$('pxChoiceClose').textContent=pxChoiceText('Close','إغلاق');
- let context='';if(food)context=pxChoiceText('Saved foods · choose one to review the quantity','الأكلات المحفوظة · اختار أكلة لمراجعة الكمية');else if(s.source.id==='fExerciseSelect')context=$('fDay')?.value||'';else if(s.source.id==='sessionExerciseSelect')context=workoutSession?.day||'';else context=pxChoiceText('Your saved exercises','تمارينك المحفوظة');$('pxChoiceContext').textContent=context;
- const search=$('pxChoiceSearch');search.placeholder=food?pxChoiceText('Search foods…','ابحث عن أكلة…'):pxChoiceText('Search exercises…','ابحث عن تمرين…');search.setAttribute('aria-label',food?pxChoiceText('Search food choices','ابحث في اختيارات الأكل'):pxChoiceText('Search exercise choices','ابحث في اختيارات التمارين'));
+ const s=pxChoiceState;if(!s)return;const food=s.source.id==='foodQuickProduct',history=s.source.id==='dailyHistoryDate',ar=document.documentElement.dir==='rtl',dialog=$('pxChoiceDialog');dialog.dir=ar?'rtl':'ltr';
+ $('pxChoiceTitle').textContent=history?pxChoiceText('Daily history','سجل اليوميات'):food?pxChoiceText('Choose food','اختار أكلة'):pxChoiceText('Choose exercise','اختار تمرين');$('pxChoiceClose').textContent=pxChoiceText('Close','إغلاق');
+ let context='';if(history)context=pxChoiceText('Choose a saved date','اختار يوم محفوظ');else if(food)context=pxChoiceText('Saved foods · choose one to review the quantity','الأكلات المحفوظة · اختار أكلة لمراجعة الكمية');else if(s.source.id==='fExerciseSelect')context=$('fDay')?.value||'';else if(s.source.id==='sessionExerciseSelect')context=workoutSession?.day||'';else context=pxChoiceText('Your saved exercises','تمارينك المحفوظة');$('pxChoiceContext').textContent=context;
+ const search=$('pxChoiceSearch');search.placeholder=history?pxChoiceText('Search dates…','ابحث بالتاريخ…'):food?pxChoiceText('Search foods…','ابحث عن أكلة…'):pxChoiceText('Search exercises…','ابحث عن تمرين…');search.setAttribute('aria-label',history?pxChoiceText('Search Daily history','ابحث في سجل اليوميات'):food?pxChoiceText('Search food choices','ابحث في اختيارات الأكل'):pxChoiceText('Search exercise choices','ابحث في اختيارات التمارين'));
  const query=pxChoiceNormalize(search.value),options=Array.from(s.source.options).filter(o=>o.value!==''&&!o.disabled&&!o.parentElement?.disabled),matches=options.filter(o=>pxChoiceNormalize(o.textContent).includes(query));
- const list=$('pxChoiceList');list.setAttribute('aria-label',food?pxChoiceText('Food choices','اختيارات الأكل'):pxChoiceText('Exercise choices','اختيارات التمارين'));list.replaceChildren();
+ const list=$('pxChoiceList');list.setAttribute('aria-label',history?pxChoiceText('Saved dates','الأيام المحفوظة'):food?pxChoiceText('Food choices','اختيارات الأكل'):pxChoiceText('Exercise choices','اختيارات التمارين'));list.replaceChildren();
  for(const option of matches.slice(0,s.limit)){
   const row=pxChoiceElement('button',undefined,'pxChoiceOption');row.type='button';row.dataset.choiceIndex=String(option.index);row.setAttribute('aria-pressed',String(option.selected));
-  const badge=pxChoiceElement('span',food?'◉':'↗','pxChoiceBadge');badge.setAttribute('aria-hidden','true');
+  const badge=pxChoiceElement('span',history?'▦':food?'◉':'↗','pxChoiceBadge');badge.setAttribute('aria-hidden','true');
   const copy=pxChoiceElement('span',undefined,'pxChoiceCopy'),name=pxChoiceElement('strong',option.textContent);name.dir='auto';copy.append(name);
   const meta=food?pxChoiceFoodMeta(option.value):'';if(meta)copy.append(pxChoiceElement('small',meta));
   const mark=pxChoiceElement('span',option.selected?'✓':'','pxChoiceMark');mark.setAttribute('aria-hidden','true');row.append(badge,copy,mark);row.onclick=()=>pxChoiceApply(option.index,option.value);list.append(row);
@@ -11766,32 +11893,7 @@ document.addEventListener('keydown',event=>{const source=pxChoiceTarget(event);i
 </script>
 
 
-<style id="px-graphite-mint">
-:root,:root[data-theme="dark"]{--bg:#101515;--bg2:#101515;--card:#18211e;--card2:#1d2823;--soft:#233029;--text:#eef6f2;--muted:#a1b5aa;--line:#33483e;--shadow:0 8px 28px #00000017;--radius:19px;--mint-on-accent:#092018}
-:root:not([data-px-accent]),:root[data-px-accent="default"]{--accent:#67e8b0;--accent2:#67e8b0;--cyan:#67e8b0}
-html[data-theme="light"]{--bg:#f2f6f3;--bg2:#f2f6f3;--card:#ffffff;--card2:#f9fcfa;--soft:#e9f1ec;--text:#142a20;--muted:#506c5c;--line:#ccddd2;--shadow:0 6px 24px #163d2410;--bad:#b4233a;--warn:#976000;--mint-on-accent:#ffffff}
-html[data-theme="light"]:not([data-px-accent]),html[data-theme="light"][data-px-accent="default"]{--accent:#087f5b;--accent2:#087f5b;--cyan:#087f5b}
-:root[data-px-accent="violet"],:root[data-px-accent="rose"],:root[data-px-accent="emerald"]{--mint-on-accent:#092018}
-body{background:var(--bg)!important;color:var(--text);letter-spacing:.005em}
-.topbar,.pxMobilePageHeader{background:var(--bg)!important}.brand small{color:var(--muted)}.brand .logo{background:var(--accent2)!important;color:var(--mint-on-accent);box-shadow:none;font-size:20px;font-weight:900;letter-spacing:-2px;font-style:italic;border-radius:13px}
-.hero{background:var(--card)!important;border-color:var(--line);box-shadow:none!important;border-radius:20px}.hero:after{display:none}.hero .eyebrow{color:var(--accent2)}
-:is(.panel,.kpi,.calcCard,.logCard,.foodLogCard,.foodProductCard,.workoutTemplateCard,.pxHomeAction,.pxInsightLead,.pxRecordedTrend,.pxComparePair>div,.pxLatestPair article,.pxSettingsTile,.pxRoutineRow,.pxChoiceOption){background:var(--card)!important;border-color:var(--line);box-shadow:none!important}
-:is(.modal,.sessionShell,.pxAnatomyDetail,.pxWeekDigest button,.pxWorkspaceDisclosure){background:var(--card2);border-color:var(--line)}
-:is(.btn.primary,.btn.green,#pxCommercialGate #pxSignin){background:var(--accent2)!important;color:var(--mint-on-accent)!important;border:1px solid transparent;box-shadow:none;font-weight:750}
-:is(.btn.soft,.chip,.pxFoodSections button,.pxPageSectionButton,.pxSettingsTile){background:var(--soft);color:var(--text);border-color:var(--line)}
-:is(.chip.active,.pxFoodSections [aria-pressed="true"],.pxWorkspaceNav [aria-pressed="true"]){background:color-mix(in srgb,var(--accent2) 14%,var(--card))!important;color:var(--accent2)!important;border-color:var(--accent2)!important}
-.btn.danger{background:color-mix(in srgb,var(--bad) 10%,var(--card));color:var(--bad);border-color:color-mix(in srgb,var(--bad) 40%,var(--line))}
-:is(input,select,textarea){background-color:var(--soft);color:var(--text);border-color:var(--line)}:is(input,select,textarea):focus{border-color:var(--accent2)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent2) 16%,transparent)!important}
-body .bottomNav{background:var(--card)!important;border-color:var(--line)!important;box-shadow:0 -4px 18px #00000012!important}body .bottomNav .navbtn.active{background:color-mix(in srgb,var(--accent2) 13%,var(--card))!important;color:var(--accent2)!important;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent2) 35%,var(--line))!important}
-#pxHomeHub .pxHomeHubGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px}#pxHomeHub .pxHomeAction:first-child,#pxHomeHub .pxHomeAction:last-child{grid-column:1/-1}#pxHomeHub .pxHomeAction{padding:16px;border-radius:18px}#pxHomeHub .pxHomeAction h4{color:var(--muted);font-size:12px;font-weight:650}#pxHomeHub .pxHomeAction>b{font-size:23px;font-weight:800;line-height:1.4}#pxHomeHub .pxHomeAction p{line-height:1.65}#pxHomeHub .pxHomeAction:first-child{border-color:color-mix(in srgb,var(--accent2) 45%,var(--line))}#pxHomeHub .pxHomeAction:first-child>.btn:first-of-type{background:var(--accent2);color:var(--mint-on-accent);border-color:transparent}#pxHomeHub progress{accent-color:var(--accent2)}
-.weekCircle{width:52px;height:52px;flex-shrink:0;background:var(--soft)!important;color:var(--accent2);border:1px solid var(--line);border-radius:14px;font-size:17px}.logo{box-shadow:none!important}#pxHomeHub .pxHomeAction{gap:6px;padding:12px}#pxHomeHub .pxHomeAction p{font-size:11px;line-height:1.5}#home>.hero{background:var(--card)!important;padding:16px!important}#home>.hero h2{font-size:28px!important;line-height:1.3}#home>.hero .eyebrow{display:none}#home>.hero p{font-size:13px;margin-bottom:0}
-#pxCommercialGate{background:var(--bg)!important;color:var(--text);padding:24px;overflow:auto}#pxCommercialGate .pxAuthBox{box-shadow:none;background:transparent;border:0;border-radius:0;padding:20px 0;width:min(380px,100%);max-width:100%}#pxCommercialGate h2{text-align:center;font-size:17px;letter-spacing:.2em;margin:12px 0 40px}#pxMintAuthMark{font-size:64px;letter-spacing:-9px;font-style:italic;font-weight:900;text-align:center;color:var(--accent2);line-height:1.1}#pxMintWelcome{font-size:30px;line-height:1.3;margin:0 0 8px;letter-spacing:-.025em}#pxMintAuthIntro{margin-bottom:26px!important}#pxCommercialGate .pxAuthField{font-size:13px;font-weight:650}#pxCommercialGate input{border-radius:12px;min-height:50px;background:var(--card)!important;color:var(--text);border-color:var(--line);font-size:16px}#pxCommercialGate .pxAuthActions{margin-top:24px;gap:10px}#pxCommercialGate button{min-height:50px;border-radius:12px}#pxCommercialGate #pxSignup{background:transparent!important;border:0!important;color:var(--accent2)!important;min-height:44px}#pxCommercialGate #pxLoginMessage{border-top:1px solid var(--line);font-size:12px;line-height:1.7}#pxMintAuthTagline{margin-top:28px;text-align:center;font-size:11px!important;letter-spacing:.12em;color:var(--muted)}
-.pxMintPassword{display:flex;align-items:stretch;background:var(--card);border:1px solid var(--line);border-radius:12px;margin:7px 0 14px;min-width:0}.pxMintPassword:focus-within{outline:2px solid var(--accent2);outline-offset:2px}#pxCommercialGate .pxMintPassword input{flex:1;min-width:0;margin:0!important;border:0!important;box-shadow:none!important;background:transparent!important}#pxCommercialGate #pxPasswordToggle{flex-shrink:0;width:66px;min-width:44px;background:transparent;color:var(--accent2);border:0;padding:8px;font-size:12px}
-#pxSavePanel{padding:0 12px!important;border-radius:12px;margin:0 0 12px;border-color:var(--line);background:var(--card);min-height:44px}#pxSavePanel>summary{min-height:44px;font-size:12px;font-weight:650;gap:8px;list-style:none}#pxSavePanel>summary::-webkit-details-marker{display:none}#pxSavePanel>summary:after{content:'›';font-size:21px;font-weight:500;margin-inline-start:0}html[dir="rtl"] #pxSavePanel>summary:after{transform:rotate(180deg)}#pxSaveLabel{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#pxMintSaveAction{font-size:11px;flex-shrink:0;color:var(--accent2)}#pxSavePanel[data-state="conflict"]{border-color:#b88937}#pxSavePanel[data-state="conflict"]>summary:before{background:#f5bd5b}#pxSavePanel[data-state="error"]{border-color:var(--bad)}
-#pxMintSyncDialog{width:min(560px,calc(100% - 20px));max-width:100%;max-height:85dvh;margin:auto auto 10px;box-sizing:border-box;border:1px solid var(--line);border-radius:23px;background:var(--card);color:var(--text);padding:18px;overflow:auto;box-shadow:var(--shadow)}#pxMintSyncDialog::backdrop{background:#000a}.pxMintSyncHead{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px}.pxMintSyncHead h2{font-size:20px;margin:0;line-height:1.4}.pxMintSyncHead button{min-height:44px}#pxMintSyncDialog p{font-size:13px;line-height:1.7;color:var(--muted);overflow-wrap:anywhere}#pxMintSyncDialog dl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;font-size:13px;border-block:1px solid var(--line);padding:14px 0}#pxMintSyncDialog dd{margin:0;font-weight:800}#pxMintSyncDialog dl:empty{display:none}#pxMintSyncDialog #pxSyncPill{position:static!important;inset:auto!important;transform:none!important;display:block;max-width:100%;width:auto;margin:8px 0 14px!important;border:1px solid var(--line);border-radius:12px;background:var(--soft)!important;color:var(--text)!important;box-shadow:none;text-align:start;padding:10px;white-space:normal;line-height:1.6}#pxMintSyncDialog [hidden]{display:none!important}#pxSaveRetry{width:100%;margin-top:8px;min-height:46px;padding-bottom:max(12px,env(safe-area-inset-bottom,0px))}
-@media(min-width:821px){#pxHomeHub .pxHomeHubGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}#pxHomeHub .pxHomeAction:first-child{grid-column:1/-1}#pxHomeHub .pxHomeAction:last-child{grid-column:auto}#pxMintSyncDialog{margin:auto}}
-@media(max-width:360px){#pxCommercialGate{padding:20px}#pxCommercialGate h2{margin-bottom:28px}#pxMintWelcome{font-size:26px}#pxMintAuthMark{font-size:54px}#pxHomeHub .pxHomeAction{padding:12px}#pxHomeHub .pxHomeAction>b{font-size:20px}}
-</style>
+
 <script id="px-graphite-mint-interface">
 let pxMintSyncScope=null;
 function pxMintCloseSync(restore=true){const dialog=$('pxMintSyncDialog');if(dialog?.open)dialog.close();pxMintSyncScope=null;const trigger=$('pxSavePanel')?.querySelector('summary');trigger?.setAttribute('aria-expanded','false');if(restore)trigger?.focus({preventScroll:true})}
@@ -11810,8 +11912,8 @@ function pxMintSyncRender(model){
   $('pxSaveRetry').onclick=()=>{pxMintCloseSync(false);void pxRetryVisibleSave()};
  }
  if(dialog.open&&pxMintSyncScope!==pxSafetyScope())pxMintCloseSync(false);
- dialog.dir=document.documentElement.dir||'ltr';$('pxMintSyncTitle').textContent=pxExplain('Save & sync details','تفاصيل الحفظ والمزامنة');$('pxMintSyncClose').textContent=pxExplain('Close','إغلاق');$('pxMintSaveAction').textContent=model.state==='conflict'||model.state==='error'?pxExplain('Review','مراجعة'):pxExplain('Details','التفاصيل');
- $('pxMintSyncEmpty').hidden=!!model.pending;$('pxMintSyncEmpty').textContent=pxExplain('No queued items in these categories. Cloud confirmation and conflict status are shown separately.','مفيش عناصر معلّقة في الأقسام دي. تأكيد الحفظ في السحابة وحالة التعارض بيظهروا بشكل منفصل.');
+ dialog.dir=document.documentElement.dir||'ltr';$('pxMintSyncTitle').textContent=pxExplain('Save & sync','الحفظ والمزامنة');$('pxMintSyncClose').textContent=pxExplain('Close','إغلاق');$('pxMintSaveAction').textContent='•••';$('pxMintSaveAction').setAttribute('aria-hidden','true');const summary=panel.querySelector('summary');summary.setAttribute('aria-label',$('pxSaveLabel').textContent+' — '+pxExplain('Save & sync details','تفاصيل الحفظ والمزامنة'));panel.title=$('pxSaveLabel').textContent;
+ $('pxSaveDrafts').hidden=!model.drafts;$('pxMintSyncEmpty').hidden=!!model.pending;$('pxMintSyncEmpty').textContent=pxExplain('No queued items in these categories. Check cloud status above.','مفيش عناصر معلقة في الأقسام دي. راجع حالة السحابة فوق.');
 }
 function pxMintAuthLabels(){
  const welcome=$('pxMintWelcome');if(!welcome)return;welcome.textContent=pxExplain('Welcome back','أهلًا برجوعك');$('pxMintAuthIntro').textContent=pxExplain('Your next step starts here.','خطوتك الجاية بتبدأ هنا.');$('pxMintAuthTagline').textContent=pxExplain('Train. Track. Understand.','اتمرّن. سجّل. افهم تقدمك.');
@@ -11830,6 +11932,7 @@ function pxMintInit(){
  pxMintAuthLabels();pxRenderSavePanel();
 }
 pxMintInit();
+document.documentElement.setAttribute('data-px-interface-ready','');
 new MutationObserver(()=>{pxMintAuthLabels();pxRenderSavePanel()}).observe(document.documentElement,{attributes:true,attributeFilter:['dir','data-theme']});
 </script>
 
