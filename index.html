@@ -5311,8 +5311,7 @@ async function saveEntry(){
   if(existingIndex>=0)data[existingIndex]=clone(obj);
   else data.push(clone(obj));
   PXStore.setItem(KEY,JSON.stringify(data));
-  if(workoutSession.drafts)delete workoutSession.drafts[currentSessionExercise()];
-  saveWorkoutSessionState();
+  // Manual log edits must not clear an unrelated Session Mode draft.
 
   const payload={...obj};
   delete payload._sync;
