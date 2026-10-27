@@ -19,7 +19,7 @@ const assert=require('node:assert/strict');
   foodProducts=[{id:'demo-oats',name:'Rolled oats',servingQty:100,servingUnit:'g',calories:380,protein:13,carbs:62,fat:7},{id:'demo-yogurt',name:'Greek yogurt',servingQty:100,servingUnit:'g',calories:70,protein:10,carbs:4,fat:1.5},{id:'demo-chicken',name:'Chicken breast',servingQty:100,servingUnit:'g',calories:165,protein:31,carbs:0,fat:3.6}];
   foodLog=foodProducts.flatMap((p,i)=>['2026-10-24','2026-10-25'].map(date=>{const amount=[60,200,150][i],factor=amount/100;return {id:'demo-food-'+i+'-'+date,productId:p.id,name:p.name,date,time:['08:00','10:30','14:00'][i],meal:['Breakfast','Snack','Lunch'][i],amount,servingQty:100,servingUnit:'g',calories:p.calories*factor,protein:p.protein*factor,carbs:p.carbs*factor,fat:p.fat*factor}}));
   nutritionTargets={calories:2200,protein:160,carbs:240,fat:70};
-  dailyReminders=[{id:'demo-habit',name:'Evening walk',amount:'20 minutes',time:'19:00',enabled:true}];
+  dailyReminders=[{id:'demo-habit',name:'Creatine',amount:'3 g',time:'19:00',enabled:true}];
   saveProgressPhotos([['2026-10-12',80.4],['2026-10-14',80.1],['2026-10-16',80.2],['2026-10-19',80],['2026-10-21',79.9],['2026-10-23',79.8]].map(([date,weight],i)=>({id:'demo-weight-'+i,date,weight,createdAt:date+'T08:00:00Z',note:''})));
   PXStore.setItem(WORKOUT_SCHEDULE_KEY,JSON.stringify({[weekdayKey()]:'Full Body'}));
   $('pxCommercialGate').hidden=true;wire();rebuild();$('nutritionDate').value=localDateKey();pxSetUILanguage('en',false);go('home');
@@ -28,6 +28,8 @@ const assert=require('node:assert/strict');
  async function capture(name,route,selector,setup){await page.setViewportSize({width:430,height:selector?2200:1000});await page.evaluate(r=>go(r),route);if(setup)await setup();await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Overflow: '+name);const target=selector?page.locator(selector):page;await target.screenshot({path:path.join(out,name+'.jpg'),type:'jpeg',quality:86,animations:'disabled'});shots.push({file:name+'.jpg',route,region:selector||'viewport',viewport:page.viewportSize(),language:await page.evaluate(()=>document.documentElement.lang)})}
  await capture('home-mobile','home');
  await capture('food-mobile','nutrition');
+ await capture('daily-mobile','daily');
+ await capture('weight-latest-readings','analytics',null);
  await capture('food-quick-add','nutrition','#nutrition .nutritionOrderQuick',async()=>page.evaluate(()=>{$('foodQuickProduct').value='demo-oats';$('foodQuickAmount').value='60';updateFoodQuickPreview()}));
  await capture('progress-weekly-review','analytics','#pxWeeklyCoach',async()=>page.evaluate(()=>{$('weeklyReviewWeek').value='22';renderWeeklyReview()}));
  await capture('weight-weekly-trend','analytics','#pxWeeklyWeight');

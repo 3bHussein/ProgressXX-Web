@@ -50,6 +50,7 @@ jobs:
             tests/session-drafts-repeat-meals-browser.cjs \
             tests/home-action-hub-browser.cjs \
             tests/simple-insights-coaching-browser.cjs \
+            tests/daily-progress-focus-browser.cjs \
             tests/insights-evidence-actions-browser.cjs \
             tests/release-ci-workflow-contract.cjs \
             tests/release-ci-gate.cjs \

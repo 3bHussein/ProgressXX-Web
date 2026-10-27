@@ -53,7 +53,7 @@ Screenshots use a disposable in-memory store, no login and blocked external requ
 | :---: | :---: |
 | <img src="docs/screenshots/insights-decisions.jpg" width="300" alt="Insights showing a recorded training improvement, matching food and weight evidence, and today's routine actions"> | <img src="docs/screenshots/insights-decisions-ar.jpg" width="300" alt="Arabic Insights with readable date ranges, recorded progress and evidence linked to the other pages"> |
 
-Choose a calendar period. See what changed, inspect the underlying records, and open the precise workout comparison, diary date, weight field or daily check-in. Unknown data stays unknown; the app does not infer the cause of a weight change or physiological recovery. [Rules and validation](docs/INSIGHTS-EVIDENCE-ACTIONS.md).
+Choose a calendar period and one question: next session, weight/food, or today’s check-in. Dated Before/Latest workout pairs and logged nutrient averages make the evidence visible; each question opens the precise source comparison or entry form. Unknown data stays unknown; the app does not infer the cause of a weight change or physiological recovery. [Rules and validation](docs/INSIGHTS-EVIDENCE-ACTIONS.md).
 
 </details>
 
@@ -80,6 +80,14 @@ Choose a calendar period. See what changed, inspect the underlying records, and 
 - **Readable progress:** recorded comparisons explain what changed; mixed/free-text work and deload weeks do not force an increase verdict.
 - **Weekly weight:** daily means contribute equally to the weekly mean. Incomplete weeks compare matching weekdays, and limited data is labelled.
 - **Mobile and language:** eight destinations, touch-sized controls, responsive layouts, English/Arabic and RTL support.
+
+## Focused Daily and Progress
+
+| Daily checklist | Previous and latest weight |
+| --- | --- |
+| <img src="docs/screenshots/daily-mobile.jpg" width="300" alt="Daily water and a compact supplement checklist with Arrange and Manage controls"> | <img src="docs/screenshots/weight-latest-readings.jpg" width="300" alt="Dated previous and latest body weight immediately above the entry form"> |
+
+Arrange supplements with up/down buttons. Notification management lives in Settings. Progress keeps weight and training primary, with measurements/calendar/goals/PRs under More. [Behavior, validation and next ideas](docs/DAILY-PROGRESS-FOCUS.md).
 
 ## A simple daily flow
 

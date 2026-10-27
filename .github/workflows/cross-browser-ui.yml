@@ -3,6 +3,7 @@ on:
   push:
     branches: [main]
     paths:
+      - tests/daily-progress-focus-browser.cjs
       - tests/insights-evidence-actions-browser.cjs
       - tests/food-workflow-tools-browser.cjs
       - tests/v3-mobile-diary-browser.cjs
@@ -56,6 +57,7 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - tests/daily-progress-focus-browser.cjs
       - tests/insights-evidence-actions-browser.cjs
       - tests/food-workflow-tools-browser.cjs
       - tests/v3-mobile-diary-browser.cjs
@@ -151,6 +153,7 @@ jobs:
           node tests/session-drafts-repeat-meals-browser.cjs
           node tests/home-action-hub-browser.cjs
           node tests/simple-insights-coaching-browser.cjs
+          node tests/daily-progress-focus-browser.cjs
           node tests/insights-evidence-actions-browser.cjs
           node tests/backup-download-import-browser.cjs
           node tests/v3-mobile-diary-browser.cjs
