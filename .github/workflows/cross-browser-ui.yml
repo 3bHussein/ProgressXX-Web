@@ -13,6 +13,7 @@ on:
       - tests/ui-language-catalogue.cjs
       - tests/backup-download-import-browser.cjs
       - tests/settings-language-pages-browser.cjs
+      - tests/routine-builder-browser.cjs
       - tests/training-day-manager-browser.cjs
       - tests/food-portions-after-refresh-browser.cjs
       - tests/helpers/logout-dialog.cjs
@@ -68,6 +69,7 @@ on:
       - tests/ui-language-catalogue.cjs
       - tests/backup-download-import-browser.cjs
       - tests/settings-language-pages-browser.cjs
+      - tests/routine-builder-browser.cjs
       - tests/training-day-manager-browser.cjs
       - tests/food-portions-after-refresh-browser.cjs
       - tests/helpers/logout-dialog.cjs
@@ -161,6 +163,7 @@ jobs:
           node tests/backup-download-import-browser.cjs
           node tests/v3-mobile-diary-browser.cjs
           node tests/settings-language-pages-browser.cjs
+          node tests/routine-builder-browser.cjs
           node tests/training-day-manager-browser.cjs
           node tests/food-portions-after-refresh-browser.cjs
           node tests/logout-dialog-policy-browser.cjs
