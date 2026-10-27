@@ -26,9 +26,9 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
  }
  try{
   const b=await openDevice('B');
-  await b.page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Synced to Supabase'),null,{timeout:20000});
+  await b.page.waitForFunction(()=>{const state=window.__pxSaveState?.();return document.querySelector('#pxCommercialGate')?.hidden&&state?.ready&&!state.dirty&&!state.busy&&!state.conflict},null,{timeout:20000});
   const a=await openDevice('A');
-  await a.page.waitForFunction(()=>document.querySelector('#pxSyncPill')?.textContent.includes('Synced to Supabase'),null,{timeout:20000});
+  await a.page.waitForFunction(()=>{const state=window.__pxSaveState?.();return document.querySelector('#pxCommercialGate')?.hidden&&state?.ready&&!state.dirty&&!state.busy&&!state.conflict},null,{timeout:20000});
   rejectA=true;
   const marker='cross-context-queued-edit';
   await a.page.evaluate(marker=>PXStore.setItem('progressx-reminders',JSON.stringify([{id:marker,text:'mock only'}])),marker);
