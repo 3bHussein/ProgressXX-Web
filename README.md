@@ -134,7 +134,7 @@ The capture script is a **local development tool** that injects demonstration fi
 
 ## Validation and release status
 
-The verified runtime release is [`27ac5e8`](https://github.com/3bHussein/ProgressXX-Web/commit/27ac5e8b109bd7cfd06b7d12330c5e06c341c759). Its [Full UI](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40244869456), [Fast safety](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40244869452), [Firefox/WebKit](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40244869474) and [Pages](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40244869527) runs succeeded. The deployed root was downloaded and compared byte-for-byte with the tested source. The development log records the initial failures and successful reruns.
+The verified runtime release is [`854ae7b`](https://github.com/3bHussein/ProgressXX-Web/commit/854ae7b39e296d876cd9777ef173da8e6cb3aff4). Its [Full UI](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40458793758), [Fast safety](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40458793413), [Firefox/WebKit](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40458793381) and [Pages](https://github.com/3bHussein/ProgressXX-Web/actions/runs/40458793273) runs succeeded. The deployed root was downloaded and compared byte-for-byte with the tested source. All four runs succeeded on their first attempts; the development log records the exact release evidence.
 
 Coverage includes synthetic workout/food actions, portions, Undo, reload, drafts, offline retry, backup/import, mocked-account save/reload/logout, keyboard controls and EN/AR mobile layouts. **Automated fixtures do not certify every real-account or physical-device scenario.**
 
