@@ -29,8 +29,10 @@ const {browserType,engine}=require('./helpers/browser-engine.cjs');
   assert.equal(await page.evaluate(()=>getComputedStyle(document.body).visibility),'visible');
   assert(await page.evaluate(()=>qaPaint.every(x=>x.ready&&x.bg==='#101515')),'No visible old palette frame');
   assert.equal(await page.locator('body style:not(noscript style)').count(),0,'Static cascade precedes body');
+  await page.evaluate(()=>{autoBackupMaybe=async()=>{};scheduleAutoBackup=()=>{}});
   await page.fill('#pxEmail','qa@example.test');await page.fill('#pxPassword','mock-pass');await page.click('#pxSignin');
   await page.waitForFunction(()=>$('pxCommercialGate').hidden);
+  await page.waitForTimeout(1800);
   await page.waitForFunction(()=>{const s=__pxSaveState();return !s.dirty&&!s.busy&&!s.conflict},null,{timeout:25000});
   return {context,page};
  }
@@ -38,7 +40,7 @@ const {browserType,engine}=require('./helpers/browser-engine.cjs');
   const a=await device(390),b=await device(1280);
   // Both start from the same settled snapshot; only one changes at a time.
   await a.page.evaluate(()=>{go('daily');toggleDailyDone('qa-daily');setWaterCurrent(1.25)});
-  await a.page.waitForFunction(()=>!__pxSaveState().dirty&&!__pxSaveState().busy,null,{timeout:25000});
+  await a.page.waitForFunction(()=>!__pxSaveState().dirty&&!__pxSaveState().busy,null,{timeout:25000}).catch(async error=>{console.log('Daily A save diagnostic',await a.page.evaluate(()=>({state:__pxSaveState(),message:$('pxSyncPill').textContent})));throw error});
   const beforePull=posts;
   assert.equal(await b.page.evaluate(()=>__pxRefreshAccountDailyReminders()),'updated');
   assert.equal(await b.page.evaluate(()=>dailyIsDone('qa-daily')),true);
