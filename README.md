@@ -81,6 +81,14 @@ Choose a calendar period and one question: next session, weight/food, or todayâ€
 - **Weekly weight:** daily means contribute equally to the weekly mean. Incomplete weeks compare matching weekdays, and limited data is labelled.
 - **Mobile and language:** eight destinations, touch-sized controls, responsive layouts, English/Arabic and RTL support.
 
+## Less scrolling and faster Food logging
+
+| Focused Quick add | Repeat a previous amount |
+| --- | --- |
+| <img src="docs/screenshots/food-focused-add.jpg" width="300" alt="One Food section shown at a time with direct shortcuts and a Show all action"> | <img src="docs/screenshots/food-repeat-amount.jpg" width="300" alt="Search historical foods and select their exact recorded quantity before adding"> |
+
+Use **Sections** to open one relevant section directly, or choose a normal jump. Food keeps diary/add/today/library priorities; usual foods use one row and library results load eight at a time. Repeat previous food recalls an exact compatible amount for preview; press Add separately. [Navigation and data rules](docs/COMPACT-FOOD-NAVIGATION.md).
+
 ## Focused Daily and Progress
 
 | Daily checklist | Previous and latest weight |

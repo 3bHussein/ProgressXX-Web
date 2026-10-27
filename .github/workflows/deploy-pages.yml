@@ -3,6 +3,7 @@ on:
   push:
     branches: [main]
     paths:
+      - tests/compact-food-navigation-browser.cjs
       - tests/daily-progress-focus-browser.cjs
       - tests/insights-evidence-actions-browser.cjs
       - tests/food-workflow-tools-browser.cjs

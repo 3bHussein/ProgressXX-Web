@@ -28,6 +28,9 @@ const assert=require('node:assert/strict');
  async function capture(name,route,selector,setup){await page.setViewportSize({width:430,height:selector?2200:1000});await page.evaluate(r=>go(r),route);if(setup)await setup();await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Overflow: '+name);const target=selector?page.locator(selector):page;await target.screenshot({path:path.join(out,name+'.jpg'),type:'jpeg',quality:86,animations:'disabled'});shots.push({file:name+'.jpg',route,region:selector||'viewport',viewport:page.viewportSize(),language:await page.evaluate(()=>document.documentElement.lang)})}
  await capture('home-mobile','home');
  await capture('food-mobile','nutrition');
+ await capture('food-focused-add','nutrition',null,async()=>page.evaluate(()=>pxShowPageSection('nutrition',document.querySelector('.nutritionOrderQuick').id,true)));
+ await capture('food-repeat-amount','nutrition','#pxRepeatFoodDialog',async()=>page.evaluate(()=>pxOpenRepeatFood()));await page.evaluate(()=>{$('pxRepeatFoodDialog').close();pxShowAllPageSections('nutrition')});
+ await capture('page-sections','nutrition','#pxPageSectionsDialog',async()=>page.evaluate(()=>pxOpenPageSections()));await page.evaluate(()=>$('pxPageSectionsDialog').close());
  await capture('daily-mobile','daily');
  await capture('weight-latest-readings','analytics',null);
  await capture('food-quick-add','nutrition','#nutrition .nutritionOrderQuick',async()=>page.evaluate(()=>{$('foodQuickProduct').value='demo-oats';$('foodQuickAmount').value='60';updateFoodQuickPreview()}));
