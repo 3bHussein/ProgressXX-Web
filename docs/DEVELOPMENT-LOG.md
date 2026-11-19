@@ -1,5 +1,12 @@
 
 ## 2026-10-17 — Session partial-set protection
+
+## November 19, 2026 — Mobile Food and Playwright runners
+
+- [PR #53](https://github.com/3bHussein/ProgressXX-Web/pull/53) adds a compact mobile calorie and macro overview, Quick add disclosure, direct recent/favorite/barcode actions and independent meal disclosures. Editing focuses the amount and returns focus to the entry after saving or cancelling.
+- [Runner fix `0641179`](https://github.com/3bHussein/ProgressXX-Web/commit/0641179eab34a160f98761e3d843e121407b9910) pins Playwright jobs and the Pages smoke job to Ubuntu 24.04 after Playwright 1.55.0 rejected Ubuntu 26.04. [UI revision `e8cf227`](https://github.com/3bHussein/ProgressXX-Web/commit/e8cf227d65f9e810690c2d76895476d7003a72b9) restores the native food library disclosure ID and preserves existing form handlers.
+- [Validation matrix and run links](COMPACT-FOOD-NAVIGATION.md#november-19-verification) record hosted and local results. Pages deployment is pending PR checks and approval. The database experiment remains paused.
+
 - Guarded Add Set and Remove Set against dropping incomplete weight/reps entries; retained original performance string, Smart Deload and historical rows. Updated V3 contract test. CI and real-device two-device sync verification pending.
 
 ## 2026-10-17 — Start Workout Deload week selection

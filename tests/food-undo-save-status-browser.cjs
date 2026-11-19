@@ -19,6 +19,18 @@ const assert=require('node:assert/strict');const {browserType,engine}=require('.
  // Undo a deletion is an explicit new ID, never removal of the original tombstone.
  await p.evaluate(()=>{foodLog=[{id:'old-cloud',date:localDateKey(),meal:'Lunch',name:'Original',productId:'food',servingQty:100,servingUnit:'g',amount:150,calories:300,protein:15,carbs:30,fat:12,time:'12:00'}];PXStore.setItem(FOOD_LOG_KEY,JSON.stringify(foodLog));renderNutrition()});await p.evaluate(()=>deleteFoodLogEntry('old-cloud'));assert.equal(await p.evaluate(()=>foodLog.length),0);
  await p.evaluate(()=>{foodLog.push({id:'unrelated',date:localDateKey(),meal:'Snack',name:'Keep me',amount:1,calories:1});PXStore.setItem(FOOD_LOG_KEY,JSON.stringify(foodLog))});await p.locator('#pxFoodUndoButton').click();await p.waitForFunction(()=>!pxFoodFlushing&&pxFoodOutbox().length===0);assert.equal(await p.evaluate(()=>foodLog.length),2);assert.equal(await p.evaluate(()=>foodLog.find(x=>x.name==='Original').amount),150);assert.notEqual(await p.evaluate(()=>foodLog.find(x=>x.name==='Original').id),'old-cloud');assert.equal(await p.evaluate(()=>JSON.parse(PXStore.getItem('pxx-food-deleted-log-ids')).includes('old-cloud')),true);
+ const restoredId=await p.evaluate(()=>foodLog.find(x=>x.name==='Original').id);
+ const edit=p.locator(`[data-food-entry-id="${restoredId}"] [data-food-edit]`);
+ const amount=p.locator('#foodEntryEditAmount');
+ await edit.press('Enter');
+ assert.equal(await amount.evaluate(e=>e===document.activeElement),true);
+ await p.locator('[onclick="closeFoodEntryEdit()"]').click();
+ assert.equal(await edit.evaluate(e=>e===document.activeElement),true);
+ await edit.click();
+ await amount.fill('125');
+ await p.locator('[onclick="saveFoodEntryEdit()"]').click();
+ await p.waitForFunction(()=>foodLog.find(x=>x.name==='Original').calories===250&&$('nutritionSyncState').textContent==='Food entry updated');
+ assert.equal(await edit.evaluate(e=>e===document.activeElement),true);
  await p.evaluate(()=>{qaOffline=true;const template=foodLog.find(x=>x.name==='Original');pxCommitFoodAddition([{...template,id:'batch1'},{...template,id:'batch2'}]);renderNutrition()});assert.equal(await p.evaluate(()=>pxFoodUndo().rows.length),2);await p.locator('#pxFoodUndoButton').click();assert.equal(await p.evaluate(()=>foodLog.length),2);assert.equal(await p.evaluate(()=>pxFoodDeletes().length),2);await p.evaluate(async()=>{qaOffline=false;await pxFlushFoodDeletes()});
  await add();await p.waitForFunction(()=>!pxFoodFlushing);await p.evaluate(()=>{const row=foodLog.find(x=>x.id===pxFoodUndo().rows[0].id);row.amount=200;PXStore.setItem(FOOD_LOG_KEY,JSON.stringify(foodLog))});await p.evaluate(()=>{pxRenderFoodUndo();pxUndoFoodAction()});assert.equal(await p.locator('#pxFoodUndoButton').isDisabled(),true);assert.match(await p.locator('#pxFoodUndoText').textContent(),/changed after adding/);assert.equal(await p.evaluate(()=>foodLog.some(x=>x.amount===200)),true);
  // In-flight upload acknowledgement must not recreate the locally deleted row.

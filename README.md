@@ -72,7 +72,7 @@ Choose a calendar period and one question: next session, weight/food, or todayâ€
 
 ### Recent improvements
 
-- **Quieter Food page:** summary, Quick add and meals are expanded; the library and secondary tools open on demand. Empty meal rows and usual-food cards take less space.
+- **Quieter Food page:** the mobile overview shows remaining, target and consumed calories, three macro cards, Add food and the selected dayâ€™s meals. Quick add, the food library and secondary tools open on demand.
 - **Faster meal logging:** usual foods from the last 30 days of loaded history, exact product/unit matching, remembered portions and previous-meal previews.
 - **Food Undo:** a two-minute window for supported additions, repeated-meal batches and diary deletions, with guards against undoing a later edit.
 - **Clearer save state:** distinguish local records, unfinished drafts, known pending changes and acknowledged cloud saves. Conflicts use the existing review path.
@@ -87,7 +87,7 @@ Choose a calendar period and one question: next session, weight/food, or todayâ€
 | --- | --- |
 | <img src="docs/screenshots/food-focused-add.jpg" width="300" alt="One Food section shown at a time with direct shortcuts and a Show all action"> | <img src="docs/screenshots/food-repeat-amount.jpg" width="300" alt="Search historical foods and select their exact recorded quantity before adding"> |
 
-Use **Sections** to open one relevant section directly, or choose a normal jump. Food keeps diary/add/today/library priorities; usual foods use one row and library results load eight at a time. Repeat previous food recalls an exact compatible amount for preview; press Add separately. [Navigation and data rules](docs/COMPACT-FOOD-NAVIGATION.md).
+On mobile, tap **Add food** to open Quick add and access search, recent foods, favorites and barcode scanning. Use the meal heading to collapse its entries, or use its Add food button to preselect that meal. The library, saved meals, planner and history open from their own headings. Use **Sections** to jump to a specific panel. Repeat previous food recalls an exact compatible amount for preview before you press Add. [Navigation and validation](docs/COMPACT-FOOD-NAVIGATION.md).
 
 ## Focused Daily and Progress
 

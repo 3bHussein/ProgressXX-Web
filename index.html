@@ -1920,7 +1920,7 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
 <style id="px-food-mobile-compact">
 .pxMobileFoodAction,.pxMobileFoodTools,.pxMobileMealToggle{display:none}
 @media(max-width:600px){
- #nutrition>.panel{min-width:0}
+ #nutrition>.panel{min-width:0;margin-block:0 8px!important}
  #nutrition .nutritionOrderDiary,#nutrition .nutritionOrderToday{padding:10px!important}
  #nutrition .pxCalorieDashboard{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px}
  #nutrition .pxCalorieEquation{display:contents}
@@ -1941,6 +1941,7 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
  #nutrition .foodMealMeta{flex-wrap:nowrap}
  #nutrition .foodMealMeta>.btn{min-height:44px;padding:5px 8px;font-size:11px}
  #nutrition .foodMealMeta>.pill{display:none}
+ #nutrition #pxFoodBatch:not([open]){padding-block:0;margin:8px 0}
  #nutrition .foodMealGroup{padding:4px 8px;margin:6px 0}
  #nutrition .pxDesktopMealTitle{display:none}
  #nutrition .pxMobileMealToggle{display:flex;align-items:center;gap:6px;flex:1;min-width:0;min-height:44px;padding:3px 0;background:none;border:0;color:var(--text);font:inherit;text-align:start;white-space:normal;cursor:pointer}
@@ -2445,7 +2446,7 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
         <div class="wide"><label class="tiny muted">Food</label><input id="foodEntryEditName" readonly></div>
         <div><label class="tiny muted">Meal</label><select id="foodEntryEditMeal"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option></select></div>
         <div><label class="tiny muted">Time</label><input id="foodEntryEditTime" type="time"></div>
-        <div><label id="foodEntryEditAmountLabel" class="tiny muted">Amount</label><input id="foodEntryEditAmount" type="number" min=".01" step=".1"></div>
+        <div><label id="foodEntryEditAmountLabel" class="tiny muted" for="foodEntryEditAmount">Amount</label><input id="foodEntryEditAmount" type="number" min=".01" step=".1"></div>
       </div>
       <div id="foodEntryEditPreview" class="callout" style="margin-top:9px"></div>
       <div class="dailyFormActions">
@@ -7333,7 +7334,9 @@ function renderNutrition(){
   const previousMeals=pxMealDisclosureScope===scope&&pxMealDisclosureDate===date
     ? new Map([...list.querySelectorAll('[data-meal-disclosure]:not(.pxFoodMealEmpty)')].map(group=>[group.dataset.mealDisclosure,!group.hasAttribute('data-mobile-closed')]))
     : new Map();
-  const focusedMeal=list.contains(document.activeElement)?document.activeElement.dataset.mealToggle:null;
+  const active=document.activeElement;
+  const focusedMeal=list.contains(active)?active.dataset.mealToggle:null;
+  const focusedEdit=matchMedia('(max-width:600px)').matches&&active?.matches('[data-food-edit]')?active.closest('[data-food-entry-id]').dataset.foodEntryId:null;
   pxMealDisclosureScope=scope;
   pxMealDisclosureDate=date;
   list.innerHTML=meals.map(meal=>{
@@ -7358,6 +7361,7 @@ function renderNutrition(){
     </div>`;
   }).join('')||'<div class="empty">No food logged for this day.</div>';
   if(focusedMeal)list.querySelector(`[data-meal-toggle="${focusedMeal}"]`)?.focus({preventScroll:true});
+  if(focusedEdit)pxFocusFoodEditButton(focusedEdit);
 
   renderFoodLibrary();
   buildFoodQuickSelect();
@@ -7591,7 +7595,7 @@ function foodLogCard(x){
         <div class="tiny muted">${pnum(x.amount)} ${esc(x.servingUnit)} • ${Math.round(Number(x.calories)||0)} kcal${foodEntryTime(x)?' • <span class="foodLogTime">🕒 '+esc(foodEntryTime(x))+'</span>':''}</div>
       </div>
       <div class="actions">
-        <button class="btn soft" style="padding:7px 10px" onclick="openFoodEntryEdit('${esc(x.id)}')">Edit</button>
+        <button class="btn soft" style="padding:7px 10px" data-food-edit onclick="openFoodEntryEdit('${esc(x.id)}')">Edit</button>
         <button class="btn danger" style="padding:7px 10px" onclick="deleteFoodLogEntry('${esc(x.id)}')">Delete</button>
       </div>
     </div>
@@ -8263,9 +8267,17 @@ async function addFoodToDiary(){
 
 }
 
+function pxFocusFoodEditButton(id){
+  const list=$('foodDiaryList');
+  const button=list.querySelector(`[data-food-entry-id="${CSS.escape(id)}"] [data-food-edit]`);
+  if(button?.getClientRects().length)button.focus({preventScroll:true});
+  else list.querySelector('.pxMobileMealToggle:not(:disabled)')?.focus({preventScroll:true});
+}
 function closeFoodEntryEdit(){
+  const id=$('foodEntryEditId')?.value;
   $('foodEntryEditForm')?.classList.remove('open');
   if($('foodEntryEditId'))$('foodEntryEditId').value='';
+  if(id&&matchMedia('(max-width:600px)').matches)pxFocusFoodEditButton(id);
 }
 function openFoodEntryEdit(id){
   const x=foodLog.find(r=>String(r.id)===String(id));
