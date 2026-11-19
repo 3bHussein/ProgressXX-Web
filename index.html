@@ -1916,6 +1916,36 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
 <style id="px-first-paint">html:not([data-px-interface-ready]) body{visibility:hidden}</style>
 <noscript><style>body{visibility:visible!important}</style></noscript>
 <script>document.addEventListener('DOMContentLoaded',()=>{document.documentElement.setAttribute('data-px-interface-ready','')},{once:true});</script>
+
+<style id="px-food-mobile-compact-v2">
+@media(max-width:600px){
+ #nutrition{padding-bottom:84px}
+ #nutrition .nutritionOrderDiary{padding:12px!important}
+ #nutrition .nutritionOrderDiary .panelHead .tiny.muted,
+ #nutrition .nutritionOrderToday>.panelHead .tiny.muted{display:none}
+ #nutrition .pxCalorieDashboard{gap:8px!important;margin-block:8px!important}
+ #nutrition .pxCalorieRing{width:96px!important;height:96px!important;min-width:96px!important}
+ #nutrition .pxCalorieEquation p{display:none}
+ #nutrition .nutritionHero{gap:6px!important}
+ #nutrition .nutritionHero .macroCard{padding:8px 5px!important;min-width:0}
+ #nutrition .nutritionHero .macroCard b{font-size:12px!important}
+ #nutrition .progressFilters{margin-top:8px}
+ #nutrition .progressFilters>div:nth-child(n+2){display:none}
+ #nutrition .nutritionOrderQuick.pxMobileFoodClosed{display:none!important}
+ #nutrition .nutritionOrderLibrary.pxMobileLibraryClosed>:not(.panelHead){display:none!important}
+ #nutrition .nutritionOrderLibrary.pxMobileLibraryClosed .barcodeActions{display:none!important}
+ #nutrition .nutritionOrderLibrary.pxMobileLibraryClosed{padding:10px 12px!important}
+ #nutrition .nutritionOrderToday{margin-top:8px!important}
+ #nutrition .nutritionOrderToday>.panelHead{margin-bottom:6px!important}
+ #nutrition .pxMobileFoodAction{width:100%;min-height:44px;margin:8px 0 2px;font-weight:800}
+ #nutrition .pxMobileLibraryToggle{min-height:44px;white-space:nowrap}
+ #nutrition .nutritionOrderQuick .panelHead .tiny.muted{display:none}
+ #nutrition .nutritionOrderQuick .foodQuickGrid{gap:8px!important}
+ #nutrition .nutritionOrderToday [data-food-entry-id]{padding:9px!important}
+ #nutrition .nutritionOrderToday .panel{margin-bottom:8px!important}
+}
+@media(min-width:601px){#nutrition .pxMobileFoodAction,#nutrition .pxMobileLibraryToggle{display:none!important}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -11936,4 +11966,58 @@ document.documentElement.setAttribute('data-px-interface-ready','');
 new MutationObserver(()=>{pxMintAuthLabels();pxRenderSavePanel()}).observe(document.documentElement,{attributes:true,attributeFilter:['dir','data-theme']});
 </script>
 
+
+<script id="px-food-mobile-compact-behavior">
+(function(){
+ const section=document.getElementById('nutrition');
+ if(!section||document.getElementById('pxMobileFoodAction'))return;
+ const diary=section.querySelector('.nutritionOrderDiary');
+ const quick=section.querySelector('.nutritionOrderQuick');
+ const library=section.querySelector('.nutritionOrderLibrary');
+ if(!diary||!quick||!library)return;
+ const add=document.createElement('button');
+ add.id='pxMobileFoodAction';add.type='button';add.className='btn primary pxMobileFoodAction';
+ add.setAttribute('aria-controls','pxMobileFoodQuick');add.textContent='＋ Add food';
+ quick.id='pxMobileFoodQuick';
+ diary.after(add);
+ const lib=document.createElement('button');
+ lib.type='button';lib.className='btn soft pxMobileLibraryToggle';
+ lib.setAttribute('aria-controls','pxMobileFoodLibrary');
+ library.id='pxMobileFoodLibrary';
+ library.querySelector('.panelHead')?.append(lib);
+ const mobile=()=>window.matchMedia('(max-width:600px)').matches;
+ function setQuick(open,scroll){
+  quick.classList.toggle('pxMobileFoodClosed',!open);
+  add.setAttribute('aria-expanded',String(open));
+  add.textContent=open?'− Close food entry':'＋ Add food';
+  if(open&&scroll)requestAnimationFrame(()=>quick.scrollIntoView({block:'start',behavior:'smooth'}));
+ }
+ function setLibrary(open){
+  library.classList.toggle('pxMobileLibraryClosed',!open);
+  lib.setAttribute('aria-expanded',String(open));
+  lib.textContent=open?'− Close library':'＋ Food library';
+ }
+ setQuick(false,false);setLibrary(false);
+ add.addEventListener('click',()=>setQuick(quick.classList.contains('pxMobileFoodClosed'),true));
+ lib.addEventListener('click',()=>setLibrary(library.classList.contains('pxMobileLibraryClosed')));
+ // Keep existing food actions and handlers intact; reveal their destination before they execute.
+ section.addEventListener('click',e=>{
+  if(!mobile())return;
+  const b=e.target.closest('button');
+  if(!b)return;
+  const action=b.getAttribute('onclick')||'';
+  if(/pxQuickMeal|pxFocusFoodSearch|pxFocusQuickFood|pxQuickFood/.test(action))setQuick(true,false);
+  if(/toggleFoodProductForm|openBarcodeScanner/.test(action)&&library.contains(b))setLibrary(true);
+ },true);
+ // Existing meal shortcuts can invoke the global function without a click on this section.
+ if(typeof window.pxQuickMeal==='function'){
+  const original=window.pxQuickMeal;
+  window.pxQuickMeal=function(){if(mobile())setQuick(true,false);return original.apply(this,arguments)};
+ }
+ if(typeof window.pxFocusFoodSearch==='function'){
+  const original=window.pxFocusFoodSearch;
+  window.pxFocusFoodSearch=function(){if(mobile())setQuick(true,false);return original.apply(this,arguments)};
+ }
+})();
+</script>
 </body></html>
