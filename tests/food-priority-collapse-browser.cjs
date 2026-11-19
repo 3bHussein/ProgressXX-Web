@@ -20,12 +20,16 @@ if(width<=600){
   await p.evaluate(l=>pxSetUILanguage(l),lang);
   assert.equal(await p.locator('html').getAttribute('dir'),lang==='ar'?'rtl':'ltr');
   const row=p.locator('[data-food-entry-id="fixture-entry"]');
-  const info=await row.locator('.foodLogInfo').boundingBox();
-  const name=await row.locator('.foodLogName').boundingBox();
-  const controls=await row.locator('.foodLogControls').boundingBox();
-  assert(name.width>=info.width/2 && name.height<=42,'Mixed-script food name must not stack vertically at '+width+' '+lang);
-  assert(controls.y>=info.y+info.height-1,'Food actions must sit below the entry details');
-  assert.equal(await row.locator('.foodLogEnergy').isVisible(),true);
+  await row.scrollIntoViewIfNeeded();
+  const layout=await row.evaluate(el=>{
+    const info=el.querySelector('.foodLogInfo').getBoundingClientRect();
+    const name=el.querySelector('.foodLogName').getBoundingClientRect();
+    const controls=el.querySelector('.foodLogControls').getBoundingClientRect();
+    return {nameWidth:name.width,nameHeight:name.height,infoWidth:info.width,infoBottom:info.bottom,controlsTop:controls.top};
+  });
+  assert(layout.nameWidth>=layout.infoWidth/2 && layout.nameHeight>0 && layout.nameHeight<=42,'Mixed-script food name must not stack vertically at '+width+' '+lang);
+  assert(layout.controlsTop>=layout.infoBottom-1,'Food actions must sit below entry details at '+width+' '+lang+' '+JSON.stringify(layout));
+  assert.equal(await row.locator('.foodLogEnergy').isVisible(),true,JSON.stringify({width,lang,layout}));
 
   assert.match(await add.textContent(),lang==='ar'?/إضافة أكل/:/Add food/);
   await add.press('Enter');
