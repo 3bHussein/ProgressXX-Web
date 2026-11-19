@@ -1922,14 +1922,30 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
 @media(max-width:600px){
  #nutrition>.panel{min-width:0;margin-block:0 8px!important}
  #nutrition .nutritionOrderDiary,#nutrition .nutritionOrderToday{padding:10px!important}
- #nutrition .pxCalorieDashboard{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px}
- #nutrition .pxCalorieEquation{display:contents}
- #nutrition .pxCalorieRing>div,#nutrition .pxCalorieEquation>div{min-height:60px;padding:6px;align-items:center;justify-content:center;text-align:center}
- #nutrition .pxCalorieEquation>div{background:var(--card2);border:1px solid var(--line);border-radius:12px}
- #nutrition .pxCalorieEquation b,#nutrition .pxCalorieRing b{font-size:clamp(17px,5vw,24px);overflow-wrap:anywhere;max-width:100%}
- #nutrition .pxCalorieEquation span{order:1}
+ #nutrition .pxCalorieDashboard{
+   grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)!important;
+   align-items:stretch;gap:0;overflow:hidden;
+   border:1px solid var(--line);border-radius:16px;background:var(--card2)
+ }
+ #nutrition .pxCalorieRing{
+   background:linear-gradient(to right,var(--accent) var(--progress),var(--line) var(--progress)) bottom/100% 4px no-repeat;
+   padding:0 0 4px;border-radius:0!important
+ }
+ [dir="rtl"] #nutrition .pxCalorieRing{
+   background-image:linear-gradient(to left,var(--accent) var(--progress),var(--line) var(--progress))
+ }
+ #nutrition .pxCalorieRing>div{
+   min-height:82px;padding:8px;border-radius:0;background:transparent
+ }
+ #nutrition .pxCalorieRing b{font-size:clamp(22px,7vw,32px);overflow-wrap:anywhere;max-width:100%}
+ #nutrition .pxCalorieEquation{
+   display:grid;align-content:center;gap:4px;padding:4px 10px;border-inline-start:1px solid var(--line)
+ }
+ #nutrition .pxCalorieEquation>div{margin:0;display:block;min-width:0}
+ #nutrition .pxCalorieEquation span{display:block;line-height:1.2}
+ #nutrition .pxCalorieEquation b{display:block;font-size:17px;line-height:1.2;overflow-wrap:anywhere}
  #nutrition .nutritionHero{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:8px 0}
- #nutrition .macroCard{min-width:0;padding:6px}
+ #nutrition .macroCard{min-width:0;padding:6px;box-shadow:none}
  #nutrition .macroCard b{font-size:12px;overflow-wrap:anywhere}
  #nutrition .nutritionOrderQuick[data-mobile-closed]{padding:0!important;background:transparent;border:0;box-shadow:none}
  #nutrition .nutritionOrderQuick[data-mobile-closed]>:not(.pxMobileFoodAction){display:none!important}
@@ -1939,14 +1955,34 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
  #nutrition .pxMobileFoodTools>.btn{flex:1 1 auto;min-height:44px;padding:6px 8px;font-size:12px;white-space:normal}
  #nutrition .foodMealTitle{margin:0;gap:4px;flex-wrap:nowrap}
  #nutrition .foodMealMeta{flex-wrap:nowrap}
- #nutrition .foodMealMeta>.btn{min-height:44px;padding:5px 8px;font-size:11px}
+ #nutrition .foodMealMeta>.btn{
+   min-height:44px;padding:5px 8px;font-size:11px;color:var(--accent);
+   background:transparent;border-color:transparent
+ }
  #nutrition .foodMealMeta>.pill{display:none}
  #nutrition #pxFoodBatch:not([open]){padding-block:0;margin:8px 0}
- #nutrition .foodMealGroup{padding:4px 8px;margin:6px 0}
+ #nutrition .foodMealGroup{padding:0;margin:8px 0;border-radius:12px;overflow:hidden}
+ #nutrition .foodMealTitle{padding-inline:10px;background:var(--card2)}
+ #nutrition .foodMealGroup:not([data-mobile-closed]) .foodMealTitle{border-block-end:1px solid var(--line)}
+ #nutrition .foodLogCard{
+   margin:0;padding:8px 10px;border:0;border-radius:0
+ }
+ #nutrition .foodLogCard+.foodLogCard{border-block-start:1px solid var(--line)}
+ #nutrition .foodLogTop>div:first-child{min-width:0}
+ #nutrition .foodLogTop .actions{flex-shrink:0}
+ #nutrition .foodLogTop .btn{min-height:44px;font-size:11px}
+ #nutrition .foodLogCard .foodMacros .pill{padding:2px 6px;border-radius:4px}
  #nutrition .pxDesktopMealTitle{display:none}
  #nutrition .pxMobileMealToggle{display:flex;align-items:center;gap:6px;flex:1;min-width:0;min-height:44px;padding:3px 0;background:none;border:0;color:var(--text);font:inherit;text-align:start;white-space:normal;cursor:pointer}
- #nutrition .pxMobileMealToggle::after{content:'+';margin-inline-start:auto;color:var(--muted)}
- #nutrition .pxMobileMealToggle[aria-expanded="true"]::after{content:'−'}
+ #nutrition .pxMobileMealToggle:not(:disabled)::after{
+   content:"";width:6px;height:6px;margin-inline-start:auto;
+   border:solid var(--muted);border-width:0 1.5px 1.5px 0;transform:rotate(45deg)
+ }
+ #nutrition .pxMobileMealToggle[aria-expanded="true"]::after{transform:rotate(225deg)}
+ #nutrition .pxMobileMealToggle:disabled{cursor:default}
+ #nutrition .pxMobileMealToggle:focus-visible,#nutrition .foodMealMeta>.btn:focus-visible{
+   outline:2px solid var(--accent);outline-offset:-3px
+ }
  #nutrition .pxMobileMealToggle small{font-size:10px;color:var(--muted)}
  #nutrition .foodMealGroup[data-mobile-closed]>.pxMobileMealRows{display:none}
  #nutrition>.nutritionOrderLibrary:not([open]),#nutrition>.nutritionExtras:not([open]){padding-block:4px!important;margin-block:4px!important}
