@@ -21,8 +21,9 @@ const assert=require('node:assert/strict');const {browserType,engine}=require('.
  await p.locator('[onclick="sessionSaveNext()"]').click();await p.evaluate(()=>{closeWorkoutSession();openWorkoutSession()});assert.equal(await p.locator('#sessionSummary').isVisible(),false);await p.locator('#sessionResumePrompt').getByRole('button',{name:'Resume session',exact:true}).click();assert.equal(await p.locator('#sessionSummary').isVisible(),true);await p.evaluate(()=>finishWorkoutSession());assert.equal(await p.evaluate(()=>PXStore.getItem(WORKOUT_SESSION_KEY)),null);assert.equal(await p.evaluate(()=>data.filter(x=>x.week===21).map(x=>x.performance).join('|')),'30*8,30*8|Completed');
  await p.evaluate(()=>{openWorkoutSession();$('sessionDaySelect').value='Push';$('sessionWeekSelect').value='22';startWorkoutSession();window.qaPersistedDraft=PXStore.getItem(WORKOUT_SESSION_KEY);window.qaOriginalSet=qaStore.setItem;qaStore.setItem=(k,v)=>{if(k!==WORKOUT_SESSION_KEY)qaOriginalSet(k,v)}});await p.locator('#sessionNotes').fill('Cannot persist silently');assert.match(await p.locator('#pxSessionDraftNotice').textContent(),/Could not save the draft/);assert.equal(await p.evaluate(()=>PXStore.getItem(WORKOUT_SESSION_KEY)===qaPersistedDraft),true);await p.evaluate(()=>{qaStore.setItem=qaOriginalSet;pxCaptureSessionDraft();restartWorkoutSession()});assert.match(dialogs.pop(),/Discard unsaved/);assert.equal(await p.evaluate(()=>Boolean(workoutSession)),true);await p.evaluate(()=>finishWorkoutSession());
  const openRepeatMeal=async()=>{
-  const add=p.locator('#pxMobileFoodAction[aria-expanded=false]');
-  if(await add.isVisible())await add.click();
+  const add=p.locator('#pxMobileFoodAction');
+  await add.waitFor({state:'visible'});
+  if(await add.getAttribute('aria-expanded')==='false')await add.click();
   await p.locator('#pxRepeatMeals>summary').click();
  };
  // Repeat the original meal snapshot without needing a current food-library item.
