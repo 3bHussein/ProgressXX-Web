@@ -2,6 +2,12 @@
 
 Production: root `index.html`. Version labels identify frontend releases; they do not approve commercial launch or change data formats. Exact commits and CI/deployment evidence are recorded in `docs/DEVELOPMENT-LOG.md`.
 
+## 2.1.1 — 2026-11-19 — frontend release candidate
+
+- Compact the mobile Food summary and show Quick add when requested. Add direct recent, favorite and barcode actions, collapsible meals and keyboard focus return after editing.
+- Retain the Food portions, history, offline queues and account storage contracts. Expand synthetic browser coverage for Arabic and English mobile widths and Food actions.
+- Pin Playwright CI and the Pages smoke job to Ubuntu 24.04. See [PR #53](https://github.com/3bHussein/ProgressXX-Web/pull/53) and the [development notes](docs/COMPACT-FOOD-NAVIGATION.md#november-19-verification) for the release checks and deployment status.
+
 ## 2.1.0 — 2026-10-14 — verified frontend release
 
 - Preserve Food portion metadata across confirmed refreshes; show explicit calorie units and whole-entry quantities when a physical portion is unknown.

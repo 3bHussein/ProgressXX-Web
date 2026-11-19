@@ -1916,6 +1916,42 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
 <style id="px-first-paint">html:not([data-px-interface-ready]) body{visibility:hidden}</style>
 <noscript><style>body{visibility:visible!important}</style></noscript>
 <script>document.addEventListener('DOMContentLoaded',()=>{document.documentElement.setAttribute('data-px-interface-ready','')},{once:true});</script>
+
+<style id="px-food-mobile-compact">
+.pxMobileFoodAction,.pxMobileFoodTools,.pxMobileMealToggle{display:none}
+@media(max-width:600px){
+ #nutrition>.panel{min-width:0;margin-block:0 8px!important}
+ #nutrition .nutritionOrderDiary,#nutrition .nutritionOrderToday{padding:10px!important}
+ #nutrition .pxCalorieDashboard{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px}
+ #nutrition .pxCalorieEquation{display:contents}
+ #nutrition .pxCalorieRing>div,#nutrition .pxCalorieEquation>div{min-height:60px;padding:6px;align-items:center;justify-content:center;text-align:center}
+ #nutrition .pxCalorieEquation>div{background:var(--card2);border:1px solid var(--line);border-radius:12px}
+ #nutrition .pxCalorieEquation b,#nutrition .pxCalorieRing b{font-size:clamp(17px,5vw,24px);overflow-wrap:anywhere;max-width:100%}
+ #nutrition .pxCalorieEquation span{order:1}
+ #nutrition .nutritionHero{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:8px 0}
+ #nutrition .macroCard{min-width:0;padding:6px}
+ #nutrition .macroCard b{font-size:12px;overflow-wrap:anywhere}
+ #nutrition .nutritionOrderQuick[data-mobile-closed]{padding:0!important;background:transparent;border:0;box-shadow:none}
+ #nutrition .nutritionOrderQuick[data-mobile-closed]>:not(.pxMobileFoodAction){display:none!important}
+ #nutrition .pxMobileFoodAction{display:block;width:100%;min-height:44px;font-weight:800}
+ #nutrition .nutritionOrderQuick:not([data-mobile-closed])>.pxMobileFoodAction{margin-bottom:8px}
+ #nutrition .pxMobileFoodTools{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+ #nutrition .pxMobileFoodTools>.btn{flex:1 1 auto;min-height:44px;padding:6px 8px;font-size:12px;white-space:normal}
+ #nutrition .foodMealTitle{margin:0;gap:4px;flex-wrap:nowrap}
+ #nutrition .foodMealMeta{flex-wrap:nowrap}
+ #nutrition .foodMealMeta>.btn{min-height:44px;padding:5px 8px;font-size:11px}
+ #nutrition .foodMealMeta>.pill{display:none}
+ #nutrition #pxFoodBatch:not([open]){padding-block:0;margin:8px 0}
+ #nutrition .foodMealGroup{padding:4px 8px;margin:6px 0}
+ #nutrition .pxDesktopMealTitle{display:none}
+ #nutrition .pxMobileMealToggle{display:flex;align-items:center;gap:6px;flex:1;min-width:0;min-height:44px;padding:3px 0;background:none;border:0;color:var(--text);font:inherit;text-align:start;white-space:normal;cursor:pointer}
+ #nutrition .pxMobileMealToggle::after{content:'+';margin-inline-start:auto;color:var(--muted)}
+ #nutrition .pxMobileMealToggle[aria-expanded="true"]::after{content:'−'}
+ #nutrition .pxMobileMealToggle small{font-size:10px;color:var(--muted)}
+ #nutrition .foodMealGroup[data-mobile-closed]>.pxMobileMealRows{display:none}
+ #nutrition>.nutritionOrderLibrary:not([open]),#nutrition>.nutritionExtras:not([open]){padding-block:4px!important;margin-block:4px!important}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -2306,7 +2342,7 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
 
     <div class="progressFilters">
       <div>
-        <label class="tiny muted">Diary date</label>
+        <label class="tiny muted" for="nutritionDate">Diary date</label>
         <input id="nutritionDate" type="date">
       </div>
       <div>
@@ -2359,7 +2395,7 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
         <select id="foodQuickProduct"></select>
       </div>
       <div>
-        <label class="tiny muted">Meal</label>
+        <label class="tiny muted" for="foodQuickMeal">Meal</label>
         <select id="foodQuickMeal"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option></select>
       </div>
       <div>
@@ -2367,7 +2403,7 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
         <input id="foodQuickTime" type="time" readonly aria-label="Current add time">
       </div>
       <div>
-        <label id="foodQuickAmountLabel" class="tiny muted">Amount</label>
+        <label id="foodQuickAmountLabel" class="tiny muted" for="foodQuickAmount">Amount</label>
         <input id="foodQuickAmount" type="number" min="0" step=".1" value="1">
       </div>
       <button class="btn primary" onclick="addFoodToDiary()">＋ Add</button>
@@ -2410,7 +2446,7 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
         <div class="wide"><label class="tiny muted">Food</label><input id="foodEntryEditName" readonly></div>
         <div><label class="tiny muted">Meal</label><select id="foodEntryEditMeal"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option></select></div>
         <div><label class="tiny muted">Time</label><input id="foodEntryEditTime" type="time"></div>
-        <div><label id="foodEntryEditAmountLabel" class="tiny muted">Amount</label><input id="foodEntryEditAmount" type="number" min=".01" step=".1"></div>
+        <div><label id="foodEntryEditAmountLabel" class="tiny muted" for="foodEntryEditAmount">Amount</label><input id="foodEntryEditAmount" type="number" min=".01" step=".1"></div>
       </div>
       <div id="foodEntryEditPreview" class="callout" style="margin-top:9px"></div>
       <div class="dailyFormActions">
@@ -2823,11 +2859,11 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
         <h3>Version & Changelog</h3>
         <div class="tiny muted">Current ProgressX build and recent major additions.</div>
       </div>
-      <span id="appVersionBadge" class="pill">v2.1.0</span>
+      <span id="appVersionBadge" class="pill">v2.1.1</span>
     </div>
 
     <div class="versionMetaGrid">
-      <div class="versionMetaCard"><b id="appVersionText">v2.1.0</b><span>Version</span></div>
+      <div class="versionMetaCard"><b id="appVersionText">v2.1.1</b><span>Version</span></div>
       <div class="versionMetaCard"><b id="appBuildDate">2026-10-14</b><span>Build date</span></div>
       <div class="versionMetaCard"><b>Private</b><span>Edition</span></div>
     </div>
@@ -3056,7 +3092,7 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
 <script>
 const PROGRESSX_BUNDLED=[];
 let bundled=[],data=[],activeDay='All',editingId=null,currentPage='home';const KEY='progressx-data-v19', SCRIPT_URL_KEY='progressx-appscript-url-v19', SHEET_URL='', DEFAULT_APPS_SCRIPT_URL='', $=id=>document.getElementById(id);const clone=x=>JSON.parse(JSON.stringify(x));
-const APP_VERSION='2.1.0';
+const APP_VERSION='2.1.1';
 const APP_BUILD_DATE='2026-10-14';
 const WORKOUT_QUEUE_KEY='progressx-workout-sync-queue-v1';
 const SYNC_META_KEY='progressx-sync-meta-v1';
@@ -7278,6 +7314,7 @@ function pxRenderScheduleDeload(){
  box.hidden=!box.childElementCount;
 }
 
+let pxMealDisclosureScope,pxMealDisclosureDate;
 function renderNutrition(){
  if(typeof pxCheckNavigationScope==='function')pxCheckNavigationScope();
  if(typeof pxRefreshInsightIfVisible==='function')pxRefreshInsightIfVisible();
@@ -7291,21 +7328,40 @@ function renderNutrition(){
   $('foodEntryCount').textContent=`${entries.length} item${entries.length===1?'':'s'}`;
 
   const meals=['Breakfast','Lunch','Dinner','Snack','Other'];
-  $('foodDiaryList').innerHTML=meals.map(meal=>{
+  const list=$('foodDiaryList');
+  const scope=typeof pxSafetyScope==='function'?pxSafetyScope():null;
+  const date=$('nutritionDate').value;
+  const previousMeals=pxMealDisclosureScope===scope&&pxMealDisclosureDate===date
+    ? new Map([...list.querySelectorAll('[data-meal-disclosure]:not(.pxFoodMealEmpty)')].map(group=>[group.dataset.mealDisclosure,!group.hasAttribute('data-mobile-closed')]))
+    : new Map();
+  const active=document.activeElement;
+  const focusedMeal=list.contains(active)?active.dataset.mealToggle:null;
+  const focusedEdit=matchMedia('(max-width:600px)').matches&&active?.matches('[data-food-edit]')?active.closest('[data-food-entry-id]').dataset.foodEntryId:null;
+  pxMealDisclosureScope=scope;
+  pxMealDisclosureDate=date;
+  list.innerHTML=meals.map(meal=>{
     const rows=entries
       .filter(x=>meal==='Other'?!['Breakfast','Lunch','Dinner','Snack'].includes(x.meal):x.meal===meal)
       .sort((a,b)=>String(foodEntryTime(a)||'99:99').localeCompare(String(foodEntryTime(b)||'99:99')));
     if(!rows.length&&meal==='Other')return '';
     const mealCals=Math.round(rows.reduce((s,x)=>s+(Number(x.calories)||0),0));
     const mealIcon={Breakfast:'🌅',Lunch:'☀️',Dinner:'🌙',Snack:'🍎'}[meal]||'🍽️';
-    return `<div class="foodMealGroup${rows.length?'':' pxFoodMealEmpty'}">
+    const mealLabel=meal==='Snack'?'Snacks':meal;
+    const expanded=rows.length>0&&(previousMeals.get(meal)??true);
+    const ar={Breakfast:'الفطار',Lunch:'الغدا',Dinner:'العشا',Snack:'وجبات خفيفة',Other:'أخرى'}[meal];
+    return `<div class="foodMealGroup${rows.length?'':' pxFoodMealEmpty'}" data-meal-disclosure="${meal}" ${expanded?'':'data-mobile-closed'}>
       <div class="foodMealTitle">
-        <span>${mealIcon} ${meal==='Snack'?'Snacks':meal}</span>
+        <span class="pxDesktopMealTitle">${mealIcon} ${mealLabel}</span>
+        <button type="button" class="pxMobileMealToggle" data-meal-toggle="${meal}" data-px-user="1" aria-expanded="${expanded}" aria-controls="pxMealRows-${meal}" ${rows.length?'':'disabled'}>
+          <span data-meal-en="${mealLabel}" data-meal-ar="${ar}" data-meal-icon="${mealIcon}">${mealIcon} ${document.documentElement.lang==='ar'?ar:mealLabel}</span><small>${mealCals} <span>${document.documentElement.lang==='ar'?'سعرة':'kcal'}</span></small>
+        </button>
         <span class="foodMealMeta"><span class="tiny muted">${rows.length} item${rows.length===1?'':'s'}</span><span class="pill">${mealCals} kcal</span><button type="button" class="btn soft" onclick="pxQuickMeal('${meal}')">＋ Add food</button></span>
       </div>
-      ${rows.map(foodLogCard).join('')}
+      <div class="pxMobileMealRows" id="pxMealRows-${meal}">${rows.map(foodLogCard).join('')}</div>
     </div>`;
   }).join('')||'<div class="empty">No food logged for this day.</div>';
+  if(focusedMeal)list.querySelector(`[data-meal-toggle="${focusedMeal}"]`)?.focus({preventScroll:true});
+  if(focusedEdit)pxFocusFoodEditButton(focusedEdit);
 
   renderFoodLibrary();
   buildFoodQuickSelect();
@@ -7539,7 +7595,7 @@ function foodLogCard(x){
         <div class="tiny muted">${pnum(x.amount)} ${esc(x.servingUnit)} • ${Math.round(Number(x.calories)||0)} kcal${foodEntryTime(x)?' • <span class="foodLogTime">🕒 '+esc(foodEntryTime(x))+'</span>':''}</div>
       </div>
       <div class="actions">
-        <button class="btn soft" style="padding:7px 10px" onclick="openFoodEntryEdit('${esc(x.id)}')">Edit</button>
+        <button class="btn soft" style="padding:7px 10px" data-food-edit onclick="openFoodEntryEdit('${esc(x.id)}')">Edit</button>
         <button class="btn danger" style="padding:7px 10px" onclick="deleteFoodLogEntry('${esc(x.id)}')">Delete</button>
       </div>
     </div>
@@ -8211,9 +8267,17 @@ async function addFoodToDiary(){
 
 }
 
+function pxFocusFoodEditButton(id){
+  const list=$('foodDiaryList');
+  const button=list.querySelector(`[data-food-entry-id="${CSS.escape(id)}"] [data-food-edit]`);
+  if(button?.getClientRects().length)button.focus({preventScroll:true});
+  else list.querySelector('.pxMobileMealToggle:not(:disabled)')?.focus({preventScroll:true});
+}
 function closeFoodEntryEdit(){
+  const id=$('foodEntryEditId')?.value;
   $('foodEntryEditForm')?.classList.remove('open');
   if($('foodEntryEditId'))$('foodEntryEditId').value='';
+  if(id&&matchMedia('(max-width:600px)').matches)pxFocusFoodEditButton(id);
 }
 function openFoodEntryEdit(id){
   const x=foodLog.find(r=>String(r.id)===String(id));
@@ -8227,6 +8291,7 @@ function openFoodEntryEdit(id){
   $('foodEntryEditForm').classList.add('open');
   updateFoodEntryEditPreview();
   $('foodEntryEditForm').scrollIntoView({behavior:pxScrollBehavior(),block:'nearest'});
+  if(matchMedia('(max-width:600px)').matches)$('foodEntryEditAmount').focus({preventScroll:true});
 }
 function updateFoodEntryEditPreview(){
   const id=$('foodEntryEditId')?.value;
@@ -11078,6 +11143,7 @@ function pxSetUILanguage(language,persist=true){
  renderProgressPhotos();pxRenderQuickFoods();if(typeof pxUpdateMobilePage==='function')pxUpdateMobilePage(document.querySelector('.bottomNav .navbtn.active')?.dataset.page||'home');
  if(typeof pxRenderUsualFoods==='function'){pxRenderUsualFoods();renderFavoriteFoods();renderRecentFoods()}
  if(typeof pxFoodCalmLabels==='function')pxFoodCalmLabels();
+ if(typeof pxLabelMobileFood==='function')pxLabelMobileFood();
  if(typeof pxRenderFoodWorkflow==='function')pxRenderFoodWorkflow();
  if(typeof pxRenderDailyWorkspace==='function')pxRenderDailyWorkspace();if(typeof pxWorkspaceLabels==='function')pxWorkspaceLabels();
  if(typeof pxRenderCompactLabels==='function')pxRenderCompactLabels();
@@ -11505,10 +11571,10 @@ function pxUsualFoodRows(today=localDateKey(),limit=6){
 function pxRenderPortionButtons(host,rows,cls){
  host.setAttribute('data-px-user','1');host.replaceChildren(...rows.map(row=>{const button=document.createElement('button');button.type='button';button.className='btn soft '+cls;const name=document.createElement('span');name.className='recentFoodName';name.dir='auto';name.textContent=row.name;const meta=document.createElement('span');meta.className='recentFoodMeta';meta.textContent=String(Number(row.amount))+' '+row.servingUnit+' • '+pxExplain(row.meal,PX_UI_AR[row.meal]||row.meal);button.append(name,meta);button.onclick=()=>quickReAddFood(row.productId,row.meal,row.amount,row.servingUnit);return button}));
 }
-function pxChooseUsualFood(id){
+function pxChooseUsualFood(id){pxRevealNavigationTarget($('foodQuickProduct'));
  const item=pxUsualFoodRows(localDateKey(),foodProducts.length).find(x=>String(x.product.id)===String(id));if(!item)return;const select=$('foodQuickProduct');select.value=String(id);$('foodQuickAmount').dataset.changed='1';$('foodQuickAmount').value=Number(item.last.amount);updateFoodQuickPreview();pxRenderUsualFoods();$('foodQuickAmount').scrollIntoView({behavior:pxScrollBehavior(),block:'center'});$('foodQuickAmount').focus({preventScroll:true});
 }
-function pxSearchUsualFood(){const browse=$('pxFoodBrowse');browse.open=true;pxFilterQuickFoods('all');const input=$('pxQuickFoodSearch');input.scrollIntoView({behavior:pxScrollBehavior(),block:'center'});input.focus({preventScroll:true})}
+function pxSearchUsualFood(){pxRevealNavigationTarget($('foodQuickProduct'));const browse=$('pxFoodBrowse');browse.open=true;pxFilterQuickFoods('all');const input=$('pxQuickFoodSearch');input.scrollIntoView({behavior:pxScrollBehavior(),block:'center'});input.focus({preventScroll:true})}
 function pxRenderUsualFoods(){
  const quick=document.querySelector('#nutrition .nutritionOrderQuick');if(!quick)return;let root=$('pxUsualFoods');if(!root){root=document.createElement('div');root.id='pxUsualFoods';root.className='pxUsualFoods';root.setAttribute('data-px-user','1');root.innerHTML='<div class="pxUsualFoodsHead"><h4></h4><button class="btn soft" type="button"></button></div><p></p><div id="pxUsualFoodGrid" class="pxUsualFoodGrid"></div>';quick.querySelector('.panelHead').after(root);root.querySelector('button').onclick=pxSearchUsualFood;$('foodQuickProduct').addEventListener('change',pxRenderUsualFoods)}
  root.querySelector('h4').textContent=pxExplain('Your usual foods','أكلك المعتاد');root.querySelector('button').textContent=pxExplain('Search all foods','ابحث في كل الأطعمة');root.querySelector('p').textContent=pxExplain('Choose a food. Review the amount, then Add.','اختار أكلة، راجع الكمية، واضغط إضافة.');
@@ -11559,7 +11625,10 @@ function pxInitFoodWorkflow(){
  library.querySelector('.panelHead').after(manage);$('pxPortionProduct').onchange=()=>pxRenderPortionManager();$('pxPortionSaveActions').append(pxWorkflowButton('Save portion','حفظ الحصة',()=>{const ok=pxSaveFoodPortion($('pxPortionProduct').value,$('pxPortionName').value,$('pxPortionBase').value);$('pxPortionMessage').textContent=ok?pxExplain('Portion saved. Choose it in Quick add.','تم حفظ الحصة. اختارها من الإضافة السريعة.'):pxExplain('Enter a name and a positive quantity. Wait for a new product to finish saving first. Maximum 12 portions.','أدخل اسمًا وكمية موجبة. انتظر اكتمال حفظ المنتج الجديد أولًا. الحد الأقصى ١٢ حصة.');if(ok){$('pxPortionName').value='';$('pxPortionBase').value='';pxRenderPortionManager()}}));
  const archiveLabel=pxWorkflowNode('label',undefined,'pxBatchChoice');const archiveView=pxWorkflowNode('input');archiveView.type='checkbox';archiveView.id='pxShowArchivedFoods';archiveView.onchange=renderFoodLibrary;archiveLabel.append(archiveView,pxWorkflowNode('span'));manage.after(archiveLabel);
  const batch=pxWorkflowDetails('pxFoodBatch','Select & move foods together','اختار وانقل أطعمة معًا');batch.innerHTML+='<p></p><div class="pxWorkflowGrid"><div><label for="pxBatchMeal"></label><select id="pxBatchMeal"><option value="">—</option><option value="Breakfast">Breakfast</option><option value="Lunch">Lunch</option><option value="Dinner">Dinner</option><option value="Snack">Snack</option></select></div><div><label for="pxBatchDate"></label><input type="date" id="pxBatchDate"></div></div><div class="actions" id="pxBatchActions"></div><p id="pxBatchStatus" role="status"></p>';
- document.querySelector('#nutrition .nutritionOrderToday .panelHead').after(batch);$('pxBatchActions').append(pxWorkflowButton('Select all','تحديد الكل',()=>{pxResetBatchScope();pxBatchSelection=new Set(nutritionEntries().map(x=>String(x.id)));pxRenderFoodBatch()}),pxWorkflowButton('Clear selection','إلغاء التحديد',()=>{pxBatchSelection.clear();pxRenderFoodBatch()}),pxWorkflowButton('Move selected foods','نقل الأطعمة المحددة',pxApplyFoodBatch));batch.addEventListener('toggle',()=>pxRenderFoodBatch());
+ document.querySelector('#nutrition .nutritionOrderToday .panelHead').after(batch);$('pxBatchActions').append(pxWorkflowButton('Select all','تحديد الكل',()=>{pxResetBatchScope();pxBatchSelection=new Set(nutritionEntries().map(x=>String(x.id)));pxRenderFoodBatch()}),pxWorkflowButton('Clear selection','إلغاء التحديد',()=>{pxBatchSelection.clear();pxRenderFoodBatch()}),pxWorkflowButton('Move selected foods','نقل الأطعمة المحددة',pxApplyFoodBatch));batch.addEventListener('toggle',()=>{
+   if(batch.open)document.querySelectorAll('#foodDiaryList .pxMobileMealToggle:not(:disabled)').forEach(button=>pxSetMobileMeal(button,true));
+   pxRenderFoodBatch();
+ });
  const optional=pxWorkflowDetails('pxOptionalSections','Choose visible sections','اختار الأقسام الظاهرة');optional.classList.add('panel');optional.append(pxWorkflowNode('p'),pxWorkflowNode('div',undefined,'pxWorkflowChecks'));$('pxSettingsHub').append(optional);
  const analytics=$('analytics'),button=pxWorkflowButton('Weekly report / share','التقرير الأسبوعي / مشاركة',pxOpenWeeklyReport);button.id='pxWeeklyReportButton';button.classList.add('pxReportOpener');analytics.querySelector('.panel')?.prepend(button);
  const dialog=pxWorkflowNode('dialog',undefined,'pxReportDialog');dialog.id='pxWeeklyReportDialog';dialog.dataset.pxUser='1';dialog.innerHTML='<h2></h2><label for="pxReportDate"></label><input id="pxReportDate" type="date" style="max-width:100%;min-height:44px"><div id="pxWeeklyReportBody"></div><div class="actions" id="pxWeeklyReportActions"></div>';document.body.append(dialog);$('pxWeeklyReportActions').append(pxWorkflowButton('Print / save PDF','طباعة / حفظ PDF',()=>{document.body.classList.add('pxPrintingReport');window.print();document.body.classList.remove('pxPrintingReport')}),pxWorkflowButton('Share / download text','مشاركة / تنزيل نص',pxShareWeeklyReport),pxWorkflowButton('Close','إغلاق',()=>dialog.close()));$('pxReportDate').onchange=pxRenderWeeklyReport;dialog.addEventListener('close',()=>{document.body.classList.remove('pxPrintingReport');pxReportReturn?.focus?.({preventScroll:true})});
@@ -11725,7 +11794,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 <script id="px-compact-navigation">
 let pxNavigationScope=null,pxNavigationFocus=new Map(),pxRepeatFoodLimit=8,pxRepeatFoodScope=null,pxNavigationOpener=null,pxRepeatFoodOpener=null;
-function pxCheckNavigationScope(){const scope=pxSafetyScope();if(pxNavigationScope!==scope){pxNavigationScope=scope;pxNavigationFocus.clear();document.querySelectorAll('.pxSectionHidden').forEach(n=>n.classList.remove('pxSectionHidden'));document.querySelectorAll('.pxFocusNotice').forEach(n=>n.hidden=true);for(const id of ['pxPageSectionsDialog','pxRepeatFoodDialog']){const d=$(id);if(d?.open)d.close()}$('pxRepeatFoodList')?.replaceChildren();if($('pxRepeatFoodSearch'))$('pxRepeatFoodSearch').value='';pxNavigationOpener=null;pxRepeatFoodOpener=null;pxRepeatFoodScope=null}}
+function pxCheckNavigationScope(){const scope=pxSafetyScope();if(pxNavigationScope!==scope){pxNavigationScope=scope;pxNavigationFocus.clear();if(typeof pxSetMobileQuick==='function')pxSetMobileQuick(false);document.querySelectorAll('.pxSectionHidden').forEach(n=>n.classList.remove('pxSectionHidden'));document.querySelectorAll('.pxFocusNotice').forEach(n=>n.hidden=true);for(const id of ['pxPageSectionsDialog','pxRepeatFoodDialog']){const d=$(id);if(d?.open)d.close()}$('pxRepeatFoodList')?.replaceChildren();if($('pxRepeatFoodSearch'))$('pxRepeatFoodSearch').value='';pxNavigationOpener=null;pxRepeatFoodOpener=null;pxRepeatFoodScope=null}}
 function pxPageTargets(page){const root=$(page);if(!root)return [];let nodes;
  if(page==='nutrition')nodes=[...root.children].filter(n=>n.matches('.panel'));
  else if(page==='analytics')nodes=[root.querySelector('.progressOrderWeight'),root.querySelector('.progressOrderWeekly'),...($('pxProgressExtras')?[...$('pxProgressExtras').children].filter(n=>n.matches('.panel,.two')):[])];
@@ -11744,7 +11813,7 @@ function pxShowPageSection(page,id,focus=true){
  pxNavigationOpener=null;$('pxPageSectionsDialog')?.close();target.node.scrollIntoView({behavior:pxScrollBehavior(),block:'start'});let heading=target.node.matches('details')?target.node.querySelector('summary'):target.node.querySelector('h3,h4');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true})}pxMarkFoodSection();
 }
 function pxShowAllPageSections(page){pxNavigationFocus.set(page,null);pxPageTargets(page).forEach(t=>t.node.classList.remove('pxSectionHidden'));const notice=$(page)?.querySelector(':scope>.pxFocusNotice');if(notice)notice.hidden=true;pxMarkFoodSection();scrollTo({top:0,behavior:pxScrollBehavior()})}
-function pxRevealNavigationTarget(node,changeFocus=true){if(!node)return;const root=node.closest('.section');if(!root)return;const targets=pxPageTargets(root.id),chosen=targets.find(t=>t.node===node||t.node.contains(node));if(!chosen&&changeFocus&&pxNavigationFocus.get(root.id)&&targets.some(t=>node.contains(t.node)))pxShowAllPageSections(root.id);if(chosen&&changeFocus&&pxNavigationFocus.get(root.id)&&pxNavigationFocus.get(root.id)!==chosen.node.id){targets.forEach(t=>t.node.classList.toggle('pxSectionHidden',t!==chosen));pxNavigationFocus.set(root.id,chosen.node.id);const notice=root.querySelector(':scope>.pxFocusNotice');if(notice)notice.querySelector('span').textContent=chosen.label+(root.id==='nutrition'?' · '+pxInsightLtr($('nutritionDate').value):'')}for(let p=node;p&&p!==root;p=p.parentElement){p.classList.remove('pxSectionHidden');if(p.matches('details'))p.open=true;if(p.classList.contains('pxOptionalHidden'))p.classList.remove('pxOptionalHidden')}pxMarkFoodSection()}
+function pxRevealNavigationTarget(node,changeFocus=true){if(!node)return;const root=node.closest('.section');if(!root)return;const targets=pxPageTargets(root.id),chosen=targets.find(t=>t.node===node||t.node.contains(node));if(!chosen&&changeFocus&&pxNavigationFocus.get(root.id)&&targets.some(t=>node.contains(t.node)))pxShowAllPageSections(root.id);if(chosen&&changeFocus&&pxNavigationFocus.get(root.id)&&pxNavigationFocus.get(root.id)!==chosen.node.id){targets.forEach(t=>t.node.classList.toggle('pxSectionHidden',t!==chosen));pxNavigationFocus.set(root.id,chosen.node.id);const notice=root.querySelector(':scope>.pxFocusNotice');if(notice)notice.querySelector('span').textContent=chosen.label+(root.id==='nutrition'?' · '+pxInsightLtr($('nutritionDate').value):'')}for(let p=node;p&&p!==root;p=p.parentElement){if(root.id==='nutrition'&&p.matches('.nutritionOrderQuick')&&matchMedia('(max-width:600px)').matches)window.pxSetMobileQuick?.(true);p.classList.remove('pxSectionHidden');if(p.matches('details'))p.open=true;if(p.classList.contains('pxOptionalHidden'))p.classList.remove('pxOptionalHidden')}pxMarkFoodSection()}
 function pxMarkFoodSection(){if(!$('pxFoodSections'))return;document.querySelectorAll('#pxFoodSections [data-food-section]').forEach(b=>b.setAttribute('aria-pressed',String(pxNavigationFocus.get('nutrition')===b.dataset.foodSection)))}
 function pxRenderSectionNavigation(page=currentPage){if(!$('pxPageSectionsButton'))return;pxCheckNavigationScope();$('pxPageSectionsButton').hidden=page==='settings'||pxPageTargets(page).length<2;$('pxPageSectionsButton').textContent=pxExplain('Sections','الأقسام');$('pxPageSectionsButton').setAttribute('aria-label',pxExplain('Browse sections on this page','تصفح أقسام الصفحة'));pxMarkFoodSection()}
 function pxOpenPageSections(){
@@ -11936,4 +12005,65 @@ document.documentElement.setAttribute('data-px-interface-ready','');
 new MutationObserver(()=>{pxMintAuthLabels();pxRenderSavePanel()}).observe(document.documentElement,{attributes:true,attributeFilter:['dir','data-theme']});
 </script>
 
+
+<script id="px-food-mobile-compact-behavior">
+function pxSetMobileQuick(open){
+ const opener=$('pxMobileFoodAction');
+ if(!opener)return;
+ opener.closest('.nutritionOrderQuick').toggleAttribute('data-mobile-closed',!open);
+ opener.setAttribute('aria-expanded',String(open));
+ opener.textContent=open?pxExplain('Close food entry','إغلاق إضافة الأكل'):pxExplain('＋ Add food','＋ إضافة أكل');
+}
+function pxLabelMobileFood(){
+ const opener=$('pxMobileFoodAction');
+ if(opener)pxSetMobileQuick(opener.getAttribute('aria-expanded')==='true');
+ for(const label of $('foodDiaryList').querySelectorAll('[data-meal-en]')){
+  label.textContent=label.dataset.mealIcon+' '+pxExplain(label.dataset.mealEn,label.dataset.mealAr);
+  label.nextElementSibling.lastElementChild.textContent=pxExplain('kcal','سعرة');
+ }
+}
+function pxSetMobileMeal(button,open){
+ button.closest('.foodMealGroup').toggleAttribute('data-mobile-closed',!open);
+ button.setAttribute('aria-expanded',String(open));
+}
+function pxInitMobileFood(){
+ const quick=document.querySelector('#nutrition .nutritionOrderQuick');
+ const opener=pxWorkspaceButton('＋ Add food','＋ إضافة أكل',()=>{
+  const open=opener.getAttribute('aria-expanded')!=='true';
+  pxSetMobileQuick(open);
+  if(open){
+   const field=$('foodQuickProduct');
+   field.scrollIntoView({block:'center',behavior:pxScrollBehavior()});
+   field.focus({preventScroll:true});
+  }
+ });
+ opener.id='pxMobileFoodAction';
+ opener.className='btn primary pxMobileFoodAction';
+ opener.setAttribute('aria-controls','pxMobileQuickContent');
+ const tools=document.createElement('div');
+ tools.className='pxMobileFoodTools';
+ const browse=(mode)=>{
+  $('pxFoodBrowse').open=true;
+  pxFilterQuickFoods(mode);
+  const field=$('pxQuickFoodSearch');
+  field.scrollIntoView({block:'center',behavior:pxScrollBehavior()});
+  field.focus({preventScroll:true});
+ };
+ tools.append(
+  pxWorkflowButton('Recent','الأخيرة',()=>browse('recent')),
+  pxWorkflowButton('Favorites','المفضلة',()=>browse('favorites')),
+  pxWorkflowButton('Scan barcode','مسح الباركود',openBarcodeScanner)
+ );
+ quick.querySelector('.panelHead').after(tools);
+ // Keep existing direct-child layout and navigation selectors intact.
+ quick.querySelector('.foodQuickGrid').id='pxMobileQuickContent';
+ quick.prepend(opener);
+ pxSetMobileQuick(false);
+ $('foodDiaryList').addEventListener('click',event=>{
+  const button=event.target.closest('[data-meal-toggle]');
+  if(button)pxSetMobileMeal(button,button.getAttribute('aria-expanded')!=='true');
+ });
+}
+pxInitMobileFood();
+</script>
 </body></html>
