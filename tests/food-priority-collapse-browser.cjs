@@ -1,12 +1,45 @@
 const assert=require('node:assert/strict'),{browserType,engine}=require('./helpers/browser-engine.cjs');
-(async()=>{const b=await browserType.launch({headless:true});let backend=0;try{for(const width of [320,390,768,1280]){
+(async()=>{const b=await browserType.launch({headless:true});let backend=0;try{for(const width of [320,360,390,430,768,1280]){
 const p=await b.newPage({viewport:{width,height:900}});await p.route('**/*',r=>{const u=new URL(r.request().url());if(u.hostname==='127.0.0.1')return r.continue();if(u.hostname.endsWith('supabase.co'))backend++;return r.abort()});
 await p.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded'});await p.locator('#pxEmail').waitFor({state:'visible'});
 const initial=await p.evaluate(()=>{$('pxCommercialGate').hidden=true;document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id==='nutrition'));foodProducts=['Banana','Oats 10','apple','Apple','Oats 2'].map((name,i)=>({id:'food-'+i,name,servingQty:100,servingUnit:'g',calories:100,protein:10,carbs:10,fat:1}));foodLog=[{id:'fixture-entry',productId:'food-2',name:'apple',date:'2026-10-13',meal:'Breakfast',time:'09:00',amount:100,calories:100,protein:10,carbs:10,fat:1}];$('nutritionDate').value='2026-10-13';window.qaDiary=JSON.stringify(foodLog);window.qaInput=JSON.stringify(foodProducts);buildFoodQuickSelect();$('foodQuickProduct').value='food-1';buildFoodQuickSelect();return {order:[...$('nutrition').children].filter(e=>e.classList.contains('panel')).map(e=>e.className.match(/nutritionOrder\w+/)?.[0]),names:[...$('foodQuickProduct').options].slice(1).map(o=>o.text),selected:$('foodQuickProduct').value,unchanged:JSON.stringify(foodProducts)===qaInput,closed:[...$('nutrition').querySelectorAll('details')].every(e=>!e.open)}});
 assert.deepEqual(initial.order,['nutritionOrderDiary','nutritionOrderQuick','nutritionOrderToday','nutritionOrderLibrary','nutritionOrderMeals','nutritionOrderPlanner','nutritionOrderHistory']);assert.deepEqual(initial.names,['apple','Apple','Banana','Oats 2','Oats 10']);assert.equal(initial.selected,'food-1');assert(initial.unchanged&&initial.closed);assert.equal(await p.locator('#pxFoodUndo').isVisible(),false,'Undo notice must remain hidden without an action');
-await p.evaluate(()=>{go('nutrition');renderNutrition()});for(const lang of ['ar','en']){await p.evaluate(l=>pxSetUILanguage(l),lang);for(const id of ['pxFoodDayTools','pxFoodLibraryDetails']){const d=p.locator('#'+id);assert.equal(await d.evaluate(e=>e.open),false);const summary=d.locator(':scope > summary');assert(await summary.evaluate(e=>e.getBoundingClientRect().height>=44));await summary.press('Enter');assert.equal(await d.evaluate(e=>e.open),true);assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'Expanded '+id+' '+lang+' '+width);await summary.press('Space');assert.equal(await d.evaluate(e=>e.open),false)}assert.equal(await p.locator('#nutritionDate').isVisible(),true);assert.equal(await p.locator('#foodQuickAmount').isVisible(),true);assert.equal(await p.locator('#foodQuickTime').isVisible(),false);assert.equal(await p.locator('#foodSearch').isVisible(),false);assert.equal(await p.locator('#foodDiaryList').isVisible(),true);if(process.env.PX_FOOD_CALM_SCREENSHOTS&&width===390)await p.screenshot({path:'/tmp/px-food-calm-'+lang+'.png',fullPage:true});}await p.evaluate(()=>pxSetUILanguage('en'));
+await p.evaluate(()=>{go('nutrition');renderNutrition()});for(const lang of ['ar','en']){await p.evaluate(l=>pxSetUILanguage(l),lang);for(const id of ['pxFoodDayTools','pxFoodLibraryDetails']){const d=p.locator('#'+id);assert.equal(await d.evaluate(e=>e.open),false);const summary=d.locator(':scope > summary');assert(await summary.evaluate(e=>e.getBoundingClientRect().height>=44));await summary.press('Enter');assert.equal(await d.evaluate(e=>e.open),true);assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'Expanded '+id+' '+lang+' '+width);await summary.press('Space');assert.equal(await d.evaluate(e=>e.open),false)}assert.equal(await p.locator('#nutritionDate').isVisible(),true);assert.equal(await p.locator('#foodQuickAmount').isVisible(),width>600);assert.equal(await p.locator('#foodQuickTime').isVisible(),false);assert.equal(await p.locator('#foodSearch').isVisible(),false);assert.equal(await p.locator('#foodDiaryList').isVisible(),true);if(process.env.PX_FOOD_CALM_SCREENSHOTS&&width===390)await p.screenshot({path:'/tmp/px-food-calm-'+lang+'.png',fullPage:true});}await p.evaluate(()=>pxSetUILanguage('en'));
+if(width<=600){
+ const add=p.locator('#pxMobileFoodAction'),breakfast=p.locator('[data-meal-toggle="Breakfast"]');
+ assert.equal(await add.getAttribute('aria-expanded'),'false');
+ assert((await p.locator('.nutritionOrderToday').boundingBox()).y<(await p.locator('#pxFoodLibraryDetails').boundingBox()).y);
+ await breakfast.press('Enter');
+ assert.equal(await breakfast.getAttribute('aria-expanded'),'false');
+ assert.equal(await p.locator('[data-food-entry-id="fixture-entry"]').isVisible(),false);
+ await p.evaluate(()=>renderNutrition());
+ assert.equal(await breakfast.evaluate(e=>e===document.activeElement),true);
+ await breakfast.press('Space');
+ assert.equal(await p.locator('[data-food-entry-id="fixture-entry"]').isVisible(),true);
+ for(const lang of ['ar','en']){
+  await p.evaluate(l=>pxSetUILanguage(l),lang);
+  assert.equal(await p.locator('html').getAttribute('dir'),lang==='ar'?'rtl':'ltr');
+  assert.match(await add.textContent(),lang==='ar'?/إضافة أكل/:/Add food/);
+  await add.press('Enter');
+  assert.equal(await p.locator('#foodQuickProduct').evaluate(e=>e===document.activeElement),true);
+  await p.locator('#pxUsualFoods .pxUsualFoodsHead button').click();
+  assert.equal(await p.locator('#pxQuickFoodSearch').evaluate(e=>e===document.activeElement),true);
+  for(const [index,filter] of [[0,'recent'],[1,'favorites']]){
+   await p.locator('.pxMobileFoodTools button').nth(index).click();
+   assert.equal(await p.locator('[data-quick-filter="'+filter+'"]').getAttribute('aria-pressed'),'true');
+  }
+  const barcode=p.locator('.pxMobileFoodTools button').last();
+  await barcode.click();
+  assert.equal(await p.locator('#barcodeManualInput').evaluate(e=>e===document.activeElement),true);
+  await p.keyboard.press('Escape');
+  assert.equal(await barcode.evaluate(e=>e===document.activeElement),true);
+  assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Expanded food '+lang+' '+width);
+  await add.press('Space');
+  assert.equal(await p.locator('#foodQuickProduct').isVisible(),false);
+ }
+}
 const panels=p.locator('#nutrition > .panel');const bounds=await panels.evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return {top:r.top,left:r.left,right:r.right,width:r.width}}));assert(bounds.every((r,i)=>r.left>=0&&r.right<=width&&(!i||r.top>bounds[i-1].top)),'Visual order and panel bounds '+width);
 for(const cls of ['nutritionOrderMeals','nutritionOrderPlanner','nutritionOrderHistory']){const d=p.locator('#nutrition > details.'+cls);const summary=d.locator('summary');assert((await summary.evaluate(e=>e.getBoundingClientRect().height))>=44);await summary.press('Enter');assert.equal(await d.evaluate(e=>e.open),true);await summary.press('Space');assert.equal(await d.evaluate(e=>e.open),false);}
-await p.locator('#nutrition > details.nutritionOrderMeals > summary').click();await p.evaluate(()=>renderNutrition());assert.equal(await p.locator('#nutrition > details.nutritionOrderMeals').evaluate(e=>e.open),true,'Render preserves expanded state');assert.equal(await p.evaluate(()=>JSON.stringify(foodProducts)===qaInput&&JSON.stringify(foodLog)===qaDiary),true);assert.equal(await p.locator('#foodEntryCount').innerText(),'1 item');
-assert.equal(await p.locator('#foodQuickProduct').isVisible(),true);assert.equal(await p.locator('#foodSearch').isVisible(),false);const library=p.locator('#pxFoodLibraryDetails');await library.locator(':scope > summary').press('Enter');assert.equal(await p.locator('#foodSearch').isVisible(),true);assert.equal(await p.locator('#onlineFoodQuery').isVisible(),false);await p.locator('#onlineFoodQuery').locator('xpath=ancestor::details[1]').locator(':scope > summary').click();assert.equal(await p.locator('#onlineFoodQuery').isVisible(),true);
+await p.locator('#nutrition > details.nutritionOrderMeals > summary').click();await p.evaluate(()=>renderNutrition());assert.equal(await p.locator('#nutrition > details.nutritionOrderMeals').evaluate(e=>e.open),true,'Render preserves expanded state');assert.equal(await p.evaluate(()=>JSON.stringify(foodProducts)===qaInput&&JSON.stringify(foodLog)===qaDiary),true);assert.equal(await p.locator('#foodEntryCount').textContent(),'1 item');
+assert.equal(await p.locator('#foodQuickProduct').isVisible(),width>600);assert.equal(await p.locator('#foodSearch').isVisible(),false);const library=p.locator('#pxFoodLibraryDetails');await library.locator(':scope > summary').press('Enter');assert.equal(await p.locator('#foodSearch').isVisible(),true);assert.equal(await p.locator('#onlineFoodQuery').isVisible(),false);await p.locator('#onlineFoodQuery').locator('xpath=ancestor::details[1]').locator(':scope > summary').click();assert.equal(await p.locator('#onlineFoodQuery').isVisible(),true);
 await p.close();}assert.equal(backend,0);console.log('PASS ['+engine+']: Food-only DOM/visual priorities at 320/390/768/1280; native closed extras and keyboard 44px toggles; alphabetical/numeric dropdown with selection/data retained; hidden online search recoverable; zero backend calls');}finally{await b.close()}})().catch(e=>{console.error(e);process.exitCode=1});

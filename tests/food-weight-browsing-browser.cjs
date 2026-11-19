@@ -14,7 +14,7 @@ const {browserType,engine}=require('./helpers/browser-engine.cjs');
   scheduleCloudProfileSync=()=>{};scheduleAutoBackup=()=>{};$('pxCommercialGate').hidden=true;
   wire();go('nutrition');renderNutrition();window.qaBefore=JSON.stringify([...m]);window.qaFoods=JSON.stringify(foodProducts);
  });
- await p.locator('#pxFoodBrowse > summary').click();
+ if(await p.locator('#pxMobileFoodAction').isVisible())await p.locator('#pxMobileFoodAction').click();await p.locator('#pxFoodBrowse > summary').click();
  assert.equal(await p.locator('.pxQuickFood').count(),8);
  await p.locator('#pxQuickFoodMore').click();assert.equal(await p.locator('.pxQuickFood').count(),16);
  await p.locator('#pxQuickFoodSearch').fill('Food 21');assert.equal(await p.locator('.pxQuickFood').count(),1);assert.equal(await p.locator('#pxQuickFoodMore').isVisible(),false);
