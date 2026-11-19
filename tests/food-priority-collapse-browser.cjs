@@ -22,7 +22,7 @@ if(width<=600){
   const row=p.locator('[data-food-entry-id="fixture-entry"]');
   const info=await row.locator('.foodLogInfo').boundingBox();
   const name=await row.locator('.foodLogName').boundingBox();
-  const controls=await row.locator('.foodLogTop .actions').boundingBox();
+  const controls=await row.locator('.foodLogControls').boundingBox();
   assert(name.width>=info.width/2 && name.height<=42,'Mixed-script food name must not stack vertically at '+width+' '+lang);
   assert(controls.y>=info.y+info.height-1,'Food actions must sit below the entry details');
   assert.equal(await row.locator('.foodLogEnergy').isVisible(),true);
