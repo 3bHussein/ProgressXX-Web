@@ -21,19 +21,28 @@ const {browserType,engine}=require('./helpers/browser-engine.cjs');
   $('pxCommercialGate').hidden=true;wire();rebuild();
   window.qaData=JSON.stringify({data,foodProducts,foodLog,weights:progressPhotos()});
  });
- const pages=['home','log','analytics','nutrition','daily','calculators','intelligence','settings'];
+ const primary=['home','log','analytics','nutrition'];
+ const pages=[...primary,'daily','calculators','intelligence','settings'];
+ const more=p.locator('#pxMoreButton'),moreDialog=p.locator('#pxMoreNav');
+ const openMore=async()=>{await more.press('Enter');await moreDialog.waitFor({state:'visible'})};
  const snapshotDir=process.env.PX_MOBILE_SCREENSHOTS;if(snapshotDir)fs.mkdirSync(snapshotDir,{recursive:true});
  for(const language of ['en','ar']){
   await p.evaluate(language=>pxSetUILanguage(language),language);
   for(const width of [320,390,768]){await p.setViewportSize({width,height:844});
+   await openMore();
+   assert.equal(await more.getAttribute('aria-expanded'),'true');
+   await p.keyboard.press('Escape');
+   await moreDialog.waitFor({state:'hidden'});
+   assert(await more.evaluate(el=>el===document.activeElement),'Escape restores focus to More');
    for(const id of pages){
+    if(!primary.includes(id))await openMore();
     const nav=p.locator('.bottomNav [data-page="'+id+'"]');await nav.focus();await p.keyboard.press('Enter');await p.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
     assert.equal(await p.locator('.section.active').getAttribute('id'),id);
     assert.equal(await nav.getAttribute('aria-current'),'page');
     assert.equal(await p.locator('#pxMobilePageTitle').isVisible(),true);assert((await p.locator('#pxMobilePageTitle').textContent()).trim().length>0);
-    const geometry=await p.locator('.bottomNav').evaluate(el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,scroll:el.scrollWidth,width:el.clientWidth,buttons:[...el.querySelectorAll('button')].map(b=>{const r=b.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height,right:r.right}})}});
-    assert.equal(geometry.buttons.length,8);assert(geometry.scroll<=geometry.width+1,'All destinations must be visible without nav scrolling');assert(geometry.buttons.every(r=>r.x>=0&&r.right<=width+1&&r.w>=44&&r.h>=44&&r.y>=geometry.top),'Thumb targets '+id+' '+width);
-    assert.equal(new Set(geometry.buttons.map(r=>Math.round(r.y))).size,2,'Two visible navigation rows');
+    const geometry=await p.locator('.bottomNav').evaluate(el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,scroll:el.scrollWidth,width:el.clientWidth,buttons:[...el.querySelectorAll(':scope > button')].map(b=>{const r=b.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height,right:r.right}})}});
+    assert.equal(geometry.buttons.length,5);assert(geometry.scroll<=geometry.width+1,'Primary tabs and More must fit without scrolling');assert(geometry.buttons.every(r=>r.x>=0&&r.right<=width+1&&r.w>=44&&r.h>=44&&r.y>=geometry.top),'Thumb targets '+id+' '+width);
+    assert.equal(new Set(geometry.buttons.map(r=>Math.round(r.y))).size,1,'One visible navigation row');
     const overflow=await p.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,offenders:[...document.querySelectorAll('.section.active *')].map(el=>({tag:el.tagName,id:el.id,cls:String(el.className),r:el.getBoundingClientRect()})).filter(x=>x.r.right>innerWidth+1||x.r.left< -1).slice(0,15).map(x=>({tag:x.tag,id:x.id,cls:x.cls,left:x.r.left,right:x.r.right,width:x.r.width}))}));
     assert(overflow.scroll<=width,id+' '+language+' overflow '+width+' '+JSON.stringify(overflow));
     if(id==='intelligence'){const gap=await p.evaluate(()=>({page:document.body.dataset.pxPage,title:$('pxMobilePageTitle').textContent,viewport:innerWidth,active:document.querySelector('.section.active')?.id,style:getComputedStyle(document.querySelector('.app')).cssText,padding:parseFloat(getComputedStyle(document.querySelector('.app')).paddingBottom),gap:$('intelligence').getBoundingClientRect().top-($('pxSavePanel')||document.querySelector('.pxMobilePageHeader')).getBoundingClientRect().bottom}));assert(gap.padding<1&&gap.gap<44,'Insights header-to-content gap '+JSON.stringify(gap));}
@@ -42,7 +51,7 @@ const {browserType,engine}=require('./helpers/browser-engine.cjs');
    }
   }
  }
- await p.setViewportSize({width:390,height:844});await p.evaluate(()=>pxSetUILanguage('en'));await p.locator('.bottomNav [data-page="settings"]').click();assert.equal(await p.locator('#settings').isVisible(),true);await p.locator('.bottomNav [data-page="calculators"]').click();
+ await p.setViewportSize({width:390,height:844});await p.evaluate(()=>pxSetUILanguage('en'));await openMore();await p.locator('.bottomNav [data-page="settings"]').click();assert.equal(await p.locator('#settings').isVisible(),true);await openMore();await p.locator('.bottomNav [data-page="calculators"]').click();
  assert.equal(await p.locator('#pxCalculatorShortcuts button').count(),10);
  await p.locator('#pxCalculatorShortcuts button').filter({hasText:'1RM estimator'}).click();
  assert((await p.locator('#pxCalcCard2').boundingBox()).y>=0);assert((await p.locator('#pxCalcCard2').boundingBox()).y<100,'Jump scrolls directly to the calculator');
