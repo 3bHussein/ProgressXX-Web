@@ -1913,6 +1913,21 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
 @media(max-width:360px){#pxCommercialGate{padding:20px}#pxCommercialGate h2{margin-bottom:28px}#pxMintWelcome{font-size:26px}#pxMintAuthMark{font-size:54px}#pxHomeHub .pxHomeAction{padding:12px}#pxHomeHub .pxHomeAction>b{font-size:20px}}
 
 @media(max-width:820px){#pxSavePanel{width:44px;height:44px;padding:0!important;margin-inline-start:auto;margin-bottom:8px;border-radius:50%}#pxSavePanel>summary{width:44px;justify-content:center;gap:0;position:relative}#pxSavePanel>summary:before{position:absolute;width:7px;height:7px;top:5px;inset-inline-end:5px}#pxSavePanel>summary:after{display:none}#pxSaveLabel{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}#pxMintSaveAction{font-size:16px;letter-spacing:1px}#pxMintSyncDialog{padding:14px;max-height:70dvh;border-radius:18px}.pxMintSyncHead{margin-bottom:8px;padding-bottom:8px}.pxMintSyncHead h2{font-size:17px}#pxMintSyncDialog p{font-size:12px;line-height:1.5;margin:8px 0}#pxMintSyncDialog dl{padding:9px 0;gap:8px}#pxMintSyncDialog #pxSyncPill{font-size:12px;line-height:1.5;padding:8px;margin:8px 0!important}}
+@media (max-width:600px){
+  #pxLatestWeight{margin-block:8px 12px}
+  #pxLatestWeight .pxLatestPair{grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:6px}
+  #pxLatestWeight .pxLatestPair article{padding:10px}
+  #pxLatestWeight .pxLatestPair article:last-child{
+    background:color-mix(in srgb,var(--accent2) 10%,var(--card2));
+  }
+  #pxLatestWeight .pxLatestPair strong{font-size:clamp(19px,5.6vw,26px);margin-block:4px}
+  #pxLatestWeight .pxLatestPair article:last-child strong{font-size:clamp(23px,7vw,34px)}
+  #pxLatestWeight .pxLatestPair time{font-variant-numeric:tabular-nums}
+  #pxLatestWeight .pxLatestDelta{margin-block:6px 0;color:var(--muted);font-size:12px}
+  #analytics .progressPhotoForm{padding:10px}
+  #analytics .pxWeekDigest{gap:6px;margin-block:10px}
+  #analytics .pxWeekDigest button{min-width:0;padding:8px 4px;overflow-wrap:anywhere}
+}
 </style>
 <style id="px-first-paint">html:not([data-px-interface-ready]) body{visibility:hidden}</style>
 <noscript><style>body{visibility:visible!important}</style></noscript>
