@@ -97,6 +97,8 @@ On mobile, tap **Add food** to open Quick add and access search, recent foods, f
 
 Arrange supplements with up/down buttons. Notification management lives in Settings. Progress keeps weight and training primary, with measurements/calendar/goals/PRs under More. [Behavior, validation and next ideas](docs/DAILY-PROGRESS-FOCUS.md).
 
+On phones, Progress gives the latest weight reading more space beside the previous reading and tightens the weight form and weekly training controls. The browser regression exercises Arabic and English layouts at 320, 360, 390 and 430 px. [Mobile Progress changes](https://github.com/3bHussein/ProgressXX-Web/pull/59).
+
 ## A simple daily flow
 
 1. Open **Home** and choose the next useful action.
