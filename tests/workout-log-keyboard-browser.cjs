@@ -8,6 +8,22 @@ assert.equal(await p.locator('#resultCount').getAttribute('role'),'status');
 assert.equal(await p.locator('#pxV3LogSummary').getAttribute('aria-live'),'polite','Mobile log summary should announce changes accessibly');
 assert.match(await p.locator('#pxV3LogSummary').textContent(),/Showing 24 of 60 entries · 60 completed/,'Initial mobile log summary must match pagination and completion counts');
 assert.equal(await p.locator('#pxV3LogSummary').evaluate(el=>el.getBoundingClientRect().width<=window.innerWidth),true,'Summary must fit within mobile viewport');
+await p.setViewportSize({width:320,height:844});
+for(const lang of ['en','ar']){
+ await p.evaluate(lang=>pxSetUILanguage(lang),lang);
+ const row=p.locator('#logList .compactLogRow').first();
+ const layout=await row.evaluate(el=>{
+  const title=el.querySelector('.compactLogTitle').getBoundingClientRect();
+  const detail=el.querySelector('.compactLogDetail').getBoundingClientRect();
+  const footer=el.querySelector('.compactLogRight').getBoundingClientRect();
+  const edit=el.querySelector('button').getBoundingClientRect();
+  return {titleBottom:title.bottom,detailTop:detail.top,detailBottom:detail.bottom,footerTop:footer.top,left:footer.left,right:footer.right,editHeight:edit.height};
+ });
+ assert(layout.titleBottom<=layout.detailTop&&layout.detailBottom<=layout.footerTop,'Workout details and controls follow the title at 320px '+lang);
+ assert(layout.left>=0&&layout.right<=320&&layout.editHeight>=44,'Workout controls fit with a touch-sized Edit button '+lang);
+}
+await p.evaluate(()=>pxSetUILanguage('en'));
+await p.setViewportSize({width:390,height:844});
 await p.locator('#logLoadMore').focus();await p.keyboard.press('Enter');assert.equal(await p.locator('#logList .compactLogRow').count(),48);assert.equal(await p.locator('#logLoadMore').evaluate(e=>e===document.activeElement),true);
 await p.keyboard.press('Space');assert.equal(await p.locator('#logList .compactLogRow').count(),60);assert.equal(await p.locator('#logLoadMore').count(),0);
 assert.equal(await p.locator('#logList .compactLogRow').nth(48).locator('button').evaluate(e=>e===document.activeElement),true);
