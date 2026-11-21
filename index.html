@@ -1011,11 +1011,18 @@ textarea{resize:vertical}
 <style id="progressx-daily-history-v1">
 .dailyHistoryList{display:grid;gap:9px;margin-top:10px}
 .dailyHistoryCard{border:1px solid var(--line);background:var(--card2);border-radius:16px;padding:12px}
-.dailyHistoryHead{display:flex;justify-content:space-between;gap:10px;align-items:center}
 .dailyHistoryDate{font-weight:900}
-.dailyHistoryScore{font-weight:900}
-.dailyHistoryMeta{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.45}
 .dailyHistoryDone{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.dailyHistoryDone .pill{display:inline-block;max-width:100%;min-width:0;white-space:normal;overflow-wrap:anywhere}
+.dailyHistoryMetrics{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px}
+.dailyHistoryMetrics>span{min-width:0;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+.dailyHistoryMetrics b{color:var(--text);font-variant-numeric:tabular-nums}
+@media(max-width:600px){
+  .dailyHistoryMetrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .dailyHistoryMetrics>span{padding:7px;border:1px solid var(--line);border-radius:9px}
+  .dailyHistoryMetrics b{display:block}
+}
+
 </style>
 <style id="progressx-log-lite-v1">
 .logSearchBar{display:grid;grid-template-columns:minmax(240px,1fr) 130px 135px 145px auto;gap:8px;margin-top:10px}
@@ -9590,7 +9597,7 @@ function renderDailyHistory(){
   if(!dates.includes(selected))selected=dates[0];
 
   if(sel){
-    sel.innerHTML=dates.map(date=>`<option value="${esc(date)}">${date===localDateKey()?'Today — ':''}${esc(date)}</option>`).join('');
+    sel.innerHTML=dates.map(date=>`<option value="${esc(date)}">${date===today?esc(pxExplain('Today','النهارده'))+' — ':''}${esc(date)}</option>`).join('');
     sel.value=selected;
   }
 
@@ -9602,13 +9609,13 @@ function renderDailyHistory(){
   const waterCurrent=Number(h.waterCurrent)||0;
   const waterTarget=Number(h.waterTarget)||0;
 
-  el.innerHTML=`<div class="dailyHistoryCard">
-    <div class="dailyHistoryHead">
-      <div class="dailyHistoryDate">${esc(selected)}${isToday?' • Today':''}</div>
-      <div class="dailyHistoryScore">${done} / ${total}</div>
+  el.innerHTML=`<div class="dailyHistoryCard" data-px-user="1">
+    <div class="dailyHistoryDate"><bdi>${esc(selected)}</bdi>${isToday?' · '+pxExplain('Today','النهارده'):''}</div>
+    <div class="dailyHistoryMetrics">
+      <span>${pxExplain('Supplements completed','المكملات المسجّلة')} <b dir="ltr">${done} / ${total}</b></span>
+      ${waterTarget>0?`<span>${pxExplain('Water','المياه')} <b dir="ltr">${Number(waterCurrent.toFixed(2))} / ${Number(waterTarget.toFixed(2))} L</b></span>`:''}
     </div>
-    <div class="dailyHistoryMeta">${done===total&&total>0?'✓ All active reminders completed':done+' completed reminder'+(done===1?'':'s')}${waterTarget>0?` • Water ${pnum(waterCurrent)} / ${pnum(waterTarget)} L`:''}</div>
-    <div class="dailyHistoryDone">${items.length?items.map(item=>`<span class="pill ok">✓ ${esc(item.name)}${item.doneAt?' • '+esc(formatDoneTime(item.doneAt)):''}</span>`).join(''):'<span class="tiny muted">No completed reminders logged.</span>'}</div>
+    <div class="dailyHistoryDone">${items.length?items.map(item=>`<span class="pill ok">✓ <bdi>${esc(item.name)}</bdi>${item.doneAt?' · '+esc(formatDoneTime(item.doneAt)):''}</span>`).join(''):`<span class="tiny muted">${pxExplain('No completed reminders logged.','مفيش مكملات متسجلة.')}</span>`}</div>
   </div>`;
 }
 
@@ -11322,7 +11329,7 @@ function pxSetUILanguage(language,persist=true){
  if($('pxAnatomyLang')){$('pxAnatomyLang').value=pxUILanguage;safeProgressXXRender('Anatomy language',pxRenderAnatomy)}
  if($('pxLanguageStatus'))$('pxLanguageStatus').textContent=saved?'Language applied to all pages.':'Language applied. Browser storage is unavailable; selection will not survive reload.';
  if(typeof pxRenderInsightSummary==='function')pxRenderInsightSummary();if(typeof pxRenderWeeklyCoach==='function')pxRenderWeeklyCoach(Number($('weeklyReviewWeek')?.value)||activeWeek());
- renderProgressPhotos();pxRenderQuickFoods();if(typeof pxUpdateMobilePage==='function')pxUpdateMobilePage(document.querySelector('.bottomNav .navbtn.active')?.dataset.page||'home');
+ renderProgressPhotos();renderDailyHistory();pxRenderQuickFoods();if(typeof pxUpdateMobilePage==='function')pxUpdateMobilePage(document.querySelector('.bottomNav .navbtn.active')?.dataset.page||'home');
  if(typeof pxRenderUsualFoods==='function'){pxRenderUsualFoods();renderFavoriteFoods();renderRecentFoods()}
  if(typeof pxFoodCalmLabels==='function')pxFoodCalmLabels();
  if(typeof pxLabelMobileFood==='function')pxLabelMobileFood();
