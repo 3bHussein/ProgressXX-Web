@@ -27,6 +27,25 @@ for(const [lang,label] of [['en','Supplements completed'],['ar','المكملا�
    card.scrollWidth<=card.clientWidth && document.documentElement.scrollWidth<=innerWidth),lang+' '+width+' history card overflow');
  }
 }
+const older=p.locator('#dailyHistoryOlder');
+const newer=p.locator('#dailyHistoryNewer');
+const current=p.locator('#dailyHistoryToday');
+await p.setViewportSize({width:320,height:900});
+assert.equal(await older.textContent(),'الأقدم');
+assert.equal(await older.getAttribute('aria-disabled'),'true');
+await newer.focus();
+await p.keyboard.press('Enter');
+assert.equal(await newer.getAttribute('aria-disabled'),'true');
+assert.equal(await current.getAttribute('aria-disabled'),'true');
+assert.equal(await newer.evaluate(button=>button===document.activeElement),true);
+await older.focus();
+await p.keyboard.press('Space');
+assert.equal(await p.locator('#dailyHistoryDate').inputValue(),historyDate);
+assert.equal(await older.getAttribute('aria-disabled'),'true');
+await p.keyboard.press('Enter');
+assert.equal(await p.locator('#dailyHistoryDate').inputValue(),historyDate);
+await current.click();
+assert.equal(await current.getAttribute('aria-disabled'),'true');
 await p.evaluate(()=>{document.querySelector('#daily .dailyOrderHistory').open=false;pxSetUILanguage('en')});
 const supplement=p.locator('#dailyReminderGrid [data-daily-id="a"]');
 for(const lang of ['en','ar']){
