@@ -1929,6 +1929,22 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
   #analytics .pxWeekDigest button{min-width:0;padding:8px 4px;overflow-wrap:anywhere}
 }
 </style>
+<style id="px-daily-water-mobile">
+#pxWaterAdjust{display:none}
+@media (max-width:600px){
+  #daily .dailyOrderWater>.panelHead{gap:8px;margin-block-end:8px}
+  #daily .dailyOrderWater>.panelHead h3{margin-block-end:0}
+  #daily .dailyOrderWater>.panelHead .dailyActions>.btn{min-height:44px}
+  #daily .dailyOrderWater .pxWaterQuickAdd{
+    background:color-mix(in srgb,var(--accent2) 12%,var(--card));
+    border-color:var(--accent2);color:var(--text);
+  }
+  #pxWaterAdjust{display:inline-flex;align-items:center;min-height:44px;margin-block-start:6px}
+  #pxWaterAdjust[aria-expanded="false"]+#pxWaterInputs{display:none!important}
+  #pxWaterInputs>div{min-width:0}
+  #pxWaterInputs input{min-height:44px;font-size:16px}
+}
+</style>
 <style id="px-first-paint">html:not([data-px-interface-ready]) body{visibility:hidden}</style>
 <noscript><style>body{visibility:visible!important}</style></noscript>
 <script>document.addEventListener('DOMContentLoaded',()=>{document.documentElement.setAttribute('data-px-interface-ready','')},{once:true});</script>
@@ -2804,15 +2820,16 @@ body #pxMoreNav .navbtn{
       <div class="panelHead">
         <div><h3>💧 Water</h3><div class="tiny muted">Quick-add your drinks through the day.</div></div>
         <div class="dailyActions">
-          <button class="btn soft" onclick="addWater(.25)">+250 mL</button>
-          <button class="btn soft" onclick="addWater(.5)">+500 mL</button>
+          <button class="btn soft pxWaterQuickAdd" onclick="addWater(.25)">+250 mL</button>
+          <button class="btn soft pxWaterQuickAdd" onclick="addWater(.5)">+500 mL</button>
           <button class="btn soft" onclick="resetWater()">Reset</button>
         </div>
       </div>
       <div class="waterBar"><div id="waterFill" class="waterFill"></div></div>
-      <div class="formGrid" style="margin-top:10px">
-        <div><label class="tiny muted">Daily target (L)</label><input id="waterTargetInput" type="number" min=".5" step=".25" onchange="setWaterTarget(this.value)"></div>
-        <div><label class="tiny muted">Current (L)</label><input id="waterCurrentInput" type="number" min="0" step=".25" onchange="setWaterCurrent(this.value)"></div>
+      <button type="button" class="btn soft" id="pxWaterAdjust" aria-expanded="false" aria-controls="pxWaterInputs" onclick="this.setAttribute('aria-expanded',String(this.getAttribute('aria-expanded')==='false'))">Adjust water</button>
+      <div class="formGrid" id="pxWaterInputs" style="margin-top:10px">
+        <div><label class="tiny muted" for="waterTargetInput">Daily target (L)</label><input id="waterTargetInput" type="number" min=".5" step=".25" onchange="setWaterTarget(this.value)"></div>
+        <div><label class="tiny muted" for="waterCurrentInput">Current (L)</label><input id="waterCurrentInput" type="number" min="0" step=".25" onchange="setWaterCurrent(this.value)"></div>
       </div>
     </div>
 
@@ -11906,7 +11923,7 @@ function pxRenderLatestWeight(rows=progressPhotos()){
  const delta=pxWorkspaceNode('p',model.delta===null?pxExplain('Your latest saved weight will stay here while you add a new reading.','آخر وزن محفوظ هيفضل ظاهر هنا وإنت بتسجّل قياس جديد.'):pxExplain('Change between these readings: ','الفرق بين القياسين: ')+pxInsightLtr((model.delta>0?'+':'')+model.delta+' kg'),'pxLatestDelta');root.replaceChildren(pair,delta);
 }
 function pxWorkspaceLabels(){
- if(!$('pxDailyManagement'))return;const labels=[['pxDailyManagementTitle','Supplements & notification settings','إدارة المكملات وإعدادات التنبيهات'],['pxDailyListTitle','My supplements','مكملاتي'],['pxDailyManageButton','Manage','إدارة'],['pxDailyAddButton','Add','إضافة'],['pxProgressExtrasTitle','Measurements, calendar & personal records','القياسات والتقويم والأرقام الشخصية'],['pxProgressWeightJump','Body weight','وزن الجسم'],['pxProgressTrainingJump','Training progress','تقدّم التمرين'],['pxProgressMoreJump','More','المزيد']];labels.forEach(([id,en,ar])=>{if($(id))$(id).textContent=pxExplain(en,ar)});
+ if(!$('pxDailyManagement'))return;const labels=[['pxWaterAdjust','Adjust water','تعديل المياه'],['pxDailyManagementTitle','Supplements & notification settings','إدارة المكملات وإعدادات التنبيهات'],['pxDailyListTitle','My supplements','مكملاتي'],['pxDailyManageButton','Manage','إدارة'],['pxDailyAddButton','Add','إضافة'],['pxProgressExtrasTitle','Measurements, calendar & personal records','القياسات والتقويم والأرقام الشخصية'],['pxProgressWeightJump','Body weight','وزن الجسم'],['pxProgressTrainingJump','Training progress','تقدّم التمرين'],['pxProgressMoreJump','More','المزيد']];labels.forEach(([id,en,ar])=>{if($(id))$(id).textContent=pxExplain(en,ar)});
  const labels2=[['dailyDone','Done today','تم النهارده'],['dailyTotal','Supplements','المكملات']];labels2.forEach(([id,en,ar])=>{const span=$(id)?.parentElement.querySelector('span');if(span){span.dataset.pxUser='1';span.textContent=pxExplain(en,ar)}});
  const form=$('dailyAddForm');for(const [selector,en,ar] of [['h3','Add supplement','إضافة مكمل'],['.panelHead .tiny','Name and amount for your daily checklist.','الاسم والكمية لقائمتك اليومية.'],['.wide label','Supplement','المكمل'],['.dailyFormActions button:first-child','Save supplement','حفظ المكمل']]){const n=form.querySelector(selector);if(n){n.dataset.pxUser='1';n.textContent=pxExplain(en,ar)}}
  $('daily').querySelector('.dailyShell>.panelHead .tiny').textContent=pxExplain('Water and supplements, one simple checklist.','الماء والمكملات في قائمة يومية بسيطة.');$('daily').querySelector('.dailyShell>.panelHead .tiny').dataset.pxUser='1';
