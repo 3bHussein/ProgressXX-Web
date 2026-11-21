@@ -97,7 +97,7 @@ On mobile, tap **Add food** to open Quick add and access search, recent foods, f
 
 Arrange supplements with up/down buttons. Notification management lives in Settings. Progress keeps weight and training primary, with measurements/calendar/goals/PRs under More. [Behavior, validation and next ideas](docs/DAILY-PROGRESS-FOCUS.md).
 
-On phones, Daily keeps the 250 mL and 500 mL water shortcuts visible. Adjust water opens the manual current amount and target fields on demand. The browser regression checks keyboard access and Arabic and English layouts from 320 to 430 px.
+On phones, Daily keeps the 250 mL and 500 mL water shortcuts visible. Adjust water opens the manual current amount and target fields on demand. The browser regression checks keyboard access and Arabic and English layouts from 320 to 430 px. The supplement checklist wraps long dose labels beside the completion button and keeps keyboard focus on the active item after marking or undoing completion.
 
 On phones, Progress gives the latest weight reading more space beside the previous reading and tightens the weight form and weekly training controls. The browser regression exercises Arabic and English layouts at 320, 360, 390 and 430 px. [Mobile Progress changes](https://github.com/3bHussein/ProgressXX-Web/pull/59).
 
