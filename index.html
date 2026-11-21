@@ -1945,6 +1945,19 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
   #pxWaterInputs input{min-height:44px;font-size:16px}
 }
 </style>
+<style id="px-daily-supplement-mobile">
+#dailyReminderGrid .reminderTop>div{min-width:0}
+#dailyReminderGrid .reminderMeta{overflow-wrap:anywhere}
+@media (max-width:600px){
+  #dailyReminderGrid .reminderTop{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(88px,auto);
+    gap:8px;
+  }
+  #dailyReminderGrid .reminderTop>.btn{max-width:100%;padding-inline:8px}
+  #dailyReminderGrid .reminderCard.done{border-inline-start:3px solid var(--accent2)}
+}
+</style>
 <style id="px-first-paint">html:not([data-px-interface-ready]) body{visibility:hidden}</style>
 <noscript><style>body{visibility:visible!important}</style></noscript>
 <script>document.addEventListener('DOMContentLoaded',()=>{document.documentElement.setAttribute('data-px-interface-ready','')},{once:true});</script>
@@ -9605,6 +9618,8 @@ function dailyIsDone(id){
   return normalizeDailyDoneValue(all[today]?.[id]);
 }
 function toggleDailyDone(id){
+  const grid=$('dailyReminderGrid');
+  const restoreFocus=grid?.contains(document.activeElement)&&document.activeElement.matches('.reminderTop button');
   ensureDailyCheckpoint(false);
   const all=dailyDoneMap(),k=localDateKey();
   if(!all[k])all[k]={};
@@ -9619,6 +9634,10 @@ function toggleDailyDone(id){
   PXStore.setItem(DAILY_DONE_TIME_KEY,JSON.stringify(times));
   snapshotDailyHistory(k);
   renderDaily();
+  if(restoreFocus){
+    const card=[...grid.children].find(item=>item.dataset.dailyId===String(id));
+    card?.querySelector('.reminderTop button')?.focus({preventScroll:true});
+  }
   renderDailyStats();
   renderDailyHistory();
   scheduleDailyStateSync();

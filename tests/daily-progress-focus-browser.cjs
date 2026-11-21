@@ -1,7 +1,29 @@
 const assert=require('node:assert/strict'),{browserType,engine}=require('./helpers/browser-engine.cjs');
 (async()=>{const browser=await browserType.launch({headless:true});try{const ctx=await browser.newContext({viewport:{width:390,height:900},serviceWorkers:'block',reducedMotion:'reduce'});let external=0;await ctx.route('**/*',r=>new URL(r.request().url()).hostname==='127.0.0.1'?r.continue():(external++,r.abort()));const p=await ctx.newPage(),errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto('http://127.0.0.1:8765/index.html');await p.locator('#pxEmail').waitFor();
-await p.evaluate(()=>{window.qaAccount='A';window.qaStores=new Map();window.qaFail=false;window.__pxActiveStore={getItem:k=>qaStores.get(qaAccount+':'+k)??null,setItem:(k,v)=>{if(qaFail&&k===DAILY_REMINDERS_KEY)throw Error('simulated storage rejection');qaStores.set(qaAccount+':'+k,String(v))},removeItem:k=>qaStores.delete(qaAccount+':'+k)};window.__pxSaveState=()=>({scope:qaAccount,ready:false});scheduleReminderConfigSync=()=>{};scheduleDailyStateSync=()=>{};scheduleCloudProfileSync=()=>{};scheduleAutoBackup=()=>{};processWorkoutQueue=()=>{};syncNutritionFromSheet=async()=>{};syncWeightCheckinsFromSheet=async()=>{};syncRemindersFromSheet=async()=>{};apiCall=async()=>{throw Error('Unexpected remote write')};dailyReminders=[{id:'a',name:'Vitamin <literal>',amount:'One serving',enabled:true},{id:'b',name:'Creatine',amount:'3 g',enabled:true},{id:'c',name:'Optional',amount:'One serving',enabled:false}];PXStore.setItem(DAILY_REMINDERS_KEY,JSON.stringify(dailyReminders));data=[{id:'old',exercise:'Bench (2x8)',day:'Upper',week:21,date:'2026-10-17',status:'Completed',performance:'60*8,60*8'},{id:'now',exercise:'Bench (2x8)',day:'Upper',week:22,date:'2026-10-24',status:'Completed',performance:'62.5*8,62.5*8'}];foodProducts=[];foodLog=[];saveProgressPhotos([{id:'first',date:'2026-10-20',weight:82,createdAt:'2026-10-20T08:00:00Z'},{id:'prev',date:'2026-10-23',weight:81,createdAt:'2026-10-23T08:00:00Z'},{id:'last',date:'2026-10-23',weight:80.5,createdAt:'2026-10-23T09:00:00Z'},{id:'future',date:'2099-01-01',weight:99}]);$('pxCommercialGate').hidden=true;wire();rebuild();go('daily');qaSource=JSON.stringify({data,weights:progressPhotos(),foodLog});});
+await p.evaluate(()=>{window.qaAccount='A';window.qaStores=new Map();window.qaFail=false;window.__pxActiveStore={getItem:k=>qaStores.get(qaAccount+':'+k)??null,setItem:(k,v)=>{if(qaFail&&k===DAILY_REMINDERS_KEY)throw Error('simulated storage rejection');qaStores.set(qaAccount+':'+k,String(v))},removeItem:k=>qaStores.delete(qaAccount+':'+k)};window.__pxSaveState=()=>({scope:qaAccount,ready:false});scheduleReminderConfigSync=()=>{};scheduleDailyStateSync=()=>{};scheduleCloudProfileSync=()=>{};scheduleAutoBackup=()=>{};processWorkoutQueue=()=>{};syncNutritionFromSheet=async()=>{};syncWeightCheckinsFromSheet=async()=>{};syncRemindersFromSheet=async()=>{};apiCall=async()=>{throw Error('Unexpected remote write')};dailyReminders=[{id:'a',name:'Vitamin <literal>',amount:'OneServingWithAnUnbrokenMeasurementLabel'.repeat(3),enabled:true},{id:'b',name:'Creatine',amount:'3 g',enabled:true},{id:'c',name:'Optional',amount:'OneServingWithAnUnbrokenMeasurementLabel'.repeat(3),enabled:false}];PXStore.setItem(DAILY_REMINDERS_KEY,JSON.stringify(dailyReminders));data=[{id:'old',exercise:'Bench (2x8)',day:'Upper',week:21,date:'2026-10-17',status:'Completed',performance:'60*8,60*8'},{id:'now',exercise:'Bench (2x8)',day:'Upper',week:22,date:'2026-10-24',status:'Completed',performance:'62.5*8,62.5*8'}];foodProducts=[];foodLog=[];saveProgressPhotos([{id:'first',date:'2026-10-20',weight:82,createdAt:'2026-10-20T08:00:00Z'},{id:'prev',date:'2026-10-23',weight:81,createdAt:'2026-10-23T08:00:00Z'},{id:'last',date:'2026-10-23',weight:80.5,createdAt:'2026-10-23T09:00:00Z'},{id:'future',date:'2099-01-01',weight:99}]);$('pxCommercialGate').hidden=true;wire();rebuild();go('daily');qaSource=JSON.stringify({data,weights:progressPhotos(),foodLog});});
 assert.equal(await p.locator('#daily #notifyBanner').count(),0);assert.equal(await p.locator('#daily .pxReminderEdit').count(),0);assert.equal(await p.locator('#daily [onclick="testDailyNotification()"]').count(),0);assert.equal(await p.locator('#dailyReminderGrid literal').count(),0);assert.equal(await p.locator('#pxDailyManagement').isVisible(),false);
+const supplement=p.locator('#dailyReminderGrid [data-daily-id="a"]');
+for(const lang of ['en','ar']){
+ await p.evaluate(language=>pxSetUILanguage(language),lang);
+ for(const width of [320,360,390,430]){
+  await p.setViewportSize({width,height:900});
+  await p.waitForFunction(w=>innerWidth===w,width);
+  const fits=await supplement.evaluate(card=>{
+   const row=card.querySelector('.reminderTop');
+   const button=row.querySelector('button');
+   return row.clientWidth>0 && row.scrollWidth<=row.clientWidth &&
+    button.getBoundingClientRect().height>=44 && document.documentElement.scrollWidth<=innerWidth;
+  });
+  assert(fits,lang+' '+width+' supplement row overflow or small action');
+ }
+ const complete=supplement.locator('.reminderTop button');
+ await complete.focus();
+ await p.keyboard.press('Enter');
+ assert.equal(await complete.getAttribute('aria-pressed'),'true');
+ assert.equal(await complete.evaluate(button=>button===document.activeElement),true);
+ await p.keyboard.press('Space');
+ assert.equal(await complete.getAttribute('aria-pressed'),'false');
+}
 const waterAdjust=p.locator('#pxWaterAdjust');
 for(const [lang,label] of [['en','Adjust water'],['ar','تعديل المياه']]){
  await p.evaluate(language=>pxSetUILanguage(language),lang);
