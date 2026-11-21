@@ -1946,14 +1946,14 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
 }
 </style>
 <style id="px-daily-supplement-mobile">
+#dailyReminderGrid .reminderTop>div{min-width:0}
+#dailyReminderGrid .reminderMeta{overflow-wrap:anywhere}
 @media (max-width:600px){
   #dailyReminderGrid .reminderTop{
     display:grid;
     grid-template-columns:minmax(0,1fr) minmax(88px,auto);
     gap:8px;
   }
-  #dailyReminderGrid .reminderTop>div{min-width:0}
-  #dailyReminderGrid .reminderMeta{overflow-wrap:anywhere}
   #dailyReminderGrid .reminderTop>.btn{max-width:100%;padding-inline:8px}
   #dailyReminderGrid .reminderCard.done{border-inline-start:3px solid var(--accent2)}
 }
