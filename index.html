@@ -2923,13 +2923,13 @@ body #pxMoreNav .navbtn{
 
 <section id="settings" class="section">
 <div class="pxSettingsDirectory" aria-label="Settings categories">
- <button type="button" class="pxSettingsTile" onclick="pxShowSettingsCategory('pxSettingsAccount','Account & sync')"><span class="pxSettingsTileIcon">👤</span><span class="pxSettingsTileText"><b>Account & sync</b><small>Account status, cloud connection and sign out</small></span></button>
- <button type="button" class="pxSettingsTile" onclick="pxShowSettingsCategory('pxLanguagePanel','Language')"><span class="pxSettingsTileIcon">🌐</span><span class="pxSettingsTileText"><b>Language</b><small>Interface language and text direction</small></span></button>
- <button type="button" class="pxSettingsTile" onclick="pxShowSettingsCategory('pxSettingsHub','Preferences & tools')"><span class="pxSettingsTileIcon">⚙️</span><span class="pxSettingsTileText"><b>Preferences & tools</b><small>Appearance, notifications and diagnostic logs</small></span></button>
- <button type="button" class="pxSettingsTile" onclick="pxShowSettingsCategory('pxSettingsBackup','Backup & recovery')"><span class="pxSettingsTileIcon">💾</span><span class="pxSettingsTileText"><b>Backup & recovery</b><small>Export, restore and protect your data</small></span></button>
- <button type="button" class="pxSettingsTile" onclick="pxShowSettingsCategory('pxSettingsSchedule','Workout schedule')"><span class="pxSettingsTileIcon">🏋️</span><span class="pxSettingsTileText"><b>Workout schedule</b><small>Training days, rest days and schedule sync</small></span></button>
+ <button type="button" class="pxSettingsTile" aria-controls="pxSettingsAccount" onclick="pxShowSettingsCategory('pxSettingsAccount','Account & sync',this)"><span class="pxSettingsTileIcon">👤</span><span class="pxSettingsTileText"><b>Account & sync</b><small>Account status, cloud connection and sign out</small></span></button>
+ <button type="button" class="pxSettingsTile" aria-controls="pxLanguagePanel" onclick="pxShowSettingsCategory('pxLanguagePanel','Language',this)"><span class="pxSettingsTileIcon">🌐</span><span class="pxSettingsTileText"><b>Language</b><small>Interface language and text direction</small></span></button>
+ <button type="button" class="pxSettingsTile" aria-controls="pxSettingsHub" onclick="pxShowSettingsCategory('pxSettingsHub','Preferences & tools',this)"><span class="pxSettingsTileIcon">⚙️</span><span class="pxSettingsTileText"><b>Preferences & tools</b><small>Appearance, notifications and diagnostic logs</small></span></button>
+ <button type="button" class="pxSettingsTile" aria-controls="pxSettingsBackup" onclick="pxShowSettingsCategory('pxSettingsBackup','Backup & recovery',this)"><span class="pxSettingsTileIcon">💾</span><span class="pxSettingsTileText"><b>Backup & recovery</b><small>Export, restore and protect your data</small></span></button>
+ <button type="button" class="pxSettingsTile" aria-controls="pxSettingsSchedule" onclick="pxShowSettingsCategory('pxSettingsSchedule','Workout schedule',this)"><span class="pxSettingsTileIcon">🏋️</span><span class="pxSettingsTileText"><b>Workout schedule</b><small>Training days, rest days and schedule sync</small></span></button>
 </div>
-<div class="pxSettingsDetailBar"><button class="btn soft" type="button" onclick="pxShowSettingsHome()">← All settings</button><h3 id="pxSettingsDetailTitle">Settings</h3></div>
+<div class="pxSettingsDetailBar"><button class="btn soft" type="button" onclick="pxShowSettingsHome()">← All settings</button><h3 id="pxSettingsDetailTitle" tabindex="-1">Settings</h3></div>
 <div class="hero pxSettingsHero"><div class="eyebrow">PREFERENCES & ACCOUNT</div><h2>⚙ Settings</h2><p>Manage your account, backups, sync, appearance and notifications in one place.</p></div>
 <div class="panel" id="pxLanguagePanel"><div class="pxLanguageRow"><div><h3>Language & direction</h3><p class="tiny muted">Choose the interface language for all pages. Saved on this device.</p></div><label for="pxUILanguage">Interface language<select id="pxUILanguage" onchange="pxSetUILanguage(this.value)"><option value="en">English</option><option value="ar">العربية</option></select></label></div><p id="pxLanguageStatus" class="tiny muted" role="status"></p></div>
 <nav class="pxSettingsQuickNav" aria-label="Settings quick navigation">
@@ -5217,13 +5217,18 @@ function startWorkoutTemplate(id){
   renderWorkoutSession();
 }
 
+let pxSettingsOpener=null;
 function pxShowSettingsHome(shouldScroll=true){
  const section=document.getElementById('settings');if(!section)return;
  section.classList.remove('pxSettingsDetailMode');
  section.querySelectorAll('.pxSettingsSelected').forEach(el=>el.classList.remove('pxSettingsSelected'));
- if(shouldScroll)section.scrollIntoView({behavior:pxScrollBehavior(),block:'start'});
+ if(shouldScroll){
+  section.scrollIntoView({behavior:pxScrollBehavior(),block:'start'});
+  (pxSettingsOpener||section.querySelector('.pxSettingsTile'))?.focus({preventScroll:true});
+ }
+ pxSettingsOpener=null;
 }
-function pxShowSettingsCategory(id,title){
+function pxShowSettingsCategory(id,title,opener=null){
  const section=document.getElementById('settings'),panel=document.getElementById(id);
  if(!section||!panel)return;
  section.querySelectorAll('.pxSettingsSelected').forEach(el=>el.classList.remove('pxSettingsSelected'));
@@ -5233,6 +5238,8 @@ function pxShowSettingsCategory(id,title){
  const titleEl=document.getElementById('pxSettingsDetailTitle');if(titleEl)titleEl.textContent=title;
  section.classList.add('pxSettingsDetailMode');
  section.scrollIntoView({behavior:pxScrollBehavior(),block:'start'});
+ pxSettingsOpener=opener;
+ if(opener)titleEl?.focus({preventScroll:true});
 }
 function pxOpenSettings(id){const panel=document.getElementById(id);const category=panel?.querySelector(':scope > details.pxSettingsCategory');if(category)category.open=true;panel?.scrollIntoView({behavior:pxScrollBehavior(),block:'start'})}
 function pxInitSettingsInterface(){
