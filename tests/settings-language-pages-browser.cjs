@@ -5,8 +5,18 @@ await p.evaluate(()=>{const m=new Map();window.__pxActiveStore={getItem:k=>m.get
 assert.equal(await p.locator('html').getAttribute('dir'),'ltr');assert.equal(await p.locator('#settings .pxSettingsCategory').count()>5,true);await p.evaluate(()=>pxShowSettingsCategory('pxLanguagePanel','Language'));await p.locator('#pxUILanguage').selectOption('ar');assert.equal(await p.locator('html').getAttribute('lang'),'ar');assert.equal(await p.locator('html').getAttribute('dir'),'rtl');assert.equal(await p.evaluate(()=>localStorage.getItem(PX_UI_LANGUAGE_KEY)),'ar');assert.match(await p.locator('#pxLanguageStatus').textContent(),/[\u0600-\u06ff]/);
 for(const lang of ['en','ar']){
  await p.evaluate(language=>{pxSetUILanguage(language);go('settings')},lang);
- for(const width of [320,390]){
+ for(const width of [320,360,390,430]){
   await p.setViewportSize({width,height:900});
+  await p.waitForFunction(w=>innerWidth===w,width);
+  const cards=await p.locator('.pxSettingsTile').evaluateAll(tiles=>tiles.map(tile=>({
+   height:tile.getBoundingClientRect().height,
+   left:tile.getBoundingClientRect().left,
+   fits:tile.scrollWidth<=tile.clientWidth,
+   arrow:getComputedStyle(tile,'::after').transform
+  })));
+  assert.equal(cards.length,5);
+  assert(cards.every(card=>card.fits&&card.left===cards[0].left&&card.height>=44&&card.height<88),lang+' '+width+' Settings tiles');
+  assert(cards.every(card=>lang==='ar'?card.arrow!=='none':card.arrow==='none'));
   const tile=p.locator('.pxSettingsTile[aria-controls="pxLanguagePanel"]');
   await tile.focus();
   await p.keyboard.press('Enter');

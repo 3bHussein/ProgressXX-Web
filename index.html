@@ -1969,6 +1969,18 @@ body .bottomNav{background:var(--card)!important;border-color:var(--line)!import
   #dailyReminderGrid .reminderCard.done{border-inline-start:3px solid var(--accent2)}
 }
 </style>
+<style id="px-compact-settings">
+@media (max-width:600px){
+  #settings .pxSettingsDirectory{grid-template-columns:minmax(0,1fr);gap:6px}
+  #settings .pxSettingsTile{min-height:64px!important;padding:10px!important;gap:9px;border-radius:13px!important}
+  #settings .pxSettingsTileIcon{width:36px;height:36px;border-radius:10px}
+  #settings .pxSettingsTileText{gap:2px;overflow-wrap:anywhere}
+  #settings .pxSettingsTile::after{flex:none;font-size:20px}
+  #settings .pxSettingsDetailBar{gap:8px}
+  #pxSettingsDetailTitle{min-width:0;overflow-wrap:anywhere}
+}
+[dir="rtl"] #settings .pxSettingsTile::after{transform:scaleX(-1)}
+</style>
 <style id="px-first-paint">html:not([data-px-interface-ready]) body{visibility:hidden}</style>
 <noscript><style>body{visibility:visible!important}</style></noscript>
 <script>document.addEventListener('DOMContentLoaded',()=>{document.documentElement.setAttribute('data-px-interface-ready','')},{once:true});</script>
