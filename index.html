@@ -1009,6 +1009,7 @@ textarea{resize:vertical}
 .commonHint{font-size:10px;color:var(--muted);margin-top:5px;line-height:1.4}
 </style>
 <style id="progressx-daily-history-v1">
+#dailyHistoryAnnouncement{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 #dailyHistorySteps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px}
 #dailyHistorySteps .btn{min-width:0;min-height:44px;padding-inline:4px;overflow-wrap:anywhere}
 #dailyHistorySteps .btn[aria-disabled="true"]{opacity:.55;cursor:default}
@@ -2875,13 +2876,15 @@ body #pxMoreNav .navbtn{
         </div>
       </div>
       <div style="margin-top:10px">
-        <select id="dailyHistoryDate" onchange="renderDailyHistory()" style="width:100%"></select>
+        <label class="tiny muted" for="dailyHistoryDate">Date</label>
+        <select id="dailyHistoryDate" onchange="renderDailyHistory(true)" style="width:100%"></select>
         <div id="dailyHistorySteps">
           <button type="button" class="btn soft" id="dailyHistoryNewer" aria-disabled="true" onclick="stepDailyHistory(-1)">Newer</button>
           <button type="button" class="btn soft" id="dailyHistoryToday" aria-disabled="true" onclick="stepDailyHistory(0)">Today</button>
           <button type="button" class="btn soft" id="dailyHistoryOlder" aria-disabled="true" onclick="stepDailyHistory(1)">Older</button>
         </div>
       </div>
+      <div id="dailyHistoryAnnouncement" role="status" aria-atomic="true" data-px-user="1"></div>
       <div id="dailyHistoryList" class="dailyHistoryList"></div>
     </div>
 
@@ -9547,7 +9550,7 @@ function stepDailyHistory(offset){
   select.value=nextDate;
   select.dispatchEvent(new Event('change',{bubbles:true}));
 }
-function renderDailyHistory(){
+function renderDailyHistory(announce=false){
   const el=$('dailyHistoryList');if(!el)return;
   const history=dailyHistoryMap();
 
@@ -9626,12 +9629,26 @@ function renderDailyHistory(){
   const items=Array.isArray(h.doneItems)?h.doneItems:names.map(name=>({name,doneAt:''}));
   const waterCurrent=Number(h.waterCurrent)||0;
   const waterTarget=Number(h.waterTarget)||0;
+  const waterAmount=Number(waterCurrent.toFixed(2));
+  const waterGoal=Number(waterTarget.toFixed(2));
+  const announcement=$('dailyHistoryAnnouncement');
+  if(announce){
+    const date=isToday?pxExplain('Today','النهارده'):selected;
+    const supplements=pxExplain('Supplements completed','المكملات المسجّلة');
+    const water=pxExplain('Water','المياه');
+    const of=pxExplain('of','من');
+    announcement.textContent=`${date}. ${supplements} ${done} ${of} ${total}.`+
+      (waterTarget>0?` ${water} ${waterAmount} ${of} ${waterGoal} ${pxExplain('liters','لتر')}.`:'');
+  }else if(announcement.textContent){
+    announcement.textContent='';
+  }
+
 
   el.innerHTML=`<div class="dailyHistoryCard" data-px-user="1">
     <div class="dailyHistoryDate"><bdi>${esc(selected)}</bdi>${isToday?' · '+pxExplain('Today','النهارده'):''}</div>
     <div class="dailyHistoryMetrics">
       <span>${pxExplain('Supplements completed','المكملات المسجّلة')} <b dir="ltr">${done} / ${total}</b></span>
-      ${waterTarget>0?`<span>${pxExplain('Water','المياه')} <b dir="ltr">${Number(waterCurrent.toFixed(2))} / ${Number(waterTarget.toFixed(2))} L</b></span>`:''}
+      ${waterTarget>0?`<span>${pxExplain('Water','المياه')} <b dir="ltr">${waterAmount} / ${waterGoal} L</b></span>`:''}
     </div>
     <div class="dailyHistoryDone">${items.length?items.map(item=>`<span class="pill ok">✓ <bdi>${esc(item.name)}</bdi>${item.doneAt?' · '+esc(formatDoneTime(item.doneAt)):''}</span>`).join(''):`<span class="tiny muted">${pxExplain('No completed reminders logged.','مفيش مكملات متسجلة.')}</span>`}</div>
   </div>`;
