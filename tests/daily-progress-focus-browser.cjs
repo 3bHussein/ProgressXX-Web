@@ -27,6 +27,10 @@ for(const [lang,label] of [['en','Supplements completed'],['ar','المكملا�
    card.scrollWidth<=card.clientWidth && document.documentElement.scrollWidth<=innerWidth),lang+' '+width+' history card overflow');
  }
 }
+const announcement=p.locator('#dailyHistoryAnnouncement');
+assert.equal(await announcement.getAttribute('role'),'status');
+assert.equal(await p.locator('label[for="dailyHistoryDate"]').textContent(),'التاريخ');
+assert.equal(await announcement.textContent(),'');
 const older=p.locator('#dailyHistoryOlder');
 const newer=p.locator('#dailyHistoryNewer');
 const current=p.locator('#dailyHistoryToday');
@@ -40,6 +44,7 @@ assert.equal(await current.getAttribute('aria-disabled'),'true');
 assert.equal(await newer.evaluate(button=>button===document.activeElement),true);
 await older.focus();
 await p.keyboard.press('Space');
+assert.match(await announcement.textContent(),/2020-03-10.*المكملات المسجّلة 1 من 2.*المياه 1.25 من 2.5 لتر/);
 assert.equal(await p.locator('#dailyHistoryDate').inputValue(),historyDate);
 assert.equal(await older.getAttribute('aria-disabled'),'true');
 await p.keyboard.press('Enter');
