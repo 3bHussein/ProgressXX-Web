@@ -24,7 +24,11 @@ for(const lang of ['en','ar']){
   assert.equal(await heading.evaluate(el=>el===document.activeElement),true);
   assert.equal(await p.locator('#pxUILanguage').isVisible(),true);
   assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
-  await p.locator('.pxSettingsDetailBar button').focus();
+  const back=p.getByRole('button',{name:lang==='ar'?'كل الإعدادات':'All settings',exact:true});
+  const arrow=back.locator('.pxSettingsBackArrow');
+  assert.equal(await arrow.getAttribute('aria-hidden'),'true');
+  assert.equal(await arrow.evaluate(el=>new DOMMatrix(getComputedStyle(el).transform).a>0),lang==='en');
+  await back.focus();
   await p.keyboard.press('Space');
   assert.equal(await tile.evaluate(el=>el===document.activeElement),true);
  }
