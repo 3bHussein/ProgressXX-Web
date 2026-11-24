@@ -61,7 +61,7 @@ Choose a calendar period and one question: next session, weight/food, or todayâ€
 
 | Area | Everyday use |
 | --- | --- |
-| **Home** | Start or resume training, log food, update water and check daily habits. Extra summaries stay behind disclosures. |
+| **Home** | Start or resume training, log food, update water and check daily habits. On phones, training and food use full-width cards, with water and habits side by side. Extra summaries stay behind disclosures. |
 | **Workout log & sessions** | Organize training days, launch templates and record sets. Numeric sets and free text are supported; partial entries are guarded. Unfinished session drafts can be resumed. |
 | **Food** | See daily calories/macros, choose a saved product and review its quantity before adding. Usual-food shortcuts recall the last compatible portion; search, barcode, saved meals and repeat-meal tools remain available. |
 | **Progress** | Compare an exercise's recorded sets with an earlier available week. See a plain-language review and an explainable next step, with deload and missing-data context. |
