@@ -11403,6 +11403,7 @@ function pxSetUILanguage(language,persist=true){
  if($('pxLanguageStatus'))$('pxLanguageStatus').textContent=saved?'Language applied to all pages.':'Language applied. Browser storage is unavailable; selection will not survive reload.';
  if(typeof pxRenderInsightSummary==='function')pxRenderInsightSummary();if(typeof pxRenderWeeklyCoach==='function')pxRenderWeeklyCoach(Number($('weeklyReviewWeek')?.value)||activeWeek());
  renderProgressPhotos();renderDailyHistory();pxRenderQuickFoods();if(typeof pxUpdateMobilePage==='function')pxUpdateMobilePage(document.querySelector('.bottomNav .navbtn.active')?.dataset.page||'home');
+ if(currentPage==='home'&&typeof pxRenderHomeHub==='function')pxRenderHomeHub();
  if(typeof pxRenderUsualFoods==='function'){pxRenderUsualFoods();renderFavoriteFoods();renderRecentFoods()}
  if(typeof pxFoodCalmLabels==='function')pxFoodCalmLabels();
  if(typeof pxLabelMobileFood==='function')pxLabelMobileFood();
